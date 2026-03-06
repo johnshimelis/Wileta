@@ -1,0 +1,126 @@
+import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import { User, Mail, Phone, Calendar, ShieldCheck, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { LayoutDashboard, ShieldCheck as VerificationIcon, Settings as SettingsIcon, LogOut, TrendingUp, Menu, X } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
+import { useLocation } from 'react-router-dom';
+
+export default function Profile() {
+    const { user, logout } = useAuth();
+    const location = useLocation();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [location.pathname]);
+
+    const NavItem = ({ to, icon: Icon, label, active }) => (
+        <Link to={to} className={`nav-item ${active ? 'active' : ''}`}>
+            <Icon size={20} />
+            <span className="nav-text">{label}</span>
+        </Link>
+    );
+
+    return (
+        <div className="app-layout">
+            <div className="mobile-header-container mobile-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <img src="/logo.jpg" alt="Wileta Logo" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
+                    <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Wileta</span>
+                </div>
+                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex' }}>
+                    {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                </button>
+            </div>
+
+            {isMobileMenuOpen && (
+                <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
+            )}
+
+            <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+                <div className="desktop-logo-container" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2.5rem', padding: '0 0.5rem' }}>
+                    <img src="/logo.jpg" alt="Wileta Logo" style={{ width: '32px', height: '32px', borderRadius: '6px', objectFit: 'cover' }} />
+                    <span className="sidebar-logo-text" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Wileta</span>
+                </div>
+
+                <nav className="sidebar-nav">
+                    <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" />
+                    <NavItem to="/profile" icon={User} label="Profile" active />
+                    <NavItem to="/settings" icon={SettingsIcon} label="Settings" />
+                </nav>
+
+                <div className="sidebar-footer">
+                    <div className="theme-toggle-container">
+                        <span className="nav-text" style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-muted)' }}>Appearance</span>
+                        <ThemeToggle />
+                    </div>
+                    <button onClick={logout} className="nav-item" style={{ color: 'var(--danger)', background: 'transparent', border: 'none', width: '100%', paddingLeft: '1.25rem' }}>
+                        <LogOut size={20} />
+                        <span className="nav-text">Logout</span>
+                    </button>
+                </div>
+            </aside>
+
+            <main className="main-content">
+                <header style={{ marginBottom: '2.5rem' }}>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em' }}>My Profile</h1>
+                    <p style={{ color: 'var(--text-muted)' }}>Manage your personal information and tipping page</p>
+                </header>
+
+                <div className="dashboard-card animate-fade-in" style={{ padding: '2.5rem', display: 'flex', gap: '2.5rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                    <div className="creator-avatar" style={{ width: '120px', height: '120px', fontSize: '3rem', margin: 0, flexShrink: 0, overflow: 'hidden' }}>
+                        {user?.profilePicUrl ? (
+                            <img src={`http://localhost:5000${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : (
+                            user?.name?.charAt(0) || user?.phone?.charAt(0) || '?'
+                        )}
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: '300px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                            <div>
+                                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)' }}>{user?.name}</h2>
+                                <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem' }}>@{user?.username}</p>
+                            </div>
+                            <Link to="/settings" className="btn-primary" style={{ width: 'auto', padding: '0.6rem 1.2rem', background: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }}>
+                                Edit Profile
+                            </Link>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
+                                <Mail size={18} />
+                                <span>{user?.email || 'No email set'}</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
+                                <Phone size={18} />
+                                <span>{user?.phone}</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
+                                <ShieldCheck size={18} color={user?.kycStatus === 'approved' ? 'var(--primary)' : 'var(--text-muted)'} />
+                                <span style={{ fontWeight: 600, color: user?.kycStatus === 'approved' ? 'var(--primary)' : 'var(--text-muted)' }}>
+                                    {user?.kycStatus === 'approved' ? 'Identity Verified' : 'Verification Needed'}
+                                </span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
+                                <Calendar size={18} />
+                                <span>Joined {new Date(user?.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ marginTop: '2.5rem' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.5rem' }}>Tipping Page Preview</h3>
+                    <div className="dashboard-card" style={{ background: 'var(--bg-color)', border: '2px dashed var(--border-color)', textAlign: 'center', padding: '3rem' }}>
+                        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Your public tipping page is live and ready to receive support.</p>
+                        <a href={`/${user?.username}`} target="_blank" className="btn-primary" style={{ width: 'auto', display: 'inline-flex' }}>
+                            View Public Page
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}
