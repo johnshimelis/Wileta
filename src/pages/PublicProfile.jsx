@@ -24,7 +24,7 @@ export default function PublicProfile() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/public/${username}`);
+                const res = await axios.get(`https://wileta-backend.onrender.com/api/public/${username}`);
                 setCreator(res.data);
             } catch (err) {
                 setError("We couldn't find this creator. The link might be broken.");
@@ -46,7 +46,7 @@ export default function PublicProfile() {
         const finalAmount = amount === 'custom' ? customAmount : amount;
 
         try {
-            await axios.post('http://localhost:5000/api/payments/tip', {
+            await axios.post('https://wileta-backend.onrender.com/api/payments/tip', {
                 creatorUsername: username,
                 tipperPhone,
                 amount: finalAmount
@@ -94,7 +94,7 @@ export default function PublicProfile() {
                 <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
                     <div className="creator-avatar" style={{ border: 'none', background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)', width: '100px', height: '100px', fontSize: '2.8rem', overflow: 'hidden' }}>
                         {creator.profilePicUrl ? (
-                            <img src={`http://localhost:5000${creator.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <img src={`https://wileta-backend.onrender.com${creator.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
                             creator.name.charAt(0).toUpperCase()
                         )}
