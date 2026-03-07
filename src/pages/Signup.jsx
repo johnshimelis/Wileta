@@ -102,8 +102,8 @@ export default function Signup() {
                         />
                     </div>
 
-                    {/* Row 2: Email & Phone side by side */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    {/* Row 2: Email & Phone responsive grid */}
+                    <div className="form-grid">
                         <div style={inputStyle}>
                             <Mail size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                             <input
@@ -130,8 +130,8 @@ export default function Signup() {
                         </div>
                     </div>
 
-                    {/* Row 3: Password & Confirm side by side */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    {/* Row 3: Password & Confirm responsive grid */}
+                    <div className="form-grid">
                         <div style={inputStyle}>
                             <Lock size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                             <input

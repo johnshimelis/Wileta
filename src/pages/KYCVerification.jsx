@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import Sidebar from '../components/Sidebar';
 import {
     Upload, Camera, CheckCircle, AlertCircle,
     ArrowRight, ArrowLeft, ShieldCheck, LayoutDashboard,
@@ -195,27 +196,7 @@ export default function KYCVerification() {
                 <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
             )}
 
-            <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-                <div className="desktop-logo-container" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2.5rem', padding: '0 0.5rem' }}>
-                    <img src="/logo.jpg" alt="Wileta Logo" style={{ width: '32px', height: '32px', borderRadius: '6px', objectFit: 'cover' }} />
-                    <span className="sidebar-logo-text" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Wileta</span>
-                </div>
-                <nav className="sidebar-nav">
-                    <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" />
-                    <NavItem to="/profile" icon={User} label="Profile" />
-                    <NavItem to="/settings" icon={Settings} label="Settings" />
-                </nav>
-                <div className="sidebar-footer">
-                    <div className="theme-toggle-container">
-                        <span className="nav-text" style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-muted)' }}>Appearance</span>
-                        <ThemeToggle />
-                    </div>
-                    <button onClick={logout} className="nav-item" style={{ color: 'var(--danger)', background: 'transparent', border: 'none', width: '100%', paddingLeft: '1.25rem' }}>
-                        <LogOut size={20} />
-                        <span className="nav-text">Logout</span>
-                    </button>
-                </div>
-            </aside>
+            <Sidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
 
             <main className="main-content">
                 <div style={{ maxWidth: '620px', margin: '0 auto' }}>

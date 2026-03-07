@@ -4,6 +4,7 @@ import { User, Mail, Phone, Calendar, ShieldCheck, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { LayoutDashboard, ShieldCheck as VerificationIcon, Settings as SettingsIcon, LogOut, TrendingUp, Menu, X } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
+import Sidebar from '../components/Sidebar';
 import { useLocation } from 'react-router-dom';
 
 export default function Profile() {
@@ -38,29 +39,7 @@ export default function Profile() {
                 <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
             )}
 
-            <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-                <div className="desktop-logo-container" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2.5rem', padding: '0 0.5rem' }}>
-                    <img src="/logo.jpg" alt="Wileta Logo" style={{ width: '32px', height: '32px', borderRadius: '6px', objectFit: 'cover' }} />
-                    <span className="sidebar-logo-text" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Wileta</span>
-                </div>
-
-                <nav className="sidebar-nav">
-                    <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" />
-                    <NavItem to="/profile" icon={User} label="Profile" active />
-                    <NavItem to="/settings" icon={SettingsIcon} label="Settings" />
-                </nav>
-
-                <div className="sidebar-footer">
-                    <div className="theme-toggle-container">
-                        <span className="nav-text" style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-muted)' }}>Appearance</span>
-                        <ThemeToggle />
-                    </div>
-                    <button onClick={logout} className="nav-item" style={{ color: 'var(--danger)', background: 'transparent', border: 'none', width: '100%', paddingLeft: '1.25rem' }}>
-                        <LogOut size={20} />
-                        <span className="nav-text">Logout</span>
-                    </button>
-                </div>
-            </aside>
+            <Sidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
 
             <main className="main-content">
                 <header style={{ marginBottom: '2.5rem' }}>

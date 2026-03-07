@@ -10,6 +10,7 @@ import ThemeToggle from '../components/ThemeToggle';
 import TopAlert from '../components/TopAlert';
 import NotificationDrawer from '../components/NotificationDrawer';
 import { useNotification } from '../context/NotificationContext';
+import Sidebar from '../components/Sidebar';
 
 // Standalone Modal Components (Defined outside to prevent re-mounting)
 const WithdrawModal = ({
@@ -287,29 +288,7 @@ export default function Dashboard() {
                 <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
             )}
 
-            <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-                <div className="desktop-logo-container" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2.5rem', padding: '0 0.5rem' }}>
-                    <img src="/logo.jpg" alt="Wileta Logo" style={{ width: '32px', height: '32px', borderRadius: '6px', objectFit: 'cover' }} />
-                    <span className="sidebar-logo-text" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Wileta</span>
-                </div>
-
-                <nav className="sidebar-nav">
-                    <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" />
-                    <NavItem to="/profile" icon={User} label="Profile" />
-                    <NavItem to="/settings" icon={Settings} label="Settings" />
-                </nav>
-
-                <div className="sidebar-footer">
-                    <div className="theme-toggle-container">
-                        <span className="nav-text" style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-muted)' }}>Appearance</span>
-                        <ThemeToggle />
-                    </div>
-                    <button onClick={logout} className="nav-item" style={{ color: 'var(--danger)', background: 'transparent', border: 'none', width: '100%', paddingLeft: '1.25rem' }}>
-                        <LogOut size={20} />
-                        <span className="nav-text">Logout</span>
-                    </button>
-                </div>
-            </aside>
+            <Sidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
 
             <main className="main-content">
                 {alert && <TopAlert message={alert.message} type={alert.type} onClose={() => setAlert(null)} />}

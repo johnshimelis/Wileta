@@ -101,7 +101,7 @@ export default function Login() {
                 <p style={{ color: 'var(--text-muted)', textAlign: 'center', fontSize: '0.9rem', marginBottom: '1.75rem' }}>Sign in to manage your tips and earnings.</p>
 
                 {/* Method Switcher */}
-                <div style={{ display: 'flex', background: 'var(--bg-color)', borderRadius: '1rem', padding: '4px', marginBottom: '1.5rem', border: '1px solid var(--border-color)' }}>
+                <div className="form-grid" style={{ background: 'var(--bg-color)', borderRadius: '1rem', padding: '4px', marginBottom: '1.5rem', border: '1px solid var(--border-color)', gap: '4px' }}>
                     {[{ id: 'email', label: 'Email & Password' }, { id: 'phone', label: 'Phone & OTP' }].map(m => (
                         <button
                             key={m.id}

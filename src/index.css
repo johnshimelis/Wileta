@@ -646,6 +646,8 @@ tr:hover {
     justify-content: flex-start;
     border-top: none;
     padding-top: 0;
+    order: 1;
+    /* Ensure it is first in flex */
   }
 
   .nav-item {
@@ -664,13 +666,16 @@ tr:hover {
   }
 
   .sidebar-footer {
-    margin-top: auto;
-    padding-top: 2rem;
+    margin-top: 2rem;
+    /* Reduced from auto to follow list */
+    padding-top: 1.5rem;
     border-top: 1px solid var(--border-color);
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
     width: 100%;
+    order: 2;
+    /* Ensure it follows nav */
   }
 
   .sidebar-footer .theme-toggle-container {
@@ -693,4 +698,21 @@ tr:hover {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
+
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .notification-drawer-content {
+    width: 92vw !important;
+    right: -20px !important;
+    left: auto !important;
+    max-width: 400px;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
 }
