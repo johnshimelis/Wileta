@@ -74,6 +74,18 @@ export const NotificationProvider = ({ children }) => {
         }
     };
 
+    const deleteAllNotifications = async () => {
+        if (!api || drawerNotifications.length === 0) return;
+        setDrawerNotifications([]);
+        setUnreadCount(0);
+        try {
+            await api.delete('/notifications');
+        } catch (error) {
+            console.error('Failed to delete all notifications', error);
+            fetchNotifications();
+        }
+    };
+
     const toggleDrawer = () => setIsDrawerOpen(prev => !prev);
 
     const triggerNotification = ({ title, message, type = 'info', duration = 5000 }) => {
@@ -118,6 +130,7 @@ export const NotificationProvider = ({ children }) => {
             setIsDrawerOpen,
             markAsRead,
             markAllAsRead,
+            deleteAllNotifications,
             getIcon
         }}>
             {children}

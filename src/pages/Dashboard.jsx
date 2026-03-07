@@ -328,7 +328,7 @@ export default function Dashboard() {
                             </p>
                         </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <div className="desktop-only" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                         <NotificationDrawer />
                     </div>
                 </header>

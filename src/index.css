@@ -599,6 +599,7 @@ tr:hover {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    overflow-y: auto;
   }
 
   .sidebar.mobile-open {
@@ -684,30 +685,15 @@ tr:hover {
     width: 100%;
   }
 
-  header {
-    flex-direction: column;
-    align-items: flex-start !important;
-    gap: 1rem;
-  }
-
-  header>div:last-child {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr !important;
-  }
-
   .notification-drawer-content {
     width: 92vw !important;
     right: -20px !important;
     left: auto !important;
     max-width: 400px;
+  }
+
+  .desktop-only {
+    display: none !important;
   }
 }
 
@@ -715,4 +701,10 @@ tr:hover {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
+}
+
+@media (min-width: 641px) {
+  .mobile-only {
+    display: none !important;
+  }
 }

@@ -5,7 +5,7 @@ import { Bell, X, CheckCircle } from 'lucide-react';
 export default function NotificationDrawer() {
     const {
         drawerNotifications, unreadCount, isDrawerOpen,
-        toggleDrawer, setIsDrawerOpen, markAsRead, markAllAsRead, getIcon
+        toggleDrawer, setIsDrawerOpen, markAsRead, markAllAsRead, deleteAllNotifications, getIcon
     } = useNotification();
     const drawerRef = useRef(null);
 
@@ -74,14 +74,26 @@ export default function NotificationDrawer() {
                 }}>
                     <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-color)' }}>
                         <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)' }}>Notifications</h3>
-                        {unreadCount > 0 && (
-                            <button
-                                onClick={markAllAsRead}
-                                style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}
-                            >
-                                <CheckCircle size={16} /> Mark all read
-                            </button>
-                        )}
+                        <div style={{ display: 'flex', gap: '12px' }}>
+                            {unreadCount > 0 && (
+                                <button
+                                    onClick={markAllAsRead}
+                                    style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
+                                    title="Mark all as read"
+                                >
+                                    <CheckCircle size={14} /> Read
+                                </button>
+                            )}
+                            {drawerNotifications.length > 0 && (
+                                <button
+                                    onClick={deleteAllNotifications}
+                                    style={{ background: 'none', border: 'none', color: 'var(--danger)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
+                                    title="Delete all notifications"
+                                >
+                                    <X size={14} /> Clear All
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     <div style={{ overflowY: 'auto', flex: 1, padding: '0.5rem 0' }}>
