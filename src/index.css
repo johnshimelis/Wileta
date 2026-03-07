@@ -626,6 +626,19 @@ tr:hover {
     right: 0;
     z-index: 900;
     height: 70px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Enhancing touch targets and mobile interactions */
+  button,
+  .nav-item,
+  input {
+    min-height: 48px;
+  }
+
+  .nav-item {
+    padding: 1rem 1.25rem;
+    font-size: 1.05rem;
   }
 
   .mobile-overlay {

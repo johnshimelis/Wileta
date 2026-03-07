@@ -34,23 +34,25 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                     <span className="sidebar-logo-text" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Wileta</span>
                 </div>
 
-                <nav className="sidebar-nav">
-                    <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" />
-                    <NavItem to="/profile" icon={User} label="Profile" />
-                    <NavItem to="/settings" icon={SettingsIcon} label="Settings" />
-                </nav>
-
-                <div className="sidebar-footer" style={{ marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid var(--border-color)', width: '100%' }}>
-                    <div className="theme-toggle-container" style={{ marginBottom: '0.5rem' }}>
-                        <span className="nav-text" style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-muted)' }}>Appearance</span>
-                        <ThemeToggle />
+                <nav className="sidebar-nav" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                    <div style={{ flex: 1 }}>
+                        <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" />
+                        <NavItem to="/profile" icon={User} label="Profile" />
+                        <NavItem to="/settings" icon={SettingsIcon} label="Settings" />
                     </div>
 
-                    <button onClick={logout} className="nav-item" style={{ width: '100%', border: 'none', background: 'none', color: 'var(--danger)', display: 'flex', alignItems: 'center', padding: '0.5rem 1.25rem' }}>
-                        <LogOut size={20} />
-                        <span className="nav-text">Logout</span>
-                    </button>
-                </div>
+                    <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <div className="nav-item theme-toggle-container" style={{ cursor: 'default', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span className="nav-text" style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-muted)' }}>Appearance</span>
+                            <ThemeToggle />
+                        </div>
+
+                        <button onClick={logout} className="nav-item" style={{ width: '100%', border: 'none', background: 'none', color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.875rem 1.25rem', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left' }}>
+                            <LogOut size={20} />
+                            <span className="nav-text" style={{ fontWeight: 600 }}>Logout</span>
+                        </button>
+                    </div>
+                </nav>
             </aside>
         </>
     );

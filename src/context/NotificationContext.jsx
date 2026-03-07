@@ -58,31 +58,39 @@ export const NotificationProvider = ({ children }) => {
             await api.delete(`/notifications/${id}`);
         } catch (error) {
             console.error('Failed to permanently delete notification', error);
-            fetchNotifications(); // Revert on failure
+            // Fallback for older backend
+            try { await api.put(`/notifications/${id}/read`); } catch (e) { }
         }
     };
 
     const markAllAsRead = async () => {
         if (!api || unreadCount === 0) return;
+        const currentUnread = drawerNotifications.filter(n => !n.isRead);
         setDrawerNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
         setUnreadCount(0);
         try {
             await api.post('/notifications/mark-all-read');
         } catch (error) {
             console.error('Failed to mark all notifications as read', error);
-            fetchNotifications();
+            try { await Promise.all(currentUnread.map(n => api.put(`/notifications/${n._id}/read`))); } catch (e) { }
         }
     };
 
     const deleteAllNotifications = async () => {
         if (!api || drawerNotifications.length === 0) return;
+        const currentNotifs = [...drawerNotifications];
         setDrawerNotifications([]);
         setUnreadCount(0);
         try {
             await api.delete('/notifications');
         } catch (error) {
-            console.error('Failed to delete all notifications', error);
-            fetchNotifications();
+            console.error('Bulk delete failed', error);
+            try {
+                await Promise.all(currentNotifs.map(n => api.delete(`/notifications/${n._id}`)));
+            } catch (e) {
+                console.error('Individual deletes failed too', e);
+                try { await Promise.all(currentNotifs.map(n => api.put(`/notifications/${n._id}/read`))); } catch (err) { }
+            }
         }
     };
 
