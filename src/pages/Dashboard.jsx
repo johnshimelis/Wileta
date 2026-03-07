@@ -274,6 +274,11 @@ export default function Dashboard() {
 
     return (
         <div className="app-layout">
+            <style>{`
+                @media (max-width: 768px) {
+                    .desktop-only-header { display: none !important; }
+                }
+            `}</style>
             <div className="mobile-header-container mobile-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <img src="/logo.jpg" alt="Wileta Logo" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
@@ -328,7 +333,7 @@ export default function Dashboard() {
                             </p>
                         </div>
                     </div>
-                    <div className="desktop-only" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <div className="desktop-only desktop-only-header" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                         <NotificationDrawer />
                     </div>
                 </header>
