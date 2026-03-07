@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import NotificationDrawer from '../components/NotificationDrawer';
 import {
     Upload, Camera, CheckCircle, AlertCircle,
     ArrowRight, ArrowLeft, ShieldCheck, LayoutDashboard,
@@ -187,9 +188,12 @@ export default function KYCVerification() {
                     <img src="/logo.jpg" alt="Wileta Logo" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
                     <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Wileta</span>
                 </div>
-                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex' }}>
-                    {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <NotificationDrawer />
+                    <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex' }}>
+                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    </button>
+                </div>
             </div>
 
             {isMobileMenuOpen && (

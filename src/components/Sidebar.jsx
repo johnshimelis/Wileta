@@ -40,7 +40,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                     <NavItem to="/settings" icon={SettingsIcon} label="Settings" />
                 </nav>
 
-                <div className="sidebar-footer">
+                <div className="sidebar-footer" style={{ marginTop: '1.5rem', paddingTop: '1rem' }}>
                     <div className="theme-toggle-container">
                         <span className="nav-text" style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-muted)' }}>Appearance</span>
                         <ThemeToggle />

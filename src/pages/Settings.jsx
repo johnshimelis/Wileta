@@ -9,6 +9,7 @@ import { Link, useLocation } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import TopAlert from '../components/TopAlert';
 import Sidebar from '../components/Sidebar';
+import NotificationDrawer from '../components/NotificationDrawer';
 
 export default function Settings() {
     const { user, setUser, api, logout } = useAuth();
@@ -111,9 +112,12 @@ export default function Settings() {
                     <img src="/logo.jpg" alt="Wileta Logo" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
                     <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Wileta</span>
                 </div>
-                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex' }}>
-                    {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <NotificationDrawer />
+                    <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex' }}>
+                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    </button>
+                </div>
             </div>
 
             {isMobileMenuOpen && (
