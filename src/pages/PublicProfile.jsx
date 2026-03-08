@@ -124,68 +124,68 @@ export default function PublicProfile() {
     return (
         <div className="public-layout">
             {alert && <TopAlert message={alert.message} type={alert.type} onClose={() => setAlert(null)} />}
-            <div className="auth-card animate-fade-in" style={{ padding: '3rem 2.5rem', maxWidth: '500px', width: '100%', zIndex: 1, border: '1px solid rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.92)' }}>
+            <div className="auth-card animate-fade-in" style={{ padding: '2rem 2.5rem', maxWidth: '500px', width: '100%', zIndex: 1, border: '1px solid rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.92)' }}>
 
                 {/* Creator Header */}
-                <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                    <div className="creator-avatar" style={{ border: 'none', background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)', width: '100px', height: '100px', fontSize: '2.8rem', overflow: 'hidden' }}>
+                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                    <div className="creator-avatar" style={{ border: 'none', background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)', width: '80px', height: '80px', fontSize: '2.2rem', overflow: 'hidden', margin: '0 auto 1rem' }}>
                         {creator.profilePicUrl ? (
                             <img src={`https://wileta-backend.onrender.com${creator.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
                             creator.name.charAt(0).toUpperCase()
                         )}
                     </div>
-                    <h1 style={{ fontSize: '2rem', fontWeight: 800, margin: '0 0 0.4rem 0', color: 'var(--text-main)', letterSpacing: '-0.03em' }}>
+                    <h1 style={{ fontSize: '1.8rem', fontWeight: 800, margin: '0 0 0.2rem 0', color: 'var(--text-main)', letterSpacing: '-0.03em' }}>
                         {creator.name}
                     </h1>
-                    <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem' }}>@{creator.username}</p>
-                    <div style={{ width: '40px', height: '3px', background: 'var(--primary)', margin: '1.5rem auto', borderRadius: '2px', opacity: 0.3 }}></div>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.6, maxWidth: '340px', margin: '0 auto' }}>
+                    <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1rem' }}>@{creator.username}</p>
+                    <div style={{ width: '40px', height: '3px', background: 'var(--primary)', margin: '1rem auto', borderRadius: '2px', opacity: 0.3 }}></div>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.5, maxWidth: '340px', margin: '0 auto' }}>
                         Support my work by leaving a tip. Every contribution is directly received and deeply appreciated.
                     </p>
                 </div>
 
                 {tippingState === 'success' ? (
-                    <div className="animate-fade-in" style={{ textAlign: 'center', padding: '1rem 0' }}>
-                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#dcfce7', color: '#10B981', margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 15px rgba(220, 252, 231, 0.5)' }}>
-                            <CheckCircle size={40} />
+                    <div className="animate-fade-in" style={{ textAlign: 'center', padding: '0.5rem 0' }}>
+                        <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#dcfce7', color: '#10B981', margin: '0 auto 1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 10px rgba(220, 252, 231, 0.5)' }}>
+                            <CheckCircle size={30} />
                         </div>
-                        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '0.75rem', color: '#064e3b' }}>Payment Received!</h2>
-                        <p style={{ color: 'var(--text-muted)', marginBottom: '2.5rem', lineHeight: 1.6 }}>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem', color: '#064e3b' }}>Payment Received!</h2>
+                        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: 1.5, fontSize: '0.95rem' }}>
                             Your tip of <strong style={{ color: 'var(--text-main)' }}>{amount === 'custom' ? customAmount : amount} ETB</strong> has been successfully sent. Thank you!
                         </p>
                         <button
                             onClick={() => { setTippingState('idle'); setAmount('50'); setTipperPhone(''); setPin(''); }}
                             className="btn-primary"
-                            style={{ background: 'var(--bg-color)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }}
+                            style={{ background: 'var(--bg-color)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none', padding: '1rem', height: '54px' }}
                         >
                             Send Another Tip
                         </button>
                     </div>
                 ) : tippingState === 'pin_prompt' || tippingState === 'processing_pin' ? (
-                    <form onSubmit={handlePinSubmit} className="animate-fade-in" style={{ textAlign: 'center', padding: '1rem 0' }}>
-                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#fef3c7', color: '#d97706', margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 15px rgba(254, 243, 199, 0.5)' }}>
-                            <Smartphone size={40} />
+                    <form onSubmit={handlePinSubmit} className="animate-fade-in" style={{ textAlign: 'center', padding: '0.5rem 0' }}>
+                        <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#fef3c7', color: '#d97706', margin: '0 auto 1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 10px rgba(254, 243, 199, 0.5)' }}>
+                            <Smartphone size={30} />
                         </div>
-                        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '0.75rem', color: '#92400e' }}>Enter Telebirr PIN</h2>
-                        <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.6 }}>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem', color: '#92400e' }}>Enter Telebirr PIN</h2>
+                        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: 1.5, fontSize: '0.95rem' }}>
                             Please enter your Telebirr PIN to authorize the <strong style={{ color: 'var(--text-main)' }}>{amount === 'custom' ? customAmount : amount} ETB</strong> tip.
                         </p>
 
-                        <div style={{ marginBottom: '2.5rem', maxWidth: '250px', margin: '0 auto 2.5rem' }}>
+                        <div style={{ marginBottom: '1.5rem', maxWidth: '250px', margin: '0 auto 1.5rem' }}>
                             <input
-                                type="password" // Use password type to obscure it, though conceptually it's a generic PIN
+                                type="password"
                                 className="form-input"
                                 placeholder="Enter PIN"
                                 value={pin}
-                                onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))} // restrict to numbers
+                                onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                 style={{
                                     textAlign: 'center',
                                     fontSize: '1.5rem',
                                     letterSpacing: '0.5em',
                                     fontWeight: 800,
                                     color: '#0f172a',
-                                    height: '64px',
+                                    height: '56px',
                                     background: '#fff'
                                 }}
                                 required
@@ -197,11 +197,11 @@ export default function PublicProfile() {
                             className="btn-primary"
                             disabled={tippingState === 'processing_pin'}
                             style={{
-                                padding: '1.2rem',
-                                fontSize: '1.2rem',
+                                padding: '1rem',
+                                fontSize: '1.1rem',
                                 borderRadius: '1rem',
                                 boxShadow: '0 12px 30px -8px rgba(16, 185, 129, 0.4)',
-                                height: '64px',
+                                height: '56px',
                                 width: '100%'
                             }}
                         >
