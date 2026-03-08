@@ -77,7 +77,7 @@ export default function NotificationDrawer() {
                         <div style={{ display: 'flex', gap: '12px' }}>
                             {unreadCount > 0 && (
                                 <button
-                                    onClick={markAllAsRead}
+                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); markAllAsRead(); }}
                                     style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
                                     title="Mark all as read"
                                 >
@@ -86,7 +86,7 @@ export default function NotificationDrawer() {
                             )}
                             {drawerNotifications.length > 0 && (
                                 <button
-                                    onClick={deleteAllNotifications}
+                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteAllNotifications(); }}
                                     style={{ background: 'none', border: 'none', color: 'var(--danger)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
                                     title="Delete all notifications"
                                 >
@@ -137,7 +137,7 @@ export default function NotificationDrawer() {
                                         </span>
                                     </div>
                                     <button
-                                        onClick={(e) => { e.stopPropagation(); markAsRead(notif._id); }}
+                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); markAsRead(notif._id); }}
                                         style={{
                                             position: 'absolute', top: '12px', right: '12px',
                                             background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '50%', width: '24px', height: '24px',
