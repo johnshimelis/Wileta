@@ -53,9 +53,9 @@ export default function PublicProfile() {
                 amount: finalAmount
             });
 
-            if (response.data && response.data.checkout_url) {
-                // Securely redirect the browser to Chapa's checkout page
-                window.location.href = response.data.checkout_url;
+            if (response.data && response.data.success) {
+                // The USSD push has been sent to the user's phone
+                setTippingState('success');
             } else {
                 setTippingState('error');
             }
@@ -120,18 +120,18 @@ export default function PublicProfile() {
                 {tippingState === 'success' ? (
                     <div className="animate-fade-in" style={{ textAlign: 'center', padding: '1rem 0' }}>
                         <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#dcfce7', color: '#10B981', margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 15px rgba(220, 252, 231, 0.5)' }}>
-                            <CheckCircle size={40} />
+                            <Smartphone size={40} />
                         </div>
-                        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '0.75rem', color: '#064e3b' }}>Payment Received!</h2>
+                        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '0.75rem', color: '#064e3b' }}>Check Your Phone!</h2>
                         <p style={{ color: 'var(--text-muted)', marginBottom: '2.5rem', lineHeight: 1.6 }}>
-                            Your tip of <strong style={{ color: 'var(--text-main)' }}>{amount === 'custom' ? customAmount : amount} ETB</strong> has been successfully sent. Thank you!
+                            We just sent a Telebirr PIN prompt to your phone. Enter your PIN to securely authorize the <strong style={{ color: 'var(--text-main)' }}>{amount === 'custom' ? customAmount : amount} ETB</strong> tip.
                         </p>
                         <button
                             onClick={() => { setTippingState('idle'); setAmount('50'); setTipperPhone(''); }}
                             className="btn-primary"
                             style={{ background: 'var(--bg-color)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }}
                         >
-                            Send Another Tip
+                            Start Over
                         </button>
                     </div>
                 ) : (
