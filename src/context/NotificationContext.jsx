@@ -47,15 +47,13 @@ export const NotificationProvider = ({ children }) => {
     const markAsRead = async (id) => {
         if (!api) return;
 
-        // Optimistic UI update: Filter it completely out of memory and decrement unread
-        const notif = drawerNotifications.find(n => n._id === id);
-        if (notif && !notif.isRead) {
-            setUnreadCount(prev => Math.max(0, prev - 1));
-        }
+        // OPTIMISTIC UPDATE: Hide instantly
         setDrawerNotifications(prev => prev.filter(n => n._id !== id));
+        setUnreadCount(prev => Math.max(0, prev - 1));
 
         try {
             await api.delete(`/notifications/${id}`);
+            await fetchNotifications();
         } catch (error) {
             console.error('Failed to permanently delete notification', error);
             // Fallback for older backend
@@ -65,11 +63,14 @@ export const NotificationProvider = ({ children }) => {
 
     const markAllAsRead = async () => {
         if (!api || unreadCount === 0) return;
-        const currentUnread = drawerNotifications.filter(n => !n.isRead);
+
+        // OPTIMISTIC UPDATE: Mark all instantly
         setDrawerNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
         setUnreadCount(0);
+
         try {
             await api.post('/notifications/mark-all-read');
+            await fetchNotifications();
         } catch (error) {
             console.error('Failed to mark all notifications as read', error);
             try { await Promise.all(currentUnread.map(n => api.put(`/notifications/${n._id}/read`))); } catch (e) { }
@@ -79,10 +80,14 @@ export const NotificationProvider = ({ children }) => {
     const deleteAllNotifications = async () => {
         if (!api || drawerNotifications.length === 0) return;
         const currentNotifs = [...drawerNotifications];
+
+        // OPTIMISTIC UPDATE: Clear instantly
         setDrawerNotifications([]);
         setUnreadCount(0);
+
         try {
             await api.delete('/notifications');
+            await fetchNotifications();
         } catch (error) {
             console.error('Bulk delete failed', error);
             try {
@@ -139,7 +144,8 @@ export const NotificationProvider = ({ children }) => {
             markAsRead,
             markAllAsRead,
             deleteAllNotifications,
-            getIcon
+            getIcon,
+            fetchNotifications
         }}>
             {children}
 
