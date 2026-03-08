@@ -46,13 +46,21 @@ export default function PublicProfile() {
         const finalAmount = amount === 'custom' ? customAmount : amount;
 
         try {
-            await axios.post('https://wileta-backend.onrender.com/api/payments/tip', {
-                creatorUsername: username,
+            // Using production URL
+            const response = await axios.post('https://wileta-backend.onrender.com/api/payments/initialize-tip', {
+                creatorId: creator.id,
                 tipperPhone,
                 amount: finalAmount
             });
-            setTippingState('success');
+
+            if (response.data && response.data.checkout_url) {
+                // Securely redirect the browser to Chapa's checkout page
+                window.location.href = response.data.checkout_url;
+            } else {
+                setTippingState('error');
+            }
         } catch (err) {
+            console.error('Tipping Error:', err);
             setTippingState('error');
         }
     };
