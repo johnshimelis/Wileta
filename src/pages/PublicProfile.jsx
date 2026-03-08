@@ -13,7 +13,9 @@ export default function PublicProfile() {
     const [amount, setAmount] = useState('50');
     const [customAmount, setCustomAmount] = useState('');
     const [tipperPhone, setTipperPhone] = useState('');
-    const [tippingState, setTippingState] = useState('idle'); // idle | processing | success | error
+    const [tippingState, setTippingState] = useState('idle'); // idle | processing | pin_prompt | processing_pin | success | error
+    const [pin, setPin] = useState('');
+    const [txRef, setTxRef] = useState('');
     const [alert, setAlert] = useState(null);
 
     const showAlert = (message, type = 'success') => {
@@ -54,13 +56,39 @@ export default function PublicProfile() {
             });
 
             if (response.data && response.data.success) {
-                // The USSD push has been sent to the user's phone
-                setTippingState('success');
+                setTxRef(response.data.tx_ref);
+                setTippingState('pin_prompt');
             } else {
                 setTippingState('error');
             }
         } catch (err) {
             console.error('Tipping Error:', err);
+            setTippingState('error');
+        }
+    };
+
+    const handlePinSubmit = async (e) => {
+        e.preventDefault();
+        if (pin.length < 4) {
+            showAlert("Please enter a valid PIN", "error");
+            return;
+        }
+
+        setTippingState('processing_pin');
+
+        try {
+            const response = await axios.post('https://wileta-backend.onrender.com/api/payments/verify-test-pin', {
+                tx_ref: txRef,
+                pin: pin
+            });
+
+            if (response.data && response.data.success) {
+                setTippingState('success');
+            } else {
+                setTippingState('error');
+            }
+        } catch (err) {
+            console.error('PIN Verification Error:', err);
             setTippingState('error');
         }
     };
@@ -120,20 +148,70 @@ export default function PublicProfile() {
                 {tippingState === 'success' ? (
                     <div className="animate-fade-in" style={{ textAlign: 'center', padding: '1rem 0' }}>
                         <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#dcfce7', color: '#10B981', margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 15px rgba(220, 252, 231, 0.5)' }}>
-                            <Smartphone size={40} />
+                            <CheckCircle size={40} />
                         </div>
-                        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '0.75rem', color: '#064e3b' }}>Check Your Phone!</h2>
+                        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '0.75rem', color: '#064e3b' }}>Payment Received!</h2>
                         <p style={{ color: 'var(--text-muted)', marginBottom: '2.5rem', lineHeight: 1.6 }}>
-                            We just sent a Telebirr PIN prompt to your phone. Enter your PIN to securely authorize the <strong style={{ color: 'var(--text-main)' }}>{amount === 'custom' ? customAmount : amount} ETB</strong> tip.
+                            Your tip of <strong style={{ color: 'var(--text-main)' }}>{amount === 'custom' ? customAmount : amount} ETB</strong> has been successfully sent. Thank you!
                         </p>
                         <button
-                            onClick={() => { setTippingState('idle'); setAmount('50'); setTipperPhone(''); }}
+                            onClick={() => { setTippingState('idle'); setAmount('50'); setTipperPhone(''); setPin(''); }}
                             className="btn-primary"
                             style={{ background: 'var(--bg-color)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }}
                         >
-                            Start Over
+                            Send Another Tip
                         </button>
                     </div>
+                ) : tippingState === 'pin_prompt' || tippingState === 'processing_pin' ? (
+                    <form onSubmit={handlePinSubmit} className="animate-fade-in" style={{ textAlign: 'center', padding: '1rem 0' }}>
+                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#fef3c7', color: '#d97706', margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 15px rgba(254, 243, 199, 0.5)' }}>
+                            <Smartphone size={40} />
+                        </div>
+                        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '0.75rem', color: '#92400e' }}>Enter Telebirr PIN</h2>
+                        <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.6 }}>
+                            Please enter your Telebirr PIN to authorize the <strong style={{ color: 'var(--text-main)' }}>{amount === 'custom' ? customAmount : amount} ETB</strong> tip.
+                        </p>
+
+                        <div style={{ marginBottom: '2.5rem', maxWidth: '250px', margin: '0 auto 2.5rem' }}>
+                            <input
+                                type="password" // Use password type to obscure it, though conceptually it's a generic PIN
+                                className="form-input"
+                                placeholder="Enter PIN"
+                                value={pin}
+                                onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))} // restrict to numbers
+                                style={{
+                                    textAlign: 'center',
+                                    fontSize: '1.5rem',
+                                    letterSpacing: '0.5em',
+                                    fontWeight: 800,
+                                    color: '#0f172a',
+                                    height: '64px',
+                                    background: '#fff'
+                                }}
+                                required
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="btn-primary"
+                            disabled={tippingState === 'processing_pin'}
+                            style={{
+                                padding: '1.2rem',
+                                fontSize: '1.2rem',
+                                borderRadius: '1rem',
+                                boxShadow: '0 12px 30px -8px rgba(16, 185, 129, 0.4)',
+                                height: '64px',
+                                width: '100%'
+                            }}
+                        >
+                            {tippingState === 'processing_pin' ? (
+                                <><span className="spinner"></span> Verifying...</>
+                            ) : (
+                                "Authorize Payment"
+                            )}
+                        </button>
+                    </form>
                 ) : (
                     <form onSubmit={handleTip} className="animate-fade-in">
                         <div style={{ marginBottom: '2rem' }}>
