@@ -214,27 +214,27 @@ export default function PublicProfile() {
                     </form>
                 ) : (
                     <form onSubmit={handleTip} className="animate-fade-in">
-                        <div style={{ marginBottom: '2rem' }}>
-                            <label style={{ display: 'block', marginBottom: '1rem', fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Select Amount (ETB)</label>
+                        <div style={{ marginBottom: '1.5rem' }}>
+                            <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Select Amount (ETB)</label>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.6rem' }}>
                                 {['10', '50', '100'].map(val => (
                                     <div
                                         key={val}
                                         className={`tip-amount-btn ${amount === val ? 'active' : ''}`}
                                         onClick={() => selectAmount(val)}
-                                        style={{ textAlign: 'center', padding: '0.8rem' }}
+                                        style={{ textAlign: 'center', padding: '0.7rem' }}
                                     >
                                         {val}
                                     </div>
                                 ))}
                             </div>
 
-                            <div style={{ marginTop: '0.75rem' }}>
+                            <div style={{ marginTop: '0.6rem' }}>
                                 <div
                                     className={`tip-amount-btn ${amount === 'custom' ? 'active' : ''}`}
                                     onClick={() => selectAmount('custom')}
-                                    style={{ textAlign: 'left', padding: '0.8rem 1rem', display: 'flex', alignItems: 'center' }}
+                                    style={{ textAlign: 'left', padding: '0.6rem 1rem', display: 'flex', alignItems: 'center' }}
                                 >
                                     <span style={{ color: amount === 'custom' ? 'var(--primary)' : 'var(--text-muted)', fontWeight: 700, fontSize: '0.9rem', flexShrink: 0 }}>Custom:</span>
                                     <input
@@ -260,11 +260,11 @@ export default function PublicProfile() {
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: '2.5rem' }}>
-                            <label style={{ display: 'block', marginBottom: '1rem', fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Your Telebirr Number</label>
+                        <div style={{ marginBottom: '1.5rem' }}>
+                            <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Your Telebirr Number</label>
                             <div style={{ position: 'relative' }}>
-                                <div style={{ position: 'absolute', top: '50%', left: '1.25rem', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
-                                    <Smartphone size={20} />
+                                <div style={{ position: 'absolute', top: '50%', left: '1rem', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
+                                    <Smartphone size={18} />
                                 </div>
                                 <input
                                     type="tel"
@@ -273,25 +273,25 @@ export default function PublicProfile() {
                                     value={tipperPhone}
                                     onChange={(e) => setTipperPhone(e.target.value)}
                                     style={{
-                                        paddingLeft: '3.2rem',
-                                        fontSize: '1.1rem',
+                                        paddingLeft: '2.8rem',
+                                        fontSize: '1.05rem',
                                         fontWeight: 700,
                                         color: '#0f172a', /* Explicit black color */
-                                        height: '56px',
+                                        height: '50px',
                                         background: '#fff'
                                     }}
                                     required
                                 />
                             </div>
-                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.8rem', display: 'flex', gap: '0.6rem', alignItems: 'flex-start', lineHeight: 1.5, padding: '0 0.5rem' }}>
-                                <AlertCircle size={14} style={{ flexShrink: 0, marginTop: '0.15rem' }} />
-                                You'll receive a Telebirr PIN prompt on your phone to authorize this payment securely.
+                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.6rem', display: 'flex', gap: '0.5rem', alignItems: 'flex-start', lineHeight: 1.4, padding: '0 0.5rem' }}>
+                                <AlertCircle size={14} style={{ flexShrink: 0, marginTop: '0.1rem' }} />
+                                You'll receive a Telebirr PIN prompt to authorize securely.
                             </p>
                         </div>
 
                         {tippingState === 'error' && (
-                            <div className="error-message" style={{ marginBottom: '1.5rem' }}>
-                                <AlertCircle size={18} /> Payment initiation failed. Please try again.
+                            <div className="error-message" style={{ marginBottom: '1rem' }}>
+                                <AlertCircle size={16} /> Payment initiation failed. Please try again.
                             </div>
                         )}
 
@@ -300,11 +300,11 @@ export default function PublicProfile() {
                             className="btn-primary"
                             disabled={tippingState === 'processing'}
                             style={{
-                                padding: '1.2rem',
-                                fontSize: '1.2rem',
+                                padding: '1rem',
+                                fontSize: '1.1rem',
                                 borderRadius: '1rem',
-                                boxShadow: '0 12px 30px -8px rgba(16, 185, 129, 0.4)',
-                                height: '64px'
+                                boxShadow: '0 8px 20px -6px rgba(16, 185, 129, 0.4)',
+                                height: '54px'
                             }}
                         >
                             {tippingState === 'processing' ? (
@@ -316,12 +316,12 @@ export default function PublicProfile() {
                     </form>
                 )}
 
-                <div style={{ textAlign: 'center', marginTop: '3rem', fontSize: '0.8rem', color: '#94a3b8', borderTop: '1px dotted var(--border-color)', paddingTop: '2rem' }}>
+                <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.75rem', color: '#94a3b8', borderTop: '1px dotted var(--border-color)', paddingTop: '1rem' }}>
                     Powered by <strong style={{ color: 'var(--text-main)', fontWeight: 800 }}>Wileta</strong>
                 </div>
             </div>
 
-            <div style={{ position: 'absolute', bottom: '2rem', left: '0', right: '0', textAlign: 'center', zIndex: 0 }}>
+            <div style={{ position: 'absolute', bottom: '1rem', left: '0', right: '0', textAlign: 'center', zIndex: 0 }}>
                 <Link to="/login" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 600 }}>Create your own tipping page &rarr;</Link>
             </div>
         </div>
