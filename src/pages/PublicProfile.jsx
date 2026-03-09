@@ -26,7 +26,7 @@ export default function PublicProfile() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await axios.get(`https://wileta-backend.onrender.com/api/public/${username}`);
+                const res = await axios.get(`http://localhost:5000/api/public/${username}`);
                 setCreator(res.data);
             } catch (err) {
                 setError("We couldn't find this creator. The link might be broken.");
@@ -48,8 +48,8 @@ export default function PublicProfile() {
         const finalAmount = amount === 'custom' ? customAmount : amount;
 
         try {
-            // Using production URL
-            const response = await axios.post('https://wileta-backend.onrender.com/api/payments/initialize-tip', {
+            // Using local URL
+            const response = await axios.post('http://localhost:5000/api/payments/initialize-tip', {
                 creatorId: creator.id,
                 tipperPhone,
                 amount: finalAmount
@@ -77,7 +77,7 @@ export default function PublicProfile() {
         setTippingState('processing_pin');
 
         try {
-            const response = await axios.post('https://wileta-backend.onrender.com/api/payments/verify-test-pin', {
+            const response = await axios.post('http://localhost:5000/api/payments/verify-test-pin', {
                 tx_ref: txRef,
                 pin: pin
             });
@@ -130,7 +130,7 @@ export default function PublicProfile() {
                 <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
                     <div className="creator-avatar" style={{ border: 'none', background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)', width: '60px', height: '60px', fontSize: '1.8rem', overflow: 'hidden', margin: '0 auto 0.5rem' }}>
                         {creator.profilePicUrl ? (
-                            <img src={`https://wileta-backend.onrender.com${creator.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <img src={creator.profilePicUrl?.startsWith('http') ? creator.profilePicUrl : `http://localhost:5000${creator.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
                             creator.name.charAt(0).toUpperCase()
                         )}

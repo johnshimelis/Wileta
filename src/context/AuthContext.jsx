@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
     // Axios instance with base URL & interceptors
     const api = axios.create({
-        baseURL: 'https://wileta-backend.onrender.com/api',
+        baseURL: 'http://localhost:5000/api',
     });
 
     api.interceptors.request.use(config => {
