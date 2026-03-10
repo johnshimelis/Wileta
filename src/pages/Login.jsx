@@ -74,7 +74,7 @@ export default function Login() {
     return (
         <div style={{
             minHeight: '100vh',
-            background: 'var(--bg-color)',
+            background: 'radial-gradient(circle at top right, rgba(15, 157, 88, 0.08), transparent 500px), radial-gradient(circle at bottom left, rgba(66, 133, 244, 0.08), transparent 500px), var(--bg-color)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -83,11 +83,12 @@ export default function Login() {
             <div className="animate-slide-up" style={{
                 width: '100%',
                 maxWidth: '500px',
-                background: 'var(--card-bg)',
+                background: 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
                 borderRadius: '1.5rem',
-                boxShadow: 'var(--shadow-lg)',
+                boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(226, 232, 240, 0.5)',
                 padding: '2.5rem 3rem',
-                border: '1px solid var(--border-color)',
             }}>
                 {/* Logo */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.75rem', justifyContent: 'center' }}>
@@ -177,9 +178,9 @@ export default function Login() {
                                         background: otpSent ? '#059669' : 'var(--primary)',
                                         color: 'white',
                                         border: 'none',
-                                        borderRadius: '0.6rem',
-                                        padding: '0.4rem 0.8rem',
-                                        fontSize: '0.85rem',
+                                        borderRadius: '0.5rem',
+                                        padding: '0.3rem 0.6rem',
+                                        fontSize: '0.8rem',
                                         fontWeight: 600,
                                         cursor: (sendingOtp || !phone) ? 'not-allowed' : 'pointer',
                                         opacity: (sendingOtp || !phone) ? 0.7 : 1,
