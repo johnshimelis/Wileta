@@ -277,7 +277,7 @@ export default function KYCVerification() {
                                 <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Take a live selfie holding your ID to verify your identity.</p>
 
                                 {/* Camera active */}
-                                <div style={{ position: 'relative', borderRadius: '50%', overflow: 'hidden', background: '#000', marginBottom: '2rem', width: '260px', height: '260px', margin: '0 auto 1.5rem', border: `4px solid ${previews.liveness ? 'var(--success)' : 'var(--primary-light)'}`, boxShadow: '0 10px 25px rgba(0,0,0,0.1)', display: cameraActive || previews.liveness ? 'block' : 'none' }}>
+                                <div style={{ position: 'relative', borderRadius: '50%', overflow: 'hidden', background: '#000', marginBottom: '2rem', width: '100%', maxWidth: '260px', aspectRatio: '1/1', margin: '0 auto 1.5rem', border: `4px solid ${previews.liveness ? 'var(--success)' : 'var(--primary-light)'}`, boxShadow: '0 10px 25px rgba(0,0,0,0.1)', display: cameraActive || previews.liveness ? 'block' : 'none' }}>
                                     <video
                                         ref={videoRef}
                                         autoPlay
