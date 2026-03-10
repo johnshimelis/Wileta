@@ -64,6 +64,8 @@ export const NotificationProvider = ({ children }) => {
     const markAllAsRead = async () => {
         if (!api || unreadCount === 0) return;
 
+        const currentUnread = drawerNotifications.filter(n => !n.isRead);
+
         // OPTIMISTIC UPDATE: Mark all instantly
         setDrawerNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
         setUnreadCount(0);
