@@ -26,7 +26,7 @@ export default function PublicProfile() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/public/${username}`);
+                const res = await axios.get(`https://wileta-backend.onrender.com/api/public/${username}`);
                 setCreator(res.data);
             } catch (err) {
                 setError("We couldn't find this creator. The link might be broken.");
@@ -49,7 +49,7 @@ export default function PublicProfile() {
 
         try {
             // Using local URL
-            const response = await axios.post('http://localhost:5000/api/payments/initialize-tip', {
+            const response = await axios.post('https://wileta-backend.onrender.com/api/payments/initialize-tip', {
                 creatorId: creator.id,
                 tipperPhone,
                 amount: finalAmount
@@ -77,7 +77,7 @@ export default function PublicProfile() {
         setTippingState('processing_pin');
 
         try {
-            const response = await axios.post('http://localhost:5000/api/payments/verify-test-pin', {
+            const response = await axios.post('https://wileta-backend.onrender.com/api/payments/verify-test-pin', {
                 tx_ref: txRef,
                 pin: pin
             });
