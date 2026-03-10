@@ -93,7 +93,7 @@ export default function Signup() {
                     </div>
 
                     {/* Row 2: Email & Phone responsive grid */}
-                    <div className="form-grid">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
                         <div className="input-group">
                             <Mail size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                             <input
@@ -119,7 +119,7 @@ export default function Signup() {
                     </div>
 
                     {/* Row 3: Password & Confirm responsive grid */}
-                    <div className="form-grid">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
                         <div className="input-group">
                             <Lock size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                             <input
