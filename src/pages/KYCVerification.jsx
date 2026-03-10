@@ -220,7 +220,7 @@ export default function KYCVerification() {
                         </div>
                     )}
 
-                    <div className="dashboard-card" style={{ padding: '2rem' }}>
+                    <div className="dashboard-card">
                         {/* STEP 1 - ID Front */}
                         {step === 1 && (
                             <div>

@@ -52,7 +52,7 @@ export default function Profile() {
                     <p style={{ color: 'var(--text-muted)' }}>Manage your personal information and tipping page</p>
                 </header>
 
-                <div className="dashboard-card animate-fade-in" style={{ padding: '2.5rem', display: 'flex', gap: '2.5rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                <div className="dashboard-card animate-fade-in" style={{ display: 'flex', gap: '2.5rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
                     <div className="creator-avatar" style={{ width: '120px', height: '120px', fontSize: '3rem', margin: 0, flexShrink: 0, overflow: 'hidden' }}>
                         {user?.profilePicUrl ? (
                             <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -61,7 +61,7 @@ export default function Profile() {
                         )}
                     </div>
 
-                    <div style={{ flex: 1, minWidth: '300px' }}>
+                    <div style={{ flex: 1, minWidth: '0' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                             <div>
                                 <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)' }}>{user?.name}</h2>
@@ -97,7 +97,7 @@ export default function Profile() {
 
                 <div style={{ marginTop: '2.5rem' }}>
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.5rem' }}>Tipping Page Preview</h3>
-                    <div className="dashboard-card" style={{ background: 'var(--bg-color)', border: '2px dashed var(--border-color)', textAlign: 'center', padding: '3rem' }}>
+                    <div className="dashboard-card" style={{ background: 'var(--card-bg)', border: '2px dashed var(--border-color)', textAlign: 'center' }}>
                         <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Your public tipping page is live and ready to receive support.</p>
                         <a href={`/${user?.username}`} target="_blank" className="btn-primary" style={{ width: 'auto', display: 'inline-flex' }}>
                             View Public Page

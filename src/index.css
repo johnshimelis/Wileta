@@ -1,37 +1,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --primary: #10B981;
-  --primary-hover: #059669;
-  --primary-light: rgba(16, 185, 129, 0.1);
-  --secondary: #3b82f6;
-  --bg-color: #f1f5f9;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --card-bg: #ffffff;
-  --border-color: #e2e8f0;
-  --danger: #ef4444;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --input-focus: rgba(16, 185, 129, 0.2);
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  --glass-blur: blur(12px);
-  --sidebar-width: 260px;
+  --primary: #0F9D58;
+  /* Premium exact green */
+  --primary-hover: #0B8043;
+  --primary-light: rgba(15, 157, 88, 0.08);
+  --secondary: #4285F4;
+  --bg-color: #F8FAFC;
+  /* Softer background */
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  /* More transparent for glass */
+  --border-color: rgba(226, 232, 240, 0.8);
+  --danger: #EA4335;
+  --success: #0F9D58;
+  --warning: #FBBC04;
+  --input-focus: rgba(15, 157, 88, 0.15);
+  /* Buttery smooth layered shadows */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 2px 4px rgba(15, 23, 42, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.05), 0 4px 6px -2px rgba(15, 23, 42, 0.025);
+  --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.06), 0 10px 10px -5px rgba(15, 23, 42, 0.02);
+  --glass-blur: blur(16px);
+  --sidebar-width: 280px;
 }
 
 [data-theme='dark'] {
-  --bg-color: #020617;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --card-bg: rgba(30, 41, 59, 0.7);
-  --border-color: rgba(51, 65, 85, 0.5);
-  --primary-light: rgba(16, 185, 129, 0.15);
-  --input-focus: rgba(16, 185, 129, 0.3);
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+  --bg-color: #0B0F19;
+  /* Deep, rich dark blue/black */
+  --text-main: #F1F5F9;
+  --text-muted: #94A3B8;
+  --card-bg: rgba(15, 23, 42, 0.6);
+  --border-color: rgba(51, 65, 85, 0.6);
+  --primary-light: rgba(15, 157, 88, 0.15);
+  --input-focus: rgba(15, 157, 88, 0.25);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 12px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 15px 25px -5px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -138,12 +145,14 @@ body {
 
 .dashboard-card {
   background: var(--card-bg);
-  padding: 2rem;
-  border-radius: 1.25rem;
+  padding: 2.25rem;
+  border-radius: 1.5rem;
+  /* Rounder, modern corners */
   box-shadow: var(--shadow-md);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--border-color);
   backdrop-filter: var(--glass-blur);
-  transition: all 0.3s ease;
+  -webkit-backdrop-filter: var(--glass-blur);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dashboard-card:hover {
@@ -206,28 +215,30 @@ body {
 
 .form-input {
   width: 100%;
-  padding: 0.875rem 1rem;
-  border: 2px solid #e2e8f0;
+  padding: 0.875rem 1.25rem;
+  border: 1.5px solid var(--border-color);
   border-radius: 1rem;
   font-size: 1rem;
   font-family: inherit;
-  transition: all 0.25s ease;
-  background-color: rgba(255, 255, 255, 0.7);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: var(--bg-color);
   color: var(--text-main);
 }
 
 .form-input::placeholder {
-  color: #94a3b8;
+  color: var(--text-muted);
+  opacity: 0.6;
 }
 
 .form-input:focus {
   outline: none;
   border-color: var(--primary);
-  background-color: #fff;
+  background-color: transparent;
   box-shadow: 0 0 0 4px var(--input-focus);
 }
 
-.form-input:focus+.form-label {
+.form-input:focus+.form-label,
+.form-input:not(:placeholder-shown)+.form-label {
   color: var(--primary);
 }
 
@@ -588,18 +599,20 @@ tr:hover {
     height: 100vh;
     border-right: 1px solid var(--border-color);
     border-bottom: none;
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.25rem;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
     transform: translateX(-100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: var(--card-bg);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    background: var(--bg-color);
+    /* solid background for mobile menu */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     overflow-y: auto;
+    box-shadow: var(--shadow-xl);
   }
 
   .sidebar.mobile-open {
@@ -608,9 +621,11 @@ tr:hover {
 
   .main-content {
     width: 100%;
-    padding: 1.5rem;
-    padding-top: calc(70px + 1.5rem);
-    /* Space for mobile header */
+    padding: 1.25rem;
+    /* Tighter padding on mobile */
+    padding-top: calc(70px + 1.25rem);
+    overflow-x: hidden;
+    /* Prevent horizontal scroll on small devices */
   }
 
   .mobile-header {
@@ -730,7 +745,35 @@ tr:hover {
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+  gap: 1.25rem;
+}
+
+/* Base text overrides for better flow */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+}
+
+p {
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  .dashboard-card {
+    padding: 1.5rem;
+    /* Smaller padding on extra small phones */
+    border-radius: 1.25rem;
+  }
+
+  /* Ensure grids don't force overflow on iPhone SE */
+  .dashboard-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 1rem;
+  }
 }
 
 @media (min-width: 641px) {
