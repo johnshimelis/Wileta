@@ -1,12 +1,14 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useNotification } from '../context/NotificationContext';
 import { Bell, X, CheckCircle } from 'lucide-react';
 
 export default function NotificationDrawer() {
     const {
-        drawerNotifications, unreadCount, isDrawerOpen,
-        toggleDrawer, setIsDrawerOpen, markAsRead, markAllAsRead, deleteAllNotifications, getIcon
+        drawerNotifications, unreadCount,
+        markAsRead, markAllAsRead, deleteAllNotifications, getIcon
     } = useNotification();
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const toggleDrawer = () => setIsDrawerOpen(prev => !prev);
     const drawerRef = useRef(null);
 
     useEffect(() => {

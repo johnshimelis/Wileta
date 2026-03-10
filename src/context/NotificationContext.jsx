@@ -13,7 +13,6 @@ export const NotificationProvider = ({ children }) => {
     // Persistent backend dropdown notifications
     const [drawerNotifications, setDrawerNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     // Safe access to AuthContext
     const authContext = useAuth();
@@ -40,7 +39,6 @@ export const NotificationProvider = ({ children }) => {
         } else {
             setDrawerNotifications([]);
             setUnreadCount(0);
-            setIsDrawerOpen(false);
         }
     }, [user, api]);
 
@@ -101,8 +99,6 @@ export const NotificationProvider = ({ children }) => {
         }
     };
 
-    const toggleDrawer = () => setIsDrawerOpen(prev => !prev);
-
     const triggerNotification = ({ title, message, type = 'info', duration = 5000 }) => {
         const id = Date.now().toString() + Math.random().toString();
 
@@ -140,9 +136,6 @@ export const NotificationProvider = ({ children }) => {
             removeNotification,
             drawerNotifications,
             unreadCount,
-            isDrawerOpen,
-            toggleDrawer,
-            setIsDrawerOpen,
             markAsRead,
             markAllAsRead,
             deleteAllNotifications,
