@@ -13,8 +13,27 @@ export default function Login() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { login } = useAuth();
+    const [otpSent, setOtpSent] = useState(false);
+    const [sendingOtp, setSendingOtp] = useState(false);
+
+    const { login, api } = useAuth();
     const navigate = useNavigate();
+
+    const handleSendOtp = async () => {
+        if (!phone) {
+            setError('Please enter your phone number first');
+            return;
+        }
+        setError('');
+        setSendingOtp(true);
+        try {
+            await api.post('/auth/request-otp', { phone });
+            setOtpSent(true);
+        } catch (err) {
+            setError(err.response?.data?.error || 'Failed to send OTP. Please try again.');
+        }
+        setSendingOtp(false);
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -170,16 +189,36 @@ export default function Login() {
                                     type="tel"
                                     placeholder="Phone number (09...)"
                                     value={phone}
-                                    onChange={e => { setPhone(e.target.value); setError(''); }}
+                                    onChange={e => { setPhone(e.target.value); setError(''); setOtpSent(false); }}
                                     style={sharedInput}
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    onClick={handleSendOtp}
+                                    disabled={sendingOtp || !phone}
+                                    style={{
+                                        background: otpSent ? '#059669' : 'var(--primary)',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '0.6rem',
+                                        padding: '0.4rem 0.8rem',
+                                        fontSize: '0.85rem',
+                                        fontWeight: 600,
+                                        cursor: (sendingOtp || !phone) ? 'not-allowed' : 'pointer',
+                                        opacity: (sendingOtp || !phone) ? 0.7 : 1,
+                                        transition: 'all 0.2s',
+                                        whiteSpace: 'nowrap'
+                                    }}
+                                >
+                                    {sendingOtp ? '...' : (otpSent ? 'Sent!' : 'Get OTP')}
+                                </button>
                             </div>
                             <div style={inputStyle}>
                                 <Lock size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                                 <input
                                     type="text"
-                                    placeholder="OTP code (use 123456)"
+                                    placeholder="6-digit OTP code"
                                     value={otp}
                                     onChange={e => { setOtp(e.target.value); setError(''); }}
                                     style={sharedInput}
@@ -188,7 +227,7 @@ export default function Login() {
                                 />
                             </div>
                             <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.75rem', marginTop: '-0.5rem' }}>
-                                Testing: OTP code is <strong>123456</strong>
+                                {!otpSent ? 'Click "Get OTP" to receive a code via SMS' : 'A code was sent to your phone!'}
                             </p>
                         </>
                     )}
