@@ -69,28 +69,7 @@ export default function Login() {
         setLoading(false);
     };
 
-    const inputStyle = {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.75rem',
-        border: '2px solid var(--border-color)',
-        borderRadius: '1rem',
-        padding: '0 1rem',
-        background: 'var(--card-bg)',
-        marginBottom: '0.875rem',
-        transition: 'border-color 0.2s'
-    };
 
-    const sharedInput = {
-        flex: 1,
-        border: 'none',
-        outline: 'none',
-        background: 'transparent',
-        color: 'var(--text-main)',
-        fontSize: '0.95rem',
-        padding: '0.9rem 0',
-        fontFamily: 'inherit',
-    };
 
     return (
         <div style={{
@@ -101,7 +80,7 @@ export default function Login() {
             justifyContent: 'center',
             padding: '1.5rem',
         }}>
-            <div style={{
+            <div className="animate-slide-up" style={{
                 width: '100%',
                 maxWidth: '500px',
                 background: 'var(--card-bg)',
@@ -155,25 +134,23 @@ export default function Login() {
                 <form onSubmit={handleLogin}>
                     {loginMethod === 'email' ? (
                         <>
-                            <div style={inputStyle}>
+                            <div className="input-group">
                                 <Mail size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                                 <input
                                     type="email"
                                     placeholder="Email address"
                                     value={email}
                                     onChange={e => { setEmail(e.target.value); setError(''); }}
-                                    style={sharedInput}
                                     required
                                 />
                             </div>
-                            <div style={inputStyle}>
+                            <div className="input-group">
                                 <Lock size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     placeholder="Password"
                                     value={password}
                                     onChange={e => { setPassword(e.target.value); setError(''); }}
-                                    style={sharedInput}
                                     required
                                 />
                                 <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', flexShrink: 0 }}>
@@ -183,14 +160,13 @@ export default function Login() {
                         </>
                     ) : (
                         <>
-                            <div style={inputStyle}>
+                            <div className="input-group">
                                 <Phone size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                                 <input
                                     type="tel"
                                     placeholder="Phone number (09...)"
                                     value={phone}
                                     onChange={e => { setPhone(e.target.value); setError(''); setOtpSent(false); }}
-                                    style={sharedInput}
                                     required
                                 />
                                 <button
@@ -215,14 +191,13 @@ export default function Login() {
                                 </button>
                             </div>
                             {otpSent && (
-                                <div className="animate-fade-in delay-1" style={inputStyle}>
+                                <div className="animate-fade-in delay-1 input-group">
                                     <Lock size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                                     <input
                                         type="text"
                                         placeholder="6-digit OTP code"
                                         value={otp}
                                         onChange={e => { setOtp(e.target.value); setError(''); }}
-                                        style={sharedInput}
                                         maxLength={6}
                                         required
                                     />

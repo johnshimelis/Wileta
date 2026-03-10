@@ -392,7 +392,7 @@ export default function Dashboard() {
                         <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', color: 'white' }}>Quick Tipping Link</h2>
                         <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.95rem', fontWeight: 500 }}>Share this link to start receiving support</p>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.15)', padding: '0.5rem', borderRadius: '1rem', flex: '1', minWidth: '300px', border: '1px solid rgba(255,255,255,0.3)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.15)', padding: '0.5rem', borderRadius: '1rem', flex: '1', minWidth: '0', border: '1px solid rgba(255,255,255,0.3)' }}>
                         <a
                             href={tipUrl}
                             target="_blank"

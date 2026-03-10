@@ -43,16 +43,7 @@ export default function Signup() {
         setLoading(false);
     };
 
-    const inputStyle = {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.75rem',
-        border: '2px solid var(--border-color)',
-        borderRadius: '1rem',
-        padding: '0 1rem',
-        background: 'var(--card-bg)',
-        transition: 'border-color 0.2s'
-    };
+
 
     return (
         <div style={{
@@ -63,7 +54,7 @@ export default function Signup() {
             justifyContent: 'center',
             padding: '1.5rem',
         }}>
-            <div style={{
+            <div className="animate-slide-up" style={{
                 width: '100%',
                 maxWidth: '580px',
                 background: 'var(--card-bg)',
@@ -89,7 +80,7 @@ export default function Signup() {
 
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
                     {/* Row 1: Name */}
-                    <div style={inputStyle}>
+                    <div className="input-group">
                         <User size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                         <input
                             name="name"
@@ -97,14 +88,13 @@ export default function Signup() {
                             placeholder="Full Name"
                             value={form.name}
                             onChange={handleChange}
-                            style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', color: 'var(--text-main)', fontSize: '0.95rem', padding: '0.8rem 0', fontFamily: 'inherit' }}
                             required
                         />
                     </div>
 
                     {/* Row 2: Email & Phone responsive grid */}
                     <div className="form-grid">
-                        <div style={inputStyle}>
+                        <div className="input-group">
                             <Mail size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                             <input
                                 name="email"
@@ -112,11 +102,10 @@ export default function Signup() {
                                 placeholder="Email address"
                                 value={form.email}
                                 onChange={handleChange}
-                                style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', color: 'var(--text-main)', fontSize: '0.95rem', padding: '0.8rem 0', fontFamily: 'inherit', width: 0 }}
                                 required
                             />
                         </div>
-                        <div style={inputStyle}>
+                        <div className="input-group">
                             <Phone size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                             <input
                                 name="phone"
@@ -124,7 +113,6 @@ export default function Signup() {
                                 placeholder="09xxxxxxxx"
                                 value={form.phone}
                                 onChange={handleChange}
-                                style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', color: 'var(--text-main)', fontSize: '0.95rem', padding: '0.8rem 0', fontFamily: 'inherit', width: 0 }}
                                 required
                             />
                         </div>
@@ -132,7 +120,7 @@ export default function Signup() {
 
                     {/* Row 3: Password & Confirm responsive grid */}
                     <div className="form-grid">
-                        <div style={inputStyle}>
+                        <div className="input-group">
                             <Lock size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                             <input
                                 name="password"
@@ -140,14 +128,13 @@ export default function Signup() {
                                 placeholder="Password"
                                 value={form.password}
                                 onChange={handleChange}
-                                style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', color: 'var(--text-main)', fontSize: '0.95rem', padding: '0.8rem 0', fontFamily: 'inherit', width: 0 }}
                                 required
                             />
                             <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', flexShrink: 0 }}>
                                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
                         </div>
-                        <div style={inputStyle}>
+                        <div className="input-group">
                             <CheckCircle size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                             <input
                                 name="confirmPassword"
@@ -155,7 +142,6 @@ export default function Signup() {
                                 placeholder="Confirm Password"
                                 value={form.confirmPassword}
                                 onChange={handleChange}
-                                style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', color: 'var(--text-main)', fontSize: '0.95rem', padding: '0.8rem 0', fontFamily: 'inherit', width: 0 }}
                                 required
                             />
                             <button type="button" onClick={() => setShowConfirm(!showConfirm)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', flexShrink: 0 }}>

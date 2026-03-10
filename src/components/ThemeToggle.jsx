@@ -20,12 +20,12 @@ export default function ThemeToggle() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 boxShadow: 'var(--shadow-sm)',
                 backdropFilter: 'var(--glass-blur)'
             }}
             onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'scale(1.1)';
+                e.currentTarget.style.transform = 'scale(1.08)';
                 e.currentTarget.style.borderColor = 'var(--primary)';
             }}
             onMouseOut={(e) => {

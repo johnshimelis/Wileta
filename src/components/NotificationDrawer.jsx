@@ -36,12 +36,18 @@ export default function NotificationDrawer() {
                     color: isDrawerOpen ? 'var(--primary)' : 'var(--text-main)',
                     padding: '0.6rem',
                     borderRadius: '0.75rem',
-                    cursor: 'pointer',
-                    position: 'relative',
-                    transition: 'all 0.2s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    boxShadow: 'var(--shadow-sm)',
+                    backdropFilter: 'var(--glass-blur)'
+                }}
+                onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.08)';
+                    e.currentTarget.style.borderColor = 'var(--primary)';
+                }}
+                onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.borderColor = 'var(--border-color)';
                 }}
             >
                 <Bell size={20} />
@@ -60,10 +66,10 @@ export default function NotificationDrawer() {
 
             {isDrawerOpen && (
                 <div className="animate-scale-in notification-drawer-content" style={{
-                    position: 'absolute',
                     top: 'calc(100% + 12px)',
                     right: 0,
-                    width: '360px',
+                    width: 'calc(100vw - 2rem)',
+                    maxWidth: '360px',
                     maxHeight: '480px',
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',

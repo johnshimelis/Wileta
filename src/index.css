@@ -220,7 +220,7 @@ body {
   border-radius: 1rem;
   font-size: 1rem;
   font-family: inherit;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   background-color: var(--bg-color);
   color: var(--text-main);
 }
@@ -240,6 +240,49 @@ body {
 .form-input:focus+.form-label,
 .form-input:not(:placeholder-shown)+.form-label {
   color: var(--primary);
+}
+
+/* Premium input group for Auth pages with focus-within */
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1.5px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 0 1rem;
+  background: var(--bg-color);
+  margin-bottom: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.input-group:focus-within {
+  border-color: var(--primary);
+  background: transparent;
+  box-shadow: 0 0 0 4px var(--input-focus);
+}
+
+.input-group input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  padding: 0.9rem 0;
+  font-family: inherit;
+}
+
+.input-group input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.input-group svg {
+  transition: color 0.3s ease;
+}
+
+.input-group:focus-within svg {
+  color: var(--primary) !important;
 }
 
 .form-input:-webkit-autofill,
@@ -318,7 +361,7 @@ body {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 6px 16px rgba(15, 157, 88, 0.3);
 }
 
 .btn-primary:hover::after {
@@ -326,8 +369,8 @@ body {
 }
 
 .btn-primary:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 2px 4px rgba(15, 157, 88, 0.15);
 }
 
 .btn-primary:disabled {
@@ -378,20 +421,26 @@ body {
   font-weight: 700;
   font-size: 1.1rem;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .tip-amount-btn:hover {
-  transform: scale(1.03);
+  transform: scale(1.03) translateY(-2px);
   border-color: var(--primary-light);
   background: white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.tip-amount-btn:active {
+  transform: scale(0.97);
+  transition: all 0.1s;
 }
 
 .tip-amount-btn.active {
   background: var(--primary-light);
   border-color: var(--primary);
   color: var(--primary-hover);
-  transform: scale(1.05);
+  transform: scale(1.05) translateY(-2px);
   box-shadow: 0 4px 12px var(--input-focus);
 }
 

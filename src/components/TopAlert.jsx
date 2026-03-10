@@ -19,8 +19,9 @@ export default function TopAlert({ message, type = 'success', onClose }) {
             alignItems: 'center',
             gap: '1rem',
             boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
-            animation: 'slide-down 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            minWidth: '320px',
+            animation: 'slide-down-spring 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            width: 'calc(100% - 2rem)',
+            maxWidth: '400px',
             fontWeight: 700
         }}>
             {type === 'success' ? <CheckCircle size={20} /> : <AlertTriangle size={20} />}
@@ -42,9 +43,9 @@ export default function TopAlert({ message, type = 'success', onClose }) {
                 <X size={18} />
             </button>
             <style>{`
-                @keyframes slide-down {
-                    from { transform: translate(-50%, -100%); opacity: 0; }
-                    to { transform: translate(-50%, 0); opacity: 1; }
+                @keyframes slide-down-spring {
+                    from { transform: translate(-50%, -100%) scale(0.95); opacity: 0; }
+                    to { transform: translate(-50%, 0) scale(1); opacity: 1; }
                 }
             `}</style>
         </div>
