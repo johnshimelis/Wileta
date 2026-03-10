@@ -264,7 +264,6 @@ body {
 .input-group input {
   flex: 1;
   min-width: 0;
-  width: 100%;
   border: none;
   outline: none;
   background: transparent;

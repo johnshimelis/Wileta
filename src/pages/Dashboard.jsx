@@ -388,16 +388,16 @@ export default function Dashboard() {
 
                 {/* Share Link Section */}
                 <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)', color: 'white', border: 'none' }}>
-                    <div>
+                    <div style={{ flex: '1 1 200px', minWidth: 0 }}>
                         <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', color: 'white' }}>Quick Tipping Link</h2>
                         <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.95rem', fontWeight: 500 }}>Share this link to start receiving support</p>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.15)', padding: '0.5rem', borderRadius: '1rem', flex: '1', minWidth: '0', border: '1px solid rgba(255,255,255,0.3)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.15)', padding: '0.5rem', borderRadius: '1rem', flex: '1 1 200px', minWidth: '0', border: '1px solid rgba(255,255,255,0.3)' }}>
                         <a
                             href={tipUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ padding: '0.5rem 1rem', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600, color: 'white', textDecoration: 'none' }}
+                            style={{ padding: '0.5rem 1rem', flex: 1, minWidth: 0, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600, color: 'white', textDecoration: 'none' }}
                             title="Open tipping page"
                         >
                             {tipUrl}
