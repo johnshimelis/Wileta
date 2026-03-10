@@ -71,27 +71,29 @@ export default function NotificationDrawer() {
                     display: 'flex',
                     flexDirection: 'column',
                     overflow: 'hidden'
-                }}>
+                }} onClick={(e) => e.stopPropagation()}>
                     <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-color)' }}>
                         <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)' }}>Notifications</h3>
                         <div style={{ display: 'flex', gap: '12px' }}>
                             {unreadCount > 0 && (
-                                <button
-                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); markAllAsRead(); }}
+                                <div
+                                    role="button"
+                                    onClick={(e) => { e.stopPropagation(); markAllAsRead(); }}
                                     style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
                                     title="Mark all as read"
                                 >
                                     <CheckCircle size={14} /> Read
-                                </button>
+                                </div>
                             )}
                             {drawerNotifications.length > 0 && (
-                                <button
-                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteAllNotifications(); }}
+                                <div
+                                    role="button"
+                                    onClick={(e) => { e.stopPropagation(); deleteAllNotifications(); }}
                                     style={{ background: 'none', border: 'none', color: 'var(--danger)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
                                     title="Delete all notifications"
                                 >
                                     <X size={14} /> Clear All
-                                </button>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -136,8 +138,9 @@ export default function NotificationDrawer() {
                                             {formatTime(notif.createdAt)}
                                         </span>
                                     </div>
-                                    <button
-                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); markAsRead(notif._id); }}
+                                    <div
+                                        role="button"
+                                        onClick={(e) => { e.stopPropagation(); markAsRead(notif._id); }}
                                         style={{
                                             position: 'absolute', top: '12px', right: '12px',
                                             background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '50%', width: '24px', height: '24px',
@@ -146,7 +149,7 @@ export default function NotificationDrawer() {
                                         title={notif.isRead ? "Dismiss" : "Mark as read"}
                                     >
                                         <X size={14} />
-                                    </button>
+                                    </div>
                                 </div>
                             ))
                         )}
