@@ -202,10 +202,14 @@ export default function KYCVerification() {
 
             <Sidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
 
-            <main className="main-content">
-                <div style={{ maxWidth: '620px', margin: '0 auto' }}>
+            <main className="main-content" style={{
+                background: 'radial-gradient(circle at top right, rgba(15, 157, 88, 0.05), transparent 500px), radial-gradient(circle at bottom left, rgba(66, 133, 244, 0.05), transparent 500px), var(--bg-color)',
+                minHeight: '100vh',
+                position: 'relative'
+            }}>
+                <div style={{ maxWidth: '620px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
                     <header style={{ marginBottom: '2rem', textAlign: 'center' }}>
-                        <div className="auth-icon" style={{ width: '60px', height: '60px', margin: '0 auto 1.25rem', background: 'var(--primary-light)', color: 'var(--primary)' }}>
+                        <div className="auth-icon" style={{ width: '60px', height: '60px', margin: '0 auto 1.25rem', background: 'var(--primary-light)', color: 'var(--primary)', boxShadow: '0 10px 25px -5px rgba(15, 157, 88, 0.3)' }}>
                             <ShieldCheck size={28} />
                         </div>
                         <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em' }}>Identity Verification</h1>
@@ -220,7 +224,13 @@ export default function KYCVerification() {
                         </div>
                     )}
 
-                    <div className="dashboard-card">
+                    <div className="dashboard-card" style={{
+                        background: 'rgba(255, 255, 255, 0.7)',
+                        backdropFilter: 'blur(24px)',
+                        WebkitBackdropFilter: 'blur(24px)',
+                        border: '1px solid rgba(226, 232, 240, 0.5)',
+                        boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(226, 232, 240, 0.5)'
+                    }}>
                         {/* STEP 1 - ID Front */}
                         {step === 1 && (
                             <div>
