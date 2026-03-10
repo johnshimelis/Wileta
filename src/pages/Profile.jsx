@@ -62,12 +62,12 @@ export default function Profile() {
                     </div>
 
                     <div style={{ flex: 1, minWidth: '0' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <div>
-                                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)' }}>{user?.name}</h2>
-                                <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem' }}>@{user?.username}</p>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+                            <div style={{ flex: '1 1 200px', minWidth: 0 }}>
+                                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', wordBreak: 'break-word' }}>{user?.name}</h2>
+                                <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem', wordBreak: 'break-word' }}>@{user?.username}</p>
                             </div>
-                            <Link to="/settings" className="btn-primary" style={{ width: 'auto', padding: '0.6rem 1.2rem', background: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }}>
+                            <Link to="/settings" className="btn-primary" style={{ width: 'auto', padding: '0.6rem 1.2rem', background: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none', flexShrink: 0 }}>
                                 Edit Profile
                             </Link>
                         </div>
