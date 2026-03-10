@@ -165,9 +165,10 @@ export default function Login() {
                                 <Phone size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
                                 <input
                                     type="tel"
-                                    placeholder="Phone number (09...)"
+                                    placeholder="Phone number"
                                     value={phone}
                                     onChange={e => { setPhone(e.target.value); setError(''); setOtpSent(false); }}
+                                    style={{ flex: 1, minWidth: 0 }}
                                     required
                                 />
                                 <button
