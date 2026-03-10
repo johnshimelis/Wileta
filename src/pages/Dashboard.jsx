@@ -320,7 +320,7 @@ export default function Dashboard() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
                         <div className="creator-avatar" style={{ width: '56px', height: '56px', fontSize: '1.5rem', margin: 0, flexShrink: 0, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                             {user?.profilePicUrl ? (
-                                <img src={`https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
                                 user?.name?.charAt(0) || '?'
                             )}

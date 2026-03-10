@@ -150,7 +150,7 @@ export default function Settings() {
                                 <div style={{ position: 'relative' }}>
                                     <div className="creator-avatar" style={{ width: '80px', height: '80px', fontSize: '2rem', margin: 0, overflow: 'hidden' }}>
                                         {user?.profilePicUrl ? (
-                                            <img src={`https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                         ) : (
                                             user?.name?.charAt(0) || '?'
                                         )}
