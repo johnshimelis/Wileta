@@ -214,32 +214,36 @@ export default function Login() {
                                     {sendingOtp ? '...' : (otpSent ? 'Sent!' : 'Get OTP')}
                                 </button>
                             </div>
-                            <div style={inputStyle}>
-                                <Lock size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
-                                <input
-                                    type="text"
-                                    placeholder="6-digit OTP code"
-                                    value={otp}
-                                    onChange={e => { setOtp(e.target.value); setError(''); }}
-                                    style={sharedInput}
-                                    maxLength={6}
-                                    required
-                                />
-                            </div>
+                            {otpSent && (
+                                <div className="animate-fade-in delay-1" style={inputStyle}>
+                                    <Lock size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
+                                    <input
+                                        type="text"
+                                        placeholder="6-digit OTP code"
+                                        value={otp}
+                                        onChange={e => { setOtp(e.target.value); setError(''); }}
+                                        style={sharedInput}
+                                        maxLength={6}
+                                        required
+                                    />
+                                </div>
+                            )}
                             <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.75rem', marginTop: '-0.5rem' }}>
                                 {!otpSent ? 'Click "Get OTP" to receive a code via SMS' : 'A code was sent to your phone!'}
                             </p>
                         </>
                     )}
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="btn-primary"
-                        style={{ width: '100%', padding: '0.9rem', fontSize: '1rem', marginTop: '0.25rem', borderRadius: '1rem' }}
-                    >
-                        {loading ? <span className="spinner"></span> : 'Sign In'}
-                    </button>
+                    {(loginMethod === 'email' || (loginMethod === 'phone' && otpSent)) && (
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="btn-primary"
+                            style={{ width: '100%', padding: '0.9rem', fontSize: '1rem', marginTop: '0.25rem', borderRadius: '1rem' }}
+                        >
+                            {loading ? <span className="spinner"></span> : 'Sign In'}
+                        </button>
+                    )}
                 </form>
 
                 <p style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '1.5rem' }}>
