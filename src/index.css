@@ -242,14 +242,13 @@ body {
   color: var(--primary);
 }
 
-/* Premium input group for Auth pages with focus-within */
 .input-group {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   border: 1.5px solid var(--border-color);
   border-radius: 1rem;
-  padding: 0 1rem;
+  padding: 0.5rem 1.25rem;
   background: var(--bg-color);
   margin-bottom: 0.875rem;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -269,7 +268,7 @@ body {
   background: transparent;
   color: var(--text-main);
   font-size: 0.95rem;
-  padding: 0.9rem 0;
+  padding: 0.5rem 0;
   font-family: inherit;
 }
 
@@ -695,9 +694,10 @@ tr:hover {
   }
 
   /* Enhancing touch targets and mobile interactions */
-  button,
+  .btn-primary,
   .nav-item,
-  input {
+  .form-input,
+  .input-group {
     min-height: 48px;
   }
 
