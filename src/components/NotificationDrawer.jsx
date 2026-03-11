@@ -66,6 +66,7 @@ export default function NotificationDrawer() {
 
             {isDrawerOpen && (
                 <div className="animate-scale-in notification-drawer-content" style={{
+                    position: 'absolute',
                     top: 'calc(100% + 12px)',
                     right: 0,
                     width: 'calc(100vw - 2rem)',
