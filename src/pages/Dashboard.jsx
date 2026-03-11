@@ -314,16 +314,11 @@ export default function Dashboard() {
                     onConfirm={handleWithdraw}
                     loading={isWithdrawing}
                 />
-                <WithdrawSuccessModal
-                    data={withdrawSuccessData}
-                    onClose={() => setWithdrawSuccessData(null)}
-                    telebirr_number={user?.telebirr_number}
-                />
                 <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
                         <div className="creator-avatar" style={{ width: '56px', height: '56px', fontSize: '1.5rem', margin: 0, flexShrink: 0, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                             {user?.profilePicUrl ? (
-                                <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://gurshapay-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
                                 user?.name?.charAt(0) || '?'
                             )}
@@ -336,58 +331,66 @@ export default function Dashboard() {
                             </p>
                         </div>
                     </div>
-                    <div className="desktop-only desktop-only-header" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <div className="desktop-only" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                         <NotificationDrawer />
                     </div>
                 </header>
 
                 {/* Status Banners */}
-                {user?.kycStatus === 'none' && (
-                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid var(--warning)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                        <AlertTriangle size={24} color="var(--warning)" />
-                        <div style={{ flex: 1 }}>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Identity Verification Required</h3>
-                            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>Complete your KYC to enable Telebirr withdrawals.</p>
-                            <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Verify Now</button>
+                {
+                    user?.kycStatus === 'none' && (
+                        <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid var(--warning)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                            <AlertTriangle size={24} color="var(--warning)" />
+                            <div style={{ flex: 1 }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Identity Verification Required</h3>
+                                <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>Complete your KYC to enable Telebirr withdrawals.</p>
+                                <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Verify Now</button>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
-                {user?.kycStatus === 'pending' && (
-                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid var(--secondary)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                        <ShieldCheck size={24} color="var(--secondary)" />
-                        <div>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Verification in Progress</h3>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>We're reviewing your documents. This usually takes less than 24h.</p>
+                {
+                    user?.kycStatus === 'pending' && (
+                        <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid var(--secondary)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                            <ShieldCheck size={24} color="var(--secondary)" />
+                            <div>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Verification in Progress</h3>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>We're reviewing your documents. This usually takes less than 24h.</p>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
-                {user?.kycStatus === 'rejected' && (
-                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                        <XCircle size={24} color="var(--danger)" />
-                        <div style={{ flex: 1 }}>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Verification Rejected</h3>
-                            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>Your documents were not accepted. Please retry with clearer photos.</p>
-                            <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem', background: 'var(--danger)' }}>Retry Now</button>
+                {
+                    user?.kycStatus === 'rejected' && (
+                        <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                            <XCircle size={24} color="var(--danger)" />
+                            <div style={{ flex: 1 }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Verification Rejected</h3>
+                                <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>Your documents were not accepted. Please retry with clearer photos.</p>
+                                <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem', background: 'var(--danger)' }}>Retry Now</button>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
-                {user?.kycStatus === 'approved' && showVerifiedBanner && (
-                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)', border: '1px solid var(--success)', display: 'flex', alignItems: 'center', gap: '1rem', position: 'relative' }}>
-                        <div className="auth-icon" style={{ width: '48px', height: '48px', margin: 0, background: 'var(--success)' }}>
-                            <CheckCircle size={24} />
+                {
+                    user?.kycStatus === 'approved' && showVerifiedBanner && (
+                        <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)', border: '1px solid var(--success)', display: 'flex', alignItems: 'center', gap: '1rem', position: 'relative' }}>
+                            <div className="auth-icon" style={{ width: '48px', height: '48px', margin: 0, background: 'var(--success)' }}>
+                                <CheckCircle size={24} />
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)' }}>Identity Verified!</h3>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>You're all set to receive and withdraw tips.</p>
+                            </div>
+                            <button onClick={dismissVerifiedBanner} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.5rem' }}>
+                                <X size={20} />
+                            </button>
                         </div>
-                        <div style={{ flex: 1 }}>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)' }}>Identity Verified!</h3>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>You're all set to receive and withdraw tips.</p>
-                        </div>
-                        <button onClick={dismissVerifiedBanner} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.5rem' }}>
-                            <X size={20} />
-                        </button>
-                    </div>
-                )}
+                    )
+                }
 
                 {/* Share Link Section */}
                 <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)', color: 'white', border: 'none' }}>
@@ -518,7 +521,7 @@ export default function Dashboard() {
                         </table>
                     )}
                 </div>
-            </main>
-        </div>
+            </main >
+        </div >
     );
 }

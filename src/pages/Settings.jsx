@@ -153,7 +153,7 @@ export default function Settings() {
                                 <div style={{ position: 'relative' }}>
                                     <div className="creator-avatar" style={{ width: '80px', height: '80px', fontSize: '2rem', margin: 0, overflow: 'hidden' }}>
                                         {user?.profilePicUrl ? (
-                                            <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://gurshapay-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                         ) : (
                                             user?.name?.charAt(0) || '?'
                                         )}
@@ -204,7 +204,7 @@ export default function Settings() {
                                 </div>
                                 <span className="badge" style={{ marginLeft: 'auto' }}>Verified</span>
                             </div>
-                        </div>
+                        </div >
 
                         <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem', marginTop: '1.5rem' }}>Security</h3>
                         <div className="dashboard-card" style={{ padding: 0, overflow: 'hidden' }}>
@@ -220,7 +220,7 @@ export default function Settings() {
                                 badge="Off"
                             />
                         </div>
-                    </section>
+                    </section >
 
                     <section style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem' }}>Notifications</h3>
@@ -245,8 +245,8 @@ export default function Settings() {
                             </button>
                         </div>
                     </section>
-                </div>
-            </main>
-        </div>
+                </div >
+            </main >
+        </div >
     );
 }

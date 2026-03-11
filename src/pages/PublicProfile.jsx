@@ -79,7 +79,7 @@ export default function PublicProfile() {
         setTippingState('processing_pin');
 
         try {
-            const response = await axios.post('https://gurshapay-backend.onrender.com/api/payments/verify-test-pin', {
+            const response = await api.post('/payments/verify-test-pin', {
                 tx_ref: txRef,
                 pin: pin
             });
@@ -177,7 +177,7 @@ export default function PublicProfile() {
                             zIndex: 1
                         }}>
                             {creator.profilePicUrl ? (
-                                <img src={creator.profilePicUrl?.startsWith('http') ? creator.profilePicUrl : `https://gurshapay-backend.onrender.com${creator.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src={creator.profilePicUrl?.startsWith('http') ? creator.profilePicUrl : `https://wileta-backend.onrender.com${creator.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
                                 creator.name.charAt(0).toUpperCase()
                             )}

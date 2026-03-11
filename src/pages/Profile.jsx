@@ -58,7 +58,7 @@ export default function Profile() {
                 <div className="dashboard-card animate-fade-in" style={{ display: 'flex', gap: '2.5rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
                     <div className="creator-avatar" style={{ width: '120px', height: '120px', fontSize: '3rem', margin: 0, flexShrink: 0, overflow: 'hidden' }}>
                         {user?.profilePicUrl ? (
-                            <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://gurshapay-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
                             user?.name?.charAt(0) || user?.phone?.charAt(0) || '?'
                         )}
@@ -107,7 +107,7 @@ export default function Profile() {
                         </a>
                     </div>
                 </div>
-            </main>
-        </div>
+            </main >
+        </div >
     );
 }
