@@ -73,7 +73,7 @@ export default function Onboarding() {
                             required
                         />
                         <p style={{ fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.5rem', fontWeight: 500 }}>
-                            Your tip link: wileta.com/{username || 'username'}
+                            Your tip link: gurshapay.com/{username || 'username'}
                         </p>
                     </div>
 

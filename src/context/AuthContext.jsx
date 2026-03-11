@@ -7,7 +7,7 @@ export const useAuth = () => useContext(AuthContext);
 
 // Axios instance with base URL & interceptors - DEFINED OUTSIDE TO PREVENT INFINITE INTERCEPTOR LOOP
 const api = axios.create({
-    baseURL: 'https://wileta-backend.onrender.com/api',
+    baseURL: 'https://gurshapay-backend.onrender.com/api',
 });
 
 api.interceptors.request.use(config => {
