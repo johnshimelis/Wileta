@@ -12,10 +12,10 @@ import NotificationDrawer from '../components/NotificationDrawer';
 import { useNotification } from '../context/NotificationContext';
 import Sidebar from '../components/Sidebar';
 
-// Standalone Modal Components (Defined outside to prevent re-mounting)
+// Standalone Modal Components
 const WithdrawModal = ({
     show, onClose, withdrawType, setWithdrawType, balance,
-    customAmount, setCustomAmount, onConfirm, loading
+    customAmount, setCustomAmount, onConfirm, loading, user
 }) => {
     if (!show) return null;
     return (
@@ -24,12 +24,28 @@ const WithdrawModal = ({
             onClick={onClose}
         >
             <div className="auth-card" style={{ maxWidth: '440px', width: '90%', padding: '2.5rem', transform: 'none', animation: 'scale-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }} onClick={e => e.stopPropagation()}>
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                     <div style={{ width: '64px', height: '64px', background: 'var(--primary-light)', color: 'var(--primary)', borderRadius: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
                         <Wallet size={32} />
                     </div>
                     <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Withdraw Funds</h2>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Send your balance to your Telebirr account</p>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Send your balance to your linked account</p>
+                </div>
+
+                {/* Destination Display */}
+                <div style={{ background: 'var(--bg-color)', padding: '1rem', borderRadius: '0.75rem', border: '1px solid var(--border-color)', marginBottom: '1.5rem', textAlign: 'left', fontSize: '0.85rem' }}>
+                    <span style={{ fontWeight: 700, display: 'block', marginBottom: '0.25rem', color: 'var(--text-main)' }}>Payout Destination:</span>
+                    {user?.payoutMethod === 'bank' ? (
+                        <div>
+                            <span style={{ fontWeight: 600 }}>Bank:</span> {user.bankDetails?.bankName}<br/>
+                            <span style={{ fontWeight: 600 }}>Account:</span> {user.bankDetails?.accountNumber}<br/>
+                            <span style={{ fontWeight: 600 }}>Holder:</span> {user.bankDetails?.accountHolderName}
+                        </div>
+                    ) : (
+                        <div>
+                            <span style={{ fontWeight: 600 }}>Telebirr Number:</span> {user?.telebirr_number || user?.phone}
+                        </div>
+                    )}
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
@@ -89,7 +105,7 @@ const WithdrawModal = ({
     );
 };
 
-const WithdrawSuccessModal = ({ data, onClose, telebirr_number }) => {
+const WithdrawSuccessModal = ({ data, onClose, user }) => {
     if (!data) return null;
     return (
         <div
@@ -100,17 +116,23 @@ const WithdrawSuccessModal = ({ data, onClose, telebirr_number }) => {
                 <div style={{ width: '80px', height: '80px', background: 'var(--success)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', boxShadow: '0 10px 20px rgba(16, 185, 129, 0.3)' }}>
                     <CheckCircle size={40} />
                 </div>
-                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Transfer Successful!</h2>
-                <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Your funds have been sent to your Telebirr wallet.</p>
+                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Transfer Requested!</h2>
+                <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Your withdrawal request is pending admin review.</p>
 
                 <div style={{ background: 'var(--bg-color)', borderRadius: '1rem', padding: '1.5rem', border: '1px solid var(--border-color)', marginBottom: '2rem', textAlign: 'left' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                        <span style={{ color: 'var(--text-muted)' }}>Amount Sent</span>
+                        <span style={{ color: 'var(--text-muted)' }}>Amount Requested</span>
                         <span style={{ fontWeight: 800, color: 'var(--primary)' }}>{data.amount.toFixed(2)} ETB</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                        <span style={{ color: 'var(--text-muted)' }}>Recipient</span>
-                        <span style={{ fontWeight: 700 }}>{telebirr_number}</span>
+                        <span style={{ color: 'var(--text-muted)' }}>Payout Method</span>
+                        <span style={{ fontWeight: 700, textTransform: 'capitalize' }}>{user?.payoutMethod || 'telebirr'}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                        <span style={{ color: 'var(--text-muted)' }}>Recipient Destination</span>
+                        <span style={{ fontWeight: 700 }}>
+                            {user?.payoutMethod === 'bank' ? `${user.bankDetails?.bankName} (...${user.bankDetails?.accountNumber?.slice(-4)})` : (user?.telebirr_number || user?.phone)}
+                        </span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span style={{ color: 'var(--text-muted)' }}>New Balance</span>
@@ -129,11 +151,17 @@ export default function Dashboard() {
     const { triggerNotification } = useNotification();
     const navigate = useNavigate();
     const location = useLocation();
+
+    // Core Metrics and data
     const [metrics, setMetrics] = useState({ total_earned: 0, pending_balance: 0 });
     const [transactions, setTransactions] = useState([]);
-    const [copied, setCopied] = useState(false);
-    const [isWithdrawing, setIsWithdrawing] = useState(false);
+    const [leaderboard, setLeaderboard] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    // Form inputs and UI States
+    const [copied, setCopied] = useState(false);
+    const [obsCopied, setObsCopied] = useState(false);
+    const [isWithdrawing, setIsWithdrawing] = useState(false);
     const [showVerifiedBanner, setShowVerifiedBanner] = useState(
         localStorage.getItem(`dismissed_verified_${user?._id}`) !== 'true'
     );
@@ -144,15 +172,27 @@ export default function Dashboard() {
     const [withdrawSuccessData, setWithdrawSuccessData] = useState(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    // Payout settings states
+    const [payoutMethod, setPayoutMethod] = useState(user?.payoutMethod || 'telebirr');
+    const [bankName, setBankName] = useState(user?.bankDetails?.bankName || '');
+    const [accountNumber, setAccountNumber] = useState(user?.bankDetails?.accountNumber || '');
+    const [accountHolderName, setAccountHolderName] = useState(user?.bankDetails?.accountHolderName || '');
+    const [savingPayout, setSavingPayout] = useState(false);
+
+    // Sync settings states when user loads
+    useEffect(() => {
+        if (user) {
+            setPayoutMethod(user.payoutMethod || 'telebirr');
+            setBankName(user.bankDetails?.bankName || '');
+            setAccountNumber(user.bankDetails?.accountNumber || '');
+            setAccountHolderName(user.bankDetails?.accountHolderName || '');
+        }
+    }, [user]);
+
     // Close menu on navigation
     useEffect(() => {
         setIsMobileMenuOpen(false);
     }, [location.pathname]);
-
-    const showAlert = (message, type = 'success') => {
-        setAlert({ message, type });
-        setTimeout(() => setAlert(null), 5000);
-    };
 
     useEffect(() => {
         fetchDashboardData();
@@ -160,12 +200,17 @@ export default function Dashboard() {
 
     const fetchDashboardData = async () => {
         try {
-            const [metricsRes, txRes] = await Promise.all([
+            const [metricsRes, txRes, leaderboardRes] = await Promise.all([
                 api.get('/dashboard/metrics'),
-                api.get('/dashboard/transactions')
+                api.get('/dashboard/transactions'),
+                api.get('/dashboard/leaderboard').catch(err => {
+                    console.error("Leaderboard fetch failed:", err);
+                    return { data: [] };
+                })
             ]);
             setMetrics(metricsRes.data);
             setTransactions(txRes.data);
+            setLeaderboard(leaderboardRes.data);
         } catch (error) {
             console.error("Error fetching dashboard data", error);
         }
@@ -204,7 +249,7 @@ export default function Dashboard() {
     }, [user?.kycStatus, api, setUser]);
 
     const handleWithdraw = async () => {
-        // Strict KYC Guard — must be first
+        // Strict KYC Guard
         if (user?.kycStatus !== 'approved') {
             setShowWithdrawModal(false);
             triggerNotification({
@@ -238,7 +283,7 @@ export default function Dashboard() {
             setCustomAmount('');
             triggerNotification({
                 title: 'Withdrawal Initialized',
-                message: 'Your transfer to Telebirr has been successfully initiated.',
+                message: 'Your transfer request has been successfully created and queued.',
                 type: 'success'
             });
             // Refresh transactions log
@@ -254,6 +299,42 @@ export default function Dashboard() {
         setIsWithdrawing(false);
     };
 
+    const handleSavePayoutSettings = async (e) => {
+        e.preventDefault();
+        setSavingPayout(true);
+        try {
+            const payload = {
+                payoutMethod,
+                bankDetails: payoutMethod === 'bank' ? {
+                    bankName,
+                    accountNumber,
+                    accountHolderName
+                } : undefined
+            };
+            const res = await api.post('/auth/update-profile', payload);
+            setUser(res.data);
+            triggerNotification({
+                title: 'Settings Saved',
+                message: 'Your payout settings have been updated successfully.',
+                type: 'success'
+            });
+        } catch (err) {
+            triggerNotification({
+                title: 'Save Failed',
+                message: err.response?.data?.error || 'Failed to update payout settings.',
+                type: 'error'
+            });
+        }
+        setSavingPayout(false);
+    };
+
+    const maskPhone = (phone) => {
+        if (!phone) return 'Supporter';
+        const clean = phone.replace(/\D/g, '');
+        if (clean.length < 8) return phone;
+        return `${clean.slice(0, 4)}***${clean.slice(-4)}`;
+    };
+
     if (isLoading) {
         return (
             <div className="auth-container">
@@ -262,16 +343,6 @@ export default function Dashboard() {
         );
     }
 
-    const NavItem = ({ to, icon: Icon, label }) => {
-        const isActive = location.pathname === to;
-        return (
-            <Link to={to} className={`nav-item ${isActive ? 'active' : ''}`}>
-                <Icon size={20} />
-                <span className="nav-text">{label}</span>
-            </Link>
-        );
-    };
-
     return (
         <div className="app-layout">
             <style>{`
@@ -279,6 +350,7 @@ export default function Dashboard() {
                     .desktop-only-header { display: none !important; }
                 }
             `}</style>
+            
             <div className="mobile-header-container mobile-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <img src="/gurshapay-logo.png" alt="GurshaPay Logo" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
@@ -303,6 +375,7 @@ export default function Dashboard() {
 
             <main className="main-content">
                 {alert && <TopAlert message={alert.message} type={alert.type} onClose={() => setAlert(null)} />}
+                
                 <WithdrawModal
                     show={showWithdrawModal}
                     onClose={() => setShowWithdrawModal(false)}
@@ -313,7 +386,15 @@ export default function Dashboard() {
                     setCustomAmount={setCustomAmount}
                     onConfirm={handleWithdraw}
                     loading={isWithdrawing}
+                    user={user}
                 />
+
+                <WithdrawSuccessModal
+                    data={withdrawSuccessData}
+                    onClose={() => setWithdrawSuccessData(null)}
+                    user={user}
+                />
+
                 <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
                         <div className="creator-avatar" style={{ width: '56px', height: '56px', fontSize: '1.5rem', margin: 0, flexShrink: 0, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
@@ -337,63 +418,55 @@ export default function Dashboard() {
                 </header>
 
                 {/* Status Banners */}
-                {
-                    user?.kycStatus === 'none' && (
-                        <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid var(--warning)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                            <AlertTriangle size={24} color="var(--warning)" />
-                            <div style={{ flex: 1 }}>
-                                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Identity Verification Required</h3>
-                                <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>Complete your KYC to enable Telebirr withdrawals.</p>
-                                <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Verify Now</button>
-                            </div>
+                {user?.kycStatus === 'none' && (
+                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid var(--warning)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                        <AlertTriangle size={24} color="var(--warning)" style={{ flexShrink: 0 }} />
+                        <div style={{ flex: 1 }}>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Identity Verification Required</h3>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>Complete your KYC to enable Telebirr and Bank withdrawals.</p>
+                            <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Verify Now</button>
                         </div>
-                    )
-                }
+                    </div>
+                )}
 
-                {
-                    user?.kycStatus === 'pending' && (
-                        <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid var(--secondary)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                            <ShieldCheck size={24} color="var(--secondary)" />
-                            <div>
-                                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Verification in Progress</h3>
-                                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>We're reviewing your documents. This usually takes less than 24h.</p>
-                            </div>
+                {user?.kycStatus === 'pending' && (
+                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid var(--secondary)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                        <ShieldCheck size={24} color="var(--secondary)" style={{ flexShrink: 0 }} />
+                        <div>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Verification in Progress</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>We're reviewing your documents. This usually takes less than 24h.</p>
                         </div>
-                    )
-                }
+                    </div>
+                )}
 
-                {
-                    user?.kycStatus === 'rejected' && (
-                        <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                            <XCircle size={24} color="var(--danger)" />
-                            <div style={{ flex: 1 }}>
-                                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Verification Rejected</h3>
-                                <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>Your documents were not accepted. Please retry with clearer photos.</p>
-                                <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem', background: 'var(--danger)' }}>Retry Now</button>
-                            </div>
+                {user?.kycStatus === 'rejected' && (
+                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                        <XCircle size={24} color="var(--danger)" style={{ flexShrink: 0 }} />
+                        <div style={{ flex: 1 }}>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Verification Rejected</h3>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>Your documents were not accepted. Please retry with clearer photos.</p>
+                            <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem', background: 'var(--danger)' }}>Retry Now</button>
                         </div>
-                    )
-                }
+                    </div>
+                )}
 
-                {
-                    user?.kycStatus === 'approved' && showVerifiedBanner && (
-                        <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)', border: '1px solid var(--success)', display: 'flex', alignItems: 'center', gap: '1rem', position: 'relative' }}>
-                            <div className="auth-icon" style={{ width: '48px', height: '48px', margin: 0, background: 'var(--success)' }}>
-                                <CheckCircle size={24} />
-                            </div>
-                            <div style={{ flex: 1 }}>
-                                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)' }}>Identity Verified!</h3>
-                                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>You're all set to receive and withdraw tips.</p>
-                            </div>
-                            <button onClick={dismissVerifiedBanner} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.5rem' }}>
-                                <X size={20} />
-                            </button>
+                {user?.kycStatus === 'approved' && showVerifiedBanner && (
+                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)', border: '1px solid var(--success)', display: 'flex', alignItems: 'center', gap: '1rem', position: 'relative' }}>
+                        <div className="auth-icon" style={{ width: '48px', height: '48px', margin: 0, background: 'var(--success)' }}>
+                            <CheckCircle size={24} />
                         </div>
-                    )
-                }
+                        <div style={{ flex: 1 }}>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)' }}>Identity Verified!</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>You're all set to receive and withdraw tips.</p>
+                        </div>
+                        <button onClick={dismissVerifiedBanner} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.5rem' }}>
+                            <X size={20} />
+                        </button>
+                    </div>
+                )}
 
                 {/* Share Link Section */}
-                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)', color: 'white', border: 'none' }}>
+                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)', color: 'white', border: 'none' }}>
                     <div style={{ flex: '1 1 200px', minWidth: 0 }}>
                         <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', color: 'white' }}>Quick Tipping Link</h2>
                         <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.95rem', fontWeight: 500 }}>Share this link to start receiving support</p>
@@ -417,7 +490,37 @@ export default function Dashboard() {
                     </div>
                 </div>
 
+                {/* OBS Alert Overlay Section */}
+                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', background: 'rgba(30, 41, 59, 0.05)', border: '1px solid var(--border-color)' }}>
+                    <div style={{ flex: '1 1 300px', minWidth: 0 }}>
+                        <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-main)' }}>
+                            <span style={{ display: 'inline-flex', padding: '6px', borderRadius: '0.5rem', background: 'rgba(15, 157, 88, 0.1)', color: '#0F9D58' }}>⚡</span>
+                            OBS Stream Alert Overlay
+                        </h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Add this link as a **Browser Source** (1920x1080) in OBS Studio for real-time tip alerts.</p>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-color)', padding: '0.5rem', borderRadius: '1rem', flex: '1 1 300px', minWidth: '0', border: '1px solid var(--border-color)' }}>
+                        <span
+                            style={{ padding: '0.5rem 1rem', flex: 1, minWidth: 0, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600, color: 'var(--text-muted)', fontSize: '0.85rem' }}
+                            title="OBS Browser Source URL"
+                        >
+                            {window.location.origin}/overlay/{user?._id}
+                        </span>
+                        <button
+                            onClick={() => {
+                                navigator.clipboard.writeText(`${window.location.origin}/overlay/${user?._id}`);
+                                setObsCopied(true);
+                                setTimeout(() => setObsCopied(false), 2000);
+                            }}
+                            style={{ background: 'var(--primary)', border: 'none', cursor: 'pointer', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, transition: 'all 0.2s' }}
+                        >
+                            {obsCopied ? <><CheckCircle size={16} /> Copied</> : <><Copy size={16} /> Copy Link</>}
+                        </button>
+                    </div>
+                </div>
+
                 <div className="dashboard-grid animate-fade-in delay-2">
+                    {/* Card 1: Wallet Balance */}
                     <div className="dashboard-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -434,7 +537,7 @@ export default function Dashboard() {
                             disabled={metrics.pending_balance <= 0 || isWithdrawing || user?.kycStatus !== 'approved'}
                             style={{ width: '100%', padding: '1rem' }}
                         >
-                            Withdraw to Telebirr
+                            Withdraw Funds
                         </button>
                         {user?.kycStatus !== 'approved' && (
                             <div style={{ color: 'var(--danger)', fontSize: '0.8rem', textAlign: 'center', marginTop: '-0.75rem', fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}>
@@ -444,6 +547,7 @@ export default function Dashboard() {
                         )}
                     </div>
 
+                    {/* Card 2: Lifetime Earnings */}
                     <div className="dashboard-card">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
                             <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -460,8 +564,173 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '2rem 0 1.5rem' }}>
-                    <h2 style={{ fontSize: '1.4rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {/* Additional Row: Leaderboard and Payout Settings */}
+                <div className="dashboard-grid animate-fade-in delay-2" style={{ marginTop: '2.5rem' }}>
+                    {/* Leaderboard Card */}
+                    <div className="dashboard-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                            <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'rgba(251, 188, 5, 0.1)', color: '#FBBC05', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <User size={20} />
+                            </div>
+                            <div>
+                                <h3 style={{ fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 700, margin: 0 }}>Top Fans Leaderboard</h3>
+                                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>Top contributors supporting you</p>
+                            </div>
+                        </div>
+
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
+                            {leaderboard.length === 0 ? (
+                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 1rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                                    <p style={{ fontSize: '0.9rem', margin: '0 0 0.5rem' }}>No tips received yet.</p>
+                                    <p style={{ fontSize: '0.8rem', margin: 0 }}>Share your tipping page to start building your community!</p>
+                                </div>
+                            ) : (
+                                leaderboard.map((fan, index) => (
+                                    <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem 1rem', background: 'var(--bg-color)', borderRadius: '1rem', border: '1px solid var(--border-color)' }}>
+                                        <div style={{
+                                            width: '28px',
+                                            height: '28px',
+                                            borderRadius: '50%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '0.85rem',
+                                            fontWeight: 800,
+                                            background: index === 0 ? '#FBBC05' : index === 1 ? '#94A3B8' : index === 2 ? '#B45309' : 'var(--border-color)',
+                                            color: index < 3 ? 'white' : 'var(--text-muted)'
+                                        }}>
+                                            {index + 1}
+                                        </div>
+                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                            <span style={{ fontSize: '0.9rem', fontWeight: 700, display: 'block', color: 'var(--text-main)' }}>
+                                                {maskPhone(fan._id)}
+                                            </span>
+                                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                                Last tip: {new Date(fan.lastTipAt).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                        <div style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.95rem' }}>
+                                            {fan.totalTipped.toFixed(2)} ETB
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Payout Settings Card */}
+                    <div className="dashboard-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                            <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'rgba(147, 51, 234, 0.1)', color: '#9333EA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Settings size={20} />
+                            </div>
+                            <div>
+                                <h3 style={{ fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 700, margin: 0 }}>Payout Details</h3>
+                                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>Manage withdrawal bank or Telebirr configuration</p>
+                            </div>
+                        </div>
+
+                        <form onSubmit={handleSavePayoutSettings} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '0.5rem' }}>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Payout Option</label>
+                                <div style={{ display: 'flex', background: 'var(--bg-color)', borderRadius: '0.75rem', padding: '3px', border: '1px solid var(--border-color)' }}>
+                                    <button
+                                        type="button"
+                                        onClick={() => setPayoutMethod('telebirr')}
+                                        style={{
+                                            flex: 1, padding: '0.5rem', borderRadius: '0.6rem', border: 'none', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer',
+                                            background: payoutMethod === 'telebirr' ? 'var(--card-bg)' : 'transparent',
+                                            color: payoutMethod === 'telebirr' ? 'var(--primary)' : 'var(--text-muted)',
+                                            boxShadow: payoutMethod === 'telebirr' ? 'var(--shadow-sm)' : 'none',
+                                            fontFamily: 'inherit'
+                                        }}
+                                    >
+                                        Telebirr
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setPayoutMethod('bank')}
+                                        style={{
+                                            flex: 1, padding: '0.5rem', borderRadius: '0.6rem', border: 'none', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer',
+                                            background: payoutMethod === 'bank' ? 'var(--card-bg)' : 'transparent',
+                                            color: payoutMethod === 'bank' ? 'var(--primary)' : 'var(--text-muted)',
+                                            boxShadow: payoutMethod === 'bank' ? 'var(--shadow-sm)' : 'none',
+                                            fontFamily: 'inherit'
+                                        }}
+                                    >
+                                        Bank Transfer
+                                    </button>
+                                </div>
+                            </div>
+
+                            {payoutMethod === 'telebirr' ? (
+                                <div style={{ background: 'var(--bg-color)', padding: '1rem', borderRadius: '0.75rem', border: '1px solid var(--border-color)', fontSize: '0.85rem' }}>
+                                    <p style={{ margin: 0, color: 'var(--text-muted)' }}>
+                                        Withdrawals will automatically route to your verified onboarded Telebirr number: 
+                                        <strong style={{ display: 'block', marginTop: '0.25rem', color: 'var(--text-main)' }}>
+                                            {user?.telebirr_number || user?.phone}
+                                        </strong>
+                                    </p>
+                                </div>
+                            ) : (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <select
+                                            className="form-input"
+                                            value={bankName}
+                                            onChange={e => setBankName(e.target.value)}
+                                            required
+                                            style={{ width: '100%', fontFamily: 'inherit', padding: '0.6rem' }}
+                                        >
+                                            <option value="">Select Bank...</option>
+                                            <option value="Commercial Bank of Ethiopia (CBE)">Commercial Bank of Ethiopia (CBE)</option>
+                                            <option value="Awash International Bank">Awash International Bank</option>
+                                            <option value="Dashen Bank">Dashen Bank</option>
+                                            <option value="Bank of Abyssinia">Bank of Abyssinia</option>
+                                            <option value="Wegagen Bank">Wegagen Bank</option>
+                                            <option value="Nib International Bank">Nib International Bank</option>
+                                            <option value="Cooperative Bank of Oromia">Cooperative Bank of Oromia</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            placeholder="Account Number"
+                                            value={accountNumber}
+                                            onChange={e => setAccountNumber(e.target.value)}
+                                            required
+                                            style={{ padding: '0.6rem' }}
+                                        />
+                                    </div>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            placeholder="Account Holder Name"
+                                            value={accountHolderName}
+                                            onChange={e => setAccountHolderName(e.target.value)}
+                                            required
+                                            style={{ padding: '0.6rem' }}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            <button
+                                type="submit"
+                                disabled={savingPayout}
+                                className="btn-primary"
+                                style={{ width: '100%', padding: '0.75rem', marginTop: 'auto' }}
+                            >
+                                {savingPayout ? <span className="spinner"></span> : 'Save Payout Details'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '2.5rem 0 1.5rem' }}>
+                    <h2 style={{ fontSize: '1.4rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
                         <History size={20} color="var(--primary)" /> Activity Log
                     </h2>
                 </div>
@@ -478,7 +747,7 @@ export default function Dashboard() {
                             <thead>
                                 <tr>
                                     <th>Date</th>
-                                    <th>Source</th>
+                                    <th>Source / Type</th>
                                     <th>Amount</th>
                                     <th>Status</th>
                                 </tr>
@@ -490,10 +759,10 @@ export default function Dashboard() {
                                         <td style={{ fontWeight: 600 }}>
                                             {tx.type === 'withdrawal' ? (
                                                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-main)' }}>
-                                                    <ArrowUpRight size={14} /> Withdrawal
+                                                    <ArrowUpRight size={14} /> Withdrawal Request
                                                 </span>
                                             ) : (
-                                                tx.tipperPhone || 'Anonymous Tipper'
+                                                maskPhone(tx.tipperPhone)
                                             )}
                                         </td>
                                         <td style={{
@@ -508,8 +777,8 @@ export default function Dashboard() {
                                                 borderRadius: '2rem',
                                                 fontSize: '0.8rem',
                                                 fontWeight: 700,
-                                                background: tx.status === 'success' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 158, 11, 0.1)',
-                                                color: tx.status === 'success' ? 'var(--success)' : 'var(--warning)',
+                                                background: tx.status === 'success' ? 'rgba(16, 185, 129, 0.1)' : tx.status === 'failed' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)',
+                                                color: tx.status === 'success' ? 'var(--success)' : tx.status === 'failed' ? 'var(--danger)' : 'var(--warning)',
                                                 textTransform: 'capitalize'
                                             }}>
                                                 {tx.status}
@@ -522,6 +791,6 @@ export default function Dashboard() {
                     )}
                 </div>
             </main >
-        </div >
+        </div>
     );
 }

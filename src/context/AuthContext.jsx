@@ -7,7 +7,9 @@ export const useAuth = () => useContext(AuthContext);
 
 // Axios instance with base URL & interceptors - DEFINED OUTSIDE TO PREVENT INFINITE INTERCEPTOR LOOP
 const api = axios.create({
-    baseURL: 'https://wileta-backend.onrender.com/api',
+    baseURL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000/api'
+        : 'https://wileta-backend.onrender.com/api',
 });
 
 api.interceptors.request.use(config => {

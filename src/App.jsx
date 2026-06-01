@@ -10,6 +10,7 @@ import PublicProfile from './pages/PublicProfile';
 import KYCVerification from './pages/KYCVerification';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import Overlay from './pages/Overlay';
 import './index.css';
 
 // Protected Route Component
@@ -81,6 +82,9 @@ function App() {
             } />
             {/* Public Tipping Page */}
             <Route path="/:username" element={<PublicProfile />} />
+            <Route path="/@:username" element={<PublicProfile />} />
+            {/* OBS Stream Overlay */}
+            <Route path="/overlay/:creatorId" element={<Overlay />} />
             {/* Default Route */}
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Routes>
