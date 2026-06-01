@@ -296,38 +296,6 @@ export default function Login() {
                         </svg>
                         Continue with Google
                     </button>
-
-                    <button
-                        type="button"
-                        onClick={() => {
-                            const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                                ? 'http://localhost:5000'
-                                : 'https://wileta-backend.onrender.com';
-                            window.location.href = `${backendUrl}/api/auth/tiktok`;
-                        }}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '0.75rem',
-                            width: '100%',
-                            padding: '0.8rem',
-                            borderRadius: '1rem',
-                            border: 'none',
-                            background: '#000000',
-                            color: 'white',
-                            fontWeight: 600,
-                            fontSize: '0.9rem',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s',
-                            fontFamily: 'inherit'
-                        }}
-                    >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.52-4.09-1.34a7.27 7.27 0 0 1-2.22-2.31c-.02 2.76-.01 5.51-.02 8.27-.04 1.56-.47 3.19-1.43 4.45a7.35 7.35 0 0 1-5.18 3.13 7.41 7.41 0 0 1-6.19-2.03c-1.63-1.63-2.32-4.08-1.78-6.36A7.37 7.37 0 0 1 7.6 1.83v4.14c-1.39.46-2.5 1.65-2.82 3.08-.41 1.72.19 3.69 1.59 4.73A3.33 3.33 0 0 0 10.6 14.1c1.55-.4 2.6-1.85 2.58-3.46.03-3.54.01-7.08.02-10.62Z"/>
-                        </svg>
-                        Continue with TikTok
-                    </button>
                 </div>
 
                 <p style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
