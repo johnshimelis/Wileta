@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Deletion Request - GurshaPay</title>
+    <link rel="icon" type="image/png" href="/gurshapay-logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0F9D58;
+            --primary-light: rgba(15, 157, 88, 0.08);
+            --primary-dark: #0B8043;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --border-color: #E2E8F0;
+            --danger: #EF4444;
+            --danger-light: rgba(239, 68, 68, 0.08);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-main: #F1F5F9;
+                --text-muted: #94A3B8;
+                --bg-color: #0B0F19;
+                --card-bg: #0F172A;
+                --border-color: #334155;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 580px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.06), 0 0 0 1px var(--border-color);
+            border: 1px solid var(--border-color);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            justify-content: center;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 26px;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-color);
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .tab-btn.active {
+            background: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(15, 157, 88, 0.2);
+            font-family: inherit;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        .alert-success {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            display: block;
+        }
+
+        .alert-danger {
+            background: var(--danger-light);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            display: block;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footer-note {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+        }
+
+        .footer-note a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="/gurshapay-logo.png" alt="GurshaPay Logo" class="logo">
+            <h1>GurshaPay Data Safety</h1>
+        </div>
+        <p class="subtitle">Submit a request to delete your account or specific data fields under our Data Protection policy.</p>
+        
+        <div id="alert-box" class="alert"></div>
+
+        <div class="tabs">
+            <button type="button" id="tab-account" class="tab-btn active" onclick="switchTab('account')">Delete Entire Account</button>
+            <button type="button" id="tab-data" class="tab-btn" onclick="switchTab('data')">Delete Specific Data Only</button>
+        </div>
+
+        <form id="deletion-form" onsubmit="handleSubmit(event)">
+            <input type="hidden" id="request-type" value="account">
+
+            <div class="form-group">
+                <label id="identity-label" for="identity">Phone Number or Email Address</label>
+                <input type="text" id="identity" class="form-input" placeholder="e.g. 0911000000 or email@domain.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="full-name">Full Name (as registered on profile)</label>
+                <input type="text" id="full-name" class="form-input" placeholder="e.g. Abebe Kebede" required>
+            </div>
+
+            <div class="form-group" id="data-fields-group" style="display: none;">
+                <label for="data-fields">Which specific data do you want deleted?</label>
+                <select id="data-fields" class="form-input">
+                    <option value="tipping_history">Clear Tipping/Transfer History</option>
+                    <option value="linked_bank">Remove Linked Bank/Payout Details</option>
+                    <option value="bio_avatar">Remove Bio, Photo & Social Links</option>
+                    <option value="all_except_account">Remove all profile details (Keep Account active)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="reason">Reason for request (Optional)</label>
+                <textarea id="reason" class="form-input" placeholder="Please let us know how we can improve..."></textarea>
+            </div>
+
+            <button type="submit" id="submit-btn" class="btn-submit">
+                Submit Deletion Request
+            </button>
+        </form>
+
+        <div class="footer-note">
+            Requests are processed manually within 30 days. For direct assistance, email <a href="mailto:support@gurshapay.com">support@gurshapay.com</a>.
+        </div>
+    </div>
+
+    <script>
+        function switchTab(type) {
+            document.getElementById('request-type').value = type;
+            const alertBox = document.getElementById('alert-box');
+            alertBox.style.display = 'none';
+
+            if (type === 'account') {
+                document.getElementById('tab-account').classList.add('active');
+                document.getElementById('tab-data').classList.remove('active');
+                document.getElementById('data-fields-group').style.display = 'none';
+                document.getElementById('identity-label').textContent = 'Phone Number or Email Address';
+                document.getElementById('submit-btn').textContent = 'Submit Account Deletion Request';
+                document.getElementById('submit-btn').style.background = 'var(--danger)';
+                document.getElementById('submit-btn').style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.2)';
+            } else {
+                document.getElementById('tab-data').classList.add('active');
+                document.getElementById('tab-account').classList.remove('remove'); // safety
+                document.getElementById('tab-account').classList.remove('active');
+                document.getElementById('data-fields-group').style.display = 'block';
+                document.getElementById('identity-label').textContent = 'Phone Number or Email Address';
+                document.getElementById('submit-btn').textContent = 'Submit Data Deletion Request';
+                document.getElementById('submit-btn').style.background = 'var(--primary)';
+                document.getElementById('submit-btn').style.boxShadow = '0 4px 12px rgba(15, 157, 88, 0.2)';
+            }
+        }
+
+        // Initialize styled background button
+        switchTab('account');
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+            const alertBox = document.getElementById('alert-box');
+            const submitBtn = document.getElementById('submit-btn');
+            alertBox.style.display = 'none';
+
+            const identity = document.getElementById('identity').value.trim();
+            const name = document.getElementById('full-name').value.trim();
+            const type = document.getElementById('request-type').value;
+            const reasonField = document.getElementById('reason').value.trim();
+            const dataFieldVal = document.getElementById('data-fields').value;
+
+            let reason = reasonField;
+            if (type === 'data') {
+                reason = `[Specific Data Deletion: ${dataFieldVal}] ` + reason;
+            }
+
+            submitBtn.disabled = true;
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+            const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:5000'
+                : 'https://wileta-backend.onrender.com';
+
+            try {
+                const response = await fetch(`${backendUrl}/api/public/request-deletion`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ identity, name, reason, type }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alertBox.className = 'alert alert-success';
+                    alertBox.textContent = data.message || 'Request submitted successfully.';
+                    alertBox.style.display = 'block';
+                    document.getElementById('deletion-form').reset();
+                    switchTab(type); // reset states
+                } else {
+                    alertBox.className = 'alert alert-danger';
+                    alertBox.textContent = data.error || 'Failed to submit request.';
+                    alertBox.style.display = 'block';
+                }
+            } catch (err) {
+                console.error(err);
+                alertBox.className = 'alert alert-danger';
+                alertBox.textContent = 'Server connection failed. Please try again later or email us directly.';
+                alertBox.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        }
+    </script>
+</body>
+</html>
