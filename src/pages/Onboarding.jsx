@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { UserPlus, AlertCircle } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function Onboarding() {
     const [name, setName] = useState('');
@@ -11,6 +14,7 @@ export default function Onboarding() {
     const [loading, setLoading] = useState(false);
 
     const { onboard } = useAuth();
+    const { t } = useLanguage();
     const navigate = useNavigate();
 
     const handleOnboard = async (e) => {
@@ -29,15 +33,21 @@ export default function Onboarding() {
     };
 
     return (
-        <div className="auth-container">
+        <div className="auth-container" style={{ position: 'relative' }}>
+            {/* Top Right Actions */}
+            <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', zIndex: 10, display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <LanguageToggle />
+                <ThemeToggle />
+            </div>
+
             <div className="auth-card animate-fade-in">
                 <div className="auth-header">
                     <div className="auth-icon animate-fade-in delay-1">
                         <UserPlus size={32} />
                     </div>
-                    <h2 className="auth-title animate-fade-in delay-1">Complete Your Profile</h2>
+                    <h2 className="auth-title animate-fade-in delay-1">{t('onboardingTitle')}</h2>
                     <p className="auth-subtitle animate-fade-in delay-2">
-                        Set up your creator account to start receiving tips directly to your Telebirr.
+                        {t('onboardingDesc2')}
                     </p>
                 </div>
 
@@ -49,12 +59,12 @@ export default function Onboarding() {
                     )}
 
                     <div className="form-group">
-                        <label htmlFor="name" className="form-label">Full Name</label>
+                        <label htmlFor="name" className="form-label">{t('fullName')}</label>
                         <input
                             id="name"
                             type="text"
                             className="form-input"
-                            placeholder="e.g. Abebe Kebede"
+                            placeholder={t('fullNamePlaceholder')}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
@@ -62,28 +72,28 @@ export default function Onboarding() {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="username" className="form-label">Choose a Username</label>
+                        <label htmlFor="username" className="form-label">{t('chooseUsernameLabel')}</label>
                         <input
                             id="username"
                             type="text"
                             className="form-input"
-                            placeholder="e.g. abebe251"
+                            placeholder={t('usernamePlaceholder')}
                             value={username}
                             onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
                             required
                         />
                         <p style={{ fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.5rem', fontWeight: 500 }}>
-                            Your tip link: gurshapay.com/{username || 'username'}
+                            {t('yourTipLink')}: gurshapay.com/{username || 'username'}
                         </p>
                     </div>
 
                     <div className="form-group" style={{ marginBottom: '2rem' }}>
-                        <label htmlFor="telebirr" className="form-label">Telebirr Phone Number</label>
+                        <label htmlFor="telebirr" className="form-label">{t('yourTelebirrNumber')}</label>
                         <input
                             id="telebirr"
                             type="tel"
                             className="form-input"
-                            placeholder="e.g. 0911000000"
+                            placeholder={t('telebirrPlaceholderOnboard')}
                             value={telebirrInfo}
                             onChange={(e) => setTelebirrInfo(e.target.value)}
                             style={{ color: '#0f172a' }}
@@ -92,7 +102,7 @@ export default function Onboarding() {
                     </div>
 
                     <button type="submit" className="btn-primary" disabled={loading}>
-                        {loading ? <span className="spinner"></span> : 'Complete Setup'}
+                        {loading ? <span className="spinner"></span> : t('finishSetup')}
                     </button>
                 </form>
             </div>

@@ -10,9 +10,11 @@ import ThemeToggle from '../components/ThemeToggle';
 import TopAlert from '../components/TopAlert';
 import Sidebar from '../components/Sidebar';
 import NotificationDrawer from '../components/NotificationDrawer';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Settings() {
     const { user, setUser, api, logout } = useAuth();
+    const { t, language, setLanguage } = useLanguage();
     const [name, setName] = useState(user?.name || '');
     const [username, setUsername] = useState(user?.username || '');
     const [saving, setSaving] = useState(false);
@@ -59,7 +61,7 @@ export default function Settings() {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             setUser(res.data);
-            showAlert("Profile picture updated!");
+            showAlert(t('changesSaved'));
         } catch (error) {
             showAlert(error.response?.data?.error || "Upload failed", "error");
         }
@@ -68,7 +70,7 @@ export default function Settings() {
 
     const handleSave = async () => {
         if (!name || !username) {
-            showAlert("Name and Username are required", "error");
+            showAlert(`${t('nameRequired')} & ${t('usernameRequired')}`, "error");
             return;
         }
         setSaving(true);
@@ -132,8 +134,8 @@ export default function Settings() {
                 {alert && <TopAlert message={alert.message} type={alert.type} onClose={() => setAlert(null)} />}
                 <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
                     <div>
-                        <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em' }}>Settings</h1>
-                        <p style={{ color: 'var(--text-muted)' }}>Customize your experience and account security</p>
+                        <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em' }}>{t('settingsTitle')}</h1>
+                        <p style={{ color: 'var(--text-muted)' }}>{t('settingsSubtitle')}</p>
                     </div>
                     <button
                         onClick={handleSave}
@@ -141,13 +143,13 @@ export default function Settings() {
                         style={{ width: 'auto', padding: '0.75rem 1.5rem', fontSize: '1rem' }}
                         disabled={saving}
                     >
-                        {saved ? <><CheckCircle size={18} /> Changes Saved</> : (saving ? <span className="spinner"></span> : <><Save size={18} /> Save Changes</>)}
+                        {saved ? <><CheckCircle size={18} /> {t('changesSavedShort')}</> : (saving ? <span className="spinner"></span> : <><Save size={18} /> {t('saveSettings')}</>)}
                     </button>
                 </header>
 
                 <div className="animate-fade-in" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem' }}>
                     <section style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem' }}>General Settings</h3>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem' }}>{t('generalSettings')}</h3>
                         <div className="dashboard-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
                                 <div style={{ position: 'relative' }}>
@@ -171,77 +173,110 @@ export default function Settings() {
                                     </label>
                                 </div>
                                 <div>
-                                    <h4 style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Profile Picture</h4>
-                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>PNG or JPG. Max 5MB.</p>
-                                    {uploading && <p style={{ fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.25rem' }}>Uploading...</p>}
+                                    <h4 style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{t('profilePicture')}</h4>
+                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{t('profilePictureLimit')}</p>
+                                    {uploading && <p style={{ fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.25rem' }}>{t('saving')}</p>}
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="form-label" style={{ marginBottom: '0.5rem', display: 'block' }}>Display Name</label>
+                                <label className="form-label" style={{ marginBottom: '0.5rem', display: 'block' }}>{t('displayName')}</label>
                                 <input
                                     type="text"
                                     className="form-input"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    placeholder="Your full name"
+                                    placeholder={t('fullNamePlaceholder')}
                                 />
                             </div>
                             <div className="form-group">
-                                <label className="form-label" style={{ marginBottom: '0.5rem', display: 'block' }}>Username (@)</label>
+                                <label className="form-label" style={{ marginBottom: '0.5rem', display: 'block' }}>{t('usernameLabelWithAt')}</label>
                                 <input
                                     type="text"
                                     className="form-input"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
-                                    placeholder="username"
+                                    placeholder={t('username')}
                                 />
                             </div>
                             <div style={{ padding: '1rem', background: 'var(--bg-color)', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                                 <Smartphone size={20} color="var(--primary)" />
                                 <div>
-                                    <p style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)' }}>Linked Telebirr</p>
+                                    <p style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)' }}>{t('linkedTelebirr')}</p>
                                     <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{user?.phone}</p>
                                 </div>
-                                <span className="badge" style={{ marginLeft: 'auto' }}>Verified</span>
+                                <span className="badge" style={{ marginLeft: 'auto' }}>{t('verifiedText')}</span>
                             </div>
                         </div >
 
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem', marginTop: '1.5rem' }}>Security</h3>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem', marginTop: '1.5rem' }}>{t('language')}</h3>
+                        <div className="dashboard-card" style={{ padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-main)' }}>{t('language')}</span>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => setLanguage('en')}
+                                    className="btn-primary"
+                                    style={{
+                                        width: 'auto', padding: '0.4rem 1rem', fontSize: '0.85rem', borderRadius: '0.5rem',
+                                        background: language === 'en' ? 'var(--primary)' : 'var(--card-bg)',
+                                        color: language === 'en' ? 'white' : 'var(--text-main)',
+                                        border: '1px solid var(--border-color)', boxShadow: 'none'
+                                    }}
+                                >
+                                    English
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setLanguage('am')}
+                                    className="btn-primary"
+                                    style={{
+                                        width: 'auto', padding: '0.4rem 1rem', fontSize: '0.85rem', borderRadius: '0.5rem',
+                                        background: language === 'am' ? 'var(--primary)' : 'var(--card-bg)',
+                                        color: language === 'am' ? 'white' : 'var(--text-main)',
+                                        border: '1px solid var(--border-color)', boxShadow: 'none'
+                                    }}
+                                >
+                                    አማርኛ
+                                </button>
+                            </div>
+                        </div>
+
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem', marginTop: '1.5rem' }}>{t('securityTitle')}</h3>
                         <div className="dashboard-card" style={{ padding: 0, overflow: 'hidden' }}>
                             <SettingRow
                                 icon={Lock}
-                                title="Password"
-                                description="Update your account password"
+                                title={t('passwordTitle')}
+                                description={t('passwordDesc')}
                             />
                             <SettingRow
                                 icon={ShieldCheck}
-                                title="Two-Factor"
-                                description="Secure your account with 2FA"
-                                badge="Off"
+                                title={t('twoFactorTitle')}
+                                description={t('twoFactorDesc')}
+                                badge={t('offStatus')}
                             />
                         </div>
                     </section >
 
                     <section style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem' }}>Notifications</h3>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem' }}>{t('notificationsTitle')}</h3>
                         <div className="dashboard-card" style={{ padding: 0, overflow: 'hidden' }}>
                             <SettingRow
                                 icon={Bell}
-                                title="Push Notifications"
-                                description="Notify when you receive a new tip"
+                                title={t('pushNotifications')}
+                                description={t('pushNotificationsDesc')}
                             />
                             <SettingRow
                                 icon={Mail}
-                                title="Email Reports"
-                                description="Weekly summary of your earnings"
+                                title={t('emailReports')}
+                                description={t('emailReportsDesc')}
                             />
                         </div>
 
                         <div className="dashboard-card" style={{ marginTop: 'auto', background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-                            <h4 style={{ color: 'var(--danger)', fontWeight: 800, marginBottom: '0.5rem' }}>Danger Zone</h4>
-                            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Once you delete your account, there is no going back. Please be certain.</p>
+                            <h4 style={{ color: 'var(--danger)', fontWeight: 800, marginBottom: '0.5rem' }}>{t('dangerZone')}</h4>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{t('deleteNotice2')}</p>
                             <button className="btn-primary" style={{ background: 'transparent', color: 'var(--danger)', border: '1px solid var(--danger)', boxShadow: 'none', fontSize: '0.9rem', padding: '0.5rem 1rem', width: 'auto' }}>
-                                Deactivate Account
+                                {t('deactivateAccount')}
                             </button>
                         </div>
                     </section>

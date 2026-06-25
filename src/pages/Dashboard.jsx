@@ -11,12 +11,14 @@ import TopAlert from '../components/TopAlert';
 import NotificationDrawer from '../components/NotificationDrawer';
 import { useNotification } from '../context/NotificationContext';
 import Sidebar from '../components/Sidebar';
+import { useLanguage } from '../context/LanguageContext';
 
 // Standalone Modal Components
 const WithdrawModal = ({
     show, onClose, withdrawType, setWithdrawType, balance,
     customAmount, setCustomAmount, onConfirm, loading, user
 }) => {
+    const { t } = useLanguage();
     if (!show) return null;
     return (
         <div
@@ -28,13 +30,13 @@ const WithdrawModal = ({
                     <div style={{ width: '64px', height: '64px', background: 'var(--primary-light)', color: 'var(--primary)', borderRadius: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
                         <Wallet size={32} />
                     </div>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Withdraw Funds</h2>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Send your balance to your linked account</p>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>{t('withdrawFunds')}</h2>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('sendBalanceNotice')}</p>
                 </div>
 
                 {/* Destination Display */}
                 <div style={{ background: 'var(--bg-color)', padding: '1rem', borderRadius: '0.75rem', border: '1px solid var(--border-color)', marginBottom: '1.5rem', textAlign: 'left', fontSize: '0.85rem' }}>
-                    <span style={{ fontWeight: 700, display: 'block', marginBottom: '0.25rem', color: 'var(--text-main)' }}>Payout Destination:</span>
+                    <span style={{ fontWeight: 700, display: 'block', marginBottom: '0.25rem', color: 'var(--text-main)' }}>{t('payoutDestination')}:</span>
                     {user?.payoutMethod === 'bank' ? (
                         <div>
                             <span style={{ fontWeight: 600 }}>Bank:</span> {user.bankDetails?.bankName}<br/>
@@ -54,7 +56,7 @@ const WithdrawModal = ({
                         style={{ padding: '1.25rem', borderRadius: '1rem', border: `2px solid ${withdrawType === 'all' ? 'var(--primary)' : 'var(--border-color)'}`, background: withdrawType === 'all' ? 'var(--primary-light)' : 'transparent', cursor: 'pointer', transition: 'all 0.2s' }}
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-                            <span style={{ fontWeight: 700, fontSize: '1rem' }}>Withdraw All</span>
+                            <span style={{ fontWeight: 700, fontSize: '1rem' }}>{t('withdrawAll')}</span>
                             {withdrawType === 'all' && <CheckCircle size={18} color="var(--primary)" />}
                         </div>
                         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Transfer your full {balance.toFixed(2)} ETB</p>
@@ -65,7 +67,7 @@ const WithdrawModal = ({
                         style={{ padding: '1.25rem', borderRadius: '1rem', border: `2px solid ${withdrawType === 'custom' ? 'var(--primary)' : 'var(--border-color)'}`, background: withdrawType === 'custom' ? 'var(--primary-light)' : 'transparent', cursor: 'pointer', transition: 'all 0.2s' }}
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-                            <span style={{ fontWeight: 700, fontSize: '1rem' }}>Custom Amount</span>
+                            <span style={{ fontWeight: 700, fontSize: '1rem' }}>{t('customAmountPlaceholder')}</span>
                             {withdrawType === 'custom' && <CheckCircle size={18} color="var(--primary)" />}
                         </div>
                         {withdrawType === 'custom' && (
@@ -84,14 +86,14 @@ const WithdrawModal = ({
                 </div>
 
                 <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button onClick={onClose} className="btn-primary" style={{ flex: 1, background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-main)', boxShadow: 'none' }}>Cancel</button>
+                    <button onClick={onClose} className="btn-primary" style={{ flex: 1, background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-main)', boxShadow: 'none' }}>{t('cancel')}</button>
                     <button
                         onClick={onConfirm}
                         disabled={loading || (withdrawType === 'custom' && !customAmount)}
                         className="btn-primary"
                         style={{ flex: 1 }}
                     >
-                        {loading ? <span className="spinner"></span> : 'Confirm'}
+                        {loading ? <span className="spinner"></span> : t('confirm')}
                     </button>
                 </div>
             </div>
@@ -106,6 +108,7 @@ const WithdrawModal = ({
 };
 
 const WithdrawSuccessModal = ({ data, onClose, user }) => {
+    const { t } = useLanguage();
     if (!data) return null;
     return (
         <div
@@ -116,31 +119,31 @@ const WithdrawSuccessModal = ({ data, onClose, user }) => {
                 <div style={{ width: '80px', height: '80px', background: 'var(--success)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', boxShadow: '0 10px 20px rgba(16, 185, 129, 0.3)' }}>
                     <CheckCircle size={40} />
                 </div>
-                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Transfer Requested!</h2>
-                <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Your withdrawal request is pending admin review.</p>
+                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>{t('transferRequested')}</h2>
+                <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>{t('pendingAdminReview')}</p>
 
                 <div style={{ background: 'var(--bg-color)', borderRadius: '1rem', padding: '1.5rem', border: '1px solid var(--border-color)', marginBottom: '2rem', textAlign: 'left' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                        <span style={{ color: 'var(--text-muted)' }}>Amount Requested</span>
+                        <span style={{ color: 'var(--text-muted)' }}>{t('amountRequested')}</span>
                         <span style={{ fontWeight: 800, color: 'var(--primary)' }}>{data.amount.toFixed(2)} ETB</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                        <span style={{ color: 'var(--text-muted)' }}>Payout Method</span>
+                        <span style={{ color: 'var(--text-muted)' }}>{t('payoutMethod')}</span>
                         <span style={{ fontWeight: 700, textTransform: 'capitalize' }}>{user?.payoutMethod || 'telebirr'}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                        <span style={{ color: 'var(--text-muted)' }}>Recipient Destination</span>
+                        <span style={{ color: 'var(--text-muted)' }}>{t('recipientDestination')}</span>
                         <span style={{ fontWeight: 700 }}>
                             {user?.payoutMethod === 'bank' ? `${user.bankDetails?.bankName} (...${user.bankDetails?.accountNumber?.slice(-4)})` : (user?.telebirr_number || user?.phone)}
                         </span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: 'var(--text-muted)' }}>New Balance</span>
+                        <span style={{ color: 'var(--text-muted)' }}>{t('newBalance')}</span>
                         <span style={{ fontWeight: 700 }}>{data.newBalance.toFixed(2)} ETB</span>
                     </div>
                 </div>
 
-                <button onClick={onClose} className="btn-primary" style={{ width: '100%' }}>Great, Thanks!</button>
+                <button onClick={onClose} className="btn-primary" style={{ width: '100%' }}>{t('greatThanks')}</button>
             </div>
         </div>
     );
@@ -151,6 +154,7 @@ export default function Dashboard() {
     const { triggerNotification } = useNotification();
     const navigate = useNavigate();
     const location = useLocation();
+    const { t } = useLanguage();
 
     // Core Metrics and data
     const [metrics, setMetrics] = useState({ total_earned: 0, pending_balance: 0 });
@@ -405,9 +409,9 @@ export default function Dashboard() {
                             )}
                         </div>
                         <div>
-                            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1.2 }}>Welcome, {user?.name.split(' ')[0]}</h1>
+                            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1.2 }}>{t('welcome')}, {user?.name.split(' ')[0]}</h1>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                                Account {user?.kycStatus === 'approved' ? 'fully verified' : 'partially set up'}
+                                {user?.kycStatus === 'approved' ? t('activeStatus') : t('kycUnverifiedStatus')}
                                 {user?.kycStatus === 'approved' && <CheckCircle size={14} color="var(--primary)" />}
                             </p>
                         </div>
@@ -422,9 +426,9 @@ export default function Dashboard() {
                     <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid var(--warning)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                         <AlertTriangle size={24} color="var(--warning)" style={{ flexShrink: 0 }} />
                         <div style={{ flex: 1 }}>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Identity Verification Required</h3>
-                            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>Complete your KYC to enable Telebirr and Bank withdrawals.</p>
-                            <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Verify Now</button>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{t('kycRequiredAlert')}</h3>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>{t('kycRequiredText')}</p>
+                            <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem' }}>{t('completeVerification')}</button>
                         </div>
                     </div>
                 )}
@@ -433,8 +437,8 @@ export default function Dashboard() {
                     <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid var(--secondary)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                         <ShieldCheck size={24} color="var(--secondary)" style={{ flexShrink: 0 }} />
                         <div>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Verification in Progress</h3>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>We're reviewing your documents. This usually takes less than 24h.</p>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{t('kycPendingStatus')}</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('kycPendingText')}</p>
                         </div>
                     </div>
                 )}
@@ -443,9 +447,9 @@ export default function Dashboard() {
                     <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                         <XCircle size={24} color="var(--danger)" style={{ flexShrink: 0 }} />
                         <div style={{ flex: 1 }}>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Verification Rejected</h3>
-                            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>Your documents were not accepted. Please retry with clearer photos.</p>
-                            <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem', background: 'var(--danger)' }}>Retry Now</button>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{t('kycRejected')}</h3>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>{t('kycRejectedText')}</p>
+                            <button onClick={() => navigate('/kyc')} className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem', background: 'var(--danger)' }}>{t('retryNow')}</button>
                         </div>
                     </div>
                 )}
@@ -456,8 +460,8 @@ export default function Dashboard() {
                             <CheckCircle size={24} />
                         </div>
                         <div style={{ flex: 1 }}>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)' }}>Identity Verified!</h3>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>You're all set to receive and withdraw tips.</p>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)' }}>{t('kycApproved')}</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('kycApprovedText')}</p>
                         </div>
                         <button onClick={dismissVerifiedBanner} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.5rem' }}>
                             <X size={20} />
@@ -468,8 +472,8 @@ export default function Dashboard() {
                 {/* Share Link Section */}
                 <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)', color: 'white', border: 'none' }}>
                     <div style={{ flex: '1 1 200px', minWidth: 0 }}>
-                        <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', color: 'white' }}>Quick Tipping Link</h2>
-                        <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.95rem', fontWeight: 500 }}>Share this link to start receiving support</p>
+                        <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', color: 'white' }}>{t('tippingLinkTitle')}</h2>
+                        <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.95rem', fontWeight: 500 }}>{t('tippingLinkDesc')}</p>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.15)', padding: '0.5rem', borderRadius: '1rem', flex: '1 1 200px', minWidth: '0', border: '1px solid rgba(255,255,255,0.3)' }}>
                         <a
@@ -485,7 +489,7 @@ export default function Dashboard() {
                             onClick={copyToClipboard}
                             style={{ background: 'white', border: 'none', cursor: 'pointer', color: 'var(--primary)', padding: '0.6rem 1.2rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, transition: 'all 0.2s' }}
                         >
-                            {copied ? <><CheckCircle size={18} /> Copied</> : <><Copy size={18} /> Copy</>}
+                            {copied ? <><CheckCircle size={18} /> {t('copied')}</> : <><Copy size={18} /> {t('copy')}</>}
                         </button>
                     </div>
                 </div>
@@ -495,9 +499,9 @@ export default function Dashboard() {
                     <div style={{ flex: '1 1 300px', minWidth: 0 }}>
                         <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-main)' }}>
                             <span style={{ display: 'inline-flex', padding: '6px', borderRadius: '0.5rem', background: 'rgba(15, 157, 88, 0.1)', color: '#0F9D58' }}>⚡</span>
-                            OBS Stream Alert Overlay
+                            {t('obsOverlayTitle')}
                         </h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Add this link as a **Browser Source** (1920x1080) in OBS Studio for real-time tip alerts.</p>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('obsOverlayDesc')}</p>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-color)', padding: '0.5rem', borderRadius: '1rem', flex: '1 1 300px', minWidth: '0', border: '1px solid var(--border-color)' }}>
                         <span
@@ -514,7 +518,7 @@ export default function Dashboard() {
                             }}
                             style={{ background: 'var(--primary)', border: 'none', cursor: 'pointer', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, transition: 'all 0.2s' }}
                         >
-                            {obsCopied ? <><CheckCircle size={16} /> Copied</> : <><Copy size={16} /> Copy Link</>}
+                            {obsCopied ? <><CheckCircle size={16} /> {t('copied')}</> : <><Copy size={16} /> {t('shareTippingLink')}</>}
                         </button>
                     </div>
                 </div>
@@ -526,7 +530,7 @@ export default function Dashboard() {
                             <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <Wallet size={20} />
                             </div>
-                            <h3 style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 600 }}>Total Balance</h3>
+                            <h3 style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 600 }}>{t('currentBalance')}</h3>
                         </div>
                         <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.04em' }}>
                             {metrics.pending_balance.toFixed(2)} <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>ETB</span>
@@ -537,7 +541,7 @@ export default function Dashboard() {
                             disabled={metrics.pending_balance <= 0 || isWithdrawing || user?.kycStatus !== 'approved'}
                             style={{ width: '100%', padding: '1rem' }}
                         >
-                            Withdraw Funds
+                            {t('withdrawFunds')}
                         </button>
                         {user?.kycStatus !== 'approved' && (
                             <div style={{ color: 'var(--danger)', fontSize: '0.8rem', textAlign: 'center', marginTop: '-0.75rem', fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}>
@@ -553,13 +557,13 @@ export default function Dashboard() {
                             <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <TrendingUp size={20} />
                             </div>
-                            <h3 style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 600 }}>Total Earnings</h3>
+                            <h3 style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 600 }}>{t('totalTips')}</h3>
                         </div>
                         <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.04em' }}>
                             {metrics.total_earned.toFixed(2)} <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>ETB</span>
                         </div>
                         <div style={{ marginTop: '1.5rem', padding: '0.75rem', background: 'var(--bg-color)', borderRadius: '0.5rem', border: '1px solid var(--border-color)', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                            Showing your lifetime earnings from all tips.
+                            {t('earningsSubtitle')}
                         </div>
                     </div>
                 </div>
@@ -573,16 +577,16 @@ export default function Dashboard() {
                                 <User size={20} />
                             </div>
                             <div>
-                                <h3 style={{ fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 700, margin: 0 }}>Top Fans Leaderboard</h3>
-                                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>Top contributors supporting you</p>
+                                <h3 style={{ fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 700, margin: 0 }}>{t('leaderboardTitle')}</h3>
+                                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>{t('leaderboardDesc')}</p>
                             </div>
                         </div>
 
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
                             {leaderboard.length === 0 ? (
                                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 1rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                                    <p style={{ fontSize: '0.9rem', margin: '0 0 0.5rem' }}>No tips received yet.</p>
-                                    <p style={{ fontSize: '0.8rem', margin: 0 }}>Share your tipping page to start building your community!</p>
+                                    <p style={{ fontSize: '0.9rem', margin: '0 0 0.5rem' }}>{t('noTipsYet')}</p>
+                                    <p style={{ fontSize: '0.8rem', margin: 0 }}>{t('noTipsSubtitle')}</p>
                                 </div>
                             ) : (
                                 leaderboard.map((fan, index) => (
@@ -606,7 +610,7 @@ export default function Dashboard() {
                                                 {maskPhone(fan._id)}
                                             </span>
                                             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                                Last tip: {new Date(fan.lastTipAt).toLocaleDateString()}
+                                                {t('lastTip')}: {new Date(fan.lastTipAt).toLocaleDateString()}
                                             </span>
                                         </div>
                                         <div style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.95rem' }}>
@@ -625,14 +629,14 @@ export default function Dashboard() {
                                 <Settings size={20} />
                             </div>
                             <div>
-                                <h3 style={{ fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 700, margin: 0 }}>Payout Details</h3>
-                                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>Manage withdrawal bank or Telebirr configuration</p>
+                                <h3 style={{ fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 700, margin: 0 }}>{t('payoutDetailsTitle')}</h3>
+                                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>{t('payoutDetailsDesc')}</p>
                             </div>
                         </div>
 
                         <form onSubmit={handleSavePayoutSettings} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '0.5rem' }}>
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Payout Option</label>
+                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.5rem' }}>{t('payoutOption')}</label>
                                 <div style={{ display: 'flex', background: 'var(--bg-color)', borderRadius: '0.75rem', padding: '3px', border: '1px solid var(--border-color)' }}>
                                     <button
                                         type="button"
@@ -666,7 +670,7 @@ export default function Dashboard() {
                             {payoutMethod === 'telebirr' ? (
                                 <div style={{ background: 'var(--bg-color)', padding: '1rem', borderRadius: '0.75rem', border: '1px solid var(--border-color)', fontSize: '0.85rem' }}>
                                     <p style={{ margin: 0, color: 'var(--text-muted)' }}>
-                                        Withdrawals will automatically route to your verified onboarded Telebirr number: 
+                                        {t('telebirrWithdrawNotice')} 
                                         <strong style={{ display: 'block', marginTop: '0.25rem', color: 'var(--text-main)' }}>
                                             {user?.telebirr_number || user?.phone}
                                         </strong>
@@ -682,7 +686,7 @@ export default function Dashboard() {
                                             required
                                             style={{ width: '100%', fontFamily: 'inherit', padding: '0.6rem' }}
                                         >
-                                            <option value="">Select Bank...</option>
+                                            <option value="">{t('selectBank')}</option>
                                             <option value="Commercial Bank of Ethiopia (CBE)">Commercial Bank of Ethiopia (CBE)</option>
                                             <option value="Awash International Bank">Awash International Bank</option>
                                             <option value="Dashen Bank">Dashen Bank</option>
@@ -696,7 +700,7 @@ export default function Dashboard() {
                                         <input
                                             type="text"
                                             className="form-input"
-                                            placeholder="Account Number"
+                                            placeholder={t('accountNumber')}
                                             value={accountNumber}
                                             onChange={e => setAccountNumber(e.target.value)}
                                             required
@@ -707,7 +711,7 @@ export default function Dashboard() {
                                         <input
                                             type="text"
                                             className="form-input"
-                                            placeholder="Account Holder Name"
+                                            placeholder={t('accountHolder')}
                                             value={accountHolderName}
                                             onChange={e => setAccountHolderName(e.target.value)}
                                             required
@@ -723,7 +727,7 @@ export default function Dashboard() {
                                 className="btn-primary"
                                 style={{ width: '100%', padding: '0.75rem', marginTop: 'auto' }}
                             >
-                                {savingPayout ? <span className="spinner"></span> : 'Save Payout Details'}
+                                {savingPayout ? <span className="spinner"></span> : t('savePayoutDetails')}
                             </button>
                         </form>
                     </div>
@@ -731,7 +735,7 @@ export default function Dashboard() {
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '2.5rem 0 1.5rem' }}>
                     <h2 style={{ fontSize: '1.4rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
-                        <History size={20} color="var(--primary)" /> Activity Log
+                        <History size={20} color="var(--primary)" /> {t('activityLog')}
                     </h2>
                 </div>
 
@@ -739,17 +743,17 @@ export default function Dashboard() {
                     {transactions.length === 0 ? (
                         <div style={{ padding: '4rem 2rem', textAlign: 'center' }}>
                             <User size={40} color="var(--text-muted)" style={{ opacity: 0.3, marginBottom: '1rem' }} />
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>No activity yet</h3>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Tips and withdrawals will appear here.</p>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>{t('noActivity')}</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('noActivityDesc')}</p>
                         </div>
                     ) : (
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Source / Type</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
+                                    <th>{t('dateLabel')}</th>
+                                    <th>{t('sourceTypeLabel')}</th>
+                                    <th>{t('amountHeaderLabel')}</th>
+                                    <th>{t('statusHeaderLabel')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -759,7 +763,7 @@ export default function Dashboard() {
                                         <td style={{ fontWeight: 600 }}>
                                             {tx.type === 'withdrawal' ? (
                                                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-main)' }}>
-                                                    <ArrowUpRight size={14} /> Withdrawal Request
+                                                    <ArrowUpRight size={14} /> {t('withdrawalRequest')}
                                                 </span>
                                             ) : (
                                                 maskPhone(tx.tipperPhone)
@@ -781,7 +785,7 @@ export default function Dashboard() {
                                                 color: tx.status === 'success' ? 'var(--success)' : tx.status === 'failed' ? 'var(--danger)' : 'var(--warning)',
                                                 textTransform: 'capitalize'
                                             }}>
-                                                {tx.status}
+                                                {t(tx.status)}
                                             </span>
                                         </td>
                                     </tr>

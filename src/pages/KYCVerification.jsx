@@ -10,10 +10,12 @@ import {
 } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 import { useNotification } from '../context/NotificationContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function KYCVerification() {
     const { user, api, logout, setUser } = useAuth();
     const { triggerNotification } = useNotification();
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [files, setFiles] = useState({ idFront: null, idBack: null, liveness: null });
@@ -62,9 +64,9 @@ export default function KYCVerification() {
             }
             setCameraActive(true);
         } catch (err) {
-            setCameraError('Camera access denied. Please allow camera access or upload a photo instead.');
+            setCameraError(t('cameraAccessDenied'));
         }
-    }, []);
+    }, [t]);
 
     const stopCamera = useCallback(() => {
         if (streamRef.current) {
@@ -107,7 +109,7 @@ export default function KYCVerification() {
 
     const handleSubmit = async () => {
         if (!files.idFront || !files.idBack || !files.liveness) {
-            setError('Please complete all three steps before submitting');
+            setError(t('kycCompleteStepsError'));
             return;
         }
         setUploading(true);
@@ -128,8 +130,8 @@ export default function KYCVerification() {
             }
 
             triggerNotification({
-                title: 'Verification Submitted',
-                message: 'Your documents are now under review.',
+                title: t('kycSubmittedTitle'),
+                message: t('kycSubmittedMessage'),
                 type: 'success'
             });
 
@@ -137,7 +139,7 @@ export default function KYCVerification() {
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to submit KYC. Please try again.');
             triggerNotification({
-                title: 'Verification Failed',
+                title: t('kycFailedTitle'),
                 message: err.response?.data?.error || 'Failed to submit KYC. Please try again.',
                 type: 'error'
             });
@@ -174,7 +176,7 @@ export default function KYCVerification() {
                 <>
                     <Upload size={36} color="var(--text-muted)" style={{ marginBottom: '0.75rem' }} />
                     <p style={{ fontWeight: 600, color: 'var(--text-main)' }}>{label}</p>
-                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>PNG, JPG up to 10MB</p>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>{t('kycUploadLimit')}</p>
                 </>
             )}
             <input type="file" id={inputId} accept="image/*" hidden onChange={(e) => handleFileChange(e, fieldName)} />
@@ -215,8 +217,8 @@ export default function KYCVerification() {
                         <div className="auth-icon" style={{ width: '60px', height: '60px', margin: '0 auto 1.25rem', background: 'var(--primary-light)', color: 'var(--primary)', boxShadow: '0 10px 25px -5px rgba(15, 157, 88, 0.3)' }}>
                             <ShieldCheck size={28} />
                         </div>
-                        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em' }}>Identity Verification</h1>
-                        <p style={{ color: 'var(--text-muted)', marginTop: '0.4rem' }}>Secure your account and enable Telebirr payouts</p>
+                        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em' }}>{t('identityVerification')}</h1>
+                        <p style={{ color: 'var(--text-muted)', marginTop: '0.4rem' }}>{t('kycSubtitle2')}</p>
                     </header>
 
                     <StepIndicator />
@@ -237,16 +239,16 @@ export default function KYCVerification() {
                         {/* STEP 1 - ID Front */}
                         {step === 1 && (
                             <div>
-                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.4rem' }}>Step 1: ID Front</h3>
-                                <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Upload a clear photo of the front of your national ID or passport.</p>
-                                <UploadBox previewSrc={previews.idFront} inputId="idFront" fieldName="idFront" label="Click to upload ID Front" />
+                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.4rem' }}>{t('kycStep1')}</h3>
+                                <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{t('kycStep1Desc')}</p>
+                                <UploadBox previewSrc={previews.idFront} inputId="idFront" fieldName="idFront" label={t('clickToUploadIdFront')} />
                                 {previews.idFront && (
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem', color: 'var(--primary)', fontSize: '0.875rem', fontWeight: 600 }}>
-                                        <CheckCircle size={14} /> Image uploaded
+                                        <CheckCircle size={14} /> {t('imageUploaded')}
                                     </div>
                                 )}
                                 <button className="btn-primary" style={{ marginTop: '1.5rem' }} onClick={() => previews.idFront && setStep(2)} disabled={!previews.idFront}>
-                                    Next Step <ArrowRight size={18} />
+                                    {t('nextStep')} <ArrowRight size={18} />
                                 </button>
                             </div>
                         )}
@@ -254,20 +256,20 @@ export default function KYCVerification() {
                         {/* STEP 2 - ID Back */}
                         {step === 2 && (
                             <div>
-                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.4rem' }}>Step 2: ID Back</h3>
-                                <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Upload a clear photo of the back side of your identity document.</p>
-                                <UploadBox previewSrc={previews.idBack} inputId="idBack" fieldName="idBack" label="Click to upload ID Back" />
+                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.4rem' }}>{t('kycStep2')}</h3>
+                                <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{t('kycStep2Desc')}</p>
+                                <UploadBox previewSrc={previews.idBack} inputId="idBack" fieldName="idBack" label={t('clickToUploadIdBack')} />
                                 {previews.idBack && (
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem', color: 'var(--primary)', fontSize: '0.875rem', fontWeight: 600 }}>
-                                        <CheckCircle size={14} /> Image uploaded
+                                        <CheckCircle size={14} /> {t('imageUploaded')}
                                     </div>
                                 )}
                                 <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
                                     <button className="btn-primary" style={{ background: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }} onClick={() => setStep(1)}>
-                                        <ArrowLeft size={18} /> Back
+                                        <ArrowLeft size={18} /> {t('back')}
                                     </button>
                                     <button className="btn-primary" onClick={() => previews.idBack && setStep(3)} disabled={!previews.idBack}>
-                                        Next Step <ArrowRight size={18} />
+                                        {t('nextStep')} <ArrowRight size={18} />
                                     </button>
                                 </div>
                             </div>
@@ -276,8 +278,8 @@ export default function KYCVerification() {
                         {/* STEP 3 - Live Selfie */}
                         {step === 3 && (
                             <div>
-                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.4rem' }}>Step 3: Selfie Verification</h3>
-                                <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Take a live selfie holding your ID to verify your identity.</p>
+                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.4rem' }}>{t('kycStep3')}</h3>
+                                <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{t('kycStep3Desc')}</p>
 
                                 {/* Camera active */}
                                 <div style={{ position: 'relative', borderRadius: '50%', overflow: 'hidden', background: '#000', marginBottom: '2rem', width: '100%', maxWidth: '260px', aspectRatio: '1/1', margin: '0 auto 1.5rem', border: `4px solid ${previews.liveness ? 'var(--success)' : 'var(--primary-light)'}`, boxShadow: '0 10px 25px rgba(0,0,0,0.1)', display: cameraActive || previews.liveness ? 'block' : 'none' }}>
@@ -315,8 +317,8 @@ export default function KYCVerification() {
                                     <>
                                         <div style={{ height: '220px', border: '2px dashed var(--border-color)', borderRadius: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)', gap: '0.5rem', marginBottom: '1.5rem' }}>
                                             <Camera size={42} color="var(--text-muted)" />
-                                            <p style={{ fontWeight: 600, color: 'var(--text-main)' }}>Live selfie required</p>
-                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Use your device camera to take a secure photo</p>
+                                            <p style={{ fontWeight: 600, color: 'var(--text-main)' }}>{t('liveSelfieRequired')}</p>
+                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('useDeviceCameraNotice')}</p>
                                         </div>
 
                                         {cameraError && (
@@ -329,7 +331,7 @@ export default function KYCVerification() {
                                                 className="btn-primary"
                                                 style={{ minWidth: '200px' }}
                                             >
-                                                <Camera size={18} /> Open Camera
+                                                <Camera size={18} /> {t('openCamera')}
                                             </button>
                                         </div>
                                     </>
@@ -339,24 +341,24 @@ export default function KYCVerification() {
                                 {previews.liveness && (
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary)', fontSize: '0.875rem', fontWeight: 600 }}>
-                                            <CheckCircle size={14} /> Selfie captured successfully
+                                            <CheckCircle size={14} /> {t('selfieCapturedSuccess')}
                                         </div>
                                         <button
                                             onClick={retakeSelfie}
                                             className="btn-primary"
                                             style={{ minWidth: '200px', background: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }}
                                         >
-                                            <RefreshCw size={18} /> Retake Selfie
+                                            <RefreshCw size={18} /> {t('retakeSelfie')}
                                         </button>
                                     </div>
                                 )}
 
                                 <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                                     <button className="btn-primary" style={{ flex: 1, background: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }} onClick={() => { stopCamera(); setStep(2); }}>
-                                        <ArrowLeft size={18} /> Back
+                                        <ArrowLeft size={18} /> {t('back')}
                                     </button>
                                     <button className="btn-primary" style={{ flex: 2 }} onClick={handleSubmit} disabled={uploading || !previews.liveness}>
-                                        {uploading ? <span className="spinner"></span> : <><CheckCircle size={18} /> Complete Verification</>}
+                                        {uploading ? <span className="spinner"></span> : <><CheckCircle size={18} /> {t('completeVerification')}</>}
                                     </button>
                                 </div>
                             </div>

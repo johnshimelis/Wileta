@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
-import { Coffee, Smartphone, HeartPulse, CheckCircle, AlertCircle, TrendingUp } from 'lucide-react';
+import { Smartphone, CheckCircle, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import TopAlert from '../components/TopAlert';
-import './PublicProfile.css'; // I'll create this for specific animations
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
+import './PublicProfile.css';
 
 export default function PublicProfile() {
     const { api } = useAuth();
@@ -17,9 +19,10 @@ export default function PublicProfile() {
     const [customAmount, setCustomAmount] = useState('');
     const [tipperPhone, setTipperPhone] = useState('');
     const [tippingState, setTippingState] = useState('idle'); // idle | processing | pin_prompt | processing_pin | success | error
-    const [pin, setPin] = useState('');
     const [txRef, setTxRef] = useState('');
     const [alert, setAlert] = useState(null);
+    
+    const { t } = useLanguage();
 
     const showAlert = (message, type = 'success') => {
         setAlert({ message, type });
@@ -37,7 +40,7 @@ export default function PublicProfile() {
             setLoading(false);
         };
         fetchProfile();
-    }, [username]);
+    }, [username, api]);
 
     const handleTip = async (e) => {
         e.preventDefault();
@@ -69,32 +72,6 @@ export default function PublicProfile() {
         }
     };
 
-    const handlePinSubmit = async (e) => {
-        e.preventDefault();
-        if (pin.length < 4) {
-            showAlert("Please enter a valid PIN", "error");
-            return;
-        }
-
-        setTippingState('processing_pin');
-
-        try {
-            const response = await api.post('/payments/verify-test-pin', {
-                tx_ref: txRef,
-                pin: pin
-            });
-
-            if (response.data && response.data.success) {
-                setTippingState('success');
-            } else {
-                setTippingState('error');
-            }
-        } catch (err) {
-            console.error('PIN Verification Error:', err);
-            setTippingState('error');
-        }
-    };
-
     const selectAmount = (val) => {
         setAmount(val);
         if (val !== 'custom') setCustomAmount('');
@@ -110,14 +87,18 @@ export default function PublicProfile() {
 
     if (error || !creator) {
         return (
-            <div className="auth-container">
+            <div className="auth-container" style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', zIndex: 10, display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <LanguageToggle />
+                    <ThemeToggle />
+                </div>
                 <div className="auth-card animate-fade-in" style={{ textAlign: 'center' }}>
-                    <div style={{ width: '80px', height: '80px', background: '#f1f5f9', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                    <div style={{ width: '80px', height: '80px', background: 'var(--bg-color)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', border: '1px solid var(--border-color)' }}>
                         <span style={{ fontSize: '2.5rem' }}>🤔</span>
                     </div>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Oops!</h2>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text-main)' }}>Oops!</h2>
                     <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.5 }}>{error}</p>
-                    <Link to="/" className="btn-primary" style={{ textDecoration: 'none' }}>Go to Homepage</Link>
+                    <Link to="/" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>Go to Homepage</Link>
                 </div>
             </div>
         );
@@ -126,7 +107,7 @@ export default function PublicProfile() {
     return (
         <div className="public-layout" style={{
             minHeight: '100vh',
-            background: 'radial-gradient(circle at top right, rgba(16, 185, 129, 0.08) 0%, transparent 40%), radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.05) 0%, transparent 40%), #f8fafc',
+            background: 'radial-gradient(circle at top right, rgba(16, 185, 129, 0.08) 0%, transparent 40%), radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.05) 0%, transparent 40%), var(--bg-color)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -134,6 +115,12 @@ export default function PublicProfile() {
             position: 'relative',
             overflow: 'hidden'
         }}>
+            {/* Top Right Actions */}
+            <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', zIndex: 10, display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <LanguageToggle />
+                <ThemeToggle />
+            </div>
+
             {/* Background decorative elements */}
             <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: '400px', height: '400px', background: 'rgba(16, 185, 129, 0.03)', borderRadius: '50%', filter: 'blur(80px)', zIndex: 0 }}></div>
             <div style={{ position: 'absolute', bottom: '5%', left: '2%', width: '300px', height: '300px', background: 'rgba(59, 130, 246, 0.03)', borderRadius: '50%', filter: 'blur(60px)', zIndex: 0 }}></div>
@@ -145,11 +132,11 @@ export default function PublicProfile() {
                 maxWidth: '480px',
                 width: '100%',
                 zIndex: 1,
-                border: '1px solid rgba(255,255,255,0.7)',
-                background: 'rgba(255,255,255,0.8)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.08)',
+                border: '1px solid var(--border-color)',
+                background: 'var(--card-bg)',
+                backdropFilter: 'var(--glass-blur)',
+                WebkitBackdropFilter: 'var(--glass-blur)',
+                boxShadow: 'var(--shadow-xl)',
                 borderRadius: '2rem'
             }}>
 
@@ -159,22 +146,23 @@ export default function PublicProfile() {
                         <div style={{
                             position: 'absolute',
                             inset: '-4px',
-                            background: 'linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%)',
+                            background: 'linear-gradient(135deg, var(--primary) 0%, #4285f4 100%)',
                             borderRadius: '50%',
                             padding: '4px',
                             opacity: 0.15
                         }}></div>
                         <div className="creator-avatar" style={{
-                            border: '4px solid #fff',
+                            border: '4px solid var(--card-bg)',
                             background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)',
                             width: '100px',
                             height: '100px',
                             fontSize: '2.5rem',
                             overflow: 'hidden',
                             margin: '0',
-                            boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
+                            boxShadow: 'var(--shadow-md)',
                             position: 'relative',
-                            zIndex: 1
+                            zIndex: 1,
+                            color: 'white'
                         }}>
                             {creator.profilePicUrl ? (
                                 <img src={creator.profilePicUrl?.startsWith('http') ? creator.profilePicUrl : `https://wileta-backend.onrender.com${creator.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -195,54 +183,56 @@ export default function PublicProfile() {
                     <div style={{ width: '40px', height: '3px', background: 'var(--primary)', margin: '1rem auto', borderRadius: '4px', opacity: 0.2 }}></div>
 
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.6, maxWidth: '340px', margin: '0 auto', fontWeight: 500 }}>
-                        Support my creative journey with a quick tip. Every <span style={{ color: 'var(--text-main)', fontWeight: 700 }}>"Gursha"</span> counts!
+                        {t('supportJourney')}
                     </p>
                 </div>
 
                 {tippingState === 'success' ? (
                     <div className="animate-fade-in" style={{ textAlign: 'center', padding: '1rem 0' }}>
-                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#dcfce7', color: '#10B981', margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 15px 35px -5px rgba(16, 185, 129, 0.25)' }}>
+                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--primary)', margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 15px 35px -5px rgba(16, 185, 129, 0.25)' }}>
                             <CheckCircle size={40} />
                         </div>
-                        <h2 style={{ fontSize: '1.75rem', fontWeight: 900, marginBottom: '0.75rem', color: '#064e3b', letterSpacing: '-0.02em' }}>Tip Successful!</h2>
+                        <h2 style={{ fontSize: '1.75rem', fontWeight: 900, marginBottom: '0.75rem', color: 'var(--text-main)', letterSpacing: '-0.02em' }}>{t('tipSuccessful')}</h2>
                         <p style={{ color: 'var(--text-muted)', marginBottom: '2.5rem', lineHeight: 1.6, fontSize: '1rem', fontWeight: 500 }}>
-                            Your contribution of <strong style={{ color: 'var(--text-main)', fontWeight: 900 }}>{amount === 'custom' ? customAmount : amount} ETB</strong> has been delivered.
+                            {t('contributionDelivered')}{' '}
+                            <strong style={{ color: 'var(--text-main)', fontWeight: 900 }}>{amount === 'custom' ? customAmount : amount} ETB</strong>
                         </p>
                         <button
-                            onClick={() => { setTippingState('idle'); setAmount('50'); setTipperPhone(''); setPin(''); }}
+                            onClick={() => { setTippingState('idle'); setAmount('50'); setTipperPhone(''); }}
                             className="btn-primary"
                             style={{ background: 'var(--bg-color)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none', padding: '1rem', height: '58px', borderRadius: '1.25rem', fontWeight: 800 }}
                         >
-                            Send Another Tip
+                            {t('sendAnotherTip')}
                         </button>
                     </div>
                 ) : tippingState === 'pin_prompt' || tippingState === 'processing_pin' ? (
                     <div className="animate-fade-in" style={{ textAlign: 'center', padding: '1rem 0' }}>
-                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#eff6ff', color: 'var(--primary)', margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 15px 35px -5px rgba(59, 130, 246, 0.15)' }}>
+                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--primary-light)', color: 'var(--primary)', margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 15px 35px -5px rgba(16, 185, 129, 0.15)' }}>
                             <Smartphone size={40} />
                         </div>
-                        <h2 style={{ fontSize: '1.75rem', fontWeight: 900, marginBottom: '0.75rem', color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Check Your Phone</h2>
+                        <h2 style={{ fontSize: '1.75rem', fontWeight: 900, marginBottom: '0.75rem', color: 'var(--text-main)', letterSpacing: '-0.02em' }}>{t('checkYourPhone')}</h2>
                         <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.6, fontSize: '1rem', fontWeight: 500 }}>
-                            We've sent a Telebirr prompt to <strong style={{ color: 'var(--text-main)' }}>{tipperPhone}</strong>. Please enter your PIN on your phone to complete the tip.
+                            {t('telebirrPromptNotice')}{' '}
+                            <strong style={{ color: 'var(--text-main)' }}>{tipperPhone}</strong>
                         </p>
 
-                        <div style={{ background: 'rgba(16, 185, 129, 0.05)', padding: '1.5rem', borderRadius: '1.5rem', border: '1px dashed rgba(16, 185, 129, 0.3)', marginBottom: '2rem' }}>
+                        <div style={{ background: 'var(--primary-light)', padding: '1.5rem', borderRadius: '1.5rem', border: '1px dashed var(--primary)', marginBottom: '2rem' }}>
                             <div className="spinner" style={{ width: '24px', height: '24px', margin: '0 auto 0.75rem', borderColor: 'var(--primary)', borderTopColor: 'transparent' }}></div>
-                            <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--primary)' }}>Awaiting confirmation...</span>
+                            <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--primary)' }}>{t('awaitingConfirmation')}</span>
                         </div>
 
                         <button
                             onClick={() => setTippingState('idle')}
                             style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
                         >
-                            Cancel and go back
+                            {t('cancelAndGoBack')}
                         </button>
                     </div>
                 ) : (
                     <form onSubmit={handleTip} className="animate-fade-in">
                         <div style={{ marginBottom: '1.75rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                                <label style={{ fontWeight: 900, fontSize: '0.85rem', color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Select Tip Amount</label>
+                                <label style={{ fontWeight: 900, fontSize: '0.85rem', color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{t('amountLabel')}</label>
                                 <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)' }}>ETB</span>
                             </div>
 
@@ -261,7 +251,12 @@ export default function PublicProfile() {
                                             height: '52px',
                                             display: 'flex',
                                             alignItems: 'center',
-                                            justifyContent: 'center'
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            border: amount === val ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                                            background: amount === val ? 'var(--primary-light)' : 'var(--bg-color)',
+                                            color: amount === val ? 'var(--primary)' : 'var(--text-main)',
+                                            transition: 'all 0.2s'
                                         }}
                                     >
                                         {val}
@@ -276,12 +271,17 @@ export default function PublicProfile() {
                                         height: '52px',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        padding: '0 0.5rem'
+                                        padding: '0 0.5rem',
+                                        cursor: 'pointer',
+                                        border: amount === 'custom' ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                                        background: amount === 'custom' ? 'var(--primary-light)' : 'var(--bg-color)',
+                                        color: amount === 'custom' ? 'var(--primary)' : 'var(--text-main)',
+                                        transition: 'all 0.2s'
                                     }}
                                 >
                                     <input
                                         type="number"
-                                        placeholder="+"
+                                        placeholder={t('customAmountPlaceholder')}
                                         onFocus={() => selectAmount('custom')}
                                         value={customAmount}
                                         onChange={(e) => setCustomAmount(e.target.value)}
@@ -289,7 +289,7 @@ export default function PublicProfile() {
                                             border: 'none',
                                             background: 'transparent',
                                             padding: '0',
-                                            fontSize: '1.1rem',
+                                            fontSize: '0.9rem',
                                             fontWeight: 900,
                                             outline: 'none',
                                             color: 'inherit',
@@ -303,15 +303,15 @@ export default function PublicProfile() {
                         </div>
 
                         <div style={{ marginBottom: '2rem' }}>
-                            <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 900, fontSize: '0.85rem', color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Your Telebirr Number</label>
+                            <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 900, fontSize: '0.85rem', color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{t('yourTelebirrNumber')}</label>
                             <div style={{ position: 'relative' }}>
-                                <div style={{ position: 'absolute', top: '50%', left: '1.25rem', transform: 'translateY(-50%)', color: 'var(--text-muted)', opacity: 0.5 }}>
+                                <div style={{ position: 'absolute', top: '50%', left: '1.25rem', transform: 'translateY(-50%)', color: 'var(--text-muted)', opacity: 0.5, display: 'flex', alignItems: 'center' }}>
                                     <Smartphone size={20} />
                                 </div>
                                 <input
                                     type="tel"
                                     className="form-input"
-                                    placeholder="09... or 07..."
+                                    placeholder={t('telebirrPlaceholder')}
                                     value={tipperPhone}
                                     onChange={(e) => setTipperPhone(e.target.value)}
                                     style={{
@@ -320,8 +320,9 @@ export default function PublicProfile() {
                                         fontWeight: 800,
                                         height: '60px',
                                         borderRadius: '1.25rem',
-                                        background: '#fff',
+                                        background: 'var(--bg-color)',
                                         border: '1.5px solid var(--border-color)',
+                                        color: 'var(--text-main)',
                                         boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
                                     }}
                                     required
@@ -330,21 +331,22 @@ export default function PublicProfile() {
                             <div style={{
                                 display: 'flex',
                                 gap: '0.6rem',
-                                background: 'rgba(0,0,0,0.03)',
+                                background: 'var(--primary-light)',
                                 padding: '0.8rem 1rem',
                                 borderRadius: '1rem',
-                                marginTop: '1rem'
+                                marginTop: '1rem',
+                                border: '1px solid rgba(15, 157, 88, 0.1)'
                             }}>
-                                <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '0.1rem', color: 'var(--text-muted)' }} />
+                                <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '0.1rem', color: 'var(--primary)' }} />
                                 <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.4, margin: 0, fontWeight: 500 }}>
-                                    We'll send a <strong style={{ color: 'var(--text-main)' }}>secure PIN prompt</strong> to your phone via Telebirr.
+                                    {t('telebirrPinPromptNotice')}
                                 </p>
                             </div>
                         </div>
 
                         {tippingState === 'error' && (
-                            <div className="error-message animate-shake" style={{ marginBottom: '1.25rem', borderRadius: '1rem' }}>
-                                <AlertCircle size={18} /> Payment initiation failed. Please check your number.
+                            <div className="error-message animate-shake" style={{ marginBottom: '1.25rem', borderRadius: '1rem', background: 'rgba(239, 68, 68, 0.08)', border: '1px solid var(--danger)', color: 'var(--danger)', padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+                                <AlertCircle size={18} /> {t('paymentFailed')}
                             </div>
                         )}
 
@@ -358,14 +360,16 @@ export default function PublicProfile() {
                                 borderRadius: '1.25rem',
                                 boxShadow: '0 20px 40px -12px rgba(16, 185, 129, 0.35)',
                                 height: '64px',
-                                fontWeight: 900
+                                fontWeight: 900,
+                                width: '100%',
+                                cursor: tippingState === 'processing' ? 'not-allowed' : 'pointer'
                             }}
                         >
                             {tippingState === 'processing' ? (
-                                <><span className="spinner" style={{ width: '20px', height: '20px' }}></span> Initiating...</>
+                                <><span className="spinner" style={{ width: '20px', height: '20px' }}></span> {t('initiatingTip')}</>
                             ) : (
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}>
-                                    Send Tip
+                                    {t('sendTipButton')}
                                 </div>
                             )}
                         </button>
@@ -374,9 +378,9 @@ export default function PublicProfile() {
 
                 <div style={{ textAlign: 'center', marginTop: '2.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>Secured by</span>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>{t('securedBy')}</span>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                            <span style={{ fontSize: '0.9rem', fontWeight: 900, color: 'var(--text-main)', lineHeight: 1 }}>GurshaPay</span>
+                            <span style={{ fontSize: '0.9rem', fontWeight: 900, color: 'var(--text-main)', lineHeight: 1 }}>{t('appName')}</span>
                             <span style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '0.05em' }}>ጎርሻፒይ</span>
                         </div>
                     </div>
@@ -392,17 +396,21 @@ export default function PublicProfile() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
-                    background: '#fff',
+                    background: 'var(--card-bg)',
                     padding: '0.75rem 1.25rem',
                     borderRadius: '100px',
-                    boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
-                    border: '1px solid var(--border-color)'
-                }}>
-                    <span>Create your own page</span>
+                    boxShadow: 'var(--shadow-sm)',
+                    border: '1px solid var(--border-color)',
+                    transition: 'all 0.2s'
+                }}
+                onMouseOver={e => e.currentTarget.style.borderColor = 'var(--primary)'}
+                onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+                >
+                    <span>{t('createOwnPage')}</span>
                     <span style={{ color: 'var(--primary)' }}>&rarr;</span>
                 </Link>
                 
-                <a href="/privacy.html" target="_blank" rel="noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.78rem', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--primary)'} onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}>Privacy Policy</a>
+                <a href="/privacy.html" target="_blank" rel="noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.78rem', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--primary)'} onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}>{t('privacyPolicy')}</a>
             </div>
         </div>
     );

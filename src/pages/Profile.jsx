@@ -8,9 +8,11 @@ import TopAlert from '../components/TopAlert';
 import NotificationDrawer from '../components/NotificationDrawer';
 import Sidebar from '../components/Sidebar';
 import { useLocation } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Profile() {
     const { user, logout } = useAuth();
+    const { t, language } = useLanguage();
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
@@ -51,8 +53,8 @@ export default function Profile() {
 
             <main className="main-content">
                 <header style={{ marginBottom: '2.5rem' }}>
-                    <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em' }}>My Profile</h1>
-                    <p style={{ color: 'var(--text-muted)' }}>Manage your personal information and tipping page</p>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em' }}>{t('myProfile')}</h1>
+                    <p style={{ color: 'var(--text-muted)' }}>{t('profileSubtitle')}</p>
                 </header>
 
                 <div className="dashboard-card animate-fade-in" style={{ display: 'flex', gap: '2.5rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
@@ -71,14 +73,14 @@ export default function Profile() {
                                 <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem', wordBreak: 'break-word' }}>@{user?.username}</p>
                             </div>
                             <Link to="/settings" className="btn-primary" style={{ width: 'auto', padding: '0.6rem 1.2rem', background: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none', flexShrink: 0 }}>
-                                Edit Profile
+                                {t('editProfile')}
                             </Link>
                         </div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
                                 <Mail size={18} />
-                                <span>{user?.email || 'No email set'}</span>
+                                <span>{user?.email || t('noEmailSet')}</span>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
                                 <Phone size={18} />
@@ -87,23 +89,23 @@ export default function Profile() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
                                 <ShieldCheck size={18} color={user?.kycStatus === 'approved' ? 'var(--primary)' : 'var(--text-muted)'} />
                                 <span style={{ fontWeight: 600, color: user?.kycStatus === 'approved' ? 'var(--primary)' : 'var(--text-muted)' }}>
-                                    {user?.kycStatus === 'approved' ? 'Identity Verified' : 'Verification Needed'}
+                                    {user?.kycStatus === 'approved' ? t('verifiedStatus') : t('unverifiedStatus')}
                                 </span>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
                                 <Calendar size={18} />
-                                <span>Joined {new Date(user?.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+                                <span>{t('joined')} {new Date(user?.createdAt || Date.now()).toLocaleDateString(language === 'am' ? 'am-ET' : 'en-US', { month: 'long', year: 'numeric' })}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div style={{ marginTop: '2.5rem' }}>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.5rem' }}>Tipping Page Preview</h3>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.5rem' }}>{t('tippingPagePreview')}</h3>
                     <div className="dashboard-card" style={{ background: 'var(--card-bg)', border: '2px dashed var(--border-color)', textAlign: 'center' }}>
-                        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Your public tipping page is live and ready to receive support.</p>
-                        <a href={`/${user?.username}`} target="_blank" className="btn-primary" style={{ width: 'auto', display: 'inline-flex' }}>
-                            View Public Page
+                        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{t('tippingPageLiveNotice')}</p>
+                        <a href={`/${user?.username}`} target="_blank" rel="noreferrer" className="btn-primary" style={{ width: 'auto', display: 'inline-flex' }}>
+                            {t('viewPublicPage')}
                         </a>
                     </div>
                 </div>
