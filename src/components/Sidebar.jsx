@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, User, Settings as SettingsIcon, LogOut, Moon, Sun } from 'lucide-react';
+import { LayoutDashboard, User, Settings as SettingsIcon, LogOut } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { useAuth } from '../context/AuthContext';
 
@@ -54,6 +54,10 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                             <LogOut size={20} />
                             <span className="nav-text" style={{ fontWeight: 600 }}>Logout</span>
                         </button>
+
+                        <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.75rem' }}>
+                            <a href="/privacy.html" target="_blank" rel="noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--primary)'} onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}>Privacy Policy</a>
+                        </div>
                     </div>
                 </nav>
             </aside>

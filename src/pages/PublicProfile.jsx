@@ -383,7 +383,7 @@ export default function PublicProfile() {
                 </div>
             </div>
 
-            <div style={{ marginTop: '2.5rem', textAlign: 'center', zIndex: 1 }}>
+            <div style={{ marginTop: '2.5rem', textAlign: 'center', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                 <Link to="/signup" style={{
                     fontSize: '0.9rem',
                     color: 'var(--text-muted)',
@@ -401,6 +401,8 @@ export default function PublicProfile() {
                     <span>Create your own page</span>
                     <span style={{ color: 'var(--primary)' }}>&rarr;</span>
                 </Link>
+                
+                <a href="/privacy.html" target="_blank" rel="noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.78rem', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--primary)'} onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}>Privacy Policy</a>
             </div>
         </div>
     );
