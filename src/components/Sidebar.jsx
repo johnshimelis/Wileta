@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, User, Settings as SettingsIcon, LogOut } from 'lucide-react';
+import { LayoutDashboard, User, Settings as SettingsIcon, LogOut, ShieldCheck } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import LanguageToggle from './LanguageToggle';
+import Logo from './Logo';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -32,12 +33,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
             )}
 
             <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-                <div className="desktop-logo-container" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2.5rem', padding: '0 0.5rem' }}>
-                    <img src="/gurshapay-logo.png" alt="GurshaPay Logo" style={{ width: '32px', height: '32px', borderRadius: '6px', objectFit: 'cover' }} />
-                    <div className="sidebar-logo-text" style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.02em', lineHeight: 1 }}>GurshaPay</span>
-                        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '0.05em', marginTop: '0.15rem' }}>ጎርሻፒይ</span>
-                    </div>
+                <div className="desktop-logo-container" style={{ display: 'flex', alignItems: 'center', marginBottom: '2.5rem', padding: '0 0.5rem' }}>
+                    <Logo size="medium" />
                 </div>
 
                 <nav className="sidebar-nav" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -61,8 +58,11 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                             <span className="nav-text" style={{ fontWeight: 600 }}>{t('logout')}</span>
                         </button>
 
-                        <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.75rem' }}>
-                            <a href="/privacy.html" target="_blank" rel="noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--primary)'} onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}>{t('privacyPolicy')}</a>
+                        <div style={{ marginTop: 'auto', paddingTop: '1.5rem' }}>
+                            <Link to="/privacy-policy" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--text-muted)', textDecoration: 'none', transition: 'all 0.2s', padding: '0.5rem', borderRadius: '0.75rem', fontSize: '0.8rem', fontWeight: 700 }} className="hover:bg-gray-100 dark:hover:bg-gray-800">
+                                <ShieldCheck size={14} />
+                                <span>{t('privacyPolicy')}</span>
+                            </Link>
                         </div>
                     </div>
                 </nav>

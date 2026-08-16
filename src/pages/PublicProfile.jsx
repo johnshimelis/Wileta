@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Smartphone, CheckCircle, AlertCircle } from 'lucide-react';
+import { Smartphone, CheckCircle, AlertCircle, MessageSquare } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import TopAlert from '../components/TopAlert';
@@ -18,6 +18,7 @@ export default function PublicProfile() {
     const [amount, setAmount] = useState('50');
     const [customAmount, setCustomAmount] = useState('');
     const [tipperPhone, setTipperPhone] = useState('');
+    const [shoutOutMessage, setShoutOutMessage] = useState('');
     const [tippingState, setTippingState] = useState('idle'); // idle | processing | pin_prompt | processing_pin | success | error
     const [txRef, setTxRef] = useState('');
     const [alert, setAlert] = useState(null);
@@ -57,7 +58,8 @@ export default function PublicProfile() {
             const response = await api.post('/payments/initialize-tip', {
                 creatorId: creator.id,
                 tipperPhone,
-                amount: finalAmount
+                amount: finalAmount,
+                message: shoutOutMessage
             });
 
             if (response.data && response.data.success) {
@@ -146,14 +148,14 @@ export default function PublicProfile() {
                         <div style={{
                             position: 'absolute',
                             inset: '-4px',
-                            background: 'linear-gradient(135deg, var(--primary) 0%, #4285f4 100%)',
+                            background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
                             borderRadius: '50%',
                             padding: '4px',
                             opacity: 0.15
                         }}></div>
                         <div className="creator-avatar" style={{
                             border: '4px solid var(--card-bg)',
-                            background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)',
+                            background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
                             width: '100px',
                             height: '100px',
                             fontSize: '2.5rem',
@@ -172,15 +174,15 @@ export default function PublicProfile() {
                         </div>
                     </div>
 
-                    <h1 style={{ fontSize: '1.75rem', fontWeight: 900, margin: '0 0 0.25rem 0', color: 'var(--text-main)', letterSpacing: '-0.04em' }}>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 900, margin: '0 0 0.25rem 0', color: 'var(--text-main)', letterSpacing: '-0.02em', fontFamily: "'Playfair Display', 'Outfit', serif" }}>
                         {creator.name}
                     </h1>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: 'var(--primary)', fontWeight: 800, fontSize: '1rem' }}>
-                        <span>@{creator.username}</span>
+                        <span style={{ fontFamily: "'Playfair Display', 'Outfit', serif", fontStyle: 'italic' }}>@{creator.username}</span>
                         <CheckCircle size={16} fill="var(--primary)" color="white" />
                     </div>
 
-                    <div style={{ width: '40px', height: '3px', background: 'var(--primary)', margin: '1rem auto', borderRadius: '4px', opacity: 0.2 }}></div>
+                    <div style={{ width: '40px', height: '3px', background: 'var(--secondary)', margin: '1rem auto', borderRadius: '4px', opacity: 0.5 }}></div>
 
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.6, maxWidth: '340px', margin: '0 auto', fontWeight: 500 }}>
                         {t('supportJourney')}
@@ -254,9 +256,17 @@ export default function PublicProfile() {
                                             justifyContent: 'center',
                                             cursor: 'pointer',
                                             border: amount === val ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                                            background: amount === val ? 'var(--primary-light)' : 'var(--bg-color)',
-                                            color: amount === val ? 'var(--primary)' : 'var(--text-main)',
-                                            transition: 'all 0.2s'
+                                            background: amount === val ? 'var(--primary)' : 'var(--bg-color)',
+                                            color: amount === val ? 'white' : 'var(--text-main)',
+                                            transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                                            boxShadow: amount === val ? '0 8px 16px rgba(10, 92, 54, 0.2)' : 'none',
+                                            transform: amount === val ? 'scale(1.05)' : 'scale(1)'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (amount !== val) e.currentTarget.style.transform = 'translateY(-2px)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (amount !== val) e.currentTarget.style.transform = 'scale(1)';
                                         }}
                                     >
                                         {val}
@@ -274,9 +284,17 @@ export default function PublicProfile() {
                                         padding: '0 0.5rem',
                                         cursor: 'pointer',
                                         border: amount === 'custom' ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                                        background: amount === 'custom' ? 'var(--primary-light)' : 'var(--bg-color)',
-                                        color: amount === 'custom' ? 'var(--primary)' : 'var(--text-main)',
-                                        transition: 'all 0.2s'
+                                        background: amount === 'custom' ? 'var(--primary)' : 'var(--bg-color)',
+                                        color: amount === 'custom' ? 'white' : 'var(--text-main)',
+                                        transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                                        boxShadow: amount === 'custom' ? '0 8px 16px rgba(10, 92, 54, 0.2)' : 'none',
+                                        transform: amount === 'custom' ? 'scale(1.05)' : 'scale(1)'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        if (amount !== 'custom') e.currentTarget.style.transform = 'translateY(-2px)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        if (amount !== 'custom') e.currentTarget.style.transform = 'scale(1)';
                                     }}
                                 >
                                     <input
@@ -302,7 +320,7 @@ export default function PublicProfile() {
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: '2rem' }}>
+                        <div style={{ marginBottom: '1.5rem' }}>
                             <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 900, fontSize: '0.85rem', color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{t('yourTelebirrNumber')}</label>
                             <div style={{ position: 'relative' }}>
                                 <div style={{ position: 'absolute', top: '50%', left: '1.25rem', transform: 'translateY(-50%)', color: 'var(--text-muted)', opacity: 0.5, display: 'flex', alignItems: 'center' }}>
@@ -323,9 +341,57 @@ export default function PublicProfile() {
                                         background: 'var(--bg-color)',
                                         border: '1.5px solid var(--border-color)',
                                         color: 'var(--text-main)',
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                    onFocus={(e) => {
+                                        e.currentTarget.style.borderColor = 'var(--primary)';
+                                        e.currentTarget.style.boxShadow = '0 0 0 4px var(--primary-light)';
+                                    }}
+                                    onBlur={(e) => {
+                                        e.currentTarget.style.borderColor = 'var(--border-color)';
+                                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
                                     }}
                                     required
+                                />
+                            </div>
+                        </div>
+
+                        <div style={{ marginBottom: '2rem' }}>
+                            <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 900, fontSize: '0.85rem', color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Shout Out Message (Optional)</label>
+                            <div style={{ position: 'relative' }}>
+                                <div style={{ position: 'absolute', top: '1.25rem', left: '1.25rem', color: 'var(--text-muted)', opacity: 0.5, display: 'flex', alignItems: 'center' }}>
+                                    <MessageSquare size={20} />
+                                </div>
+                                <textarea
+                                    className="form-input"
+                                    placeholder="Leave a nice message for the creator..."
+                                    value={shoutOutMessage}
+                                    onChange={(e) => setShoutOutMessage(e.target.value)}
+                                    maxLength={200}
+                                    style={{
+                                        paddingLeft: '3.25rem',
+                                        paddingTop: '1.15rem',
+                                        fontSize: '1rem',
+                                        fontWeight: 500,
+                                        minHeight: '100px',
+                                        resize: 'vertical',
+                                        borderRadius: '1.25rem',
+                                        background: 'var(--bg-color)',
+                                        border: '1.5px solid var(--border-color)',
+                                        color: 'var(--text-main)',
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                                        lineHeight: 1.5,
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                    onFocus={(e) => {
+                                        e.currentTarget.style.borderColor = 'var(--primary)';
+                                        e.currentTarget.style.boxShadow = '0 0 0 4px var(--primary-light)';
+                                    }}
+                                    onBlur={(e) => {
+                                        e.currentTarget.style.borderColor = 'var(--border-color)';
+                                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
+                                    }}
                                 />
                             </div>
                             <div style={{

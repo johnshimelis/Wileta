@@ -11,6 +11,7 @@ import TopAlert from '../components/TopAlert';
 import Sidebar from '../components/Sidebar';
 import NotificationDrawer from '../components/NotificationDrawer';
 import { useLanguage } from '../context/LanguageContext';
+import Logo from '../components/Logo';
 
 export default function Settings() {
     const { user, setUser, api, logout } = useAuth();
@@ -111,11 +112,7 @@ export default function Settings() {
         <div className="app-layout">
             <div className="mobile-header-container mobile-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <img src="/gurshapay-logo.png" alt="GurshaPay Logo" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.02em', lineHeight: 1 }}>GurshaPay</span>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '0.05em', marginTop: '0.15rem' }}>ጎርሻፒይ</span>
-                    </div>
+                    <Logo size="small" />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <NotificationDrawer />
@@ -211,33 +208,24 @@ export default function Settings() {
                         <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem', marginTop: '1.5rem' }}>{t('language')}</h3>
                         <div className="dashboard-card" style={{ padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-main)' }}>{t('language')}</span>
-                            <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                <button
-                                    type="button"
-                                    onClick={() => setLanguage('en')}
-                                    className="btn-primary"
+                            <div className="segmented-control" style={{ marginBottom: 0, width: '200px' }}>
+                                <div 
+                                    className="segmented-indicator"
                                     style={{
-                                        width: 'auto', padding: '0.4rem 1rem', fontSize: '0.85rem', borderRadius: '0.5rem',
-                                        background: language === 'en' ? 'var(--primary)' : 'var(--card-bg)',
-                                        color: language === 'en' ? 'white' : 'var(--text-main)',
-                                        border: '1px solid var(--border-color)', boxShadow: 'none'
+                                        left: language === 'en' ? '4px' : 'calc(50% + 2px)',
+                                        width: 'calc(50% - 6px)'
                                     }}
-                                >
-                                    English
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setLanguage('am')}
-                                    className="btn-primary"
-                                    style={{
-                                        width: 'auto', padding: '0.4rem 1rem', fontSize: '0.85rem', borderRadius: '0.5rem',
-                                        background: language === 'am' ? 'var(--primary)' : 'var(--card-bg)',
-                                        color: language === 'am' ? 'white' : 'var(--text-main)',
-                                        border: '1px solid var(--border-color)', boxShadow: 'none'
-                                    }}
-                                >
-                                    አማርኛ
-                                </button>
+                                />
+                                {[{ id: 'en', label: 'English' }, { id: 'am', label: 'አማርኛ' }].map(m => (
+                                    <button
+                                        key={m.id}
+                                        type="button"
+                                        onClick={() => setLanguage(m.id)}
+                                        className={`segmented-btn ${language === m.id ? 'active' : ''}`}
+                                    >
+                                        {m.label}
+                                    </button>
+                                ))}
                             </div>
                         </div>
 
@@ -272,7 +260,7 @@ export default function Settings() {
                             />
                         </div>
 
-                        <div className="dashboard-card" style={{ marginTop: 'auto', background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                        <div className="dashboard-card" style={{ marginTop: 'auto', border: '1px solid var(--border-color)', opacity: 0.9 }}>
                             <h4 style={{ color: 'var(--danger)', fontWeight: 800, marginBottom: '0.5rem' }}>{t('dangerZone')}</h4>
                             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{t('deleteNotice2')}</p>
                             <button className="btn-primary" style={{ background: 'transparent', color: 'var(--danger)', border: '1px solid var(--danger)', boxShadow: 'none', fontSize: '0.9rem', padding: '0.5rem 1rem', width: 'auto' }}>

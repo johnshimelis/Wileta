@@ -11,6 +11,8 @@ import KYCVerification from './pages/KYCVerification';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Overlay from './pages/Overlay';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import DataDeletion from './pages/DataDeletion';
 import './index.css';
 
 // Protected Route Component
@@ -85,6 +87,11 @@ function App() {
             <Route path="/@:username" element={<PublicProfile />} />
             {/* OBS Stream Overlay */}
             <Route path="/overlay/:creatorId" element={<Overlay />} />
+            
+            {/* Public Legal / Compliance Pages */}
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/data-deletion" element={<DataDeletion />} />
+            
             {/* Default Route */}
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Routes>

@@ -178,13 +178,12 @@ export default function Overlay() {
                         animation: 'pulse-icon 1.5s infinite alternate'
                     }}>
                         <img 
-                            src="/gurshapay-logo.png" 
+                            src="/gurshapay-logo-new.png" 
                             alt="Gursha Logo" 
                             style={{ 
                                 width: '54px', 
-                                height: '54px', 
-                                borderRadius: '0.8rem',
-                                objectFit: 'cover'
+                                height: 'auto',
+                                objectFit: 'contain'
                             }} 
                         />
                     </div>

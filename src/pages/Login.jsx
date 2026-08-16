@@ -5,6 +5,8 @@ import { Mail, Phone, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
+import Logo from '../components/Logo';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Login() {
     const [loginMethod, setLoginMethod] = useState('email'); // 'email' | 'phone'
@@ -102,167 +104,187 @@ export default function Login() {
         setLoading(false);
     };
 
+    const pageVariants = {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } },
+        exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }
+    };
+
     return (
-        <div style={{
-            minHeight: '100vh',
-            background: 'radial-gradient(circle at top right, rgba(15, 157, 88, 0.08), transparent 500px), radial-gradient(circle at bottom left, rgba(66, 133, 244, 0.08), transparent 500px), var(--bg-color)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1.5rem',
-            position: 'relative'
-        }}>
+        <motion.div 
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={pageVariants}
+            className="auth-container"
+        >
             {/* Top Right Actions */}
             <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', zIndex: 10, display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                 <LanguageToggle />
                 <ThemeToggle />
             </div>
 
-            <div className="animate-slide-up" style={{
-                width: '100%',
-                maxWidth: '500px',
-                background: 'var(--card-bg)',
-                backdropFilter: 'var(--glass-blur)',
-                WebkitBackdropFilter: 'var(--glass-blur)',
-                borderRadius: '1.5rem',
-                boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.06), 0 0 0 1px var(--border-color)',
-                padding: '2.5rem 3rem',
-                transition: 'transform 0.3s, box-shadow 0.3s'
-            }}>
+            <div className="auth-card">
                 {/* Logo */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.75rem', justifyContent: 'center' }}>
-                    <img src="/gurshapay-logo.png" alt="GurshaPay Logo" style={{ width: '44px', height: '44px', borderRadius: '1rem', objectFit: 'cover' }} />
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1 }}>{t('appName')}</span>
-                        <span style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '0.05em', marginTop: '0.15rem' }}>ጎርሻፒይ</span>
-                    </div>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1.75rem', justifyContent: 'center' }}>
+                    <Logo size="large" />
                 </div>
 
                 <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-main)', textAlign: 'center', marginBottom: '0.35rem', letterSpacing: '-0.02em' }}>{t('welcomeBack')}</h1>
                 <p style={{ color: 'var(--text-muted)', textAlign: 'center', fontSize: '0.9rem', marginBottom: '1.75rem' }}>{t('signInSubtitle')}</p>
 
-                {/* Method Switcher */}
-                <div style={{ display: 'flex', background: 'var(--bg-color)', borderRadius: '1rem', padding: '4px', marginBottom: '1.5rem', border: '1px solid var(--border-color)' }}>
+                {/* Segmented Control Switcher */}
+                <div className="segmented-control">
+                    <div 
+                        className="segmented-indicator"
+                        style={{
+                            left: loginMethod === 'email' ? '4px' : 'calc(50% + 2px)',
+                            width: 'calc(50% - 6px)'
+                        }}
+                    />
                     {[{ id: 'email', label: t('emailMethod') }, { id: 'phone', label: t('phoneMethod') }].map(m => (
                         <button
                             key={m.id}
                             type="button"
                             onClick={() => { setLoginMethod(m.id); setError(''); }}
-                            style={{
-                                flex: 1,
-                                padding: '0.6rem',
-                                borderRadius: '0.75rem',
-                                border: 'none',
-                                fontWeight: 600,
-                                fontSize: '0.85rem',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                background: loginMethod === m.id ? 'var(--card-bg)' : 'transparent',
-                                color: loginMethod === m.id ? 'var(--primary)' : 'var(--text-muted)',
-                                boxShadow: loginMethod === m.id ? 'var(--shadow-sm)' : 'none',
-                                fontFamily: 'inherit',
-                            }}
+                            className={`segmented-btn ${loginMethod === m.id ? 'active' : ''}`}
                         >
                             {m.label}
                         </button>
                     ))}
                 </div>
 
-                {error && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', background: 'rgba(239,68,68,0.08)', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: '0.875rem', padding: '0.75rem 1rem', marginBottom: '1.25rem', fontSize: '0.9rem', fontWeight: 500 }}>
-                        <AlertCircle size={16} /> {error}
-                    </div>
-                )}
+                <AnimatePresence mode="wait">
+                    {error && (
+                        <motion.div 
+                            initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                            animate={{ opacity: 1, height: 'auto', marginBottom: '1.25rem' }}
+                            exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                            style={{ overflow: 'hidden' }}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', background: 'rgba(239,68,68,0.08)', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: '0.875rem', padding: '0.75rem 1rem', fontSize: '0.9rem', fontWeight: 500 }}>
+                                <AlertCircle size={16} /> {error}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 <form onSubmit={handleLogin}>
-                    {loginMethod === 'email' ? (
-                        <>
-                            <div className="input-group">
-                                <Mail size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
-                                <input
-                                    type="email"
-                                    placeholder={t('emailAddress')}
-                                    value={email}
-                                    onChange={e => { setEmail(e.target.value); setError(''); }}
-                                    required
-                                />
-                            </div>
-                            <div className="input-group">
-                                <Lock size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    placeholder={t('password')}
-                                    value={password}
-                                    onChange={e => { setPassword(e.target.value); setError(''); }}
-                                    required
-                                />
-                                <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', flexShrink: 0 }}>
-                                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                                </button>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <div className="input-group">
-                                <Phone size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
-                                <input
-                                    type="tel"
-                                    placeholder={t('phoneNumber')}
-                                    value={phone}
-                                    onChange={e => { setPhone(e.target.value); setError(''); setOtpSent(false); }}
-                                    style={{ flex: 1, minWidth: 0 }}
-                                    required
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleSendOtp}
-                                    disabled={sendingOtp || !phone}
-                                    style={{
-                                        background: otpSent ? '#059669' : 'var(--primary)',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '0.5rem',
-                                        padding: '0.3rem 0.6rem',
-                                        fontSize: '0.8rem',
-                                        fontWeight: 600,
-                                        cursor: (sendingOtp || !phone) ? 'not-allowed' : 'pointer',
-                                        opacity: (sendingOtp || !phone) ? 0.7 : 1,
-                                        transition: 'all 0.2s',
-                                        whiteSpace: 'nowrap'
-                                    }}
-                                >
-                                    {sendingOtp ? '...' : (otpSent ? t('sent') : t('getOtp'))}
-                                </button>
-                            </div>
-                            {otpSent && (
-                                <div className="animate-fade-in delay-1 input-group">
-                                    <Lock size={18} color="var(--text-muted)" style={{ flexShrink: 0 }} />
+                    <AnimatePresence mode="wait">
+                        {loginMethod === 'email' ? (
+                            <motion.div 
+                                key="email"
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 10 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <div className="input-group">
+                                    <Mail size={18} />
                                     <input
-                                        type="text"
-                                        placeholder={t('otpCode')}
-                                        value={otp}
-                                        onChange={e => { setOtp(e.target.value); setError(''); }}
-                                        maxLength={6}
+                                        type="email"
+                                        placeholder={t('emailAddress')}
+                                        value={email}
+                                        onChange={e => { setEmail(e.target.value); setError(''); }}
                                         required
                                     />
                                 </div>
-                            )}
-                            <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.75rem', marginTop: '-0.5rem' }}>
-                                {!otpSent ? t('otpPromptClick') : t('otpPromptSent')}
-                            </p>
-                        </>
-                    )}
+                                <div className="input-group">
+                                    <Lock size={18} />
+                                    <input
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder={t('password')}
+                                        value={password}
+                                        onChange={e => { setPassword(e.target.value); setError(''); }}
+                                        required
+                                    />
+                                    <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', flexShrink: 0 }}>
+                                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                    </button>
+                                </div>
+                            </motion.div>
+                        ) : (
+                            <motion.div 
+                                key="phone"
+                                initial={{ opacity: 0, x: 10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -10 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <div className="input-group">
+                                    <Phone size={18} />
+                                    <input
+                                        type="tel"
+                                        placeholder={t('phoneNumber')}
+                                        value={phone}
+                                        onChange={e => { setPhone(e.target.value); setError(''); setOtpSent(false); }}
+                                        style={{ flex: 1, minWidth: 0 }}
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={handleSendOtp}
+                                        disabled={sendingOtp || !phone}
+                                        style={{
+                                            background: otpSent ? 'var(--success)' : 'var(--primary)',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '0.5rem',
+                                            padding: '0.3rem 0.6rem',
+                                            fontSize: '0.8rem',
+                                            fontWeight: 600,
+                                            cursor: (sendingOtp || !phone) ? 'not-allowed' : 'pointer',
+                                            opacity: (sendingOtp || !phone) ? 0.7 : 1,
+                                            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                                            whiteSpace: 'nowrap'
+                                        }}
+                                    >
+                                        {sendingOtp ? <span className="spinner" style={{width: 14, height: 14, borderWidth: 2}}></span> : (otpSent ? t('sent') : t('getOtp'))}
+                                    </button>
+                                </div>
+                                <AnimatePresence>
+                                    {otpSent && (
+                                        <motion.div 
+                                            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                                            animate={{ opacity: 1, height: 'auto', marginTop: '0.875rem' }}
+                                            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                                            style={{ overflow: 'hidden' }}
+                                        >
+                                            <div className="input-group" style={{ marginBottom: 0 }}>
+                                                <Lock size={18} />
+                                                <input
+                                                    type="text"
+                                                    placeholder={t('otpCode')}
+                                                    value={otp}
+                                                    onChange={e => { setOtp(e.target.value); setError(''); }}
+                                                    maxLength={6}
+                                                    required
+                                                />
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.75rem', marginTop: '0.5rem' }}>
+                                    {!otpSent ? t('otpPromptClick') : t('otpPromptSent')}
+                                </p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
-                    {(loginMethod === 'email' || (loginMethod === 'phone' && otpSent)) && (
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="btn-primary"
-                            style={{ width: '100%', padding: '0.9rem', fontSize: '1rem', marginTop: '0.25rem', borderRadius: '1rem' }}
-                        >
-                            {loading ? <span className="spinner"></span> : t('signInButton')}
-                        </button>
-                    )}
+                    <AnimatePresence>
+                        {(loginMethod === 'email' || (loginMethod === 'phone' && otpSent)) && (
+                            <motion.button
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                type="submit"
+                                disabled={loading}
+                                className="btn-primary"
+                                style={{ marginTop: '0.5rem' }}
+                            >
+                                {loading ? <span className="spinner"></span> : t('signInButton')}
+                            </motion.button>
+                        )}
+                    </AnimatePresence>
                 </form>
 
                 <div style={{ display: 'flex', alignItems: 'center', margin: '1.5rem 0', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
@@ -315,10 +337,12 @@ export default function Login() {
                     <Link to="/signup" style={{ color: 'var(--primary)', fontWeight: 700, textDecoration: 'none' }}>{t('signUpLink')}</Link>
                 </p>
 
-                <div style={{ marginTop: '1.75rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem', textAlign: 'center', fontSize: '0.8rem' }}>
-                    <a href="/privacy.html" target="_blank" rel="noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--primary)'} onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}>{t('privacyPolicy')}</a>
+                <div style={{ marginTop: '1.75rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem', textAlign: 'center', fontSize: '0.8rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+                    <Link to="/privacy-policy" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--primary)'} onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}>{t('privacyPolicy')}</Link>
+                    <span style={{ color: 'var(--border-color)' }}>|</span>
+                    <Link to="/data-deletion" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--danger)'} onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}>Data Deletion</Link>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }

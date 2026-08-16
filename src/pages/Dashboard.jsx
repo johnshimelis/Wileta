@@ -12,6 +12,7 @@ import NotificationDrawer from '../components/NotificationDrawer';
 import { useNotification } from '../context/NotificationContext';
 import Sidebar from '../components/Sidebar';
 import { useLanguage } from '../context/LanguageContext';
+import Logo from '../components/Logo';
 
 // Standalone Modal Components
 const WithdrawModal = ({
@@ -357,11 +358,7 @@ export default function Dashboard() {
             
             <div className="mobile-header-container mobile-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <img src="/gurshapay-logo.png" alt="GurshaPay Logo" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.02em', lineHeight: 1 }}>GurshaPay</span>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '0.05em', marginTop: '0.15rem' }}>ጎርሻፒይ</span>
-                    </div>
+                    <Logo size="small" />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <NotificationDrawer />
@@ -470,24 +467,24 @@ export default function Dashboard() {
                 )}
 
                 {/* Share Link Section */}
-                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', background: 'linear-gradient(135deg, var(--primary) 0%, #059669 100%)', color: 'white', border: 'none' }}>
+                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', borderLeft: '4px solid var(--primary)' }}>
                     <div style={{ flex: '1 1 200px', minWidth: 0 }}>
-                        <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', color: 'white' }}>{t('tippingLinkTitle')}</h2>
-                        <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.95rem', fontWeight: 500 }}>{t('tippingLinkDesc')}</p>
+                        <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', color: 'var(--text-main)' }}>{t('tippingLinkTitle')}</h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', fontWeight: 500 }}>{t('tippingLinkDesc')}</p>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.15)', padding: '0.5rem', borderRadius: '1rem', flex: '1 1 200px', minWidth: '0', border: '1px solid rgba(255,255,255,0.3)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-color)', padding: '0.5rem', borderRadius: '1rem', flex: '1 1 200px', minWidth: '0', border: '1px solid var(--border-color)' }}>
                         <a
                             href={tipUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ padding: '0.5rem 1rem', flex: 1, minWidth: 0, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600, color: 'white', textDecoration: 'none' }}
+                            style={{ padding: '0.5rem 1rem', flex: 1, minWidth: 0, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600, color: 'var(--primary)', textDecoration: 'none' }}
                             title="Open tipping page"
                         >
                             {tipUrl}
                         </a>
                         <button
                             onClick={copyToClipboard}
-                            style={{ background: 'white', border: 'none', cursor: 'pointer', color: 'var(--primary)', padding: '0.6rem 1.2rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, transition: 'all 0.2s' }}
+                            style={{ background: 'var(--primary)', border: 'none', cursor: 'pointer', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, transition: 'all 0.2s' }}
                         >
                             {copied ? <><CheckCircle size={18} /> {t('copied')}</> : <><Copy size={18} /> {t('copy')}</>}
                         </button>
@@ -495,7 +492,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* OBS Alert Overlay Section */}
-                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', background: 'rgba(30, 41, 59, 0.05)', border: '1px solid var(--border-color)' }}>
+                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', borderLeft: '4px solid var(--secondary)' }}>
                     <div style={{ flex: '1 1 300px', minWidth: 0 }}>
                         <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-main)' }}>
                             <span style={{ display: 'inline-flex', padding: '6px', borderRadius: '0.5rem', background: 'rgba(15, 157, 88, 0.1)', color: '#0F9D58' }}>⚡</span>
@@ -554,7 +551,7 @@ export default function Dashboard() {
                     {/* Card 2: Lifetime Earnings */}
                     <div className="dashboard-card">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-                            <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'rgba(212, 175, 55, 0.1)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <TrendingUp size={20} />
                             </div>
                             <h3 style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 600 }}>{t('totalTips')}</h3>

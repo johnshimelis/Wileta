@@ -5,6 +5,7 @@ import { UserPlus, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Onboarding() {
     const [name, setName] = useState('');
@@ -32,32 +33,63 @@ export default function Onboarding() {
         setLoading(false);
     };
 
+    const pageVariants = {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } },
+        exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }
+    };
+
     return (
-        <div className="auth-container" style={{ position: 'relative' }}>
+        <motion.div 
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={pageVariants}
+            className="auth-container"
+        >
             {/* Top Right Actions */}
             <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', zIndex: 10, display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                 <LanguageToggle />
                 <ThemeToggle />
             </div>
 
-            <div className="auth-card animate-fade-in">
-                <div className="auth-header">
-                    <div className="auth-icon animate-fade-in delay-1">
+            <div className="auth-card">
+                <div className="auth-header" style={{ marginBottom: '2.5rem' }}>
+                    <motion.div 
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: 'spring', damping: 15 }}
+                        style={{
+                            width: '64px', height: '64px', background: 'var(--primary)', borderRadius: '1.25rem',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem',
+                            color: 'white', boxShadow: '0 10px 20px -5px var(--primary-glow)',
+                            transform: 'rotate(-5deg)'
+                        }}
+                    >
                         <UserPlus size={32} />
-                    </div>
-                    <h2 className="auth-title animate-fade-in delay-1">{t('onboardingTitle')}</h2>
-                    <p className="auth-subtitle animate-fade-in delay-2">
+                    </motion.div>
+                    <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-main)', textAlign: 'center', marginBottom: '0.35rem', letterSpacing: '-0.02em' }}>{t('onboardingTitle')}</h2>
+                    <p style={{ color: 'var(--text-muted)', textAlign: 'center', fontSize: '0.9rem' }}>
                         {t('onboardingDesc2')}
                     </p>
                 </div>
 
-                <form onSubmit={handleOnboard} className="animate-fade-in delay-2">
+                <AnimatePresence mode="wait">
                     {error && (
-                        <div className="error-message">
-                            <AlertCircle size={18} /> {error}
-                        </div>
+                        <motion.div 
+                            initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                            animate={{ opacity: 1, height: 'auto', marginBottom: '1.25rem' }}
+                            exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                            style={{ overflow: 'hidden' }}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: 'var(--danger)', borderRadius: '0.875rem', padding: '0.75rem 1rem', fontSize: '0.9rem', fontWeight: 500 }}>
+                                <AlertCircle size={16} /> {error}
+                            </div>
+                        </motion.div>
                     )}
+                </AnimatePresence>
 
+                <form onSubmit={handleOnboard}>
                     <div className="form-group">
                         <label htmlFor="name" className="form-label">{t('fullName')}</label>
                         <input
@@ -82,12 +114,12 @@ export default function Onboarding() {
                             onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
                             required
                         />
-                        <p style={{ fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.5rem', fontWeight: 500 }}>
+                        <p style={{ fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.5rem', fontWeight: 600 }}>
                             {t('yourTipLink')}: gurshapay.com/{username || 'username'}
                         </p>
                     </div>
 
-                    <div className="form-group" style={{ marginBottom: '2rem' }}>
+                    <div className="form-group" style={{ marginBottom: '2.5rem' }}>
                         <label htmlFor="telebirr" className="form-label">{t('yourTelebirrNumber')}</label>
                         <input
                             id="telebirr"
@@ -96,7 +128,6 @@ export default function Onboarding() {
                             placeholder={t('telebirrPlaceholderOnboard')}
                             value={telebirrInfo}
                             onChange={(e) => setTelebirrInfo(e.target.value)}
-                            style={{ color: '#0f172a' }}
                             required
                         />
                     </div>
@@ -106,6 +137,6 @@ export default function Onboarding() {
                     </button>
                 </form>
             </div>
-        </div>
+        </motion.div>
     );
 }
