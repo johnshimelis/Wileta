@@ -54,8 +54,8 @@ export default function Profile() {
                     <p style={{ color: 'var(--text-muted)' }}>{t('profileSubtitle')}</p>
                 </header>
 
-                <div className="dashboard-card animate-fade-in" style={{ display: 'flex', gap: '2.5rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                    <div className="creator-avatar" style={{ width: '120px', height: '120px', fontSize: '3rem', margin: 0, flexShrink: 0, overflow: 'hidden' }}>
+                <div className="dashboard-card animate-fade-in profile-card">
+                    <div className="creator-avatar profile-avatar-container">
                         {user?.profilePicUrl ? (
                             <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
@@ -63,18 +63,18 @@ export default function Profile() {
                         )}
                     </div>
 
-                    <div style={{ flex: 1, minWidth: '0' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
-                            <div style={{ flex: '1 1 200px', minWidth: 0 }}>
-                                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', wordBreak: 'break-word' }}>{user?.name}</h2>
-                                <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem', wordBreak: 'break-word' }}>@{user?.username}</p>
+                    <div className="profile-info-container">
+                        <div className="profile-header-row">
+                            <div className="profile-name-container">
+                                <h2 className="profile-name-text">{user?.name}</h2>
+                                <p className="profile-username-text">@{user?.username}</p>
                             </div>
-                            <Link to="/settings" className="btn-primary" style={{ width: 'auto', padding: '0.6rem 1.2rem', background: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none', flexShrink: 0 }}>
+                            <Link to="/settings" className="btn-primary profile-edit-btn">
                                 {t('editProfile')}
                             </Link>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
+                        <div className="profile-details-grid">
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
                                 <Mail size={18} />
                                 <span>{user?.email || t('noEmailSet')}</span>
