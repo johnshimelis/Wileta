@@ -15,7 +15,7 @@ export default function Logo({ size = 'medium', className = '' }) {
     };
 
     const dimensions = {
-        small: { height: '80px', textSize: '1.4rem' },
+        small: { height: '60px', textSize: '1.2rem' },
         medium: { height: '140px', textSize: '2.2rem' },
         large: { height: '180px', textSize: '2.8rem' },
         xlarge: { height: '220px', textSize: '3.5rem' }

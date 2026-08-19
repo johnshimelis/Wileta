@@ -33,11 +33,11 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
             )}
 
             <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-                <div className="desktop-logo-container" style={{ display: 'flex', alignItems: 'center', marginBottom: '2.5rem', padding: '0 0.5rem' }}>
-                    <Logo size="medium" />
+                <div className="desktop-logo-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.5rem', padding: '0 0.5rem' }}>
+                    <Logo size="large" />
                 </div>
 
-                <nav className="sidebar-nav" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <nav className="sidebar-nav" style={{ display: 'flex', flexDirection: 'column', height: '100%', marginTop: '0.5rem' }}>
                     <div style={{ flex: 1 }}>
                         <NavItem to="/dashboard" icon={LayoutDashboard} label={t('dashboardTitle')} />
                         <NavItem to="/profile" icon={User} label={t('profile')} />
