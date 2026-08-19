@@ -127,7 +127,7 @@ export default function Login() {
             <div className="auth-card" style={{ padding: '2rem' }}>
                 {/* Logo */}
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem', justifyContent: 'center' }}>
-                    <Logo size="medium" />
+                    <Logo size="small" />
                 </div>
 
                 <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)', textAlign: 'center', marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>{t('welcomeBack')}</h1>
