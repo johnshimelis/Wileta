@@ -59,24 +59,24 @@ export default function Signup() {
                 <ThemeToggle />
             </div>
 
-            <div className="auth-card">
+            <div className="auth-card" style={{ padding: '2rem' }}>
                 {/* Logo */}
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1.75rem', justifyContent: 'center' }}>
-                    <Logo size="large" />
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem', justifyContent: 'center' }}>
+                    <Logo size="medium" />
                 </div>
 
-                <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-main)', textAlign: 'center', marginBottom: '0.35rem', letterSpacing: '-0.02em' }}>{t('createAccount')}</h1>
-                <p style={{ color: 'var(--text-muted)', textAlign: 'center', fontSize: '0.9rem', marginBottom: '1.75rem' }}>{t('signUpSubtitle')}</p>
+                <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)', textAlign: 'center', marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>{t('createAccount')}</h1>
+                <p style={{ color: 'var(--text-muted)', textAlign: 'center', fontSize: '0.85rem', marginBottom: '1.25rem' }}>{t('signUpSubtitle')}</p>
 
                 <AnimatePresence mode="wait">
                     {error && (
                         <motion.div 
                             initial={{ opacity: 0, height: 0, marginBottom: 0 }}
-                            animate={{ opacity: 1, height: 'auto', marginBottom: '1.25rem' }}
+                            animate={{ opacity: 1, height: 'auto', marginBottom: '1rem' }}
                             exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                             style={{ overflow: 'hidden' }}
                         >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: 'var(--danger)', borderRadius: '0.875rem', padding: '0.75rem 1rem', fontSize: '0.9rem', fontWeight: 500 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: 'var(--danger)', borderRadius: '0.875rem', padding: '0.5rem 0.75rem', fontSize: '0.85rem', fontWeight: 500 }}>
                                 <AlertCircle size={16} /> {error}
                             </div>
                         </motion.div>
@@ -84,7 +84,7 @@ export default function Signup() {
                 </AnimatePresence>
 
                 <form onSubmit={handleSignup}>
-                    <div className="input-group">
+                    <div className="input-group" style={{ marginBottom: '0.75rem' }}>
                         <User size={18} />
                         <input
                             type="text"
@@ -94,7 +94,7 @@ export default function Signup() {
                             required
                         />
                     </div>
-                    <div className="input-group">
+                    <div className="input-group" style={{ marginBottom: '0.75rem' }}>
                         <Mail size={18} />
                         <input
                             type="email"
@@ -104,7 +104,7 @@ export default function Signup() {
                             required
                         />
                     </div>
-                    <div className="input-group">
+                    <div className="input-group" style={{ marginBottom: '1rem' }}>
                         <Lock size={18} />
                         <input
                             type="password"
@@ -119,19 +119,19 @@ export default function Signup() {
                         type="submit"
                         disabled={loading}
                         className="btn-primary"
-                        style={{ marginTop: '1.5rem' }}
+                        style={{ marginTop: '0.5rem' }}
                     >
                         {loading ? <span className="spinner"></span> : t('signUpLink')}
                     </button>
                 </form>
 
-                <div style={{ display: 'flex', alignItems: 'center', margin: '1.5rem 0', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', margin: '1.25rem 0', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
                     <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
                     <span style={{ padding: '0 0.75rem' }}>{t('orSignUpWith')}</span>
                     <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
                     <button
                         type="button"
                         onClick={() => {
@@ -146,13 +146,13 @@ export default function Signup() {
                             justifyContent: 'center',
                             gap: '0.75rem',
                             width: '100%',
-                            padding: '0.8rem',
+                            padding: '0.75rem',
                             borderRadius: '1rem',
                             border: '1px solid var(--border-color)',
                             background: 'var(--input-bg)',
                             color: 'var(--text-main)',
                             fontWeight: 600,
-                            fontSize: '0.9rem',
+                            fontSize: '0.85rem',
                             cursor: 'pointer',
                             transition: 'all 0.2s',
                             fontFamily: 'inherit',
@@ -161,7 +161,7 @@ export default function Signup() {
                         onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.background = 'rgba(0,0,0,0.4)'; }}
                         onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.background = 'var(--input-bg)'; }}
                     >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
@@ -171,16 +171,10 @@ export default function Signup() {
                     </button>
                 </div>
 
-                <p style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                     {t('alreadyHaveAccount')}{' '}
                     <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 700, textDecoration: 'none' }}>{t('signInLink')}</Link>
                 </p>
-
-                <div style={{ marginTop: '1.75rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem', textAlign: 'center', fontSize: '0.8rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
-                    <Link to="/privacy-policy" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--primary)'} onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}>{t('privacyPolicy')}</Link>
-                    <span style={{ color: 'var(--border-color)' }}>|</span>
-                    <Link to="/data-deletion" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--danger)'} onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}>Data Deletion</Link>
-                </div>
             </div>
         </motion.div>
     );

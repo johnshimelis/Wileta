@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import {
     User, LayoutDashboard, ShieldCheck, Settings as SettingsIcon,
@@ -86,8 +87,9 @@ export default function Settings() {
         setSaving(false);
     };
 
-    const SettingRow = ({ icon: Icon, title, description, badge }) => (
+    const SettingRow = ({ icon: Icon, title, description, badge, onClick }) => (
         <div
+            onClick={onClick}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', borderBottom: '1px solid var(--border-color)', cursor: 'pointer', transition: 'background 0.2s' }}
             onMouseOver={e => e.currentTarget.style.background = 'var(--bg-color)'}
             onMouseOut={e => e.currentTarget.style.background = 'transparent'}
@@ -145,9 +147,14 @@ export default function Settings() {
                 </header>
 
                 <div className="animate-fade-in" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem' }}>
-                    <section style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem' }}>{t('generalSettings')}</h3>
-                        <div className="dashboard-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <motion.section 
+                        initial="hidden" 
+                        animate="visible" 
+                        variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } }}
+                        style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+                    >
+                        <motion.h3 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem' }}>{t('generalSettings')}</motion.h3>
+                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="dashboard-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
                                 <div style={{ position: 'relative' }}>
                                     <div className="creator-avatar" style={{ width: '80px', height: '80px', fontSize: '2rem', margin: 0, overflow: 'hidden' }}>
@@ -203,10 +210,10 @@ export default function Settings() {
                                 </div>
                                 <span className="badge" style={{ marginLeft: 'auto' }}>{t('verifiedText')}</span>
                             </div>
-                        </div >
+                        </motion.div>
 
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem', marginTop: '1.5rem' }}>{t('language')}</h3>
-                        <div className="dashboard-card" style={{ padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <motion.h3 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem', marginTop: '1.5rem' }}>{t('language')}</motion.h3>
+                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="dashboard-card" style={{ padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-main)' }}>{t('language')}</span>
                             <div className="segmented-control" style={{ marginBottom: 0, width: '200px' }}>
                                 <div 
@@ -227,47 +234,60 @@ export default function Settings() {
                                     </button>
                                 ))}
                             </div>
-                        </div>
+                        </motion.div>
 
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem', marginTop: '1.5rem' }}>{t('securityTitle')}</h3>
-                        <div className="dashboard-card" style={{ padding: 0, overflow: 'hidden' }}>
+                        <motion.h3 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem', marginTop: '1.5rem' }}>{t('securityTitle')}</motion.h3>
+                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="dashboard-card" style={{ padding: 0, overflow: 'hidden' }}>
                             <SettingRow
                                 icon={Lock}
                                 title={t('passwordTitle')}
                                 description={t('passwordDesc')}
+                                onClick={() => showAlert(t('featureComingSoon') || 'Feature coming soon', 'warning')}
                             />
                             <SettingRow
                                 icon={ShieldCheck}
                                 title={t('twoFactorTitle')}
                                 description={t('twoFactorDesc')}
                                 badge={t('offStatus')}
+                                onClick={() => showAlert(t('featureComingSoon') || 'Feature coming soon', 'warning')}
                             />
-                        </div>
-                    </section >
+                        </motion.div>
+                    </motion.section >
 
-                    <section style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem' }}>{t('notificationsTitle')}</h3>
-                        <div className="dashboard-card" style={{ padding: 0, overflow: 'hidden' }}>
+                    <motion.section 
+                        initial="hidden" 
+                        animate="visible" 
+                        variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } } }}
+                        style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+                    >
+                        <motion.h3 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem' }}>{t('notificationsTitle')}</motion.h3>
+                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="dashboard-card" style={{ padding: 0, overflow: 'hidden' }}>
                             <SettingRow
                                 icon={Bell}
                                 title={t('pushNotifications')}
                                 description={t('pushNotificationsDesc')}
+                                onClick={() => showAlert(t('featureComingSoon') || 'Feature coming soon', 'warning')}
                             />
                             <SettingRow
                                 icon={Mail}
                                 title={t('emailReports')}
                                 description={t('emailReportsDesc')}
+                                onClick={() => showAlert(t('featureComingSoon') || 'Feature coming soon', 'warning')}
                             />
-                        </div>
+                        </motion.div>
 
-                        <div className="dashboard-card" style={{ marginTop: 'auto', border: '1px solid var(--border-color)', opacity: 0.9 }}>
+                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="dashboard-card" style={{ marginTop: 'auto', border: '1px solid var(--border-color)', opacity: 0.9 }}>
                             <h4 style={{ color: 'var(--danger)', fontWeight: 800, marginBottom: '0.5rem' }}>{t('dangerZone')}</h4>
                             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{t('deleteNotice2')}</p>
-                            <button className="btn-primary" style={{ background: 'transparent', color: 'var(--danger)', border: '1px solid var(--danger)', boxShadow: 'none', fontSize: '0.9rem', padding: '0.5rem 1rem', width: 'auto' }}>
+                            <button 
+                                onClick={() => showAlert(t('deactivateAccountNotice') || 'Account deactivation is disabled.', 'error')}
+                                className="btn-primary" 
+                                style={{ background: 'transparent', color: 'var(--danger)', border: '1px solid var(--danger)', boxShadow: 'none', fontSize: '0.9rem', padding: '0.5rem 1rem', width: 'auto' }}
+                            >
                                 {t('deactivateAccount')}
                             </button>
-                        </div>
-                    </section>
+                        </motion.div>
+                    </motion.section>
                 </div >
             </main >
         </div >

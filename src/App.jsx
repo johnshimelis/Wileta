@@ -1,7 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
+import PageTransition from './components/PageTransition';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Onboarding from './pages/Onboarding';
@@ -41,60 +43,70 @@ const PublicRoute = ({ children }) => {
   return children;
 };
 
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/login" element={
+          <PublicRoute>
+            <PageTransition><Login /></PageTransition>
+          </PublicRoute>
+        } />
+        <Route path="/signup" element={
+          <PublicRoute>
+            <PageTransition><Signup /></PageTransition>
+          </PublicRoute>
+        } />
+        <Route path="/onboarding" element={
+          <ProtectedRoute>
+            <PageTransition><Onboarding /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <PageTransition><Dashboard /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/kyc" element={
+          <ProtectedRoute>
+            <PageTransition><KYCVerification /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <PageTransition><Profile /></PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/settings" element={
+          <ProtectedRoute>
+            <PageTransition><Settings /></PageTransition>
+          </ProtectedRoute>
+        } />
+        {/* Public Tipping Page */}
+        <Route path="/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+        <Route path="/@:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+        {/* OBS Stream Overlay */}
+        <Route path="/overlay/:creatorId" element={<PageTransition><Overlay /></PageTransition>} />
+        
+        {/* Public Legal / Compliance Pages */}
+        <Route path="/privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+        <Route path="/data-deletion" element={<PageTransition><DataDeletion /></PageTransition>} />
+        
+        {/* Default Route */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <NotificationProvider>
-          <Routes>
-            <Route path="/login" element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            } />
-            <Route path="/signup" element={
-              <PublicRoute>
-                <Signup />
-              </PublicRoute>
-            } />
-            <Route path="/onboarding" element={
-              <ProtectedRoute>
-                <Onboarding />
-              </ProtectedRoute>
-            } />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/kyc" element={
-              <ProtectedRoute>
-                <KYCVerification />
-              </ProtectedRoute>
-            } />
-            <Route path="/profile" element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } />
-            <Route path="/settings" element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            } />
-            {/* Public Tipping Page */}
-            <Route path="/:username" element={<PublicProfile />} />
-            <Route path="/@:username" element={<PublicProfile />} />
-            {/* OBS Stream Overlay */}
-            <Route path="/overlay/:creatorId" element={<Overlay />} />
-            
-            {/* Public Legal / Compliance Pages */}
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/data-deletion" element={<DataDeletion />} />
-            
-            {/* Default Route */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
+          <AnimatedRoutes />
         </NotificationProvider>
       </AuthProvider>
     </BrowserRouter>
