@@ -62,7 +62,7 @@ const newLayout = `
                         overflow: 'hidden'
                     }}>
                         {creator.profilePicUrl ? (
-                            <img src={creator.profilePicUrl?.startsWith('http') ? creator.profilePicUrl : \`https://wileta-backend.onrender.com\${creator.profilePicUrl}\`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <img src={creator.profilePicUrl?.startsWith('http') ? creator.profilePicUrl : 'https://wileta-backend.onrender.com' + creator.profilePicUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
                             creator.name.charAt(0).toUpperCase()
                         )}
@@ -136,7 +136,7 @@ const newLayout = `
                                                 padding: '0.75rem 0',
                                                 borderRadius: '0.75rem',
                                                 border: amount === val ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                                                background: amount === val ? 'var(--primary-light)' : 'var(--card-bg)',
+                                                background: amount === val ? 'var(--primary-light)' : 'white',
                                                 color: amount === val ? 'var(--primary)' : 'var(--text-main)',
                                                 fontWeight: 800,
                                                 fontSize: '1.1rem',
@@ -152,7 +152,7 @@ const newLayout = `
                                 <div style={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    background: 'var(--card-bg)',
+                                    background: 'white',
                                     border: amount === 'custom' ? '2px solid var(--primary)' : '1px solid var(--border-color)',
                                     borderRadius: '0.75rem',
                                     padding: '0.5rem 1rem',
@@ -263,7 +263,7 @@ const newLayout = `
                                     transition: 'all 0.2s'
                                 }}
                             >
-                                {tippingState === 'processing' ? <span className="spinner" style={{ width: '20px', height: '20px' }}></span> : `Support ${amount === 'custom' ? (customAmount || '0') : amount} ETB`}
+                                {tippingState === 'processing' ? <span className="spinner" style={{ width: '20px', height: '20px' }}></span> : "Support " + (amount === 'custom' ? (customAmount || '0') : amount) + " ETB"}
                             </button>
                         </form>
                     )}
