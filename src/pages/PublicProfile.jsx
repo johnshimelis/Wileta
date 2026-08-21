@@ -62,9 +62,9 @@ export default function PublicProfile() {
                 message: shoutOutMessage
             });
 
-            if (response.data && response.data.success && response.data.checkout_url) {
-                // Redirect user directly to Chapa's secure checkout page
-                window.location.href = response.data.checkout_url;
+            if (response.data && response.data.success) {
+                // Direct charge initiated via Telebirr push
+                setTippingState('pin_prompt');
             } else {
                 setTippingState('error');
             }
