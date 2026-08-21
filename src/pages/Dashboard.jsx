@@ -35,9 +35,11 @@ const WithdrawModal = ({
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('sendBalanceNotice')}</p>
                 </div>
 
-                {/* Destination Display */}
+                {/* Destination Display & Selection */}
                 <div style={{ background: 'var(--bg-color)', padding: '1rem', borderRadius: '0.75rem', border: '1px solid var(--border-color)', marginBottom: '1.5rem', textAlign: 'left', fontSize: '0.85rem' }}>
-                    <span style={{ fontWeight: 700, display: 'block', marginBottom: '0.25rem', color: 'var(--text-main)' }}>{t('payoutDestination')}:</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                        <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>{t('payoutDestination')}:</span>
+                    </div>
                     {user?.payoutMethod === 'bank' ? (
                         <div>
                             <span style={{ fontWeight: 600 }}>Bank:</span> {user.bankDetails?.bankName}<br/>
@@ -49,6 +51,9 @@ const WithdrawModal = ({
                             <span style={{ fontWeight: 600 }}>Telebirr Number:</span> {user?.telebirr_number || user?.phone}
                         </div>
                     )}
+                    <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                        * To change this, update your Payout Settings below.
+                    </p>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
@@ -75,6 +80,7 @@ const WithdrawModal = ({
                             <div className="form-group" style={{ marginTop: '1rem' }}>
                                 <input
                                     type="number"
+                                    min="1"
                                     className="form-input"
                                     placeholder="Enter amount in ETB"
                                     value={customAmount}
@@ -90,7 +96,7 @@ const WithdrawModal = ({
                     <button onClick={onClose} className="btn-primary" style={{ flex: 1, background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-main)', boxShadow: 'none' }}>{t('cancel')}</button>
                     <button
                         onClick={onConfirm}
-                        disabled={loading || (withdrawType === 'custom' && !customAmount)}
+                        disabled={loading || (withdrawType === 'custom' && (!customAmount || Number(customAmount) <= 0))}
                         className="btn-primary"
                         style={{ flex: 1 }}
                     >
