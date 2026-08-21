@@ -185,18 +185,24 @@ export default function Dashboard() {
 
     // Payout settings states
     const [payoutMethod, setPayoutMethod] = useState(user?.payoutMethod || 'telebirr');
-    const [bankName, setBankName] = useState(user?.bankDetails?.bankName || '');
-    const [accountNumber, setAccountNumber] = useState(user?.bankDetails?.accountNumber || '');
-    const [accountHolderName, setAccountHolderName] = useState(user?.bankDetails?.accountHolderName || '');
+    
+    // Initialize with existing bankAccounts array, OR legacy bankDetails object, OR one empty form
+    const initialBankAccounts = user?.bankAccounts?.length > 0 
+        ? user.bankAccounts 
+        : (user?.bankDetails?.bankName ? [user.bankDetails] : [{ bankName: '', accountNumber: '', accountHolderName: '' }]);
+        
+    const [bankAccounts, setBankAccounts] = useState(initialBankAccounts);
     const [savingPayout, setSavingPayout] = useState(false);
 
     // Sync settings states when user loads
     useEffect(() => {
         if (user) {
             setPayoutMethod(user.payoutMethod || 'telebirr');
-            setBankName(user.bankDetails?.bankName || '');
-            setAccountNumber(user.bankDetails?.accountNumber || '');
-            setAccountHolderName(user.bankDetails?.accountHolderName || '');
+            if (user.bankAccounts?.length > 0) {
+                setBankAccounts(user.bankAccounts);
+            } else if (user.bankDetails?.bankName) {
+                setBankAccounts([user.bankDetails]);
+            }
         }
     }, [user]);
 
@@ -316,11 +322,7 @@ export default function Dashboard() {
         try {
             const payload = {
                 payoutMethod,
-                bankDetails: payoutMethod === 'bank' ? {
-                    bankName,
-                    accountNumber,
-                    accountHolderName
-                } : undefined
+                bankAccounts: payoutMethod === 'bank' ? bankAccounts : undefined
             };
             const res = await api.post('/auth/update-profile', payload);
             setUser(res.data);
@@ -473,12 +475,12 @@ export default function Dashboard() {
                 )}
 
                 {/* Share Link Section */}
-                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', borderLeft: '4px solid var(--primary)' }}>
-                    <div style={{ flex: '1 1 200px', minWidth: 0 }}>
+                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '1.5rem', borderLeft: '4px solid var(--primary)' }}>
+                    <div style={{ marginBottom: '1rem' }}>
                         <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', color: 'var(--text-main)' }}>{t('tippingLinkTitle')}</h2>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', fontWeight: 500 }}>{t('tippingLinkDesc')}</p>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-color)', padding: '0.5rem', borderRadius: '1rem', flex: '1 1 200px', minWidth: '0', border: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-color)', padding: '0.5rem', borderRadius: '1rem', border: '1px solid var(--border-color)', width: '100%', overflow: 'hidden' }}>
                         <a
                             href={tipUrl}
                             target="_blank"
@@ -490,7 +492,7 @@ export default function Dashboard() {
                         </a>
                         <button
                             onClick={copyToClipboard}
-                            style={{ background: 'var(--primary)', border: 'none', cursor: 'pointer', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, transition: 'all 0.2s' }}
+                            style={{ background: 'var(--primary)', border: 'none', cursor: 'pointer', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, transition: 'all 0.2s', flexShrink: 0 }}
                         >
                             {copied ? <><CheckCircle size={18} /> {t('copied')}</> : <><Copy size={18} /> {t('copy')}</>}
                         </button>
@@ -498,15 +500,15 @@ export default function Dashboard() {
                 </div>
 
                 {/* OBS Alert Overlay Section */}
-                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', borderLeft: '4px solid var(--secondary)' }}>
-                    <div style={{ flex: '1 1 300px', minWidth: 0 }}>
+                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '2.5rem', borderLeft: '4px solid var(--secondary)' }}>
+                    <div style={{ marginBottom: '1rem' }}>
                         <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-main)' }}>
                             <span style={{ display: 'inline-flex', padding: '6px', borderRadius: '0.5rem', background: 'rgba(15, 157, 88, 0.1)', color: '#0F9D58' }}>⚡</span>
                             {t('obsOverlayTitle')}
                         </h2>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('obsOverlayDesc')}</p>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-color)', padding: '0.5rem', borderRadius: '1rem', flex: '1 1 300px', minWidth: '0', border: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-color)', padding: '0.5rem', borderRadius: '1rem', border: '1px solid var(--border-color)', width: '100%', overflow: 'hidden' }}>
                         <span
                             style={{ padding: '0.5rem 1rem', flex: 1, minWidth: 0, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600, color: 'var(--text-muted)', fontSize: '0.85rem' }}
                             title="OBS Browser Source URL"
@@ -519,7 +521,7 @@ export default function Dashboard() {
                                 setObsCopied(true);
                                 setTimeout(() => setObsCopied(false), 2000);
                             }}
-                            style={{ background: 'var(--primary)', border: 'none', cursor: 'pointer', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, transition: 'all 0.2s' }}
+                            style={{ background: 'var(--primary)', border: 'none', cursor: 'pointer', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, transition: 'all 0.2s', flexShrink: 0 }}
                         >
                             {obsCopied ? <><CheckCircle size={16} /> {t('copied')}</> : <><Copy size={16} /> {t('shareTippingLink')}</>}
                         </button>
@@ -680,47 +682,72 @@ export default function Dashboard() {
                                     </p>
                                 </div>
                             ) : (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <select
-                                            className="form-input"
-                                            value={bankName}
-                                            onChange={e => setBankName(e.target.value)}
-                                            required
-                                            style={{ width: '100%', fontFamily: 'inherit', padding: '0.6rem' }}
-                                        >
-                                            <option value="">{t('selectBank')}</option>
-                                            <option value="Commercial Bank of Ethiopia (CBE)">Commercial Bank of Ethiopia (CBE)</option>
-                                            <option value="Awash International Bank">Awash International Bank</option>
-                                            <option value="Dashen Bank">Dashen Bank</option>
-                                            <option value="Bank of Abyssinia">Bank of Abyssinia</option>
-                                            <option value="Wegagen Bank">Wegagen Bank</option>
-                                            <option value="Nib International Bank">Nib International Bank</option>
-                                            <option value="Cooperative Bank of Oromia">Cooperative Bank of Oromia</option>
-                                        </select>
-                                    </div>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <input
-                                            type="text"
-                                            className="form-input"
-                                            placeholder={t('accountNumber')}
-                                            value={accountNumber}
-                                            onChange={e => setAccountNumber(e.target.value)}
-                                            required
-                                            style={{ padding: '0.6rem' }}
-                                        />
-                                    </div>
-                                    <div className="form-group" style={{ margin: 0 }}>
-                                        <input
-                                            type="text"
-                                            className="form-input"
-                                            placeholder={t('accountHolder')}
-                                            value={accountHolderName}
-                                            onChange={e => setAccountHolderName(e.target.value)}
-                                            required
-                                            style={{ padding: '0.6rem' }}
-                                        />
-                                    </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                                    {bankAccounts.map((account, index) => (
+                                        <div key={index} style={{ padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '0.75rem', background: 'var(--card-bg)' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                                                <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-main)' }}>Bank Account {index + 1}</span>
+                                                {bankAccounts.length > 1 && (
+                                                    <button type="button" onClick={() => setBankAccounts(bankAccounts.filter((_, i) => i !== index))} style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600 }}>Remove</button>
+                                                )}
+                                            </div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                                <select
+                                                    className="form-input"
+                                                    value={account.bankName}
+                                                    onChange={e => {
+                                                        const newAccounts = [...bankAccounts];
+                                                        newAccounts[index].bankName = e.target.value;
+                                                        setBankAccounts(newAccounts);
+                                                    }}
+                                                    required
+                                                    style={{ width: '100%', fontFamily: 'inherit', padding: '0.6rem' }}
+                                                >
+                                                    <option value="">{t('selectBank')}</option>
+                                                    <option value="Commercial Bank of Ethiopia (CBE)">Commercial Bank of Ethiopia (CBE)</option>
+                                                    <option value="Awash International Bank">Awash International Bank</option>
+                                                    <option value="Dashen Bank">Dashen Bank</option>
+                                                    <option value="Bank of Abyssinia">Bank of Abyssinia</option>
+                                                    <option value="Wegagen Bank">Wegagen Bank</option>
+                                                    <option value="Nib International Bank">Nib International Bank</option>
+                                                    <option value="Cooperative Bank of Oromia">Cooperative Bank of Oromia</option>
+                                                </select>
+                                                <input
+                                                    type="text"
+                                                    className="form-input"
+                                                    placeholder={t('accountNumber')}
+                                                    value={account.accountNumber}
+                                                    onChange={e => {
+                                                        const newAccounts = [...bankAccounts];
+                                                        newAccounts[index].accountNumber = e.target.value;
+                                                        setBankAccounts(newAccounts);
+                                                    }}
+                                                    required
+                                                    style={{ padding: '0.6rem' }}
+                                                />
+                                                <input
+                                                    type="text"
+                                                    className="form-input"
+                                                    placeholder={t('accountHolder')}
+                                                    value={account.accountHolderName}
+                                                    onChange={e => {
+                                                        const newAccounts = [...bankAccounts];
+                                                        newAccounts[index].accountHolderName = e.target.value;
+                                                        setBankAccounts(newAccounts);
+                                                    }}
+                                                    required
+                                                    style={{ padding: '0.6rem' }}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                    <button
+                                        type="button"
+                                        onClick={() => setBankAccounts([...bankAccounts, { bankName: '', accountNumber: '', accountHolderName: '' }])}
+                                        style={{ background: 'rgba(10, 92, 54, 0.1)', color: 'var(--primary)', border: '1px dashed var(--primary)', padding: '0.75rem', borderRadius: '0.75rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+                                    >
+                                        + Add Another Account
+                                    </button>
                                 </div>
                             )}
 
