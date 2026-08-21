@@ -572,8 +572,17 @@ tr:hover {
   position: sticky;
   top: 0;
   height: 100vh;
+  overflow-y: auto;
   z-index: 50;
   transition: all 0.3s ease;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
 }
 
 .main-content {

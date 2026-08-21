@@ -15,6 +15,7 @@ import Settings from './pages/Settings';
 import Overlay from './pages/Overlay';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import DataDeletion from './pages/DataDeletion';
+import ResetPassword from './pages/ResetPassword';
 import './index.css';
 
 // Protected Route Component
@@ -57,6 +58,11 @@ const AnimatedRoutes = () => {
         <Route path="/signup" element={
           <PublicRoute>
             <PageTransition><Signup /></PageTransition>
+          </PublicRoute>
+        } />
+        <Route path="/reset-password/:token" element={
+          <PublicRoute>
+            <PageTransition><ResetPassword /></PageTransition>
           </PublicRoute>
         } />
         <Route path="/onboarding" element={

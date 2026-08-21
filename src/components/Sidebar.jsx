@@ -12,11 +12,12 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
     const { logout } = useAuth();
     const { t } = useLanguage();
 
-    const NavItem = ({ to, icon: Icon, label }) => {
+    const NavItem = ({ to, icon: Icon, label, target }) => {
         const active = location.pathname === to;
         return (
             <Link
                 to={to}
+                target={target}
                 className={`nav-item ${active ? 'active' : ''}`}
                 onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -42,6 +43,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                         <NavItem to="/dashboard" icon={LayoutDashboard} label={t('dashboardTitle')} />
                         <NavItem to="/profile" icon={User} label={t('profile')} />
                         <NavItem to="/settings" icon={SettingsIcon} label={t('settings')} />
+                        <NavItem to="/privacy-policy" icon={ShieldCheck} label="Privacy & Terms" target="_blank" />
                     </div>
 
                     <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -57,13 +59,6 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                             <LogOut size={20} />
                             <span className="nav-text" style={{ fontWeight: 600 }}>{t('logout')}</span>
                         </button>
-
-                        <div style={{ marginTop: 'auto', paddingTop: '1.5rem' }}>
-                            <Link to="/privacy-policy" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--text-muted)', textDecoration: 'none', transition: 'all 0.2s', padding: '0.5rem', borderRadius: '0.75rem', fontSize: '0.8rem', fontWeight: 700 }} className="hover:bg-gray-100 dark:hover:bg-gray-800">
-                                <ShieldCheck size={14} />
-                                <span>{t('privacyPolicy')}</span>
-                            </Link>
-                        </div>
                     </div>
                 </nav>
             </aside>

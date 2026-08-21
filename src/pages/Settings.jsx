@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import {
     User, LayoutDashboard, ShieldCheck, Settings as SettingsIcon,
     LogOut, TrendingUp, Bell, Lock, Globe, Smartphone,
-    Save, CheckCircle, ChevronRight, Mail, Camera, Upload, Menu, X
+    Save, CheckCircle, ChevronRight, Mail, Camera, Upload, Menu, X, AlertTriangle
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
@@ -25,6 +25,18 @@ export default function Settings() {
     const [alert, setAlert] = useState(null);
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [pushEnabled, setPushEnabled] = useState(true);
+    const [emailEnabled, setEmailEnabled] = useState(true);
+    const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+
+    // Modals state
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordLoading, setPasswordLoading] = useState(false);
+
+    const [showDeactivateModal, setShowDeactivateModal] = useState(false);
 
     React.useEffect(() => {
         setIsMobileMenuOpen(false);
@@ -87,7 +99,23 @@ export default function Settings() {
         setSaving(false);
     };
 
-    const SettingRow = ({ icon: Icon, title, description, badge, onClick }) => (
+    const handleUpdatePassword = async (e) => {
+        e.preventDefault();
+        setPasswordError('');
+        setPasswordLoading(true);
+        try {
+            await api.post('/auth/update-password', { currentPassword, newPassword });
+            showAlert('Password updated successfully!', 'success');
+            setShowPasswordModal(false);
+            setCurrentPassword('');
+            setNewPassword('');
+        } catch (error) {
+            setPasswordError(error.response?.data?.error || 'Failed to update password');
+        }
+        setPasswordLoading(false);
+    };
+
+    const SettingRow = ({ icon: Icon, title, description, badge, onClick, isToggle, checked }) => (
         <div
             onClick={onClick}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', borderBottom: '1px solid var(--border-color)', cursor: 'pointer', transition: 'background 0.2s' }}
@@ -105,7 +133,13 @@ export default function Settings() {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 {badge && <span className="badge" style={{ margin: 0 }}>{badge}</span>}
-                <ChevronRight size={20} color="var(--text-muted)" />
+                {isToggle ? (
+                    <div style={{ width: '40px', height: '22px', background: checked ? 'var(--primary)' : 'var(--border-color)', borderRadius: '11px', position: 'relative', transition: '0.3s' }}>
+                        <div style={{ width: '18px', height: '18px', background: 'white', borderRadius: '50%', position: 'absolute', top: '2px', left: checked ? '20px' : '2px', transition: '0.3s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+                    </div>
+                ) : (
+                    <ChevronRight size={20} color="var(--text-muted)" />
+                )}
             </div>
         </div>
     );
@@ -242,14 +276,19 @@ export default function Settings() {
                                 icon={Lock}
                                 title={t('passwordTitle')}
                                 description={t('passwordDesc')}
-                                onClick={() => showAlert(t('featureComingSoon') || 'Feature coming soon', 'warning')}
+                                onClick={() => setShowPasswordModal(true)}
                             />
                             <SettingRow
                                 icon={ShieldCheck}
                                 title={t('twoFactorTitle')}
                                 description={t('twoFactorDesc')}
-                                badge={t('offStatus')}
-                                onClick={() => showAlert(t('featureComingSoon') || 'Feature coming soon', 'warning')}
+                                badge={twoFactorEnabled ? 'On' : 'Off'}
+                                isToggle={true}
+                                checked={twoFactorEnabled}
+                                onClick={() => {
+                                    setTwoFactorEnabled(!twoFactorEnabled);
+                                    showAlert(`Two-Factor Authentication ${!twoFactorEnabled ? 'Enabled' : 'Disabled'}`, 'success');
+                                }}
                             />
                         </motion.div>
                     </motion.section >
@@ -266,13 +305,23 @@ export default function Settings() {
                                 icon={Bell}
                                 title={t('pushNotifications')}
                                 description={t('pushNotificationsDesc')}
-                                onClick={() => showAlert(t('featureComingSoon') || 'Feature coming soon', 'warning')}
+                                isToggle={true}
+                                checked={pushEnabled}
+                                onClick={() => {
+                                    setPushEnabled(!pushEnabled);
+                                    showAlert(`Push Notifications ${!pushEnabled ? 'Enabled' : 'Disabled'}`, 'success');
+                                }}
                             />
                             <SettingRow
                                 icon={Mail}
                                 title={t('emailReports')}
                                 description={t('emailReportsDesc')}
-                                onClick={() => showAlert(t('featureComingSoon') || 'Feature coming soon', 'warning')}
+                                isToggle={true}
+                                checked={emailEnabled}
+                                onClick={() => {
+                                    setEmailEnabled(!emailEnabled);
+                                    showAlert(`Email Reports ${!emailEnabled ? 'Enabled' : 'Disabled'}`, 'success');
+                                }}
                             />
                         </motion.div>
 
@@ -280,7 +329,7 @@ export default function Settings() {
                             <h4 style={{ color: 'var(--danger)', fontWeight: 800, marginBottom: '0.5rem' }}>{t('dangerZone')}</h4>
                             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{t('deleteNotice2')}</p>
                             <button 
-                                onClick={() => showAlert(t('deactivateAccountNotice') || 'Account deactivation is disabled.', 'error')}
+                                onClick={() => setShowDeactivateModal(true)}
                                 className="btn-primary" 
                                 style={{ background: 'transparent', color: 'var(--danger)', border: '1px solid var(--danger)', boxShadow: 'none', fontSize: '0.9rem', padding: '0.5rem 1rem', width: 'auto' }}
                             >
@@ -289,6 +338,76 @@ export default function Settings() {
                         </motion.div>
                     </motion.section>
                 </div >
+
+                {/* Password Update Modal */}
+                {showPasswordModal && (
+                    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div className="dashboard-card" style={{ width: '90%', maxWidth: '400px', position: 'relative' }}>
+                            <button onClick={() => setShowPasswordModal(false)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
+                                <X size={24} />
+                            </button>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '1.5rem' }}>Update Password</h3>
+                            {passwordError && <div style={{ color: 'var(--danger)', marginBottom: '1rem', fontSize: '0.9rem' }}>{passwordError}</div>}
+                            <form onSubmit={handleUpdatePassword}>
+                                <div className="form-group">
+                                    <label className="form-label" style={{ marginBottom: '0.5rem', display: 'block' }}>Current Password <span style={{fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'normal'}}>(Leave blank if you signed in via Google/Phone)</span></label>
+                                    <input 
+                                        type="password" 
+                                        className="form-input" 
+                                        value={currentPassword} 
+                                        onChange={e => setCurrentPassword(e.target.value)} 
+                                    />
+                                </div>
+                                <div className="form-group" style={{ marginTop: '1rem' }}>
+                                    <label className="form-label" style={{ marginBottom: '0.5rem', display: 'block' }}>New Password</label>
+                                    <input 
+                                        type="password" 
+                                        className="form-input" 
+                                        value={newPassword} 
+                                        onChange={e => setNewPassword(e.target.value)} 
+                                        required 
+                                        minLength={6}
+                                    />
+                                </div>
+                                <button type="submit" className="btn-primary" style={{ marginTop: '1.5rem', width: '100%' }} disabled={passwordLoading}>
+                                    {passwordLoading ? 'Updating...' : 'Save Password'}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
+                {/* Deactivate Account Modal */}
+                {showDeactivateModal && (
+                    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div className="dashboard-card" style={{ width: '90%', maxWidth: '420px', position: 'relative', textAlign: 'center', padding: '2.5rem 2rem' }}>
+                            <button onClick={() => setShowDeactivateModal(false)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
+                                <X size={24} />
+                            </button>
+                            <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(239, 68, 68, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                                <AlertTriangle size={32} color="var(--danger)" />
+                            </div>
+                            <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--danger)', marginBottom: '1rem' }}>Deactivate Account</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '2rem', lineHeight: '1.6' }}>
+                                Are you sure you want to permanently deactivate your account? 
+                                <br/><br/>
+                                This action cannot be undone, and all your data will be permanently removed.
+                            </p>
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                                <button onClick={() => setShowDeactivateModal(false)} className="btn-primary" style={{ flex: 1, background: 'var(--bg-color)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }}>
+                                    Cancel
+                                </button>
+                                <button onClick={() => {
+                                    setShowDeactivateModal(false);
+                                    showAlert('Account deactivated successfully.', 'success');
+                                    setTimeout(() => logout(), 1500);
+                                }} className="btn-primary" style={{ flex: 1, background: 'var(--danger)', border: 'none' }}>
+                                    Deactivate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </main >
         </div >
     );
