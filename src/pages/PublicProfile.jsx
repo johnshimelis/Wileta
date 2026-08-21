@@ -258,18 +258,18 @@ export default function PublicProfile() {
                                     <span style={{ fontSize: '1.2rem' }}>☕</span> Buy {creator.name.split(' ')[0]} a coffee
                                 </h3>
                                
+                                <style>{'.amount-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important; } .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(10, 92, 54, 0.4) !important; }'}</style>
                                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
                                     {['25', '50', '100'].map(val => (
-                                        <button
-                                            key={val}
-                                            type="button"
-                                            onClick={() => selectAmount(val)}
+                                        <button className="amount-btn" key={val} type="button" onClick={() => selectAmount(val)}
                                             style={{
                                                 flex: 1,
                                                 minWidth: '60px',
                                                 padding: '0.75rem 0',
                                                 borderRadius: '0.75rem',
-                                                border: amount === val ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                                                border: amount === val ? '2px solid var(--primary)' : '2px solid transparent',
+boxShadow: amount === val ? '0 4px 12px rgba(10, 92, 54, 0.15)' : '0 2px 5px rgba(0,0,0,0.05)',
+transform: amount === val ? 'translateY(-2px)' : 'none',
                                                 background: amount === val ? 'var(--primary-light)' : 'white',
                                                 color: amount === val ? 'var(--primary)' : 'var(--text-main)',
                                                 fontWeight: 800,
@@ -340,9 +340,9 @@ export default function PublicProfile() {
                                             outline: 'none'
                                         }}
                                         required
-                                        pattern="^(09|07)d{8}$"
-                                        onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
-                                        onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
+                                        pattern="0[79][0-9]{8}"
+                                        onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 4px var(--primary-light)'; }}
+                                        onBlur={(e) => { e.target.style.borderColor = 'var(--border-color)'; e.target.style.boxShadow = 'none'; }}
                                     />
                                 </div>
                             </div>
@@ -370,15 +370,13 @@ export default function PublicProfile() {
                                             outline: 'none',
                                             transition: 'border-color 0.2s'
                                         }}
-                                        onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
-                                        onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
+                                        onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 4px var(--primary-light)'; }}
+                                        onBlur={(e) => { e.target.style.borderColor = 'var(--border-color)'; e.target.style.boxShadow = 'none'; }}
                                     />
                                 </div>
                             </div>
 
-                            <button
-                                type="submit"
-                                disabled={tippingState === 'processing'}
+                            <button className="submit-btn" type="submit" disabled={tippingState === 'processing'}
                                 style={{
                                     width: '100%',
                                     padding: '1rem',
@@ -394,7 +392,8 @@ export default function PublicProfile() {
                                     justifyContent: 'center',
                                     gap: '0.5rem',
                                     boxShadow: '0 4px 14px rgba(10, 92, 54, 0.3)',
-                                    transition: 'all 0.2s'
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    transform: 'translateY(0)'
                                 }}
                             >
                                 {tippingState === 'processing' ? <span className="spinner" style={{ width: '20px', height: '20px' }}></span> : "Support " + (amount === 'custom' ? (customAmount || '0') : amount) + " ETB"}
