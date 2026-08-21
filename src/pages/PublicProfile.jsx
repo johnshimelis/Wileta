@@ -62,9 +62,9 @@ export default function PublicProfile() {
                 message: shoutOutMessage
             });
 
-            if (response.data && response.data.success) {
-                setTxRef(response.data.tx_ref);
-                setTippingState('pin_prompt');
+            if (response.data && response.data.success && response.data.checkout_url) {
+                // Redirect user directly to Chapa's secure checkout page
+                window.location.href = response.data.checkout_url;
             } else {
                 setTippingState('error');
             }
