@@ -43,6 +43,31 @@ export default function PublicProfile() {
         fetchProfile();
     }, [username, api]);
 
+    useEffect(() => {
+        let intervalId;
+        if ((tippingState === 'pin_prompt' || tippingState === 'processing_pin') && txRef) {
+            intervalId = setInterval(async () => {
+                try {
+                    const res = await api.get(`/payments/status/${txRef}`);
+                    if (res.data && res.data.success) {
+                        if (res.data.status === 'success') {
+                            setTippingState('success');
+                            clearInterval(intervalId);
+                        } else if (res.data.status === 'failed') {
+                            setTippingState('error');
+                            clearInterval(intervalId);
+                        }
+                    }
+                } catch (err) {
+                    console.error('Polling error:', err);
+                }
+            }, 3000); // Check every 3 seconds
+        }
+        return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
+    }, [tippingState, txRef, api]);
+
     const handleTip = async (e) => {
         e.preventDefault();
         const phoneRegex = /^(09|07)\d{8}$/;
@@ -64,6 +89,9 @@ export default function PublicProfile() {
 
             if (response.data && response.data.success) {
                 // Direct charge initiated via Telebirr push
+                if (response.data.tx_ref) {
+                    setTxRef(response.data.tx_ref);
+                }
                 setTippingState('pin_prompt');
             } else {
                 setTippingState('error');
