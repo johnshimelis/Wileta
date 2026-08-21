@@ -238,7 +238,7 @@ export default function PublicProfile() {
                                 <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)' }}>ETB</span>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '0.75rem' }}>
                                 {['25', '50', '100'].map(val => (
                                     <div
                                         key={val}
@@ -272,51 +272,48 @@ export default function PublicProfile() {
                                         {val}
                                     </div>
                                 ))}
-                                <div
-                                    className={`tip-amount-btn ${amount === 'custom' ? 'active' : ''}`}
-                                    onClick={() => selectAmount('custom')}
+                            </div>
+                            
+                            <div
+                                className={`tip-amount-btn custom-amount-container ${amount === 'custom' ? 'active' : ''}`}
+                                onClick={() => { selectAmount('custom'); document.getElementById('customAmountInput')?.focus(); }}
+                                style={{
+                                    textAlign: 'center',
+                                    borderRadius: '1rem',
+                                    height: '52px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    padding: '0 1rem',
+                                    cursor: 'text',
+                                    border: amount === 'custom' ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                                    background: amount === 'custom' ? 'var(--primary-light)' : 'var(--bg-color)',
+                                    color: amount === 'custom' ? 'var(--primary)' : 'var(--text-main)',
+                                    transition: 'all 0.3s ease',
+                                    boxShadow: amount === 'custom' ? '0 4px 12px rgba(10, 92, 54, 0.1)' : 'none',
+                                }}
+                            >
+                                <span style={{ fontWeight: 800, marginRight: '0.5rem', opacity: 0.7 }}>ETB</span>
+                                <input
+                                    id="customAmountInput"
+                                    type="number"
+                                    min="1"
+                                    placeholder="Enter custom amount..."
+                                    onFocus={() => selectAmount('custom')}
+                                    value={customAmount}
+                                    onChange={(e) => setCustomAmount(e.target.value)}
                                     style={{
-                                        textAlign: 'center',
-                                        borderRadius: '1rem',
-                                        height: '52px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        padding: '0 0.5rem',
-                                        cursor: 'pointer',
-                                        border: amount === 'custom' ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                                        background: amount === 'custom' ? 'var(--primary)' : 'var(--bg-color)',
-                                        color: amount === 'custom' ? 'white' : 'var(--text-main)',
-                                        transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                                        boxShadow: amount === 'custom' ? '0 8px 16px rgba(10, 92, 54, 0.2)' : 'none',
-                                        transform: amount === 'custom' ? 'scale(1.05)' : 'scale(1)'
+                                        border: 'none',
+                                        background: 'transparent',
+                                        padding: '0',
+                                        fontSize: '1rem',
+                                        fontWeight: 800,
+                                        outline: 'none',
+                                        color: 'inherit',
+                                        width: '100%',
+                                        textAlign: 'left'
                                     }}
-                                    onMouseEnter={(e) => {
-                                        if (amount !== 'custom') e.currentTarget.style.transform = 'translateY(-2px)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        if (amount !== 'custom') e.currentTarget.style.transform = 'scale(1)';
-                                    }}
-                                >
-                                    <input
-                                        type="number"
-                                        placeholder={t('customAmountPlaceholder')}
-                                        onFocus={() => selectAmount('custom')}
-                                        value={customAmount}
-                                        onChange={(e) => setCustomAmount(e.target.value)}
-                                        style={{
-                                            border: 'none',
-                                            background: 'transparent',
-                                            padding: '0',
-                                            fontSize: '0.9rem',
-                                            fontWeight: 900,
-                                            outline: 'none',
-                                            color: 'inherit',
-                                            width: '100%',
-                                            textAlign: 'center'
-                                        }}
-                                        required={amount === 'custom'}
-                                    />
-                                </div>
+                                    required={amount === 'custom'}
+                                />
                             </div>
                         </div>
 
