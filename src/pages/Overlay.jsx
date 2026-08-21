@@ -218,6 +218,25 @@ export default function Overlay() {
                         from <span style={{ color: '#F1F5F9', fontWeight: 800 }}>{alert.tipperPhone}</span>
                     </p>
 
+                    {alert.message && (
+                        <div style={{
+                            marginTop: '1.5rem',
+                            padding: '1rem 1.5rem',
+                            background: 'rgba(15, 157, 88, 0.1)',
+                            borderLeft: '4px solid #0F9D58',
+                            borderRadius: '0 1rem 1rem 0',
+                            maxWidth: '400px',
+                            wordWrap: 'break-word',
+                            fontStyle: 'italic',
+                            color: '#E2E8F0',
+                            fontSize: '1.1rem',
+                            lineHeight: 1.5,
+                            boxShadow: 'inset 0 0 20px rgba(15, 157, 88, 0.05)'
+                        }}>
+                            "{alert.message}"
+                        </div>
+                    )}
+
                     <div style={{
                         marginTop: '1rem',
                         padding: '0.4rem 1rem',

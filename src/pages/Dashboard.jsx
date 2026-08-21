@@ -763,7 +763,20 @@ export default function Dashboard() {
                                                     <ArrowUpRight size={14} /> {t('withdrawalRequest')}
                                                 </span>
                                             ) : (
-                                                maskPhone(tx.tipperPhone)
+                                                <div>
+                                                    {maskPhone(tx.tipperPhone)}
+                                                    {tx.message && (
+                                                        <div style={{
+                                                            fontSize: '0.8rem',
+                                                            color: 'var(--text-muted)',
+                                                            marginTop: '0.25rem',
+                                                            fontStyle: 'italic',
+                                                            fontWeight: 400
+                                                        }}>
+                                                            "{tx.message}"
+                                                        </div>
+                                                    )}
+                                                </div>
                                             )}
                                         </td>
                                         <td style={{
