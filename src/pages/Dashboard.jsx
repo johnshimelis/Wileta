@@ -106,7 +106,7 @@ const WithdrawModal = ({
                             )}
                         </div>
                     ) : (
-                        <div style={{ padding: '1.25rem', background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '1rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <div style={{ padding: '1.25rem', background: 'var(--card-bg)', border: '1px solid rgba(0,0,0,0.05)', borderRadius: '1.25rem', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                             <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.1)', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <Smartphone size={20} />
                             </div>
@@ -748,8 +748,8 @@ export default function Dashboard() {
                             ) : (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                                     {bankAccounts.map((account, index) => (
-                                        <div key={index} style={{ padding: '1.25rem', border: '1px solid var(--border-color)', borderRadius: '1rem', background: 'var(--card-bg)', position: 'relative', overflow: 'hidden' }}>
-                                            <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '4px', background: getBankColor(account.bankName) }}></div>
+                                        <div key={index} style={{ padding: '1.25rem', border: '1px solid rgba(0,0,0,0.05)', borderRadius: '1.25rem', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', background: 'var(--card-bg)', position: 'relative', overflow: 'hidden' }}>
+                                            <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '4px', background: getBankColor(account.bankName), opacity: 0.7 }}></div>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                                                     <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: getBankColor(account.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.75rem', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
