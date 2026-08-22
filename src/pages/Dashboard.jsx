@@ -851,64 +851,53 @@ export default function Dashboard() {
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('noActivityDesc')}</p>
                         </div>
                     ) : (
-                        <table>
+                        <div style={{ overflowX: "auto" }}><style>{`.tx-row { transition: all 0.2s; border-radius: 8px; cursor: pointer; } .tx-row:hover { background: rgba(0,0,0,0.02); transform: translateX(2px); }`}</style>
+                        <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 0.5rem', minWidth: '500px' }}>
                             <thead>
                                 <tr>
-                                    <th>{t('dateLabel')}</th>
-                                    <th>{t('sourceTypeLabel')}</th>
-                                    <th>{t('amountHeaderLabel')}</th>
-                                    <th>{t('statusHeaderLabel')}</th>
+                                    <th style={{ textAlign: 'left', padding: '0.5rem 1rem', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.85rem', borderBottom: '1px solid var(--border-color)' }}>{t('dateLabel')}</th>
+                                    <th style={{ textAlign: 'left', padding: '0.5rem 1rem', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.85rem', borderBottom: '1px solid var(--border-color)' }}>{t('sourceTypeLabel')}</th>
+                                    <th style={{ textAlign: 'right', padding: '0.5rem 1rem', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.85rem', borderBottom: '1px solid var(--border-color)' }}>{t('amountHeaderLabel')}</th>
+                                    <th style={{ textAlign: 'right', padding: '0.5rem 1rem', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.85rem', borderBottom: '1px solid var(--border-color)' }}>{t('statusHeaderLabel')}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {transactions.map((tx) => (
-                                    <tr key={tx._id}>
-                                        <td>{new Date(tx.createdAt).toLocaleDateString()}</td>
-                                        <td style={{ fontWeight: 600 }}>
-                                            {tx.type === 'withdrawal' ? (
-                                                <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-main)' }}>
-                                                    <ArrowUpRight size={14} /> {t('withdrawalRequest')}
-                                                </span>
-                                            ) : (
+                                {transactions.map(tx => (
+                                    <tr key={tx._id} className="tx-row">
+                                        <td style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                                            {new Date(tx.createdAt).toLocaleDateString('en-GB')}
+                                        </td>
+                                        <td style={{ padding: '1rem' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: tx.type === 'tip' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', color: tx.type === 'tip' ? '#10B981' : '#EF4444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    {tx.type === 'tip' ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+                                                </div>
                                                 <div>
-                                                    {maskPhone(tx.tipperPhone)}
-                                                    {tx.message && (
-                                                        <div style={{
-                                                            fontSize: '0.8rem',
-                                                            color: 'var(--text-muted)',
-                                                            marginTop: '0.25rem',
-                                                            fontStyle: 'italic',
-                                                            fontWeight: 400
-                                                        }}>
-                                                            "{tx.message}"
-                                                        </div>
+                                                    <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>
+                                                        {tx.type === 'tip' ? maskPhone(tx.tipperPhone) : t('withdrawalRequest')}
+                                                    </div>
+                                                    {tx.type === 'tip' && tx.message && (
+                                                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic', marginTop: '0.2rem' }}>"{tx.message}"</div>
                                                     )}
                                                 </div>
-                                            )}
+                                            </div>
                                         </td>
-                                        <td style={{
-                                            color: tx.type === 'withdrawal' ? 'var(--text-main)' : 'var(--primary)',
-                                            fontWeight: 700
-                                        }}>
-                                            {tx.type === 'withdrawal' ? '-' : '+'}{tx.netAmount.toFixed(2)} ETB
+                                        <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 800, color: tx.type === 'tip' ? 'var(--primary)' : 'var(--text-main)', fontSize: '1.05rem' }}>
+                                            {tx.type === 'tip' ? '+' : '-'}{tx.amount.toFixed(2)} ETB
                                         </td>
-                                        <td>
-                                            <span style={{
-                                                padding: '0.25rem 0.75rem',
-                                                borderRadius: '2rem',
-                                                fontSize: '0.8rem',
-                                                fontWeight: 700,
-                                                background: tx.status === 'success' ? 'rgba(16, 185, 129, 0.1)' : tx.status === 'failed' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)',
-                                                color: tx.status === 'success' ? 'var(--success)' : tx.status === 'failed' ? 'var(--danger)' : 'var(--warning)',
-                                                textTransform: 'capitalize'
+                                        <td style={{ padding: '1rem', textAlign: 'right' }}>
+                                            <span style={{ 
+                                                display: 'inline-flex', padding: '0.25rem 0.75rem', borderRadius: '100px', fontSize: '0.8rem', fontWeight: 700,
+                                                background: tx.status === 'success' ? 'rgba(16, 185, 129, 0.1)' : tx.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                                                color: tx.status === 'success' ? '#10B981' : tx.status === 'pending' ? '#F59E0B' : '#EF4444'
                                             }}>
-                                                {t(tx.status)}
+                                                {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
                                             </span>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
+                        </table></div>
                     )}
                 </div>
             </main >
