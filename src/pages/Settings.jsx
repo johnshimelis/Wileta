@@ -188,7 +188,7 @@ export default function Settings() {
                         style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
                     >
                         <motion.h3 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem' }}>{t('generalSettings')}</motion.h3>
-                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="dashboard-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="premium-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
                                 <div style={{ position: 'relative' }}>
                                     <div className="creator-avatar" style={{ width: '80px', height: '80px', fontSize: '2rem', margin: 0, overflow: 'hidden' }}>
@@ -247,7 +247,7 @@ export default function Settings() {
                         </motion.div>
 
                         <motion.h3 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem', marginTop: '1.5rem' }}>{t('language')}</motion.h3>
-                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="dashboard-card" style={{ padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="premium-card" style={{ padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-main)' }}>{t('language')}</span>
                             <div className="segmented-control" style={{ marginBottom: 0, width: '200px' }}>
                                 <div 
@@ -271,7 +271,7 @@ export default function Settings() {
                         </motion.div>
 
                         <motion.h3 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem', marginTop: '1.5rem' }}>{t('securityTitle')}</motion.h3>
-                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="dashboard-card" style={{ padding: 0, overflow: 'hidden' }}>
+                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="premium-card" style={{ padding: 0, overflow: 'hidden' }}>
                             <SettingRow
                                 icon={Lock}
                                 title={t('passwordTitle')}
@@ -300,7 +300,7 @@ export default function Settings() {
                         style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
                     >
                         <motion.h3 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '-0.5rem' }}>{t('notificationsTitle')}</motion.h3>
-                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="dashboard-card" style={{ padding: 0, overflow: 'hidden' }}>
+                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="premium-card" style={{ padding: 0, overflow: 'hidden' }}>
                             <SettingRow
                                 icon={Bell}
                                 title={t('pushNotifications')}
@@ -325,7 +325,7 @@ export default function Settings() {
                             />
                         </motion.div>
 
-                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="dashboard-card" style={{ marginTop: 'auto', border: '1px solid var(--border-color)', opacity: 0.9 }}>
+                        <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} className="premium-card" style={{ marginTop: 'auto', border: '1px solid var(--border-color)', opacity: 0.9 }}>
                             <h4 style={{ color: 'var(--danger)', fontWeight: 800, marginBottom: '0.5rem' }}>{t('dangerZone')}</h4>
                             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{t('deleteNotice2')}</p>
                             <button 
@@ -342,7 +342,7 @@ export default function Settings() {
                 {/* Password Update Modal */}
                 {showPasswordModal && (
                     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div className="dashboard-card" style={{ width: '90%', maxWidth: '400px', position: 'relative' }}>
+                        <div className="premium-card" style={{ width: '90%', maxWidth: '400px', position: 'relative' }}>
                             <button onClick={() => setShowPasswordModal(false)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
                                 <X size={24} />
                             </button>
@@ -380,7 +380,7 @@ export default function Settings() {
                 {/* Deactivate Account Modal */}
                 {showDeactivateModal && (
                     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div className="dashboard-card" style={{ width: '90%', maxWidth: '420px', position: 'relative', textAlign: 'center', padding: '2.5rem 2rem' }}>
+                        <div className="premium-card" style={{ width: '90%', maxWidth: '420px', position: 'relative', textAlign: 'center', padding: '2.5rem 2rem' }}>
                             <button onClick={() => setShowDeactivateModal(false)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
                                 <X size={24} />
                             </button>

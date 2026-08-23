@@ -492,7 +492,7 @@ export default function Dashboard() {
 
                 {/* Status Banners */}
                 {user?.kycStatus === 'none' && (
-                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid var(--warning)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                    <div className="premium-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid var(--warning)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                         <AlertTriangle size={24} color="var(--warning)" style={{ flexShrink: 0 }} />
                         <div style={{ flex: 1 }}>
                             <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{t('kycRequiredAlert')}</h3>
@@ -503,7 +503,7 @@ export default function Dashboard() {
                 )}
 
                 {user?.kycStatus === 'pending' && (
-                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid var(--secondary)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                    <div className="premium-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid var(--secondary)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                         <ShieldCheck size={24} color="var(--secondary)" style={{ flexShrink: 0 }} />
                         <div>
                             <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{t('kycPendingStatus')}</h3>
@@ -513,7 +513,7 @@ export default function Dashboard() {
                 )}
 
                 {user?.kycStatus === 'rejected' && (
-                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                    <div className="premium-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                         <XCircle size={24} color="var(--danger)" style={{ flexShrink: 0 }} />
                         <div style={{ flex: 1 }}>
                             <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{t('kycRejected')}</h3>
@@ -524,7 +524,7 @@ export default function Dashboard() {
                 )}
 
                 {user?.kycStatus === 'approved' && showVerifiedBanner && (
-                    <div className="dashboard-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)', border: '1px solid var(--success)', display: 'flex', alignItems: 'center', gap: '1rem', position: 'relative' }}>
+                    <div className="premium-card animate-fade-in" style={{ padding: '1.5rem', marginBottom: '2.5rem', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)', border: '1px solid var(--success)', display: 'flex', alignItems: 'center', gap: '1rem', position: 'relative' }}>
                         <div className="auth-icon" style={{ width: '48px', height: '48px', margin: 0, background: 'var(--success)' }}>
                             <CheckCircle size={24} />
                         </div>
@@ -539,7 +539,7 @@ export default function Dashboard() {
                 )}
 
                 {/* Share Link Section */}
-                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '1.5rem', borderLeft: '4px solid var(--primary)' }}>
+                <div className="premium-card animate-fade-in delay-1" style={{ marginBottom: '1.5rem', borderLeft: '4px solid var(--primary)' }}>
                     <div style={{ marginBottom: '1rem' }}>
                         <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', color: 'var(--text-main)' }}>{t('tippingLinkTitle')}</h2>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', fontWeight: 500 }}>{t('tippingLinkDesc')}</p>
@@ -564,7 +564,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* OBS Alert Overlay Section */}
-                <div className="dashboard-card animate-fade-in delay-1" style={{ marginBottom: '2.5rem', borderLeft: '4px solid var(--secondary)' }}>
+                <div className="premium-card animate-fade-in delay-1" style={{ marginBottom: '2.5rem', borderLeft: '4px solid var(--secondary)' }}>
                     <div style={{ marginBottom: '1rem' }}>
                         <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-main)' }}>
                             <span style={{ display: 'inline-flex', padding: '6px', borderRadius: '0.5rem', background: 'rgba(15, 157, 88, 0.1)', color: '#0F9D58' }}>⚡</span>
@@ -594,7 +594,7 @@ export default function Dashboard() {
 
                 <div className="dashboard-grid animate-fade-in delay-2">
                     {/* Card 1: Wallet Balance */}
-                    <div className="dashboard-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <div className="premium-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <Wallet size={20} />
@@ -621,7 +621,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* Card 2: Lifetime Earnings */}
-                    <div className="dashboard-card">
+                    <div className="premium-card">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
                             <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'rgba(212, 175, 55, 0.1)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <TrendingUp size={20} />
@@ -640,7 +640,7 @@ export default function Dashboard() {
                 {/* Additional Row: Leaderboard and Payout Settings */}
                 <div className="dashboard-grid animate-fade-in delay-2" style={{ marginTop: '2.5rem' }}>
                     {/* Leaderboard Card */}
-                    <div className="dashboard-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div className="premium-card" style={{ display: 'flex', flexDirection: 'column' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
                             <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'rgba(251, 188, 5, 0.1)', color: '#FBBC05', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <User size={20} />
@@ -692,7 +692,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* Payout Settings Card */}
-                    <div className="dashboard-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div className="premium-card" style={{ display: 'flex', flexDirection: 'column' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
                             <div style={{ width: '40px', height: '40px', borderRadius: '0.75rem', background: 'rgba(147, 51, 234, 0.1)', color: '#9333EA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <Settings size={20} />

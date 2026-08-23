@@ -54,7 +54,7 @@ export default function Profile() {
                     <p style={{ color: 'var(--text-muted)' }}>{t('profileSubtitle')}</p>
                 </header>
 
-                <div className="dashboard-card animate-fade-in profile-card">
+                <div className="premium-card animate-fade-in profile-card">
                     <div className="creator-avatar profile-avatar-container">
                         {user?.profilePicUrl ? (
                             <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -99,7 +99,7 @@ export default function Profile() {
 
                 <div style={{ marginTop: '2.5rem' }}>
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.5rem' }}>{t('tippingPagePreview')}</h3>
-                    <div className="dashboard-card" style={{ background: 'var(--card-bg)', border: '2px dashed var(--border-color)', textAlign: 'center' }}>
+                    <div className="premium-card" style={{ background: 'var(--card-bg)', border: '2px dashed var(--border-color)', textAlign: 'center' }}>
                         <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{t('tippingPageLiveNotice')}</p>
                         <a href={`/${user?.username}`} target="_blank" rel="noreferrer" className="btn-primary" style={{ width: 'auto', display: 'inline-flex' }}>
                             {t('viewPublicPage')}

@@ -172,7 +172,7 @@ body {
   transform: translateY(-2px);
 }
 
-.dashboard-card {
+.premium-card {
   background: var(--card-bg);
   padding: 2.25rem;
   border-radius: 1.5rem;
@@ -183,7 +183,7 @@ body {
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.dashboard-card:hover {
+.premium-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
 }
@@ -808,7 +808,7 @@ tr:hover {
     grid-template-columns: 1fr;
   }
 
-  .dashboard-card {
+  .premium-card {
     padding: 1.25rem;
   }
 
@@ -855,7 +855,7 @@ p {
 }
 
 @media (max-width: 480px) {
-  .dashboard-card {
+  .premium-card {
     padding: 1.5rem;
     /* Smaller padding on extra small phones */
     border-radius: 1.25rem;
