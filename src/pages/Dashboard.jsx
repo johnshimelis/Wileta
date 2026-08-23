@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {
-    LogOut, Copy, CheckCircle, Wallet, History, ArrowUpRight,
+    LogOut, Copy, CheckCircle, Wallet, History, ArrowUpRight, ArrowDownRight,
     TrendingUp, AlertTriangle, ShieldCheck, XCircle, LayoutDashboard,
     User, Link as LinkIcon, Settings, Bell, X, AlertCircle, Menu, Smartphone
 } from 'lucide-react';
