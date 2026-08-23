@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 const PublicProfile = () => {
     const { username } = useParams();
     const { t } = useLanguage();
+    const { api } = useAuth();
     const [creator, setCreator] = useState(null);
     const [loading, setLoading] = useState(true);
     
