@@ -1309,3 +1309,43 @@ button:active:not(:disabled) {
   border-right: 1px solid var(--border-color) !important;
 }
 
+.main-content {
+    position: relative;
+    padding-top: 4rem !important;
+}
+
+.main-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 250px;
+    background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 10px 10px;
+    z-index: 0;
+    border-bottom-left-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+}
+
+.main-content > * {
+    position: relative;
+    z-index: 10;
+}
+
+.dashboard-header h1, 
+.dashboard-header p,
+.settings-header h1,
+.settings-header p,
+.profile-header h1,
+.profile-header p {
+    color: white !important;
+}
+
+.dashboard-header,
+.settings-header,
+.profile-header {
+    margin-bottom: 2rem;
+}
+
