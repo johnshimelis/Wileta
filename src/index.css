@@ -1208,3 +1208,95 @@ input:focus, select:focus {
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
     border-color: var(--primary) !important;
 }
+
+/* Premium Activity Logs Hover States */
+.tx-row {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  position: relative;
+  border-bottom: 1px solid var(--border-color);
+}
+.tx-row:hover {
+  background: var(--bg-color);
+  transform: scale(1.01) translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  z-index: 10;
+  border-radius: 0.75rem;
+}
+.tx-row td {
+  transition: padding 0.3s ease;
+}
+.tx-row:hover td:first-child {
+  border-top-left-radius: 0.75rem;
+  border-bottom-left-radius: 0.75rem;
+  padding-left: 1.5rem !important;
+}
+.tx-row:hover td:last-child {
+  border-top-right-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  padding-right: 1.5rem !important;
+}
+
+/* Enhanced Nav Item Interactivity */
+.nav-item {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--primary);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 4px;
+}
+.nav-item:hover::before, .nav-item.active::before {
+  transform: scaleY(1);
+}
+.nav-item:hover {
+  background: rgba(16, 185, 129, 0.08) !important;
+  transform: translateX(6px);
+}
+.nav-item.active {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.12) 0%, transparent 100%) !important;
+  font-weight: 800;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.05);
+}
+.nav-item svg {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-item:hover svg, .nav-item.active svg {
+  transform: scale(1.15) rotate(-5deg);
+  color: var(--primary) !important;
+}
+
+/* Form Inputs Interactivity */
+.form-input {
+  transition: all 0.3s ease !important;
+}
+.form-input:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15) !important;
+  border-color: var(--primary) !important;
+}
+
+/* Button Interactivity */
+button {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+button:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+}
+button:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+}
+
