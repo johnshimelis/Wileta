@@ -25,7 +25,7 @@ const PublicProfile = () => {
     useEffect(() => {
         const fetchCreator = async () => {
             try {
-                const res = await api.get(`/creators/${username}`);
+                const res = await api.get(`/public/${username}`);
                 setCreator(res.data);
             } catch (err) {
                 console.error("Fetch creator error:", err);

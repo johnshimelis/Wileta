@@ -253,7 +253,7 @@ export default function Dashboard() {
     // Initialize with existing bankAccounts array, OR legacy bankDetails object, OR one empty form
     const initialBankAccounts = user?.bankAccounts?.length > 0 
         ? user.bankAccounts 
-        : (user?.bankDetails?.bankName ? [user.bankDetails] : [{ bankName: '', accountNumber: '', accountHolderName: '' }]);
+        : (user?.bankDetails?.bankName ? [user.bankDetails] : [{ bankName: '', accountNumber: '', accountHolderName: '', logoUrl: '' }]);
         
     const [bankAccounts, setBankAccounts] = useState(initialBankAccounts);
     const [savingPayout, setSavingPayout] = useState(false);
@@ -809,13 +809,46 @@ export default function Dashboard() {
                                                         required
                                                         style={{ flex: 1, padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid var(--border-color)', background: 'var(--bg-color)', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-main)' }}
                                                     />
-                                                </div>
-                                            </div>
-                                        </div>
+                                                      />
+                                                  </div>
+                                                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.02)', borderRadius: '0.75rem', border: '1px dashed var(--border-color)' }}>
+                                                      <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--bg-color)', border: '1px solid var(--border-color)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                                          {account.logoUrl ? (
+                                                              <img src={account.logoUrl} alt="Bank Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                          ) : (
+                                                              <Upload size={20} color="var(--text-muted)" />
+                                                          )}
+                                                      </div>
+                                                      <div style={{ flex: 1 }}>
+                                                          <p style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Bank Logo (Optional)</p>
+                                                          <label style={{ fontSize: '0.75rem', color: 'var(--primary)', cursor: 'pointer', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                                                              <Upload size={14} /> Upload Custom Logo
+                                                              <input 
+                                                                  type="file" 
+                                                                  accept="image/*" 
+                                                                  style={{ display: 'none' }}
+                                                                  onChange={(e) => {
+                                                                      const file = e.target.files[0];
+                                                                      if (file) {
+                                                                          const reader = new FileReader();
+                                                                          reader.onloadend = () => {
+                                                                              const newAccounts = [...bankAccounts];
+                                                                              newAccounts[index].logoUrl = reader.result;
+                                                                              setBankAccounts(newAccounts);
+                                                                          };
+                                                                          reader.readAsDataURL(file);
+                                                                      }
+                                                                  }}
+                                                              />
+                                                          </label>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
                                     ))}
                                     <button
                                         type="button"
-                                        onClick={() => setBankAccounts([...bankAccounts, { bankName: '', accountNumber: '', accountHolderName: '' }])}
+                                        onClick={() => setBankAccounts([...bankAccounts, { bankName: '', accountNumber: '', accountHolderName: '', logoUrl: '' }])}
                                         style={{ background: 'transparent', color: 'var(--primary)', border: '2px dashed var(--border-color)', padding: '1rem', borderRadius: '1rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                                         onMouseOver={(e) => e.target.style.borderColor = 'var(--primary)'}
                                         onMouseOut={(e) => e.target.style.borderColor = 'var(--border-color)'}
