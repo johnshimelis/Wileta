@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '../utils/api';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -15,7 +16,7 @@ import { useLanguage } from '../context/LanguageContext';
 import Logo from '../components/Logo';
 
 export default function Settings() {
-    const { user, setUser, api, logout } = useAuth();
+    const { user, setUser, logout } = useAuth();
     const { t, language, setLanguage } = useLanguage();
     const [name, setName] = useState(user?.name || '');
     const [username, setUsername] = useState(user?.username || '');

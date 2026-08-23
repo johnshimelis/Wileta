@@ -1114,3 +1114,11 @@ p {
   border-radius: 1rem;
   backdrop-filter: blur(10px);
 }
+
+.premium-card:hover {
+  border-color: var(--primary);
+}
+.sidebar {
+  border-right: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 4px 0 24px rgba(0,0,0,0.02);
+}
