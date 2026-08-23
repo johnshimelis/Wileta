@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {
     LogOut, Copy, CheckCircle, Wallet, History, ArrowUpRight, ArrowDownRight,
     TrendingUp, AlertTriangle, ShieldCheck, XCircle, LayoutDashboard,
-    User, Link as LinkIcon, Settings, Bell, X, AlertCircle, Menu, Smartphone
+    User, Link as LinkIcon, Settings, Bell, X, AlertCircle, Menu, Smartphone, Upload
 } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 import TopAlert from '../components/TopAlert';
