@@ -186,7 +186,7 @@ export default function KYCVerification() {
 
     return (
         <div className="app-layout">
-            <div className="mobile-header-container mobile-header">
+            <div className="mobile-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <Logo size="small" />
                 </div>

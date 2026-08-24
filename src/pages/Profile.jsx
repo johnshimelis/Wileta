@@ -1,112 +1,117 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Phone, Calendar, ShieldCheck, MapPin } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { LayoutDashboard, ShieldCheck as VerificationIcon, Settings as SettingsIcon, LogOut, TrendingUp, Menu, X } from 'lucide-react';
-import ThemeToggle from '../components/ThemeToggle';
-import TopAlert from '../components/TopAlert';
-import NotificationDrawer from '../components/NotificationDrawer';
+import { User, Mail, Phone, Calendar, ShieldCheck, ExternalLink, Edit3, Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { useLocation } from 'react-router-dom';
+import NotificationDrawer from '../components/NotificationDrawer';
 import { useLanguage } from '../context/LanguageContext';
 import Logo from '../components/Logo';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import Badge from '../components/ui/Badge';
 
 export default function Profile() {
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
     const { t, language } = useLanguage();
-    const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-
-    React.useEffect(() => {
-        setIsMobileMenuOpen(false);
-    }, [location.pathname]);
-
-    const NavItem = ({ to, icon: Icon, label, active }) => (
-        <Link to={to} className={`nav-item ${active ? 'active' : ''}`}>
-            <Icon size={20} />
-            <span className="nav-text">{label}</span>
-        </Link>
-    );
 
     return (
         <div className="app-layout">
-            <div className="mobile-header-container mobile-header">
+            {/* Mobile Header (Hidden on Desktop) */}
+            <div className="mobile-header">
+                <Logo size="small" />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <Logo size="small" />
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <NotificationDrawer />
-                    <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex' }}>
-                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    <button
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex' }}
+                    >
+                        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
                 </div>
             </div>
 
-            {isMobileMenuOpen && (
-                <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
-            )}
-
             <Sidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
 
             <main className="main-content">
-                <header style={{ marginBottom: '2.5rem' }}>
-                    <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em' }}>{t('myProfile')}</h1>
-                    <p style={{ color: 'var(--text-muted)' }}>{t('profileSubtitle')}</p>
-                </header>
-
-                <div className="premium-card animate-fade-in profile-card">
-                    <div className="creator-avatar profile-avatar-container">
-                        {user?.profilePicUrl ? (
-                            <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        ) : (
-                            user?.name?.charAt(0) || user?.phone?.charAt(0) || '?'
-                        )}
+                {/* Header Row */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                    <div>
+                        <h1 style={{ fontSize: '1.75rem', fontWeight: 900 }}>{t('myProfile')}</h1>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('profileSubtitle')}</p>
                     </div>
-
-                    <div className="profile-info-container">
-                        <div className="profile-header-row">
-                            <div className="profile-name-container">
-                                <h2 className="profile-name-text">{user?.name}</h2>
-                                <p className="profile-username-text">@{user?.username}</p>
-                            </div>
-                            <Link to="/settings" className="btn-primary profile-edit-btn">
+                    <div className="desktop-only" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <NotificationDrawer />
+                        <Link to="/settings">
+                            <Button variant="primary" size="sm" icon={Edit3}>
                                 {t('editProfile')}
-                            </Link>
-                        </div>
-
-                        <div className="profile-details-grid">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
-                                <Mail size={18} />
-                                <span>{user?.email || t('noEmailSet')}</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
-                                <Phone size={18} />
-                                <span>{user?.phone}</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
-                                <ShieldCheck size={18} color={user?.kycStatus === 'approved' ? 'var(--primary)' : 'var(--text-muted)'} />
-                                <span style={{ fontWeight: 600, color: user?.kycStatus === 'approved' ? 'var(--primary)' : 'var(--text-muted)' }}>
-                                    {user?.kycStatus === 'approved' ? t('verifiedStatus') : t('unverifiedStatus')}
-                                </span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
-                                <Calendar size={18} />
-                                <span>{t('joined')} {new Date(user?.createdAt || Date.now()).toLocaleDateString(language === 'am' ? 'am-ET' : 'en-US', { month: 'long', year: 'numeric' })}</span>
-                            </div>
-                        </div>
+                            </Button>
+                        </Link>
                     </div>
                 </div>
 
-                <div style={{ marginTop: '2.5rem' }}>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.5rem' }}>{t('tippingPagePreview')}</h3>
-                    <div className="premium-card" style={{ background: 'var(--card-bg)', border: '2px dashed var(--border-color)', textAlign: 'center' }}>
-                        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{t('tippingPageLiveNotice')}</p>
-                        <a href={`/${user?.username}`} target="_blank" rel="noreferrer" className="btn-primary" style={{ width: 'auto', display: 'inline-flex' }}>
-                            {t('viewPublicPage')}
+                {/* Profile Info Card */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+                    <Card style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                            <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.75rem', fontWeight: 900, overflow: 'hidden', flexShrink: 0, border: '3px solid var(--card-bg-subtle)' }}>
+                                {user?.profilePicUrl ? (
+                                    <img src={user.profilePicUrl.startsWith('http') ? user.profilePicUrl : `https://wileta-backend.onrender.com${user.profilePicUrl}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                ) : (
+                                    user?.name?.charAt(0) || '?'
+                                )}
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                    <h2 style={{ fontSize: '1.35rem', fontWeight: 800 }}>{user?.name}</h2>
+                                    <Badge variant={user?.kycStatus === 'approved' ? 'success' : 'warning'} size="sm" icon={ShieldCheck}>
+                                        {user?.kycStatus === 'approved' ? 'Verified' : 'Unverified'}
+                                    </Badge>
+                                </div>
+                                <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.9rem', marginTop: '0.15rem' }}>
+                                    @{user?.username}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                                <Mail size={16} color="var(--text-muted)" />
+                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email || 'No email set'}</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                                <Phone size={16} color="var(--text-muted)" />
+                                <span>{user?.phone || user?.telebirr_number || 'No phone set'}</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                                <Calendar size={16} color="var(--text-muted)" />
+                                <span>Joined {new Date(user?.createdAt || Date.now()).toLocaleDateString(language === 'am' ? 'am-ET' : 'en-US', { month: 'short', year: 'numeric' })}</span>
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Tipping Page Card */}
+                    <Card style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>Public Tipping Page</h3>
+                                <Badge variant="primary" size="sm">Live</Badge>
+                            </div>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.25rem' }}>
+                                Your public page is live and ready to receive Telebirr support from fans.
+                            </p>
+                            <div style={{ background: 'var(--card-bg-subtle)', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.25rem', wordBreak: 'break-all' }}>
+                                {window.location.origin}/{user?.username}
+                            </div>
+                        </div>
+                        <a href={`/${user?.username}`} target="_blank" rel="noreferrer">
+                            <Button variant="outline" size="sm" icon={ExternalLink} iconPosition="right" className="btn-full">
+                                {t('viewPublicPage')}
+                            </Button>
                         </a>
-                    </div>
+                    </Card>
                 </div>
-            </main >
-        </div >
+            </main>
+        </div>
     );
 }
