@@ -16,6 +16,7 @@ import Overlay from './pages/Overlay';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import DataDeletion from './pages/DataDeletion';
 import ResetPassword from './pages/ResetPassword';
+import Home from './pages/Home';
 import './index.css';
 
 // Protected Route Component
@@ -100,8 +101,10 @@ const AnimatedRoutes = () => {
         <Route path="/privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
         <Route path="/data-deletion" element={<PageTransition><DataDeletion /></PageTransition>} />
         
-        {/* Default Route */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        {/* Homepage */}
+        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+        {/* Catch-all fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
   );
