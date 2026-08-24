@@ -380,6 +380,29 @@ export default function Dashboard() {
         setIsWithdrawing(false);
     };
 
+    
+    const handleLogoUpload = async (file, accountIndex) => {
+        try {
+            const formData = new FormData();
+            formData.append('logo', file);
+            const res = await api.post('/auth/upload-logo', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            if (res.data.logoUrl) {
+                const newAccounts = [...bankAccounts];
+                if (accountIndex === -1) {
+                    setNewAccount({...newAccount, logoUrl: res.data.logoUrl});
+                } else {
+                    newAccounts[accountIndex].logoUrl = res.data.logoUrl;
+                    setBankAccounts(newAccounts);
+                }
+            }
+        } catch (error) {
+            console.error('Failed to upload logo to S3', error);
+            alert('Failed to upload logo');
+        }
+    };
+    
     const handleSavePayoutSettings = async (e) => {
         e.preventDefault();
         setSavingPayout(true);
@@ -810,38 +833,7 @@ export default function Dashboard() {
                                                         style={{ flex: 1, padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid var(--border-color)', background: 'var(--bg-color)', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-main)' }}
                                                     />
                                                   </div>
-                                                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.02)', borderRadius: '0.75rem', border: '1px dashed var(--border-color)' }}>
-                                                      <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--bg-color)', border: '1px solid var(--border-color)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                                          {account.logoUrl ? (
-                                                              <img src={account.logoUrl} alt="Bank Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                          ) : (
-                                                              <Upload size={20} color="var(--text-muted)" />
-                                                          )}
-                                                      </div>
-                                                      <div style={{ flex: 1 }}>
-                                                          <p style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Bank Logo (Optional)</p>
-                                                          <label style={{ fontSize: '0.75rem', color: 'var(--primary)', cursor: 'pointer', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                                                              <Upload size={14} /> Upload Custom Logo
-                                                              <input 
-                                                                  type="file" 
-                                                                  accept="image/*" 
-                                                                  style={{ display: 'none' }}
-                                                                  onChange={(e) => {
-                                                                      const file = e.target.files[0];
-                                                                      if (file) {
-                                                                          const reader = new FileReader();
-                                                                          reader.onloadend = () => {
-                                                                              const newAccounts = [...bankAccounts];
-                                                                              newAccounts[index].logoUrl = reader.result;
-                                                                              setBankAccounts(newAccounts);
-                                                                          };
-                                                                          reader.readAsDataURL(file);
-                                                                      }
-                                                                  }}
-                                                              />
-                                                          </label>
-                                                      </div>
-                                                  </div>
+                                                  
                                               </div>
                                           </div>
                                     ))}

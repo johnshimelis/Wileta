@@ -1,208 +1,81 @@
 ﻿const fs = require('fs');
 let code = fs.readFileSync('src/pages/Dashboard.jsx', 'utf8');
 
-const oldTable = `<table>
-                            <thead>
-                                <tr>
-                                    <th>{t('dateLabel')}</th>
-                                    <th>{t('sourceTypeLabel')}</th>
-                                    <th>{t('amountHeaderLabel')}</th>
-                                    <th>{t('statusHeaderLabel')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {transactions.map((tx) => (
-                                    <tr key={tx._id}>
-                                        <td>{new Date(tx.createdAt).toLocaleDateString()}</td>
-                                        <td style={{ fontWeight: 600 }}>
-                                            {tx.type === 'tip' ? maskPhone(tx.tipperPhone) : t('withdrawalRequest')}
-                                        </td>
-                                        <td style={{ color: tx.type === 'tip' ? 'var(--primary)' : 'inherit', fontWeight: 600 }}>
-                                            {tx.type === 'tip' ? '+' : '-'}{tx.amount} ETB
-                                        </td>
-                                        <td>
-                                            <span className={\`status-badge status-\${tx.status}\`}>
-                                                {tx.status}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>`;
-
-const newTable = `<style>{\`.tx-row { transition: all 0.2s; border-radius: 8px; cursor: pointer; } .tx-row:hover { background: rgba(0,0,0,0.02); transform: translateX(2px); }\`}</style>
-                        <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 0.5rem', minWidth: '500px' }}>
-                            <thead>
-                                <tr>
-                                    <th style={{ textAlign: 'left', padding: '0.5rem 1rem', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.85rem', borderBottom: '1px solid var(--border-color)' }}>{t('dateLabel')}</th>
-                                    <th style={{ textAlign: 'left', padding: '0.5rem 1rem', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.85rem', borderBottom: '1px solid var(--border-color)' }}>{t('sourceTypeLabel')}</th>
-                                    <th style={{ textAlign: 'right', padding: '0.5rem 1rem', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.85rem', borderBottom: '1px solid var(--border-color)' }}>{t('amountHeaderLabel')}</th>
-                                    <th style={{ textAlign: 'right', padding: '0.5rem 1rem', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.85rem', borderBottom: '1px solid var(--border-color)' }}>{t('statusHeaderLabel')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {transactions.map(tx => (
-                                    <tr key={tx._id} className="tx-row">
-                                        <td style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                                            {new Date(tx.createdAt).toLocaleDateString('en-GB')}
-                                        </td>
-                                        <td style={{ padding: '1rem' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: tx.type === 'tip' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', color: tx.type === 'tip' ? '#10B981' : '#EF4444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                    {tx.type === 'tip' ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
-                                                </div>
-                                                <div>
-                                                    <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>
-                                                        {tx.type === 'tip' ? maskPhone(tx.tipperPhone) : t('withdrawalRequest')}
-                                                    </div>
-                                                    {tx.type === 'tip' && tx.message && (
-                                                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic', marginTop: '0.2rem' }}>"{tx.message}"</div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 800, color: tx.type === 'tip' ? 'var(--primary)' : 'var(--text-main)', fontSize: '1.05rem' }}>
-                                            {tx.type === 'tip' ? '+' : '-'}{tx.amount.toFixed(2)} ETB
-                                        </td>
-                                        <td style={{ padding: '1rem', textAlign: 'right' }}>
-                                            <span style={{ 
-                                                display: 'inline-flex', padding: '0.25rem 0.75rem', borderRadius: '100px', fontSize: '0.8rem', fontWeight: 700,
-                                                background: tx.status === 'success' ? 'rgba(16, 185, 129, 0.1)' : tx.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                                                color: tx.status === 'success' ? '#10B981' : tx.status === 'pending' ? '#F59E0B' : '#EF4444'
-                                            }}>
-                                                {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>`;
-
-if (code.includes(oldTable)) {
-    code = code.replace(oldTable, newTable);
-} else {
-    console.log("Could not find table block");
+// 1. Inject handleLogoUpload if not exists
+if (!code.includes('const handleLogoUpload')) {
+    const uploadHandler = `
+    const handleLogoUpload = async (file, accountIndex) => {
+        try {
+            const formData = new FormData();
+            formData.append('logo', file);
+            const res = await api.post('/auth/upload-logo', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            if (res.data.logoUrl) {
+                const newAccounts = [...bankAccounts];
+                if (accountIndex === -1) {
+                    setNewAccount({...newAccount, logoUrl: res.data.logoUrl});
+                } else {
+                    newAccounts[accountIndex].logoUrl = res.data.logoUrl;
+                    setBankAccounts(newAccounts);
+                }
+            }
+        } catch (error) {
+            console.error('Failed to upload logo to S3', error);
+            alert('Failed to upload logo');
+        }
+    };
+    `;
+    code = code.replace('const handleSavePayoutSettings = async', uploadHandler + '\n    const handleSavePayoutSettings = async');
 }
 
-const payoutStart = code.indexOf('{bankAccounts.map((account, index) => (');
-const payoutEndStr = '+ Add Another Account';
-const payoutEnd = code.indexOf('</div>', code.indexOf(payoutEndStr));
+// 2. Add Edit Icon to the Bank Initials Circle
+const circleTarget = `                                                      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: getBankColor(account.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.75rem', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
+                                                          {getBankInitials(account.bankName)}
+                                                      </div>`;
 
-if (payoutStart !== -1 && payoutEnd !== -1) {
-    const origPayout = code.substring(code.lastIndexOf('<div', payoutStart), payoutEnd + 6);
+const circleReplacement = `
+                                                      <label style={{ cursor: 'pointer', position: 'relative' }}>
+                                                          <input type="file" style={{ display: 'none' }} accept="image/*" onChange={(e) => { if(e.target.files[0]) handleLogoUpload(e.target.files[0], index); }} />
+                                                          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: getBankColor(account.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.75rem', boxShadow: '0 2px 5px rgba(0,0,0,0.1)', backgroundImage: account.logoUrl ? \`url(\${account.logoUrl})\` : 'none', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                                                              {!account.logoUrl && getBankInitials(account.bankName)}
+                                                          </div>
+                                                          <div style={{ position: 'absolute', bottom: -5, right: -5, background: 'white', borderRadius: '50%', padding: '2px', boxShadow: '0 2px 5px rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                                          </div>
+                                                      </label>`;
+
+code = code.replace(circleTarget, circleReplacement);
+
+// 3. REMOVE the big "Bank Logo (Optional)" block completely.
+// We look for "<div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.02)', borderRadius: '0.75rem', border: '1px dashed var(--border-color)' }}>"
+let parts = code.split(`<div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.02)', borderRadius: '0.75rem', border: '1px dashed var(--border-color)' }}>`);
+if (parts.length > 1) {
+    // The first part is everything before the first block.
+    // We need to cut out until the matching closing div.
+    let newCode = parts[0];
     
-    const newPayout = `<div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                                    {bankAccounts.map((account, index) => (
-                                        <div key={index} style={{ padding: '1.25rem', border: '1px solid rgba(0,0,0,0.05)', borderRadius: '1rem', background: 'var(--card-bg)', position: 'relative', overflow: 'hidden', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                                            <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '4px', background: getBankColor(account.bankName), opacity: 0.7 }}></div>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                                    {account.logoUrl ? (
-                                                        <img src={account.logoUrl} alt="Bank Logo" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'contain', background: 'white', border: '1px solid rgba(0,0,0,0.05)' }} />
-                                                    ) : (
-                                                        <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: getBankColor(account.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8rem', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
-                                                            {getBankInitials(account.bankName)}
-                                                        </div>
-                                                    )}
-                                                    <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main)' }}>Bank Account {index + 1}</span>
-                                                </div>
-                                                {bankAccounts.length > 1 && (
-                                                    <button type="button" onClick={() => setBankAccounts(bankAccounts.filter((_, i) => i !== index))} style={{ background: 'rgba(239, 68, 68, 0.1)', border: 'none', color: 'var(--danger)', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 700, padding: '0.35rem 0.75rem', borderRadius: '1rem', transition: 'all 0.2s' }}>Remove</button>
-                                                )}
-                                            </div>
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                                <select
-                                                    className="form-input"
-                                                    value={account.bankName}
-                                                    onChange={e => {
-                                                        const newAccounts = [...bankAccounts];
-                                                        newAccounts[index].bankName = e.target.value;
-                                                        setBankAccounts(newAccounts);
-                                                    }}
-                                                    required
-                                                    style={{ width: '100%', fontFamily: 'inherit', padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid rgba(0,0,0,0.08)', background: 'var(--bg-color)', fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-main)' }}
-                                                >
-                                                    <option value="">{t('selectBank')}</option>
-                                                    <option value="Commercial Bank of Ethiopia (CBE)">Commercial Bank of Ethiopia (CBE)</option>
-                                                    <option value="Awash International Bank">Awash International Bank</option>
-                                                    <option value="Dashen Bank">Dashen Bank</option>
-                                                    <option value="Bank of Abyssinia">Bank of Abyssinia</option>
-                                                    <option value="Wegagen Bank">Wegagen Bank</option>
-                                                    <option value="Nib International Bank">Nib International Bank</option>
-                                                    <option value="Cooperative Bank of Oromia">Cooperative Bank of Oromia</option>
-                                                </select>
-                                                <div style={{ display: 'flex', gap: '1rem' }}>
-                                                    <div style={{ flex: 1 }}>
-                                                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>Account Number</label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-input"
-                                                            placeholder={t('accountNumber')}
-                                                            value={account.accountNumber}
-                                                            onChange={e => {
-                                                                const newAccounts = [...bankAccounts];
-                                                                newAccounts[index].accountNumber = e.target.value;
-                                                                setBankAccounts(newAccounts);
-                                                            }}
-                                                            required
-                                                            style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid rgba(0,0,0,0.08)', background: 'var(--bg-color)', fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-main)' }}
-                                                        />
-                                                    </div>
-                                                    <div style={{ flex: 1 }}>
-                                                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>Account Holder</label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-input"
-                                                            placeholder={t('accountHolder')}
-                                                            value={account.accountHolderName}
-                                                            onChange={e => {
-                                                                const newAccounts = [...bankAccounts];
-                                                                newAccounts[index].accountHolderName = e.target.value;
-                                                                setBankAccounts(newAccounts);
-                                                            }}
-                                                            required
-                                                            style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid rgba(0,0,0,0.08)', background: 'var(--bg-color)', fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-main)' }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>Custom Bank Logo URL (Optional)</label>
-                                                    <input
-                                                        type="url"
-                                                        className="form-input"
-                                                        placeholder="https://example.com/logo.png"
-                                                        value={account.logoUrl || ''}
-                                                        onChange={e => {
-                                                            const newAccounts = [...bankAccounts];
-                                                            newAccounts[index].logoUrl = e.target.value;
-                                                            setBankAccounts(newAccounts);
-                                                        }}
-                                                        style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid rgba(0,0,0,0.08)', background: 'var(--bg-color)', fontSize: '0.9rem', color: 'var(--text-main)' }}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                    <button
-                                        type="button"
-                                        onClick={() => setBankAccounts([...bankAccounts, { bankName: '', accountNumber: '', accountHolderName: '', logoUrl: '' }])}
-                                        style={{ background: 'rgba(0,0,0,0.02)', color: 'var(--primary)', border: '2px dashed rgba(0,0,0,0.1)', padding: '1.25rem', borderRadius: '1rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
-                                        onMouseOver={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.background = 'rgba(10, 92, 54, 0.05)'; }}
-                                        onMouseOut={(e) => { e.target.style.borderColor = 'rgba(0,0,0,0.1)'; e.target.style.background = 'rgba(0,0,0,0.02)'; }}
-                                    >
-                                        <span style={{ fontSize: '1.25rem' }}>+</span> Add Another Account
-                                    </button>
-                                </div>`;
-    code = code.replace(origPayout, newPayout);
-} else {
-    console.log("Could not find payout block");
+    for (let i = 1; i < parts.length; i++) {
+        // Find the matching end div for this block.
+        // It's a block with 3 <div> and 1 <label> inside it.
+        // It ends at: </label>\n                                                        </div>\n                                                    </div>
+        // Let's just find "</label>" and the following two "</div>"
+        let endIdx = parts[i].indexOf('</label>');
+        if (endIdx !== -1) {
+            let div1 = parts[i].indexOf('</div>', endIdx);
+            let div2 = parts[i].indexOf('</div>', div1 + 6);
+            if (div2 !== -1) {
+                newCode += parts[i].substring(div2 + 6);
+            }
+        } else {
+             newCode += parts[i];
+        }
+    }
+    code = newCode;
 }
 
-if (!code.includes('ArrowUpRight')) {
-    code = code.replace("import { CreditCard, History, Clock, ArrowRight, Wallet, CheckCircle, Smartphone, AlertTriangle, MessageCircle, Copy, Check, Menu, X, Share2, LayoutDashboard, Settings as SettingsIcon, LogOut, ChevronRight, User as UserIcon, Link as LinkIcon, Edit, Trash2 } from 'lucide-react';", "import { CreditCard, History, Clock, ArrowRight, Wallet, CheckCircle, Smartphone, AlertTriangle, MessageCircle, Copy, Check, Menu, X, Share2, LayoutDashboard, Settings as SettingsIcon, LogOut, ChevronRight, User as UserIcon, Link as LinkIcon, Edit, Trash2, ArrowUpRight, ArrowDownRight } from 'lucide-react';");
-    
-    // In case the import was different:
-    code = code.replace("import { CreditCard, History, Clock, ArrowRight, Wallet, CheckCircle, Smartphone, AlertTriangle, MessageCircle, Copy, Check, Menu, X, Share2, LayoutDashboard, Settings as SettingsIcon, LogOut, ChevronRight, User, Link as LinkIcon, Edit, Trash2 } from 'lucide-react';", "import { CreditCard, History, Clock, ArrowRight, Wallet, CheckCircle, Smartphone, AlertTriangle, MessageCircle, Copy, Check, Menu, X, Share2, LayoutDashboard, Settings as SettingsIcon, LogOut, ChevronRight, User, Link as LinkIcon, Edit, Trash2, ArrowUpRight, ArrowDownRight } from 'lucide-react';");
-}
+// 4. In handleSavePayoutSettings, we must prevent it from saving huge base64 strings if it does, 
+// wait, we already upload directly to S3 and save the URL, so standard save is fine.
 
 fs.writeFileSync('src/pages/Dashboard.jsx', code);
+console.log('Done fixing');

@@ -1349,3 +1349,62 @@ button:active:not(:disabled) {
     margin-bottom: 2rem;
 }
 
+/* Enhanced Dashboard Aesthetics matching Public Profile */
+
+/* Sidebar */
+.sidebar {
+  background: linear-gradient(135deg, #064e3b 0%, #059669 100%) !important;
+  color: white !important;
+  border-right: none !important;
+}
+
+.sidebar .nav-text,
+.sidebar .lucide {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.sidebar .nav-item.active,
+.sidebar .nav-item:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+}
+
+.sidebar-logo-text {
+  color: white !important;
+}
+
+/* Dashboard Header Row */
+.dashboard-header,
+.settings-header,
+.profile-header {
+  background: linear-gradient(135deg, #064e3b 0%, #059669 100%) !important;
+  border-radius: 1.5rem;
+  padding: 2rem !important;
+  margin-bottom: 2rem !important;
+  box-shadow: 0 10px 30px rgba(5, 150, 105, 0.2);
+  color: white !important;
+  position: relative;
+  z-index: 100 !important; /* Keep notifications above cards */
+}
+
+.dashboard-header h1,
+.settings-header h1,
+.profile-header h1 {
+  color: white !important;
+}
+
+.dashboard-header p,
+.settings-header p,
+.profile-header p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Remove my old broken global green header */
+.main-content::before {
+  display: none !important;
+}
+
+.main-content {
+  padding-top: 1.25rem !important;
+}
+
