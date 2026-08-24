@@ -1301,110 +1301,121 @@ button:active:not(:disabled) {
 }
 
 
-/* Fix Blurred Sidebar */
+/* Premium Light-Blue Tinted Modern Sidebar */
 .sidebar {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  background: var(--bg-color) !important;
-  border-right: 1px solid var(--border-color) !important;
+  background: #F0F7FF !important;
+  background: linear-gradient(180deg, #F8FAFD 0%, #EEF5FC 100%) !important;
+  border-right: 1px solid rgba(219, 234, 254, 0.9) !important;
+  color: var(--text-main) !important;
+  box-shadow: 2px 0 16px rgba(37, 99, 235, 0.03) !important;
+  z-index: 50;
 }
 
-.main-content {
-    position: relative;
-    padding-top: 4rem !important;
+[data-theme='dark'] .sidebar {
+  background: #0B1120 !important;
+  background: linear-gradient(180deg, #0F172A 0%, #0B1120 100%) !important;
+  border-right: 1px solid rgba(30, 41, 59, 0.8) !important;
+  color: #F8FAFC !important;
 }
 
-.main-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 250px;
-    background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
-    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 10px 10px;
-    z-index: 0;
-    border-bottom-left-radius: 2rem;
-    border-bottom-right-radius: 2rem;
+.sidebar .nav-text {
+  color: var(--text-main) !important;
+  font-weight: 600;
 }
 
-.main-content > * {
-    position: relative;
-    z-index: 10;
-}
-
-.dashboard-header h1, 
-.dashboard-header p,
-.settings-header h1,
-.settings-header p,
-.profile-header h1,
-.profile-header p {
-    color: white !important;
-}
-
-.dashboard-header,
-.settings-header,
-.profile-header {
-    margin-bottom: 2rem;
-}
-
-/* Enhanced Dashboard Aesthetics matching Public Profile */
-
-/* Sidebar */
-.sidebar {
-  background: linear-gradient(135deg, #064e3b 0%, #059669 100%) !important;
-  color: white !important;
-  border-right: none !important;
-}
-
-.sidebar .nav-text,
 .sidebar .lucide {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: var(--text-muted) !important;
+  transition: all 0.25s ease;
 }
 
-.sidebar .nav-item.active,
+.sidebar .nav-item {
+  color: var(--text-muted) !important;
+  border-radius: 0.875rem !important;
+  margin: 0.25rem 0.5rem !important;
+  padding: 0.75rem 1rem !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: transparent !important;
+}
+
 .sidebar .nav-item:hover {
-  background: rgba(255, 255, 255, 0.15) !important;
-  color: white !important;
+  background: rgba(224, 242, 254, 0.9) !important;
+  color: #0284C7 !important;
+  transform: translateX(4px);
+}
+
+.sidebar .nav-item:hover .lucide {
+  color: #0284C7 !important;
+  transform: scale(1.1);
+}
+
+.sidebar .nav-item.active {
+  background: #FFFFFF !important;
+  color: var(--primary) !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 14px rgba(10, 92, 54, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid rgba(229, 231, 235, 0.9) !important;
+}
+
+.sidebar .nav-item.active .lucide {
+  color: var(--primary) !important;
+}
+
+.sidebar .nav-item.active .nav-text {
+  color: var(--primary) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme='dark'] .sidebar .nav-text {
+  color: #E2E8F0 !important;
+}
+
+[data-theme='dark'] .sidebar .nav-item:hover {
+  background: rgba(30, 41, 59, 0.8) !important;
+  color: #38BDF8 !important;
+}
+
+[data-theme='dark'] .sidebar .nav-item:hover .lucide {
+  color: #38BDF8 !important;
+}
+
+[data-theme='dark'] .sidebar .nav-item.active {
+  background: #1E293B !important;
+  color: #34D399 !important;
+  border-color: rgba(51, 65, 85, 0.8) !important;
+}
+
+[data-theme='dark'] .sidebar .nav-item.active .lucide,
+[data-theme='dark'] .sidebar .nav-item.active .nav-text {
+  color: #34D399 !important;
 }
 
 .sidebar-logo-text {
-  color: white !important;
+  color: var(--text-main) !important;
 }
 
-/* Dashboard Header Row */
+/* Main Content & Stacking Context Fixes */
+.main-content {
+  position: relative;
+  padding: 2rem 2.5rem !important;
+}
+
+/* Dashboard Welcome & Header Cards */
+.dashboard-welcome-card,
 .dashboard-header,
 .settings-header,
 .profile-header {
-  background: linear-gradient(135deg, #064e3b 0%, #059669 100%) !important;
-  border-radius: 1.5rem;
-  padding: 2rem !important;
-  margin-bottom: 2rem !important;
-  box-shadow: 0 10px 30px rgba(5, 150, 105, 0.2);
-  color: white !important;
+  position: relative !important;
+  z-index: 100 !important; /* Always sits above cards below it so notifications pop over */
+}
+
+/* Notification Drawer Dropdown Must Always Sit on Top */
+.notification-drawer-content {
+  z-index: 99999 !important;
+}
+
+.premium-card {
   position: relative;
-  z-index: 100 !important; /* Keep notifications above cards */
+  z-index: 1;
 }
-
-.dashboard-header h1,
-.settings-header h1,
-.profile-header h1 {
-  color: white !important;
-}
-
-.dashboard-header p,
-.settings-header p,
-.profile-header p {
-  color: rgba(255, 255, 255, 0.9) !important;
-}
-
-/* Remove my old broken global green header */
-.main-content::before {
-  display: none !important;
-}
-
-.main-content {
-  padding-top: 1.25rem !important;
-}
-

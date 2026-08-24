@@ -4,7 +4,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {
     LogOut, Copy, CheckCircle, Wallet, History, ArrowUpRight, ArrowDownRight,
     TrendingUp, AlertTriangle, ShieldCheck, XCircle, LayoutDashboard,
-    User, Link as LinkIcon, Settings, Bell, X, AlertCircle, Menu, Smartphone, Upload
+    User, Link as LinkIcon, Settings, Bell, X, AlertCircle, Menu, Smartphone, Upload, Camera, Edit2
 } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 import TopAlert from '../components/TopAlert';
@@ -491,7 +491,20 @@ export default function Dashboard() {
                     user={user}
                 />
 
-                <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+                <header className="dashboard-welcome-card animate-fade-in" style={{
+                    background: 'linear-gradient(135deg, rgba(10, 92, 54, 0.08) 0%, rgba(59, 130, 246, 0.08) 50%, rgba(212, 175, 55, 0.08) 100%)',
+                    border: '1px solid rgba(10, 92, 54, 0.18)',
+                    borderRadius: '1.5rem',
+                    padding: '1.5rem 2rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '2.5rem',
+                    position: 'relative',
+                    zIndex: 1000,
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.03)',
+                    backdropFilter: 'var(--glass-blur)'
+                }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
                         <div className="creator-avatar" style={{ width: '56px', height: '56px', fontSize: '1.5rem', margin: 0, flexShrink: 0, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                             {user?.profilePicUrl ? (
