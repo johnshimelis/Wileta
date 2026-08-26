@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
     ArrowRight, Smartphone, Wallet, ShieldCheck, Zap,
     CheckCircle, MessageSquare, Heart, Video, Sparkles,
     ChevronDown, ChevronUp, Copy, Users, Play, Volume2,
-    DollarSign, Sliders, ExternalLink, Award, Check, RefreshCw
+    DollarSign, Sliders, ExternalLink, Award, Check, RefreshCw,
+    TrendingUp, Star, Bell, Gift
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -19,30 +20,69 @@ export default function Home() {
 
     // ── 1. Interactive Hero Creator Simulator ─────────────────────────────
     const sampleCreators = [
-        { name: 'Hana Tadesse', handle: 'hanacreates', role: 'Tech & Lifestyle YouTuber', avatar: '👩🏾‍💻', preset: '100', supporters: '1,420' },
-        { name: 'Dawit Getachew', handle: 'dawitgaming', role: 'Live Streamer & Esports', avatar: '🎮', preset: '250', supporters: '2,890' },
-        { name: 'Selamawit Bekele', handle: 'selampodcast', role: 'Podcaster & Storyteller', avatar: '🎙️', preset: '50', supporters: '860' }
+        {
+            name: 'Hana Tadesse',
+            handle: 'hanacreates',
+            role: 'Tech & Lifestyle YouTuber',
+            avatar: '👩🏾‍💻',
+            preset: '100',
+            supporters: 1420,
+            recentSupporter: 'Natnael T.',
+            note: 'Loved your latest video! Gursha on me ☕'
+        },
+        {
+            name: 'Dawit Getachew',
+            handle: 'dawitgaming',
+            role: 'Live Streamer & Esports',
+            avatar: '🎮',
+            preset: '250',
+            supporters: 2890,
+            recentSupporter: 'Kidus M.',
+            note: 'Insane clutch in the tournament bro! 🚀'
+        },
+        {
+            name: 'Selamawit Bekele',
+            handle: 'selampodcast',
+            role: 'Podcaster & Storyteller',
+            avatar: '🎙️',
+            preset: '50',
+            supporters: 860,
+            recentSupporter: 'Bethlehem A.',
+            note: 'Keep inspiring our community with great stories ❤️'
+        }
     ];
+
     const [selectedCreatorIdx, setSelectedCreatorIdx] = useState(0);
     const activeCreator = sampleCreators[selectedCreatorIdx];
 
     const [simAmount, setSimAmount] = useState('100');
+    const [simCustomMode, setSimCustomMode] = useState(false);
     const [simMessage, setSimMessage] = useState('Loved your latest video! Gursha on me ☕');
-    const [simState, setSimState] = useState('idle'); // 'idle' | 'ussd_prompt' | 'success'
+    const [simState, setSimState] = useState('idle'); // 'idle' | 'ussd_prompt' | 'pin_entering' | 'success'
+    const [simPin, setSimPin] = useState('');
+    const [simAlertToast, setSimAlertToast] = useState(false);
 
     const quickReactions = [
         '☕ Gursha on me!',
         '🚀 Keep pushing quality!',
         '🔥 Best content in Ethiopia!',
-        '❤️ Proud supporter!'
+        '❤️ Proud supporter!',
+        '💡 Invaluable tutorials!'
     ];
 
     const handleSendSimTip = (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         setSimState('ussd_prompt');
+        setSimPin('');
         setTimeout(() => {
-            setSimState('success');
-        }, 1500);
+            setSimState('pin_entering');
+            setSimPin('• • • •');
+            setTimeout(() => {
+                setSimState('success');
+                setSimAlertToast(true);
+                setTimeout(() => setSimAlertToast(false), 4500);
+            }, 1200);
+        }, 1000);
     };
 
     // ── 2. Handle Availability Checker ────────────────────────────────────
@@ -65,11 +105,20 @@ export default function Home() {
     const monthlyEstimate = fanCount * avgTip;
     const annualEstimate = monthlyEstimate * 12;
 
+    const setTier = (fans, tip) => {
+        setFanCount(fans);
+        setAvgTip(tip);
+    };
+
     // ── 4. OBS Stream Alert Simulator ─────────────────────────────────────
     const [obsAlertActive, setObsAlertActive] = useState(false);
+    const [obsCustomTip, setObsCustomTip] = useState(250);
+    const [obsCustomName, setObsCustomName] = useState('Abebe K.');
+    const [obsCustomNote, setObsCustomNote] = useState('Insane clutch gameplay on stream! Keep grinding 🚀');
+
     const triggerObsAlertDemo = () => {
         setObsAlertActive(true);
-        setTimeout(() => setObsAlertActive(false), 4000);
+        setTimeout(() => setObsAlertActive(false), 4500);
     };
 
     // ── 5. FAQ Accordion ──────────────────────────────────────────────────
@@ -97,6 +146,41 @@ export default function Home() {
         <div style={{ minHeight: '100vh', background: 'var(--bg-color)', overflowX: 'hidden' }}>
             <Navbar />
 
+            {/* Live Global Toast Simulation when tip completes */}
+            {simAlertToast && (
+                <div 
+                    className="animate-fade-in"
+                    style={{
+                        position: 'fixed',
+                        bottom: '24px',
+                        right: '24px',
+                        background: '#0F172A',
+                        color: '#FFFFFF',
+                        border: '1px solid #334155',
+                        borderRadius: 'var(--radius-lg)',
+                        padding: '1rem 1.25rem',
+                        boxShadow: 'var(--shadow-xl)',
+                        zIndex: 'var(--z-toast)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.85rem',
+                        maxWidth: '380px'
+                    }}
+                >
+                    <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Bell size={18} color="#FFFFFF" />
+                    </div>
+                    <div>
+                        <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#10B981' }}>
+                            🔔 Live Stream Alert Fired!
+                        </div>
+                        <div style={{ fontSize: '0.775rem', color: '#94A3B8' }}>
+                            {activeCreator.name} received +{simAmount} ETB via Telebirr USSD.
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* ── HERO SECTION ────────────────────────────────────────── */}
             <section style={{ position: 'relative', padding: '3.5rem 1.25rem 4.5rem', maxWidth: 'var(--container-max)', margin: '0 auto' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '3rem', alignItems: 'center' }}>
@@ -108,7 +192,7 @@ export default function Home() {
                             Ethiopia's #1 Creator Monetization Platform
                         </div>
 
-                        <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 900, letterSpacing: '-0.035em', lineHeight: 1.15, marginBottom: '1.25rem' }}>
+                        <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, letterSpacing: '-0.035em', lineHeight: 1.15, marginBottom: '1.25rem' }}>
                             Turn Support Into <br />
                             <span style={{ color: 'var(--primary)' }}>Real Income.</span>
                         </h1>
@@ -118,7 +202,7 @@ export default function Home() {
                         </p>
 
                         {/* Interactive Handle Claim Bar */}
-                        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '0.4rem 0.4rem 0.4rem 0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem', maxWidth: '460px', marginBottom: '1rem', boxShadow: 'var(--shadow-sm)' }}>
+                        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '0.4rem 0.4rem 0.4rem 0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem', maxWidth: '460px', marginBottom: '0.75rem', boxShadow: 'var(--shadow-sm)' }}>
                             <span style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>gurshapay.com/@</span>
                             <input
                                 type="text"
@@ -138,9 +222,13 @@ export default function Home() {
                             </Button>
                         </div>
 
-                        {claimStatus === 'available' && (
+                        {claimStatus === 'available' ? (
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary)', fontSize: '0.825rem', fontWeight: 700, marginBottom: '1.5rem' }}>
                                 <CheckCircle size={14} /> @{claimUsername} is available! Claim it today.
+                            </div>
+                        ) : (
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+                                Free custom URL • Instant Telebirr setup in 30 seconds
                             </div>
                         )}
 
@@ -163,7 +251,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* Right: INTERACTIVE TIPPING WIDGET */}
+                    {/* Right: INTERACTIVE TIPPING WIDGET SIMULATOR */}
                     <div id="simulator">
                         {/* Creator Switcher */}
                         <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '0.75rem', background: 'var(--card-bg-subtle)', padding: '0.25rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
@@ -174,6 +262,7 @@ export default function Home() {
                                     onClick={() => {
                                         setSelectedCreatorIdx(i);
                                         setSimAmount(c.preset);
+                                        setSimMessage(c.note);
                                         setSimState('idle');
                                     }}
                                     style={{
@@ -200,7 +289,7 @@ export default function Home() {
                             {/* Card Top Profile Header */}
                             <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                    <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.35rem' }}>
+                                    <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>
                                         {activeCreator.avatar}
                                     </div>
                                     <div>
@@ -213,8 +302,8 @@ export default function Home() {
                                         </div>
                                     </div>
                                 </div>
-                                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary)', background: 'var(--primary-light)', padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-full)' }}>
-                                    {activeCreator.supporters} fans
+                                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary)', background: 'var(--primary-light)', padding: '0.2rem 0.55rem', borderRadius: 'var(--radius-full)' }}>
+                                    {activeCreator.supporters.toLocaleString()} fans
                                 </span>
                             </div>
 
@@ -224,7 +313,9 @@ export default function Home() {
                                     <form onSubmit={handleSendSimTip}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                                             <label className="form-label" style={{ margin: 0 }}>Select Tip Amount</label>
-                                            <span style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.95rem' }}>{simAmount} ETB</span>
+                                            <span style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.95rem' }}>
+                                                {simAmount} ETB <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>({Math.max(1, Math.round(Number(simAmount) / 50))} Gurshas ☕)</span>
+                                            </span>
                                         </div>
 
                                         {/* Amount Chips */}
@@ -233,13 +324,16 @@ export default function Home() {
                                                 <button
                                                     key={amt}
                                                     type="button"
-                                                    onClick={() => setSimAmount(amt)}
+                                                    onClick={() => {
+                                                        setSimAmount(amt);
+                                                        setSimCustomMode(false);
+                                                    }}
                                                     style={{
                                                         padding: '0.55rem 0',
                                                         borderRadius: 'var(--radius-md)',
-                                                        border: simAmount === amt ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                                                        background: simAmount === amt ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                                        color: simAmount === amt ? 'var(--primary)' : 'var(--text-main)',
+                                                        border: (!simCustomMode && simAmount === amt) ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                                                        background: (!simCustomMode && simAmount === amt) ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                                        color: (!simCustomMode && simAmount === amt) ? 'var(--primary)' : 'var(--text-main)',
                                                         fontWeight: 800,
                                                         fontSize: '0.85rem',
                                                         cursor: 'pointer',
@@ -254,7 +348,7 @@ export default function Home() {
                                         {/* Quick Reaction Message Chips */}
                                         <div style={{ marginBottom: '1rem' }}>
                                             <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', marginBottom: '0.4rem' }}>
-                                                {quickReactions.map((q, idx) => (
+                                                {quickReactions.slice(0, 4).map((q, idx) => (
                                                     <button
                                                         key={idx}
                                                         type="button"
@@ -298,17 +392,34 @@ export default function Home() {
 
                                 {simState === 'ussd_prompt' && (
                                     <div className="animate-fade-in" style={{ textAlign: 'center', padding: '1.5rem 0' }}>
-                                        <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.1)', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.75rem' }}>
+                                        <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(0, 114, 206, 0.1)', color: '#0072CE', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.75rem' }}>
                                             <Smartphone size={24} />
                                         </div>
                                         <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '0.2rem' }}>
-                                            Telebirr Push Prompt Sent
+                                            Telebirr USSD Push Prompt
                                         </div>
                                         <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.85rem' }}>
-                                            Authorizing {simAmount} ETB transfer to {activeCreator.name}...
+                                            Transferring {simAmount} ETB to {activeCreator.name}...
                                         </p>
-                                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'var(--card-bg-subtle)', padding: '0.4rem 0.85rem', borderRadius: 'var(--radius-full)', fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)' }}>
-                                            <span>PIN Verified ✓</span>
+                                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'var(--card-bg-subtle)', padding: '0.4rem 0.85rem', borderRadius: 'var(--radius-full)', fontSize: '0.8rem', fontWeight: 700, color: '#0072CE' }}>
+                                            <span>Simulating USSD Push...</span>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {simState === 'pin_entering' && (
+                                    <div className="animate-fade-in" style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+                                        <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.75rem' }}>
+                                            <ShieldCheck size={24} />
+                                        </div>
+                                        <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '0.2rem' }}>
+                                            Telebirr PIN Verification
+                                        </div>
+                                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.85rem' }}>
+                                            Entering Telebirr PIN on mobile device:
+                                        </p>
+                                        <div style={{ fontSize: '1.5rem', letterSpacing: '0.3em', fontWeight: 900, color: 'var(--primary)' }}>
+                                            {simPin}
                                         </div>
                                     </div>
                                 )}
@@ -318,7 +429,7 @@ export default function Home() {
                                         <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.5rem' }}>
                                             <CheckCircle size={24} />
                                         </div>
-                                        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '0.2rem' }}>
+                                        <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '0.2rem' }}>
                                             {simAmount} ETB Received! 🎉
                                         </h3>
                                         <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontStyle: 'italic', marginBottom: '0.85rem' }}>
@@ -326,9 +437,9 @@ export default function Home() {
                                         </p>
                                         <div style={{ display: 'flex', gap: '0.35rem', justifyContent: 'center', marginBottom: '1rem', flexWrap: 'wrap' }}>
                                             <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-full)', background: 'var(--success-light)', color: 'var(--success)' }}>
-                                                Telebirr Settled
+                                                Telebirr Settled ✓
                                             </span>
-                                            <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-full)', background: 'var(--warning-light)', color: 'var(--secondary)' }}>
+                                            <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-full)', background: 'rgba(217, 119, 6, 0.1)', color: 'var(--secondary)' }}>
                                                 OBS Alert Fired ⚡
                                             </span>
                                         </div>
@@ -348,16 +459,16 @@ export default function Home() {
             </section>
 
             {/* ── FINANCIAL SERVICES & BANK INTEGRATIONS ───────────────── */}
-            <section id="payouts" style={{ padding: '3rem 1.25rem', background: 'var(--card-bg)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
+            <section id="payouts" style={{ padding: '3.5rem 1.25rem', background: 'var(--card-bg)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
                 <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                         <p style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--primary)', marginBottom: '0.25rem' }}>
                             National Financial Rails
                         </p>
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: 900 }}>Direct Settlement with Ethiopian Banks</h2>
+                        <h2 style={{ fontSize: '1.6rem', fontWeight: 900 }}>Direct Settlement with Ethiopian Banks</h2>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.85rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.85rem' }}>
                         {[
                             { name: 'Telebirr', tag: 'Instant Push USSD', color: '#0072CE', badge: 'Fastest' },
                             { name: 'Commercial Bank (CBE)', tag: 'CBE Birr & Accounts', color: '#5C2D91', badge: 'Popular' },
@@ -379,7 +490,7 @@ export default function Home() {
                                 }}
                             >
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: bank.color }}></div>
+                                    <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: bank.color }}></div>
                                     <span style={{ fontSize: '0.65rem', fontWeight: 700, padding: '0.1rem 0.4rem', borderRadius: 'var(--radius-full)', background: 'var(--card-bg)', color: 'var(--text-muted)' }}>
                                         {bank.badge}
                                     </span>
@@ -393,11 +504,64 @@ export default function Home() {
             </section>
 
             {/* ── EARNINGS ESTIMATOR CALCULATOR ───────────────────────── */}
-            <section id="calculator" style={{ padding: '4.5rem 1.25rem', maxWidth: '840px', margin: '0 auto' }}>
-                <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', padding: '2rem 1.5rem', boxShadow: 'var(--shadow-md)' }}>
-                    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <section id="calculator" style={{ padding: '4.5rem 1.25rem', maxWidth: '860px', margin: '0 auto' }}>
+                <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', padding: '2.25rem 1.5rem', boxShadow: 'var(--shadow-md)' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
                         <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', letterSpacing: '0.05em' }}>Revenue Estimator</span>
                         <h2 style={{ fontSize: '1.75rem', fontWeight: 900, marginTop: '0.25rem' }}>How Much Could You Earn on GurshaPay?</h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.25rem' }}>Select a preset tier or slide to match your Ethiopian audience</p>
+                    </div>
+
+                    {/* Preset Tiers */}
+                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginBottom: '2rem', flexWrap: 'wrap' }}>
+                        <button
+                            type="button"
+                            onClick={() => setTier(50, 50)}
+                            style={{
+                                padding: '0.4rem 0.85rem',
+                                borderRadius: 'var(--radius-full)',
+                                border: (fanCount === 50 && avgTip === 50) ? '1px solid var(--primary)' : '1px solid var(--border-color)',
+                                background: (fanCount === 50 && avgTip === 50) ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                color: (fanCount === 50 && avgTip === 50) ? 'var(--primary)' : 'var(--text-secondary)',
+                                fontWeight: 700,
+                                fontSize: '0.775rem',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            🌱 Starter Creator (50 fans)
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setTier(250, 100)}
+                            style={{
+                                padding: '0.4rem 0.85rem',
+                                borderRadius: 'var(--radius-full)',
+                                border: (fanCount === 250 && avgTip === 100) ? '1px solid var(--primary)' : '1px solid var(--border-color)',
+                                background: (fanCount === 250 && avgTip === 100) ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                color: (fanCount === 250 && avgTip === 100) ? 'var(--primary)' : 'var(--text-secondary)',
+                                fontWeight: 700,
+                                fontSize: '0.775rem',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            🚀 Growing YouTuber (250 fans)
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setTier(1000, 200)}
+                            style={{
+                                padding: '0.4rem 0.85rem',
+                                borderRadius: 'var(--radius-full)',
+                                border: (fanCount === 1000 && avgTip === 200) ? '1px solid var(--primary)' : '1px solid var(--border-color)',
+                                background: (fanCount === 1000 && avgTip === 200) ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                color: (fanCount === 1000 && avgTip === 200) ? 'var(--primary)' : 'var(--text-secondary)',
+                                fontWeight: 700,
+                                fontSize: '0.775rem',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            👑 Top Streamer (1,000 fans)
+                        </button>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', alignItems: 'center' }}>
@@ -499,10 +663,10 @@ export default function Home() {
                             {obsAlertActive ? (
                                 <div className="animate-fade-in" style={{ background: 'var(--primary)', border: '2px solid #10B981', borderRadius: 'var(--radius-lg)', padding: '1rem 1.5rem', color: '#FFFFFF', textAlign: 'center', maxWidth: '90%' }}>
                                     <div style={{ fontSize: '1.1rem', fontWeight: 900 }}>
-                                        🎉 Abebe tipped 250 ETB!
+                                        🎉 {obsCustomName} tipped {obsCustomTip} ETB!
                                     </div>
                                     <p style={{ margin: '0.25rem 0 0', fontSize: '0.8rem', opacity: 0.9, fontStyle: 'italic' }}>
-                                        "Insane clutch gameplay on stream! Keep grinding 🚀"
+                                        "{obsCustomNote}"
                                     </p>
                                 </div>
                             ) : (
@@ -536,7 +700,7 @@ export default function Home() {
                     </div>
 
                     <div style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)', background: 'var(--card-bg)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                        <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-md)', background: 'var(--secondary-light)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.1rem' }}>
+                        <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-md)', background: 'rgba(217, 119, 6, 0.12)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.1rem' }}>
                             2
                         </div>
                         <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>2. Share with Your Fans</h3>
