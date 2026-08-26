@@ -160,7 +160,7 @@ export default function Login() {
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh', width: '100%', background: 'var(--bg-color)' }}>
-            {/* Left Column: Perfectly Centered Modal Container */}
+            {/* Left Column: Centered Modal Container */}
             <div style={{
                 flex: 1,
                 display: 'flex',
@@ -171,22 +171,20 @@ export default function Login() {
                 minHeight: '100vh',
                 boxSizing: 'border-box'
             }}>
-                {/* Top Bar with Logo & Controls */}
+                {/* Top Bar with Language & Theme Controls */}
                 <div style={{
                     width: '100%',
                     maxWidth: '440px',
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    gap: '0.5rem'
                 }}>
-                    <Logo size="small" />
-                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                        <LanguageToggle />
-                        <ThemeToggle />
-                    </div>
+                    <LanguageToggle />
+                    <ThemeToggle />
                 </div>
 
-                {/* Perfect Modal Card */}
+                {/* Modal Card with Logo INSIDE */}
                 <div style={{
                     width: '100%',
                     maxWidth: '440px',
@@ -194,9 +192,14 @@ export default function Login() {
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
                     borderRadius: '16px',
-                    padding: '2.25rem 2rem',
+                    padding: '2.5rem 2rem',
                     boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)'
                 }}>
+                    {/* Centered Bigger Brand Logo INSIDE the Modal */}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                        <Logo size="large" />
+                    </div>
+
                     {showForgotPassword ? (
                         <div>
                             <button
@@ -206,8 +209,8 @@ export default function Login() {
                                 <ArrowLeft size={16} /> Back to sign in
                             </button>
 
-                            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.35rem' }}>Reset Password</h1>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
+                            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, textAlign: 'center', marginBottom: '0.35rem' }}>Reset Password</h1>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', textAlign: 'center', marginBottom: '1.5rem' }}>
                                 Enter your registered email and we'll send you a reset link.
                             </p>
 

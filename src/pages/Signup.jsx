@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User, AlertCircle, CheckCircle, Sparkles } from 'lucide-react';
+import {
+    Mail, Lock, User, AlertCircle, CheckCircle, ShieldCheck,
+    Sparkles
+} from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
@@ -58,22 +61,20 @@ export default function Signup() {
                 minHeight: '100vh',
                 boxSizing: 'border-box'
             }}>
-                {/* Top Bar with Logo & Controls */}
+                {/* Top Bar with Language & Theme Controls */}
                 <div style={{
                     width: '100%',
                     maxWidth: '440px',
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    gap: '0.5rem'
                 }}>
-                    <Logo size="small" />
-                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                        <LanguageToggle />
-                        <ThemeToggle />
-                    </div>
+                    <LanguageToggle />
+                    <ThemeToggle />
                 </div>
 
-                {/* Perfect Modal Card */}
+                {/* Modal Card with Logo INSIDE */}
                 <div style={{
                     width: '100%',
                     maxWidth: '440px',
@@ -81,9 +82,14 @@ export default function Signup() {
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
                     borderRadius: '16px',
-                    padding: '2.25rem 2rem',
+                    padding: '2.5rem 2rem',
                     boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)'
                 }}>
+                    {/* Centered Bigger Brand Logo INSIDE the Modal */}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                        <Logo size="large" />
+                    </div>
+
                     <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                         <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
                             {t('createAccount')}
