@@ -3,7 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import {
     Mail, Phone, Lock, Eye, EyeOff, AlertCircle,
-    ArrowLeft, Send, Sparkles, CheckCircle, ShieldCheck
+    ArrowLeft, Send, CheckCircle, ShieldCheck, Zap, Heart,
+    Sparkles
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
@@ -11,7 +12,7 @@ import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
-import { motion, AnimatePresence } from 'framer-motion';
+import Card from '../components/ui/Card';
 
 export default function Login() {
     const [loginMethod, setLoginMethod] = useState('email'); // 'email' | 'phone'
@@ -25,6 +26,7 @@ export default function Login() {
 
     const [otpSent, setOtpSent] = useState(false);
     const [sendingOtp, setSendingOtp] = useState(false);
+    const [resendCountdown, setResendCountdown] = useState(0);
 
     // Forgot Password states
     const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -35,6 +37,14 @@ export default function Login() {
     const { login, api, setUser } = useAuth();
     const { t } = useLanguage();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        let timer;
+        if (resendCountdown > 0) {
+            timer = setTimeout(() => setResendCountdown(resendCountdown - 1), 1000);
+        }
+        return () => clearTimeout(timer);
+    }, [resendCountdown]);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -75,6 +85,7 @@ export default function Login() {
         try {
             await api.post('/auth/request-otp', { phone });
             setOtpSent(true);
+            setResendCountdown(60);
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to send OTP. Please try again.');
         }
@@ -106,14 +117,14 @@ export default function Login() {
         let res;
         if (loginMethod === 'email') {
             if (!email || !password) {
-                setError(t('emailAndPassReq'));
+                setError(t('emailAndPassReq') || 'Email and password are required');
                 setLoading(false);
                 return;
             }
             res = await login({ email, password });
         } else {
             if (!phone || !otp) {
-                setError(t('phoneAndOtpReq'));
+                setError(t('phoneAndOtpReq') || 'Phone and OTP code are required');
                 setLoading(false);
                 return;
             }
@@ -127,45 +138,67 @@ export default function Login() {
                 navigate('/onboarding');
             }
         } else {
-            setError(res.error);
+            setError(res.error || 'Invalid credentials');
         }
         setLoading(false);
     };
 
     return (
-        <div className="auth-split-container">
-            {/* Left Form Area */}
-            <div className="auth-split-left">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', minHeight: '100vh', width: '100%', background: 'var(--bg-color)' }}>
+            {/* Left Centered Form Column */}
+            <div style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '2rem 1.5rem',
+                position: 'relative',
+                minHeight: '100vh',
+                boxSizing: 'border-box'
+            }}>
+                {/* Top Controls Header */}
+                <div style={{
+                    position: 'absolute',
+                    top: '1.5rem',
+                    left: '2rem',
+                    right: '2rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    maxWidth: '1080px',
+                    margin: '0 auto'
+                }}>
                     <Logo size="small" />
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <LanguageToggle />
                         <ThemeToggle />
                     </div>
                 </div>
 
-                <div className="auth-split-card">
+                {/* Form Wrapper Card */}
+                <div style={{ width: '100%', maxWidth: '420px', margin: 'auto 0' }}>
                     {showForgotPassword ? (
-                        <div className="animate-fade-in">
+                        <Card style={{ padding: '2rem', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)' }}>
                             <button
                                 onClick={() => { setShowForgotPassword(false); setError(''); setResetSent(false); }}
-                                style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', cursor: 'pointer', marginBottom: '1.5rem', fontWeight: 600 }}
+                                style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)', cursor: 'pointer', marginBottom: '1.25rem', fontWeight: 600, fontSize: '0.85rem' }}
                             >
-                                <ArrowLeft size={16} /> Back to sign in
+                                <ArrowLeft size={16} /> Back to Sign In
                             </button>
 
-                            <h1 style={{ fontSize: '1.75rem', fontWeight: 900, marginBottom: '0.5rem' }}>Reset Password</h1>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1.75rem' }}>
+                            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.35rem' }}>Reset Password</h1>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
                                 Enter your registered email address and we'll send you a password reset link.
                             </p>
 
                             {resetSent ? (
-                                <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
-                                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-                                        <Mail size={28} />
+                                <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+                                    <div style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+                                        <Mail size={24} />
                                     </div>
-                                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>Check Your Email</h3>
-                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.35rem' }}>Check Your Email</h3>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
                                         We sent a password reset link to <strong>{resetEmail}</strong>.
                                     </p>
                                     <Button variant="primary" className="btn-full" onClick={() => setShowForgotPassword(false)}>
@@ -175,7 +208,7 @@ export default function Login() {
                             ) : (
                                 <form onSubmit={handleForgotPassword}>
                                     {error && (
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--danger-light)', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: 'var(--radius-md)', padding: '0.75rem 1rem', fontSize: '0.85rem', fontWeight: 600, marginBottom: '1.25rem' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--danger-light)', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: 'var(--radius-md)', padding: '0.65rem 0.85rem', fontSize: '0.825rem', fontWeight: 600, marginBottom: '1.25rem' }}>
                                             <AlertCircle size={16} /> {error}
                                         </div>
                                     )}
@@ -198,7 +231,7 @@ export default function Login() {
                                     <Button
                                         type="submit"
                                         variant="primary"
-                                        size="lg"
+                                        size="md"
                                         className="btn-full"
                                         loading={resetLoading}
                                         icon={Send}
@@ -207,14 +240,16 @@ export default function Login() {
                                     </Button>
                                 </form>
                             )}
-                        </div>
+                        </Card>
                     ) : (
-                        <div className="animate-fade-in">
-                            <h1 style={{ fontSize: '1.75rem', fontWeight: 900, marginBottom: '0.35rem' }}>{t('welcomeBack')}</h1>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1.5rem' }}>{t('signInSubtitle')}</p>
+                        <Card style={{ padding: '2.25rem 2rem', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)' }}>
+                            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                                <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '0.25rem' }}>{t('welcomeBack')}</h1>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{t('signInSubtitle')}</p>
+                            </div>
 
                             {/* Method Switcher Tabs */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.35rem', background: 'var(--card-bg-subtle)', padding: '0.25rem', borderRadius: 'var(--radius-md)', marginBottom: '1.5rem', border: '1px solid var(--border-color)' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.35rem', background: 'var(--card-bg-subtle)', padding: '0.25rem', borderRadius: 'var(--radius-md)', marginBottom: '1.25rem', border: '1px solid var(--border-color)' }}>
                                 <button
                                     type="button"
                                     onClick={() => { setLoginMethod('email'); setError(''); }}
@@ -225,10 +260,10 @@ export default function Login() {
                                         background: loginMethod === 'email' ? 'var(--card-bg)' : 'transparent',
                                         color: loginMethod === 'email' ? 'var(--primary)' : 'var(--text-muted)',
                                         fontWeight: 700,
-                                        fontSize: '0.85rem',
+                                        fontSize: '0.825rem',
                                         cursor: 'pointer',
                                         boxShadow: loginMethod === 'email' ? 'var(--shadow-xs)' : 'none',
-                                        transition: 'all 0.2s'
+                                        transition: 'all 0.15s ease'
                                     }}
                                 >
                                     {t('emailMethod')}
@@ -243,10 +278,10 @@ export default function Login() {
                                         background: loginMethod === 'phone' ? 'var(--card-bg)' : 'transparent',
                                         color: loginMethod === 'phone' ? 'var(--primary)' : 'var(--text-muted)',
                                         fontWeight: 700,
-                                        fontSize: '0.85rem',
+                                        fontSize: '0.825rem',
                                         cursor: 'pointer',
                                         boxShadow: loginMethod === 'phone' ? 'var(--shadow-xs)' : 'none',
-                                        transition: 'all 0.2s'
+                                        transition: 'all 0.15s ease'
                                     }}
                                 >
                                     {t('phoneMethod')}
@@ -254,7 +289,7 @@ export default function Login() {
                             </div>
 
                             {error && (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--danger-light)', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: 'var(--radius-md)', padding: '0.75rem 1rem', fontSize: '0.85rem', fontWeight: 600, marginBottom: '1.25rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--danger-light)', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: 'var(--radius-md)', padding: '0.65rem 0.85rem', fontSize: '0.825rem', fontWeight: 600, marginBottom: '1.25rem' }}>
                                     <AlertCircle size={16} /> {error}
                                 </div>
                             )}
@@ -301,7 +336,7 @@ export default function Login() {
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowPassword(!showPassword)}
-                                                    style={{ position: 'absolute', right: '1rem', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}
+                                                    style={{ position: 'absolute', right: '0.85rem', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}
                                                 >
                                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                                 </button>
@@ -330,10 +365,10 @@ export default function Login() {
                                                     size="md"
                                                     onClick={handleSendOtp}
                                                     loading={sendingOtp}
-                                                    disabled={otpSent}
+                                                    disabled={resendCountdown > 0}
                                                     style={{ flexShrink: 0 }}
                                                 >
-                                                    {otpSent ? t('sent') : t('getOtp')}
+                                                    {resendCountdown > 0 ? `${resendCountdown}s` : (otpSent ? t('resend') || 'Resend' : t('getOtp'))}
                                                 </Button>
                                             </div>
                                         </div>
@@ -359,7 +394,7 @@ export default function Login() {
                                 <Button
                                     type="submit"
                                     variant="primary"
-                                    size="lg"
+                                    size="md"
                                     className="btn-full"
                                     loading={loading}
                                     style={{ marginTop: '0.5rem' }}
@@ -369,9 +404,9 @@ export default function Login() {
                             </form>
 
                             {/* Divider */}
-                            <div style={{ display: 'flex', alignItems: 'center', margin: '1.5rem 0', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', margin: '1.25rem 0', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                                 <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
-                                <span style={{ padding: '0 0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('orSignInWith')}</span>
+                                <span style={{ padding: '0 0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{t('orSignInWith')}</span>
                                 <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
                             </div>
 
@@ -379,7 +414,7 @@ export default function Login() {
                             <Button
                                 type="button"
                                 variant="secondary"
-                                size="lg"
+                                size="md"
                                 className="btn-full"
                                 onClick={() => {
                                     const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -397,46 +432,105 @@ export default function Login() {
                                 {t('googleButton')}
                             </Button>
 
-                            <p style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '1.75rem' }}>
+                            <p style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '1.5rem', marginBottom: 0 }}>
                                 {t('dontHaveAccount')}{' '}
                                 <Link to="/signup" style={{ color: 'var(--primary)', fontWeight: 700 }}>
                                     {t('signUpLink')}
                                 </Link>
                             </p>
-                        </div>
+                        </Card>
                     )}
-                </div>
 
-                <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2rem' }}>
-                    Secured by GurshaPay Financial Compliance • 🇪🇹 Ethiopia
+                    <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '1.5rem' }}>
+                        🔒 256-bit encrypted • Direct Telebirr & CBE settlement
+                    </div>
                 </div>
             </div>
 
-            {/* Right Brand Showcase Area */}
-            <div className="auth-split-right">
-                <div style={{ maxWidth: '440px' }}>
-                    <Badge variant="primary" style={{ background: 'rgba(255,255,255,0.15)', color: 'white', marginBottom: '1.5rem' }}>
-                        Creator Community
+            {/* Right Brand & Interactive Showcase Column (Desktop Only) */}
+            <div className="desktop-only" style={{
+                flex: 1,
+                background: 'linear-gradient(145deg, #064E3B 0%, #047857 50%, #059669 100%)',
+                color: '#FFFFFF',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '3rem 2.5rem',
+                position: 'relative',
+                overflow: 'hidden'
+            }}>
+                {/* Background Grid Pattern Accent */}
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundImage: 'radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)',
+                    backgroundSize: '24px 24px',
+                    pointerEvents: 'none'
+                }}></div>
+
+                <div style={{ maxWidth: '440px', width: '100%', position: 'relative', zIndex: 2 }}>
+                    <Badge variant="primary" style={{ background: 'rgba(255,255,255,0.15)', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.25)', marginBottom: '1.25rem' }}>
+                        Ethiopian Creator Fintech 🇪🇹
                     </Badge>
-                    <h2 style={{ fontSize: '2.25rem', fontWeight: 900, color: 'white', lineHeight: 1.2, marginBottom: '1rem' }}>
-                        Receive Support. Grow Your Passion.
+
+                    <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.25, marginBottom: '1rem', letterSpacing: '-0.02em' }}>
+                        Receive Direct Support. Grow Your Passion.
                     </h2>
-                    <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.6, marginBottom: '2.5rem' }}>
-                        Over 5,000 Ethiopian creators use GurshaPay for instant Telebirr & bank payouts, livestream alerts, and fan engagement.
+                    
+                    <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.55, marginBottom: '2rem' }}>
+                        Over 5,000 Ethiopian YouTubers, TikTokers, and streamers use GurshaPay for instant Telebirr payouts and real-time live alerts.
                     </p>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'white', fontSize: '0.95rem' }}>
-                            <CheckCircle size={18} color="#34D399" />
-                            <span>Instant Telebirr PIN push confirmations</span>
+                    {/* Interactive Live Tipping Receipt Mockup */}
+                    <div style={{
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        backdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: 'var(--radius-lg)',
+                        padding: '1.25rem',
+                        marginBottom: '2rem',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.15)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#FFFFFF', color: '#064E3B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.95rem' }}>
+                                    NT
+                                </div>
+                                <div>
+                                    <div style={{ fontWeight: 700, fontSize: '0.875rem' }}>Natnael Tadesse</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.75)' }}>via Telebirr USSD</div>
+                                </div>
+                            </div>
+                            <span style={{ background: '#10B981', color: '#FFFFFF', fontWeight: 800, fontSize: '0.85rem', padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-sm)' }}>
+                                + 250 ETB ☕
+                            </span>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'white', fontSize: '0.95rem' }}>
-                            <CheckCircle size={18} color="#34D399" />
-                            <span>Direct bank transfers to CBE, Abyssinia, & Awash</span>
+                        <div style={{ background: 'rgba(0, 0, 0, 0.15)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', fontSize: '0.825rem', color: '#FFFFFF', fontStyle: 'italic', marginBottom: '0.65rem' }}>
+                            "Loved your latest tutorial bro! Keep inspiring us ❤️"
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'white', fontSize: '0.95rem' }}>
-                            <CheckCircle size={18} color="#34D399" />
-                            <span>Real-time OBS live stream overlays</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.725rem', color: '#A7F3D0' }}>
+                            <CheckCircle size={13} color="#34D399" />
+                            <span>Instant CBE & Telebirr settlement confirmed</span>
+                        </div>
+                    </div>
+
+                    {/* Trust Pillars */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.875rem', color: '#FFFFFF' }}>
+                            <CheckCircle size={16} color="#34D399" />
+                            <span>Direct Telebirr PIN push confirmations</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.875rem', color: '#FFFFFF' }}>
+                            <CheckCircle size={16} color="#34D399" />
+                            <span>Bank transfers to CBE, Abyssinia, Awash & Dashen</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.875rem', color: '#FFFFFF' }}>
+                            <CheckCircle size={16} color="#34D399" />
+                            <span>Real-time OBS & TikTok livestream overlays</span>
                         </div>
                     </div>
                 </div>
