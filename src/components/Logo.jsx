@@ -1,57 +1,49 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Logo({ size = 'small', className = '' }) {
+export default function Logo({ size = 'medium', className = '' }) {
     const sizeConfig = {
-        compact: { iconSize: 26, fontSize: '1.05rem' },
-        small: { iconSize: 32, fontSize: '1.2rem' },
-        medium: { iconSize: 40, fontSize: '1.45rem' },
-        large: { iconSize: 48, fontSize: '1.75rem' }
-    }[size] || { iconSize: 32, fontSize: '1.2rem' };
+        compact: { height: '36px', fontSize: '1.2rem' },
+        small: { height: '42px', fontSize: '1.35rem' },
+        medium: { height: '50px', fontSize: '1.55rem' },
+        large: { height: '64px', fontSize: '1.9rem' }
+    }[size] || { height: '50px', fontSize: '1.55rem' };
 
     return (
         <Link 
             to="/" 
-            className={`logo-brand ${className}`} 
+            className={'logo-brand ' + className} 
             style={{ 
                 display: 'inline-flex', 
                 alignItems: 'center', 
-                gap: '0.6rem',
+                gap: '0.75rem',
                 textDecoration: 'none', 
                 cursor: 'pointer',
-                userSelect: 'none'
+                userSelect: 'none',
+                height: sizeConfig.height
             }}
         >
-            <div style={{
-                width: sizeConfig.iconSize,
-                height: sizeConfig.iconSize,
-                borderRadius: '8px',
-                background: 'linear-gradient(135deg, #0A5C36 0%, #064E3B 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 2px 8px rgba(10, 92, 54, 0.25)',
-                position: 'relative',
-                overflow: 'hidden',
-                flexShrink: 0
-            }}>
-                <img 
-                    src="/gp-logo.jpg" 
-                    alt="Logo" 
-                    onError={(e) => { e.target.style.display = 'none'; }}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                />
-            </div>
+            <img 
+                src="/gp-official-logo.png" 
+                alt="GurshaPay" 
+                className="brand-logo-img"
+                style={{ 
+                    height: '100%', 
+                    width: 'auto', 
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.08))'
+                }} 
+            />
             <span style={{ 
                 fontSize: sizeConfig.fontSize, 
                 fontWeight: 900, 
-                letterSpacing: '-0.03em', 
+                letterSpacing: '-0.035em', 
                 color: 'var(--text-main)',
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center'
             }}>
                 Gursha<span style={{ color: 'var(--primary)' }}>Pay</span>
-                <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: 'var(--secondary)', marginLeft: '3px', marginBottom: '4px' }}></span>
+                <span style={{ display: 'inline-block', width: '7px', height: '7px', borderRadius: '50%', background: 'var(--secondary)', marginLeft: '3px', marginBottom: '5px' }}></span>
             </span>
         </Link>
     );
