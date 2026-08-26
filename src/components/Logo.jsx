@@ -6,7 +6,7 @@ export default function Logo({ size = 'medium', className = '', showText = true 
         compact: { height: '32px', fontSize: '1.15rem' },
         small: { height: '38px', fontSize: '1.3rem' },
         medium: { height: '46px', fontSize: '1.5rem' },
-        large: { height: '56px', fontSize: '1.8rem' }
+        large: { height: '54px', fontSize: '1.75rem' }
     }[size] || { height: '46px', fontSize: '1.5rem' };
 
     return (
@@ -16,7 +16,7 @@ export default function Logo({ size = 'medium', className = '', showText = true 
             style={{ 
                 display: 'inline-flex', 
                 alignItems: 'center', 
-                gap: '0.65rem',
+                gap: '0.35rem',
                 textDecoration: 'none', 
                 cursor: 'pointer',
                 userSelect: 'none',
@@ -41,7 +41,8 @@ export default function Logo({ size = 'medium', className = '', showText = true 
                     letterSpacing: '-0.035em', 
                     color: 'var(--text-main)',
                     display: 'inline-flex',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    marginLeft: '-1px'
                 }}>
                     Gursha<span style={{ color: 'var(--primary)' }}>Pay</span>
                     <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: 'var(--secondary)', marginLeft: '3px', marginBottom: '4px' }}></span>

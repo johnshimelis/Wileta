@@ -4,15 +4,13 @@ import { useNavigate, Link } from 'react-router-dom';
 import {
     Mail, Phone, Lock, Eye, EyeOff, AlertCircle,
     ArrowLeft, Send, CheckCircle, ShieldCheck, Zap, Heart,
-    Sparkles, Volume2, Users
+    Sparkles, Volume2, Users, TrendingUp, DollarSign
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
-import Badge from '../components/ui/Badge';
-import Card from '../components/ui/Card';
 
 export default function Login() {
     const [loginMethod, setLoginMethod] = useState('email'); // 'email' | 'phone'
@@ -36,7 +34,7 @@ export default function Login() {
 
     // Interactive Right-side Showcase state
     const demoSupporters = [
-        { name: 'Natnael Tadesse', role: 'YouTube Creator Supporter', amount: '250', time: '10s ago', note: 'Loved your latest video! Gursha on me ☕' },
+        { name: 'Natnael Tadesse', role: 'Tech YouTuber Supporter', amount: '250', time: '10s ago', note: 'Loved your latest video! Gursha on me ☕' },
         { name: 'Bethlehem Assefa', role: 'Live Podcast Listener', amount: '500', time: '1m ago', note: 'Keep inspiring our community with great stories ❤️' },
         { name: 'Dawit Getachew', role: 'Gaming Stream Fan', amount: '100', time: '3m ago', note: 'Insane clutch in the tournament bro! 🚀' }
     ];
@@ -167,18 +165,20 @@ export default function Login() {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                padding: '2rem 1.5rem',
+                padding: '1.75rem 1.25rem',
                 minHeight: '100vh',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                width: '100%'
             }}>
-                {/* Top Bar with Language & Theme Controls */}
+                {/* Top Controls Bar */}
                 <div style={{
                     width: '100%',
                     maxWidth: '440px',
                     display: 'flex',
                     justifyContent: 'flex-end',
                     alignItems: 'center',
-                    gap: '0.5rem'
+                    gap: '0.5rem',
+                    marginBottom: '0.5rem'
                 }}>
                     <LanguageToggle />
                     <ThemeToggle />
@@ -192,11 +192,12 @@ export default function Login() {
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
                     borderRadius: '16px',
-                    padding: '2.5rem 2rem',
-                    boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)'
+                    padding: '2.25rem 2rem',
+                    boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)',
+                    boxSizing: 'border-box'
                 }}>
-                    {/* Centered Bigger Brand Logo INSIDE the Modal */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                    {/* Centered Bigger Brand Logo INSIDE the Modal with Tight Gap */}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.85rem' }}>
                         <Logo size="large" />
                     </div>
 
@@ -265,8 +266,8 @@ export default function Login() {
                         </div>
                     ) : (
                         <div>
-                            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                                <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                            <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
+                                <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
                                     {t('welcomeBack')}
                                 </h1>
                                 <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
@@ -518,12 +519,12 @@ export default function Login() {
                     )}
                 </div>
 
-                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
                     🔒 Secured by GurshaPay Financial Compliance • 🇪🇹 Ethiopia
                 </div>
             </div>
 
-            {/* Right Column: Centered Rich Interactive Showcase (Desktop) */}
+            {/* Right Column: Centered Rich Interactive Showcase (Desktop Only) */}
             <div className="desktop-only" style={{
                 flex: 1.15,
                 background: 'linear-gradient(145deg, #064E3B 0%, #047857 50%, #059669 100%)',
@@ -563,7 +564,7 @@ export default function Login() {
                         Receive Direct Support. Grow Your Passion.
                     </h2>
                     
-                    <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.88)', lineHeight: 1.55, marginBottom: '1.75rem' }}>
+                    <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.88)', lineHeight: 1.55, marginBottom: '1.5rem' }}>
                         Empowering 5,000+ Ethiopian YouTubers, Streamers, and Podcasters with instant Telebirr & Multi-Bank direct payouts.
                     </p>
 
@@ -599,7 +600,7 @@ export default function Login() {
                         border: '1px solid rgba(255, 255, 255, 0.25)',
                         borderRadius: '12px',
                         padding: '1.25rem',
-                        marginBottom: '1.75rem',
+                        marginBottom: '1.5rem',
                         boxShadow: '0 12px 30px rgba(0,0,0,0.2)'
                     }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
@@ -645,22 +646,38 @@ export default function Login() {
                         </div>
                     </div>
 
+                    {/* Live Stats Row */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginBottom: '1.25rem' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.08)', padding: '0.65rem 0.5rem', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.15)' }}>
+                            <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#FFFFFF' }}>5,000+</div>
+                            <div style={{ fontSize: '0.675rem', color: 'rgba(255,255,255,0.8)' }}>Active Creators</div>
+                        </div>
+                        <div style={{ background: 'rgba(255,255,255,0.08)', padding: '0.65rem 0.5rem', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.15)' }}>
+                            <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#34D399' }}>99.9%</div>
+                            <div style={{ fontSize: '0.675rem', color: 'rgba(255,255,255,0.8)' }}>Telebirr Uptime</div>
+                        </div>
+                        <div style={{ background: 'rgba(255,255,255,0.08)', padding: '0.65rem 0.5rem', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.15)' }}>
+                            <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#FBBF24' }}>&lt; 10s</div>
+                            <div style={{ fontSize: '0.675rem', color: 'rgba(255,255,255,0.8)' }}>Instant Payouts</div>
+                        </div>
+                    </div>
+
                     {/* Trust Rails */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.18)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.825rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={15} color="#34D399" />
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', paddingTop: '0.85rem', borderTop: '1px solid rgba(255,255,255,0.18)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
+                            <CheckCircle size={14} color="#34D399" />
                             <span>Instant Telebirr Payouts</span>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.825rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={15} color="#34D399" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
+                            <CheckCircle size={14} color="#34D399" />
                             <span>CBE, Abyssinia & Awash</span>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.825rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={15} color="#34D399" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
+                            <CheckCircle size={14} color="#34D399" />
                             <span>1080p OBS Alert Overlays</span>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.825rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={15} color="#34D399" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
+                            <CheckCircle size={14} color="#34D399" />
                             <span>Zero Monthly Fee</span>
                         </div>
                     </div>
