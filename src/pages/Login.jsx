@@ -10,6 +10,7 @@ import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
+import Badge from '../components/ui/Badge';
 
 export default function Login() {
     const [loginMethod, setLoginMethod] = useState('email'); // 'email' | 'phone'
@@ -141,84 +142,51 @@ export default function Login() {
     };
 
     return (
-        <div style={{
-            minHeight: '100vh',
-            width: '100%',
-            background: 'var(--bg-color)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '1.5rem 1rem',
-            boxSizing: 'border-box'
-        }}>
-            {/* Top Bar with Language and Theme Controls */}
-            <header style={{
-                width: '100%',
-                maxWidth: '480px',
+        <div style={{ display: 'flex', minHeight: '100vh', width: '100%', background: 'var(--bg-color)' }}>
+            {/* Left Form Column */}
+            <div style={{
+                flex: 1,
                 display: 'flex',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                gap: '0.5rem',
-                marginBottom: '1rem'
-            }}>
-                <LanguageToggle />
-                <ThemeToggle />
-            </header>
-
-            {/* Main Centered Authentication Card */}
-            <main style={{
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                padding: '2.5rem 3rem',
+                maxWidth: '580px',
                 width: '100%',
-                maxWidth: '440px',
-                margin: 'auto 0'
+                boxSizing: 'border-box'
             }}>
-                <div style={{
-                    background: 'var(--card-bg)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '16px',
-                    padding: '2.25rem 2rem',
-                    boxShadow: '0 4px 20px rgba(15, 23, 42, 0.08)'
-                }}>
-                    {/* Centered Logo INSIDE the Modal */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
-                        <Logo size="medium" />
+                {/* Header Row: Logo & Controls */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                    <Logo size="small" />
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <LanguageToggle />
+                        <ThemeToggle />
                     </div>
+                </div>
 
+                {/* Form Content Area */}
+                <div style={{ width: '100%', maxWidth: '420px', margin: 'auto 0' }}>
                     {showForgotPassword ? (
                         <div>
                             <button
                                 onClick={() => { setShowForgotPassword(false); setError(''); setResetSent(false); }}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.4rem',
-                                    color: 'var(--text-muted)',
-                                    cursor: 'pointer',
-                                    marginBottom: '1rem',
-                                    fontWeight: 600,
-                                    fontSize: '0.85rem'
-                                }}
+                                style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)', cursor: 'pointer', marginBottom: '1.25rem', fontWeight: 600, fontSize: '0.85rem' }}
                             >
-                                <ArrowLeft size={16} /> Back to Sign In
+                                <ArrowLeft size={16} /> Back to sign in
                             </button>
 
-                            <h1 style={{ fontSize: '1.4rem', fontWeight: 800, textAlign: 'center', marginBottom: '0.35rem' }}>
-                                Reset Password
-                            </h1>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', textAlign: 'center', marginBottom: '1.5rem' }}>
-                                Enter your registered email and we will send you a reset link.
+                            <h1 style={{ fontSize: '1.65rem', fontWeight: 900, marginBottom: '0.35rem' }}>Reset Password</h1>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                                Enter your registered email and we'll send you a reset link.
                             </p>
 
                             {resetSent ? (
-                                <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-                                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-                                        <Mail size={22} />
+                                <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+                                    <div style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+                                        <Mail size={24} />
                                     </div>
-                                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.35rem' }}>Check Your Inbox</h3>
-                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-                                        Reset instructions sent to <strong>{resetEmail}</strong>.
+                                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.35rem' }}>Check Your Email</h3>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
+                                        We sent a password reset link to <strong>{resetEmail}</strong>.
                                     </p>
                                     <Button variant="primary" size="lg" className="btn-full" onClick={() => setShowForgotPassword(false)}>
                                         Return to Sign In
@@ -247,26 +215,44 @@ export default function Login() {
                                         </div>
                                     </div>
 
-                                    <Button
+                                    <button
                                         type="submit"
-                                        variant="primary"
-                                        size="lg"
-                                        className="btn-full"
-                                        loading={resetLoading}
-                                        icon={Send}
+                                        disabled={resetLoading}
+                                        style={{
+                                            width: '100%',
+                                            height: '46px',
+                                            background: 'var(--primary)',
+                                            color: '#FFFFFF',
+                                            border: 'none',
+                                            borderRadius: '8px',
+                                            fontWeight: 700,
+                                            fontSize: '0.95rem',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '0.5rem',
+                                            marginTop: '0.5rem',
+                                            boxShadow: '0 2px 8px rgba(5, 150, 105, 0.25)',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                        onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-hover)'}
+                                        onMouseLeave={e => e.currentTarget.style.background = 'var(--primary)'}
+                                        onMouseDown={e => e.currentTarget.style.transform = 'scale(0.985)'}
+                                        onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
                                     >
-                                        Send Reset Link
-                                    </Button>
+                                        {resetLoading ? <span className="spinner"></span> : 'Send Reset Link'}
+                                    </button>
                                 </form>
                             )}
                         </div>
                     ) : (
                         <div>
-                            <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
-                                <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                <h1 style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
                                     {t('welcomeBack')}
                                 </h1>
-                                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem' }}>
                                     {t('signInSubtitle')}
                                 </p>
                             </div>
@@ -279,7 +265,7 @@ export default function Login() {
                                 background: 'var(--card-bg-subtle)',
                                 padding: '0.25rem',
                                 borderRadius: '8px',
-                                marginBottom: '1.25rem',
+                                marginBottom: '1.5rem',
                                 border: '1px solid var(--border-color)'
                             }}>
                                 <button
@@ -440,7 +426,7 @@ export default function Login() {
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         gap: '0.5rem',
-                                        marginTop: '0.75rem',
+                                        marginTop: '0.5rem',
                                         boxShadow: '0 2px 8px rgba(5, 150, 105, 0.25)',
                                         transition: 'all 0.15s ease'
                                     }}
@@ -515,15 +501,99 @@ export default function Login() {
                     )}
                 </div>
 
-                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '1.25rem' }}>
+                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2rem' }}>
                     🔒 Secured by GurshaPay Financial Compliance • 🇪🇹 Ethiopia
                 </div>
-            </main>
+            </div>
 
-            {/* Bottom Clean Footer */}
-            <footer style={{ width: '100%', maxWidth: '440px', textAlign: 'center', padding: '0.5rem 0' }}>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>© {new Date().getFullYear()} GurshaPay Technologies Inc.</span>
-            </footer>
+            {/* Right Brand Showcase Column (Desktop Only) */}
+            <div className="desktop-only" style={{
+                flex: 1.1,
+                background: 'linear-gradient(145deg, #064E3B 0%, #047857 50%, #059669 100%)',
+                color: '#FFFFFF',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '3.5rem 3rem',
+                position: 'relative',
+                overflow: 'hidden'
+            }}>
+                {/* Subtle Radial Grid */}
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundImage: 'radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)',
+                    backgroundSize: '24px 24px',
+                    pointerEvents: 'none'
+                }}></div>
+
+                <div style={{ maxWidth: '440px', width: '100%', position: 'relative', zIndex: 2 }}>
+                    <Badge variant="primary" style={{ background: 'rgba(255,255,255,0.15)', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.25)', marginBottom: '1.25rem' }}>
+                        Ethiopian Creator Fintech 🇪🇹
+                    </Badge>
+
+                    <h2 style={{ fontSize: '2.1rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.25, marginBottom: '1rem', letterSpacing: '-0.02em' }}>
+                        Receive Direct Support. Grow Your Passion.
+                    </h2>
+                    
+                    <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.55, marginBottom: '2rem' }}>
+                        Over 5,000 Ethiopian YouTubers, TikTokers, and streamers use GurshaPay for instant Telebirr payouts and real-time live alerts.
+                    </p>
+
+                    {/* Interactive Live Tipping Receipt Mockup */}
+                    <div style={{
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        backdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '12px',
+                        padding: '1.25rem',
+                        marginBottom: '2rem',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.15)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#FFFFFF', color: '#064E3B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.95rem' }}>
+                                    NT
+                                </div>
+                                <div>
+                                    <div style={{ fontWeight: 700, fontSize: '0.875rem' }}>Natnael Tadesse</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.75)' }}>via Telebirr USSD</div>
+                                </div>
+                            </div>
+                            <span style={{ background: '#10B981', color: '#FFFFFF', fontWeight: 800, fontSize: '0.85rem', padding: '0.2rem 0.6rem', borderRadius: '4px' }}>
+                                + 250 ETB ☕
+                            </span>
+                        </div>
+                        <div style={{ background: 'rgba(0, 0, 0, 0.15)', padding: '0.65rem 0.85rem', borderRadius: '6px', fontSize: '0.825rem', color: '#FFFFFF', fontStyle: 'italic', marginBottom: '0.65rem' }}>
+                            "Loved your latest tutorial bro! Keep inspiring us ❤️"
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.725rem', color: '#A7F3D0' }}>
+                            <CheckCircle size={13} color="#34D399" />
+                            <span>Instant CBE & Telebirr settlement confirmed</span>
+                        </div>
+                    </div>
+
+                    {/* Trust Pillars */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.875rem', color: '#FFFFFF' }}>
+                            <CheckCircle size={16} color="#34D399" />
+                            <span>Direct Telebirr PIN push confirmations</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.875rem', color: '#FFFFFF' }}>
+                            <CheckCircle size={16} color="#34D399" />
+                            <span>Bank transfers to CBE, Abyssinia, Awash & Dashen</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.875rem', color: '#FFFFFF' }}>
+                            <CheckCircle size={16} color="#34D399" />
+                            <span>Real-time OBS & TikTok livestream overlays</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
