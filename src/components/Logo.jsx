@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 export default function Logo({ size = 'medium', className = '', showText = true }) {
     const sizeConfig = {
-        compact: { height: '32px', fontSize: '1.15rem' },
-        small: { height: '38px', fontSize: '1.3rem' },
-        medium: { height: '46px', fontSize: '1.5rem' },
-        large: { height: '54px', fontSize: '1.75rem' }
-    }[size] || { height: '46px', fontSize: '1.5rem' };
+        compact: { height: '30px', fontSize: '1.15rem' },
+        small: { height: '36px', fontSize: '1.25rem' },
+        medium: { height: '44px', fontSize: '1.45rem' },
+        large: { height: '52px', fontSize: '1.7rem' }
+    }[size] || { height: '44px', fontSize: '1.45rem' };
 
     return (
         <Link 
@@ -16,7 +16,7 @@ export default function Logo({ size = 'medium', className = '', showText = true 
             style={{ 
                 display: 'inline-flex', 
                 alignItems: 'center', 
-                gap: '0.35rem',
+                gap: '0.28rem',
                 textDecoration: 'none', 
                 cursor: 'pointer',
                 userSelect: 'none',
@@ -24,14 +24,13 @@ export default function Logo({ size = 'medium', className = '', showText = true 
             }}
         >
             <img 
-                src="/gp-official-logo.png" 
+                src="/gp-logo-transparent.png" 
                 alt="GurshaPay" 
                 className="brand-logo-img"
                 style={{ 
                     height: '100%', 
                     width: 'auto', 
-                    objectFit: 'contain',
-                    mixBlendMode: 'multiply'
+                    objectFit: 'contain'
                 }} 
             />
             {showText && (
@@ -42,10 +41,10 @@ export default function Logo({ size = 'medium', className = '', showText = true 
                     color: 'var(--text-main)',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    marginLeft: '-1px'
+                    lineHeight: 1
                 }}>
                     Gursha<span style={{ color: 'var(--primary)' }}>Pay</span>
-                    <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: 'var(--secondary)', marginLeft: '3px', marginBottom: '4px' }}></span>
+                    <span style={{ display: 'inline-block', width: '5px', height: '5px', borderRadius: '50%', background: 'var(--secondary)', marginLeft: '2px', marginBottom: '3px' }}></span>
                 </span>
             )}
         </Link>
