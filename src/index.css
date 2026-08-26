@@ -1,29 +1,34 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap');
+
+/* ==========================================================================
+   1. DESIGN TOKENS (Fintech Precision & Restraint)
+   ========================================================================== */
 
 :root {
-  /* Brand Palette (Sophisticated Ethiopian Emerald & Warm Gold) */
+  /* Brand Palette (Ethiopian Forest Emerald & Warm Amber) */
   --primary: #059669;
   --primary-hover: #047857;
   --primary-active: #065F46;
   --primary-light: rgba(5, 150, 105, 0.08);
-  --primary-glow: rgba(5, 150, 105, 0.2);
-  
+  --primary-subtle: rgba(5, 150, 105, 0.14);
+
   --secondary: #D97706;
   --secondary-hover: #B45309;
-  --secondary-light: rgba(217, 119, 6, 0.1);
+  --secondary-light: rgba(217, 119, 6, 0.08);
 
-  /* Light Theme Surfaces & Neutrals */
+  /* Neutral Surfaces (Light Theme) */
   --bg-color: #F8FAFC;
   --card-bg: #FFFFFF;
   --card-bg-subtle: #F1F5F9;
   --border-color: #E2E8F0;
+  --border-hover: #CBD5E1;
   --border-focus: #059669;
-  
+
   /* Typography Colors */
   --text-main: #0F172A;
   --text-secondary: #475569;
   --text-muted: #94A3B8;
-  
+
   /* Status Colors */
   --success: #10B981;
   --success-light: rgba(16, 185, 129, 0.1);
@@ -34,31 +39,30 @@
   --info: #3B82F6;
   --info-light: rgba(59, 130, 246, 0.1);
 
-  /* Input specific */
+  /* Form & Input */
   --input-bg: #FFFFFF;
   --input-border: #CBD5E1;
-  --input-focus: rgba(5, 150, 105, 0.15);
+  --input-focus-ring: rgba(5, 150, 105, 0.16);
 
-  /* Radii */
-  --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* Standard Radii (Clean, Restrained) */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
   --radius-full: 9999px;
 
-  /* Shadows (Natural, Subtle & Layered) */
+  /* Natural Subtle Shadows */
   --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
   --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
-  --shadow-lg: 0 12px 24px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
-  --shadow-xl: 0 20px 32px -8px rgba(15, 23, 42, 0.1), 0 8px 16px -4px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.06), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
+  --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
 
-  /* Layout Dimensions */
-  --sidebar-width: 260px;
-  --navbar-height: 68px;
-  --container-max: 1200px;
-  --glass-blur: blur(12px);
+  /* Dimensions */
+  --sidebar-width: 250px;
+  --navbar-height: 64px;
+  --container-max: 1160px;
 
   /* Z-Index Hierarchy */
   --z-base: 1;
@@ -70,30 +74,35 @@
 }
 
 [data-theme='dark'] {
-  --bg-color: #0B0F19;
+  --bg-color: #0B0F17;
   --card-bg: #111827;
-  --card-bg-subtle: #1F2937;
-  --border-color: #1F2937;
+  --card-bg-subtle: #1A2234;
+  --border-color: #1E293B;
+  --border-hover: #334155;
   --border-focus: #10B981;
 
-  --text-main: #F9FAFB;
-  --text-secondary: #D1D5DB;
-  --text-muted: #6B7280;
+  --text-main: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #64748B;
 
-  --primary-light: rgba(16, 185, 129, 0.15);
-  --primary-glow: rgba(16, 185, 129, 0.3);
+  --primary-light: rgba(16, 185, 129, 0.12);
+  --primary-subtle: rgba(16, 185, 129, 0.2);
   --secondary-light: rgba(217, 119, 6, 0.15);
 
-  --input-bg: #0B0F19;
-  --input-border: #374151;
-  --input-focus: rgba(16, 185, 129, 0.25);
+  --input-bg: #0F172A;
+  --input-border: #334155;
+  --input-focus-ring: rgba(16, 185, 129, 0.25);
 
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 14px 28px rgba(0, 0, 0, 0.6);
-  --shadow-xl: 0 24px 40px rgba(0, 0, 0, 0.7);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 30px rgba(0, 0, 0, 0.6);
 }
+
+/* ==========================================================================
+   2. RESET & BASE ELEMENTS
+   ========================================================================== */
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -108,10 +117,10 @@ html {
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-main);
-  line-height: 1.5;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -120,9 +129,9 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
   color: var(--text-main);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.025em;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 a {
@@ -135,38 +144,52 @@ button, input, select, textarea {
   font-size: inherit;
 }
 
+/* Dark mode image inverter for pure black logo */
+[data-theme='dark'] .brand-logo-img {
+  filter: invert(1) brightness(1.2) drop-shadow(0 2px 4px rgba(255, 255, 255, 0.1)) !important;
+}
+
 /* ==========================================================================
-   2. BUTTONS & CONTROLS
+   3. COMPONENT PRIMITIVES
    ========================================================================== */
 
+/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  font-weight: 700;
+  font-weight: 600;
   border-radius: var(--radius-md);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s ease;
   white-space: nowrap;
   user-select: none;
+  font-size: 0.875rem;
+  line-height: 1;
 }
 
 .btn:active {
-  transform: scale(0.98);
+  transform: scale(0.985);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
 .btn-primary {
   background: var(--primary);
   color: #FFFFFF !important;
   border-color: transparent;
-  box-shadow: 0 1px 2px rgba(5, 150, 105, 0.2), 0 2px 4px rgba(5, 150, 105, 0.1);
+  box-shadow: 0 1px 2px rgba(5, 150, 105, 0.2);
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   background: var(--primary-hover);
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25);
 }
 
 .btn-secondary {
@@ -175,7 +198,7 @@ button, input, select, textarea {
   border-color: var(--border-color);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(:disabled) {
   background: var(--border-color);
 }
 
@@ -185,9 +208,9 @@ button, input, select, textarea {
   border-color: var(--border-color);
 }
 
-.btn-outline:hover {
+.btn-outline:hover:not(:disabled) {
   background: var(--card-bg-subtle);
-  border-color: var(--text-muted);
+  border-color: var(--border-hover);
 }
 
 .btn-ghost {
@@ -196,17 +219,17 @@ button, input, select, textarea {
   border-color: transparent;
 }
 
-.btn-ghost:hover {
+.btn-ghost:hover:not(:disabled) {
   background: var(--card-bg-subtle);
   color: var(--text-main);
 }
 
-.btn-sm { padding: 0.4rem 0.75rem; font-size: 0.85rem; border-radius: var(--radius-sm); }
-.btn-md { padding: 0.6rem 1.1rem; font-size: 0.95rem; }
-.btn-lg { padding: 0.85rem 1.6rem; font-size: 1.05rem; border-radius: var(--radius-lg); }
+.btn-sm { padding: 0.45rem 0.75rem; font-size: 0.8125rem; border-radius: var(--radius-sm); }
+.btn-md { padding: 0.6rem 1.1rem; font-size: 0.875rem; }
+.btn-lg { padding: 0.8rem 1.5rem; font-size: 0.95rem; border-radius: var(--radius-md); }
 .btn-full { width: 100%; }
 
-/* Form inputs */
+/* Form Elements */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -215,26 +238,26 @@ button, input, select, textarea {
 }
 
 .form-label {
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 0.8125rem;
+  font-weight: 600;
   color: var(--text-main);
 }
 
 .form-input, .form-select {
   width: 100%;
-  padding: 0.65rem 0.875rem;
+  padding: 0.625rem 0.875rem;
   background: var(--input-bg);
   border: 1px solid var(--input-border);
   border-radius: var(--radius-md);
   color: var(--text-main);
-  font-size: 0.95rem;
-  transition: all 0.15s ease;
+  font-size: 0.9375rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
   outline: none;
 }
 
 .form-input:focus, .form-select:focus {
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--input-focus);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
 }
 
 .input-group {
@@ -244,8 +267,45 @@ button, input, select, textarea {
   width: 100%;
 }
 
+/* Cards & Surfaces */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s ease;
+}
+
+/* Range input slider styling */
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--border-color);
+  border-radius: var(--radius-full);
+  outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(5, 150, 105, 0.4);
+  border: 2px solid #FFFFFF;
+  transition: transform 0.1s ease;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
 /* ==========================================================================
-   3. RESPONSIVE APP LAYOUT & SIDEBAR
+   4. APP LAYOUT & SIDEBAR (RESPONSIVE)
    ========================================================================== */
 
 .app-layout {
@@ -272,7 +332,7 @@ button, input, select, textarea {
 .main-content {
   flex: 1;
   padding: 2rem 2.5rem 4rem;
-  max-width: 1280px;
+  max-width: 1240px;
   min-width: 0;
   width: 100%;
 }
@@ -319,6 +379,10 @@ button, input, select, textarea {
   .main-content {
     padding: 1.25rem 1rem 3rem !important;
   }
+
+  .mobile-hamburger-btn {
+    display: flex !important;
+  }
 }
 
 .mobile-overlay {
@@ -336,11 +400,11 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.65rem 0.85rem;
+  padding: 0.6rem 0.85rem;
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   transition: all 0.15s ease;
   text-decoration: none;
 }
@@ -357,106 +421,7 @@ button, input, select, textarea {
 }
 
 /* ==========================================================================
-   4. DATA TABLES & RESPONSIVE CARDS
-   ========================================================================== */
-
-.table-responsive-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.data-table th {
-  padding: 0.65rem 0.85rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.data-table td {
-  padding: 0.85rem 0.85rem;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 0.9rem;
-}
-
-/* Range input slider styling */
-input[type=range] {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 6px;
-  background: var(--border-color);
-  border-radius: 9999px;
-  outline: none;
-}
-
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--primary);
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.4);
-  border: 2px solid #FFFFFF;
-  transition: transform 0.1s ease;
-}
-
-input[type=range]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-}
-
-/* Animation utilities */
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.95); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.creator-avatar {
-  border-radius: 50% !important;
-  overflow: hidden !important;
-  flex-shrink: 0;
-}
-
-.creator-avatar img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  display: block !important;
-}
-
-@media (max-width: 900px) {
-  .mobile-hamburger-btn {
-    display: flex !important;
-  }
-}
-
-
-/* ==========================================================================
-   5. AUTH SPLIT SCREEN & ONBOARDING STYLES (RESPONSIVE)
+   5. AUTH & SPLIT SCREEN LAYOUTS
    ========================================================================== */
 
 .auth-split-container {
@@ -472,20 +437,20 @@ input[type=range]::-webkit-slider-thumb:hover {
   flex-direction: column;
   justify-content: space-between;
   padding: 2.5rem 3rem;
-  max-width: 600px;
+  max-width: 560px;
   margin: 0 auto;
   width: 100%;
 }
 
 .auth-split-card {
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   margin: auto 0;
 }
 
 .auth-split-right {
   flex: 1.1;
-  background: linear-gradient(135deg, #0A5C36 0%, #064E3B 100%);
+  background: linear-gradient(145deg, #059669 0%, #047857 100%);
   color: #FFFFFF;
   display: flex;
   flex-direction: column;
@@ -513,25 +478,25 @@ input[type=range]::-webkit-slider-thumb:hover {
   }
 }
 
-/* Auth segmented tab switcher */
+/* Tab buttons */
 .auth-tab-group {
   display: flex;
   background: var(--card-bg-subtle);
   padding: 0.25rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .auth-tab-btn {
   flex: 1;
-  padding: 0.5rem 0.75rem;
+  padding: 0.45rem 0.75rem;
   border-radius: var(--radius-sm);
   border: none;
   background: transparent;
   color: var(--text-muted);
-  font-weight: 700;
-  font-size: 0.85rem;
+  font-weight: 600;
+  font-size: 0.8125rem;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -539,27 +504,74 @@ input[type=range]::-webkit-slider-thumb:hover {
 .auth-tab-btn.active {
   background: var(--card-bg);
   color: var(--primary);
+  font-weight: 700;
   box-shadow: var(--shadow-xs);
 }
 
 /* ==========================================================================
-   6. PUBLIC NAVBAR & GENERAL RESPONSIVENESS
+   6. DATA TABLES
    ========================================================================== */
 
-.public-navbar {
+.table-responsive-wrapper {
   width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-@media (max-width: 900px) {
-  .mobile-hamburger-btn {
-    display: flex !important;
-  }
-  .desktop-only {
-    display: none !important;
-  }
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
 }
 
-/* Invert black logo for crisp visibility in dark mode */
-[data-theme="dark"] .brand-logo-img {
-  filter: invert(1) brightness(1.2) drop-shadow(0 2px 6px rgba(255,255,255,0.15)) !important;
+.data-table th {
+  padding: 0.625rem 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table td {
+  padding: 0.875rem 0.875rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.875rem;
+}
+
+/* ==========================================================================
+   7. MICRO-ANIMATIONS & UTILITIES
+   ========================================================================== */
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.95); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.creator-avatar {
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  flex-shrink: 0;
+}
+
+.creator-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
 }
