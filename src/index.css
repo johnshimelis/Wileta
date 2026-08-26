@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap');
 
 /* ==========================================================================
-   1. DESIGN TOKENS (Fintech Precision & Restraint)
+   1. GURSHAPAY COHESIVE DESIGN TOKENS (Fintech Precision & Ethiopian Identity)
    ========================================================================== */
 
 :root {
@@ -27,9 +27,9 @@
   /* Typography Colors */
   --text-main: #0F172A;
   --text-secondary: #475569;
-  --text-muted: #94A3B8;
+  --text-muted: #64748B;
 
-  /* Status Colors */
+  /* Semantic Status */
   --success: #10B981;
   --success-light: rgba(16, 185, 129, 0.1);
   --warning: #F59E0B;
@@ -44,7 +44,7 @@
   --input-border: #CBD5E1;
   --input-focus-ring: rgba(5, 150, 105, 0.16);
 
-  /* Standard Radii (Clean, Restrained) */
+  /* Standard Radii (Restrained & Systematic) */
   --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
@@ -52,7 +52,7 @@
   --radius-xl: 16px;
   --radius-full: 9999px;
 
-  /* Natural Subtle Shadows */
+  /* Layered Natural Shadows */
   --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
   --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
   --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
@@ -101,7 +101,7 @@
 }
 
 /* ==========================================================================
-   2. RESET & BASE ELEMENTS
+   2. RESET & GLOBAL TYPOGRAPHY
    ========================================================================== */
 
 *, *::before, *::after {
@@ -134,6 +134,16 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.25;
 }
 
+h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.03em; }
+h2 { font-size: 1.375rem; font-weight: 700; letter-spacing: -0.02em; }
+h3 { font-size: 1.125rem; font-weight: 700; letter-spacing: -0.015em; }
+h4 { font-size: 1rem; font-weight: 600; }
+
+p {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -150,10 +160,9 @@ button, input, select, textarea {
 }
 
 /* ==========================================================================
-   3. COMPONENT PRIMITIVES
+   3. STANDARDIZED BUTTONS & INTERACTIONS
    ========================================================================== */
 
-/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -170,12 +179,12 @@ button, input, select, textarea {
   line-height: 1;
 }
 
-.btn:active {
+.btn:active:not(:disabled) {
   transform: scale(0.985);
 }
 
 .btn:disabled {
-  opacity: 0.55;
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none !important;
 }
@@ -224,12 +233,25 @@ button, input, select, textarea {
   color: var(--text-main);
 }
 
+.btn-danger {
+  background: var(--danger);
+  color: #FFFFFF !important;
+  border-color: transparent;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #DC2626;
+}
+
 .btn-sm { padding: 0.45rem 0.75rem; font-size: 0.8125rem; border-radius: var(--radius-sm); }
 .btn-md { padding: 0.6rem 1.1rem; font-size: 0.875rem; }
 .btn-lg { padding: 0.8rem 1.5rem; font-size: 0.95rem; border-radius: var(--radius-md); }
 .btn-full { width: 100%; }
 
-/* Form Elements */
+/* ==========================================================================
+   4. FORM INPUTS & FIELD CONTROLS
+   ========================================================================== */
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -267,17 +289,93 @@ button, input, select, textarea {
   width: 100%;
 }
 
-/* Cards & Surfaces */
+.input-group > svg:first-child {
+  position: absolute;
+  left: 0.85rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.input-group > input {
+  padding-left: 2.5rem;
+}
+
+/* ==========================================================================
+   5. CARDS, BADGES & SURFACES
+   ========================================================================== */
+
 .card {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Range input slider styling */
+.card-pad-none { padding: 0 !important; }
+.card-pad-sm { padding: 1rem !important; }
+.card-pad-lg { padding: 2rem !important; }
+
+.card-hover:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  line-height: 1.2;
+}
+
+.badge-sm {
+  padding: 0.15rem 0.4rem;
+  font-size: 0.7rem;
+}
+
+.badge-neutral {
+  background: var(--card-bg-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.badge-primary {
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.badge-success {
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.badge-warning {
+  background: var(--warning-light);
+  color: var(--warning);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.badge-danger {
+  background: var(--danger-light);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.badge-info {
+  background: var(--info-light);
+  color: var(--info);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+/* Range input slider */
 input[type=range] {
   -webkit-appearance: none;
   width: 100%;
@@ -305,7 +403,7 @@ input[type=range]::-webkit-slider-thumb:hover {
 }
 
 /* ==========================================================================
-   4. APP LAYOUT & SIDEBAR (RESPONSIVE)
+   6. APP LAYOUT, SIDEBAR & DATA TABLES
    ========================================================================== */
 
 .app-layout {
@@ -420,10 +518,7 @@ input[type=range]::-webkit-slider-thumb:hover {
   font-weight: 700;
 }
 
-/* ==========================================================================
-   5. AUTH & SPLIT SCREEN LAYOUTS
-   ========================================================================== */
-
+/* Auth split layouts */
 .auth-split-container {
   display: flex;
   min-height: 100vh;
@@ -478,7 +573,6 @@ input[type=range]::-webkit-slider-thumb:hover {
   }
 }
 
-/* Tab buttons */
 .auth-tab-group {
   display: flex;
   background: var(--card-bg-subtle);
@@ -508,10 +602,7 @@ input[type=range]::-webkit-slider-thumb:hover {
   box-shadow: var(--shadow-xs);
 }
 
-/* ==========================================================================
-   6. DATA TABLES
-   ========================================================================== */
-
+/* Data tables */
 .table-responsive-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -538,12 +629,25 @@ input[type=range]::-webkit-slider-thumb:hover {
   padding: 0.875rem 0.875rem;
   border-bottom: 1px solid var(--border-color);
   font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
 }
 
-/* ==========================================================================
-   7. MICRO-ANIMATIONS & UTILITIES
-   ========================================================================== */
+.data-table tr:hover td {
+  background: var(--card-bg-subtle);
+}
 
+/* Spinner */
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #FFFFFF;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Micro-animations */
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
