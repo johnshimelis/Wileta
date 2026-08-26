@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User, AlertCircle, CheckCircle } from 'lucide-react';
+import { Mail, Lock, User, AlertCircle, CheckCircle, Sparkles } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
-import Badge from '../components/ui/Badge';
 
 export default function Signup() {
     const [name, setName] = useState('');
@@ -48,19 +47,25 @@ export default function Signup() {
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh', width: '100%', background: 'var(--bg-color)' }}>
-            {/* Left Form Column */}
+            {/* Left Column: Centered Modal Container */}
             <div style={{
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                padding: '2.5rem 3rem',
-                maxWidth: '580px',
-                width: '100%',
+                alignItems: 'center',
+                padding: '2rem 1.5rem',
+                minHeight: '100vh',
                 boxSizing: 'border-box'
             }}>
-                {/* Header Row: Logo & Controls */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                {/* Top Bar with Logo & Controls */}
+                <div style={{
+                    width: '100%',
+                    maxWidth: '440px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
                     <Logo size="small" />
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <LanguageToggle />
@@ -68,13 +73,22 @@ export default function Signup() {
                     </div>
                 </div>
 
-                {/* Form Content Area */}
-                <div style={{ width: '100%', maxWidth: '420px', margin: 'auto 0' }}>
-                    <div style={{ marginBottom: '1.5rem' }}>
-                        <h1 style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                {/* Perfect Modal Card */}
+                <div style={{
+                    width: '100%',
+                    maxWidth: '440px',
+                    margin: 'auto 0',
+                    background: 'var(--card-bg)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '16px',
+                    padding: '2.25rem 2rem',
+                    boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)'
+                }}>
+                    <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                        <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
                             {t('createAccount')}
                         </h1>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem' }}>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                             {t('signUpSubtitle')}
                         </p>
                     </div>
@@ -148,7 +162,7 @@ export default function Signup() {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 gap: '0.5rem',
-                                marginTop: '0.5rem',
+                                marginTop: '0.75rem',
                                 boxShadow: '0 2px 8px rgba(5, 150, 105, 0.25)',
                                 transition: 'all 0.15s ease'
                             }}
@@ -221,25 +235,24 @@ export default function Signup() {
                     </p>
                 </div>
 
-                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2rem' }}>
+                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                     By signing up, you agree to our Terms of Service & Privacy Policy.
                 </div>
             </div>
 
-            {/* Right Brand Showcase Column (Desktop Only) */}
+            {/* Right Column: Centered Rich Interactive Showcase (Desktop) */}
             <div className="desktop-only" style={{
-                flex: 1.1,
+                flex: 1.15,
                 background: 'linear-gradient(145deg, #064E3B 0%, #047857 50%, #059669 100%)',
                 color: '#FFFFFF',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                padding: '3.5rem 3rem',
+                padding: '3rem 2.5rem',
                 position: 'relative',
                 overflow: 'hidden'
             }}>
-                {/* Subtle Radial Grid */}
                 <div style={{
                     position: 'absolute',
                     top: 0,
@@ -251,21 +264,23 @@ export default function Signup() {
                     pointerEvents: 'none'
                 }}></div>
 
-                <div style={{ maxWidth: '440px', width: '100%', position: 'relative', zIndex: 2 }}>
-                    <Badge variant="primary" style={{ background: 'rgba(255,255,255,0.15)', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.25)', marginBottom: '1.25rem' }}>
-                        Start in 60 Seconds ⚡
-                    </Badge>
+                <div style={{ maxWidth: '460px', width: '100%', position: 'relative', zIndex: 2 }}>
+                    <div style={{ marginBottom: '1.25rem' }}>
+                        <span style={{ background: 'rgba(255,255,255,0.18)', color: '#FFFFFF', padding: '0.3rem 0.75rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 700, border: '1px solid rgba(255,255,255,0.3)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                            <Sparkles size={14} color="#FBBF24" /> Start in 60 Seconds ⚡
+                        </span>
+                    </div>
 
-                    <h2 style={{ fontSize: '2.1rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.25, marginBottom: '1rem', letterSpacing: '-0.02em' }}>
+                    <h2 style={{ fontSize: '2.15rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.2, marginBottom: '0.85rem', letterSpacing: '-0.025em' }}>
                         Your Supporters Are Ready to Send Gursha.
                     </h2>
                     
-                    <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.55, marginBottom: '2rem' }}>
+                    <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.88)', lineHeight: 1.55, marginBottom: '1.75rem' }}>
                         Create your unique public tipping page in seconds. Claim your handle and start receiving instant Telebirr tips directly from your audience.
                     </p>
 
-                    {/* Step-by-step checklist */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', background: 'rgba(255,255,255,0.1)', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)' }}>
+                    {/* Feature Cards Checklist */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.25)', marginBottom: '1.75rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: '#FFFFFF' }}>
                             <CheckCircle size={18} color="#34D399" />
                             <span>100% Free registration — zero monthly fee</span>
@@ -278,6 +293,11 @@ export default function Signup() {
                             <CheckCircle size={18} color="#34D399" />
                             <span>Full Telebirr & multi-bank payout support</span>
                         </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#A7F3D0' }}>
+                        <ShieldCheck size={16} color="#34D399" />
+                        <span>Protected by Ethiopian National ID KYC Verification</span>
                     </div>
                 </div>
             </div>
