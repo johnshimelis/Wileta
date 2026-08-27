@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
     Copy, CheckCircle, Wallet, History, ArrowUpRight, ArrowDownRight,
     TrendingUp, AlertTriangle, ShieldCheck, XCircle, User,
     ExternalLink, Menu, X, Smartphone, Upload, Edit2, AlertCircle, Sparkles,
-    Search, Filter, ArrowRight, Share2, DollarSign, Building, RefreshCw, QrCode
+    Search, Filter, ArrowRight, Share2, DollarSign, Building, RefreshCw, QrCode,
+    Zap, Check
 } from 'lucide-react';
 import TopAlert from '../components/TopAlert';
 import NotificationDrawer from '../components/NotificationDrawer';
@@ -460,11 +461,11 @@ export default function Dashboard() {
 
             <Sidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
 
-            <main className="main-content" style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1.5rem' }}>
+            <main className="main-content">
                 {alert && <TopAlert message={alert.message} type={alert.type} onClose={() => setAlert(null)} />}
 
                 {/* Dashboard Executive Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
                             <h1 style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.025em', margin: 0 }}>
@@ -474,7 +475,7 @@ export default function Dashboard() {
                                 {user?.kycStatus === 'approved' ? 'KYC Verified' : user?.kycStatus === 'pending' ? 'KYC Under Review' : 'KYC Unverified'}
                             </Badge>
                         </div>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.35rem', marginBottom: 0 }}>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.25rem', marginBottom: 0 }}>
                             Real-time overview of your monetization and incoming Telebirr support.
                         </p>
                     </div>
@@ -522,90 +523,178 @@ export default function Dashboard() {
                     </div>
                 )}
 
-                {/* HERO FINTECH BALANCE & EARNINGS CARD */}
+                {/* 3 EQUAL-WIDTH TOP METRIC CARDS */}
                 <div style={{
-                    background: 'var(--card-bg)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '16px',
-                    padding: '1.75rem',
-                    marginBottom: '1.75rem',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                    gap: '1.25rem',
+                    marginBottom: '1.75rem'
                 }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', alignItems: 'center' }}>
-                        {/* Primary Balance Section */}
-                        <div style={{ borderRight: '1px solid var(--border-color)', paddingRight: '1.5rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                    {t('currentBalance')}
-                                </span>
-                                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }}></span>
+                    {/* Card 1: CURRENT BALANCE */}
+                    <div
+                        style={{
+                            background: 'var(--card-bg)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '16px',
+                            padding: '1.5rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            boxShadow: 'var(--shadow-sm)',
+                            transition: 'all 0.2s ease',
+                            cursor: 'pointer'
+                        }}
+                        onMouseEnter={e => {
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                            e.currentTarget.style.borderColor = 'var(--primary)';
+                        }}
+                        onMouseLeave={e => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                            e.currentTarget.style.borderColor = 'var(--border-color)';
+                        }}
+                    >
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                                    <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                        {t('currentBalance')}
+                                    </span>
+                                    <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }}></span>
+                                </div>
+                                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <Wallet size={16} />
+                                </div>
                             </div>
 
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '0.85rem' }}>
-                                <span style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.035em', lineHeight: 1 }}>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBottom: '1rem' }}>
+                                <span style={{ fontSize: '2.1rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1 }}>
                                     {isLoading ? '...' : metrics.pending_balance.toFixed(2)}
                                 </span>
-                                <span style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--primary)' }}>ETB</span>
-                            </div>
-
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                                <Button
-                                    variant="primary"
-                                    size="md"
-                                    icon={ArrowUpRight}
-                                    iconPosition="right"
-                                    disabled={metrics.pending_balance <= 0 || user?.kycStatus !== 'approved'}
-                                    onClick={() => setShowWithdrawModal(true)}
-                                >
-                                    {t('withdrawFunds')}
-                                </Button>
-                                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                                    {user?.kycStatus === 'approved' ? '⚡ Instant payout routing' : '🔒 Verified KYC required'}
-                                </span>
+                                <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--primary)' }}>ETB</span>
                             </div>
                         </div>
 
-                        {/* Secondary Metrics */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                            {/* Lifetime Earnings */}
-                            <div style={{ background: 'var(--card-bg-subtle)', padding: '1rem 1.15rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                        {t('totalTips')}
-                                    </span>
-                                    <TrendingUp size={16} color="var(--primary)" />
-                                </div>
-                                <div style={{ fontSize: '1.35rem', fontWeight: 900, color: 'var(--text-main)' }}>
-                                    {isLoading ? '...' : metrics.total_earned.toFixed(2)} <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>ETB</span>
-                                </div>
-                                <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-                                    Lifetime total received
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+                            <Button
+                                variant="primary"
+                                size="sm"
+                                icon={ArrowUpRight}
+                                iconPosition="right"
+                                disabled={metrics.pending_balance <= 0 || user?.kycStatus !== 'approved'}
+                                onClick={() => setShowWithdrawModal(true)}
+                            >
+                                {t('withdrawFunds')}
+                            </Button>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                {user?.kycStatus === 'approved' ? '⚡ Instant payout' : '🔒 KYC required'}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Card 2: TOTAL TIPS */}
+                    <div
+                        style={{
+                            background: 'var(--card-bg)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '16px',
+                            padding: '1.5rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            boxShadow: 'var(--shadow-sm)',
+                            transition: 'all 0.2s ease',
+                            cursor: 'pointer'
+                        }}
+                        onMouseEnter={e => {
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                            e.currentTarget.style.borderColor = 'var(--border-hover)';
+                        }}
+                        onMouseLeave={e => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                            e.currentTarget.style.borderColor = 'var(--border-color)';
+                        }}
+                    >
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    {t('totalTips')}
+                                </span>
+                                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(5, 150, 105, 0.1)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <TrendingUp size={16} />
                                 </div>
                             </div>
 
-                            {/* Active Payout Rail */}
-                            <div style={{ background: 'var(--card-bg-subtle)', padding: '1rem 1.15rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                        Payout Rail
-                                    </span>
-                                    <Smartphone size={16} color="#3B82F6" />
-                                </div>
-                                <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', textTransform: 'capitalize', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                    {user?.payoutMethod === 'bank' ? (bankAccounts[0]?.bankName || 'Bank Transfer') : 'Telebirr Wallet'}
-                                </div>
-                                <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', marginTop: '0.2rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                    {user?.payoutMethod === 'bank' ? (bankAccounts[0]?.accountNumber || 'Configured') : (user?.telebirr_number || user?.phone || 'Configured')}
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBottom: '1rem' }}>
+                                <span style={{ fontSize: '2.1rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                                    {isLoading ? '...' : metrics.total_earned.toFixed(2)}
+                                </span>
+                                <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-muted)' }}>ETB</span>
+                            </div>
+                        </div>
+
+                        <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                            <Sparkles size={13} color="#F59E0B" />
+                            <span>Lifetime total received from audience</span>
+                        </div>
+                    </div>
+
+                    {/* Card 3: PAYOUT RAIL */}
+                    <div
+                        style={{
+                            background: 'var(--card-bg)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '16px',
+                            padding: '1.5rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            boxShadow: 'var(--shadow-sm)',
+                            transition: 'all 0.2s ease',
+                            cursor: 'pointer'
+                        }}
+                        onMouseEnter={e => {
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                            e.currentTarget.style.borderColor = 'var(--border-hover)';
+                        }}
+                        onMouseLeave={e => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                            e.currentTarget.style.borderColor = 'var(--border-color)';
+                        }}
+                    >
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    Payout Rail
+                                </span>
+                                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.1)', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    {user?.payoutMethod === 'bank' ? <Building size={16} /> : <Smartphone size={16} />}
                                 </div>
                             </div>
+
+                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {user?.payoutMethod === 'bank' ? (bankAccounts[0]?.bankName || 'Bank Transfer') : 'Telebirr Wallet'}
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.75rem', borderTop: '1px solid var(--border-color)', fontSize: '0.775rem' }}>
+                            <span style={{ color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {user?.payoutMethod === 'bank' ? (bankAccounts[0]?.accountNumber || 'Configured') : (user?.telebirr_number || user?.phone || 'Configured')}
+                            </span>
+                            <Badge variant="primary" size="sm">Active</Badge>
                         </div>
                     </div>
                 </div>
 
                 {/* QUICK INTEGRATIONS & SHARING TOOLSTRIP */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem', marginBottom: '1.75rem' }}>
                     {/* Share Tipping Handle */}
-                    <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '1.25rem' }}>
+                    <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '1.25rem', boxShadow: 'var(--shadow-sm)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
                             <span style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)' }}>
                                 {t('tippingLinkTitle')}
@@ -626,7 +715,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* OBS Livestream Overlay */}
-                    <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '1.25rem' }}>
+                    <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '1.25rem', boxShadow: 'var(--shadow-sm)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
                             <span style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                                 <Sparkles size={16} color="#F59E0B" /> {t('obsOverlayTitle')}
@@ -656,7 +745,8 @@ export default function Dashboard() {
                         borderRadius: '16px',
                         padding: '1.5rem',
                         display: 'flex',
-                        flexDirection: 'column'
+                        flexDirection: 'column',
+                        boxShadow: 'var(--shadow-sm)'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                             <div>
@@ -681,7 +771,8 @@ export default function Dashboard() {
                                         fontSize: '0.75rem',
                                         fontWeight: 700,
                                         cursor: 'pointer',
-                                        boxShadow: txFilter === 'all' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none'
+                                        boxShadow: txFilter === 'all' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                                        transition: 'all 0.15s ease'
                                     }}
                                 >
                                     All
@@ -697,7 +788,8 @@ export default function Dashboard() {
                                         fontSize: '0.75rem',
                                         fontWeight: 700,
                                         cursor: 'pointer',
-                                        boxShadow: txFilter === 'tips' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none'
+                                        boxShadow: txFilter === 'tips' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                                        transition: 'all 0.15s ease'
                                     }}
                                 >
                                     Tips
@@ -713,7 +805,8 @@ export default function Dashboard() {
                                         fontSize: '0.75rem',
                                         fontWeight: 700,
                                         cursor: 'pointer',
-                                        boxShadow: txFilter === 'withdrawals' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none'
+                                        boxShadow: txFilter === 'withdrawals' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                                        transition: 'all 0.15s ease'
                                     }}
                                 >
                                     Payouts
@@ -745,7 +838,7 @@ export default function Dashboard() {
                                     </thead>
                                     <tbody>
                                         {filteredTransactions.slice(0, 10).map((tx) => (
-                                            <tr key={tx._id}>
+                                            <tr key={tx._id} style={{ transition: 'background 0.15s ease' }}>
                                                 <td style={{ fontSize: '0.825rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                                                     {new Date(tx.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                                 </td>
@@ -799,7 +892,8 @@ export default function Dashboard() {
                         borderRadius: '16px',
                         padding: '1.5rem',
                         display: 'flex',
-                        flexDirection: 'column'
+                        flexDirection: 'column',
+                        boxShadow: 'var(--shadow-sm)'
                     }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
                             <div>
@@ -834,8 +928,12 @@ export default function Dashboard() {
                                             padding: '0.75rem 0.95rem',
                                             background: 'var(--card-bg-subtle)',
                                             borderRadius: '10px',
-                                            border: '1px solid var(--border-color)'
+                                            border: '1px solid var(--border-color)',
+                                            transition: 'all 0.15s ease',
+                                            cursor: 'pointer'
                                         }}
+                                        onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
+                                        onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
                                     >
                                         <div
                                             style={{
@@ -878,7 +976,8 @@ export default function Dashboard() {
                     border: '1px solid var(--border-color)',
                     borderRadius: '16px',
                     padding: '1.75rem',
-                    marginBottom: '2rem'
+                    marginBottom: '2rem',
+                    boxShadow: 'var(--shadow-sm)'
                 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                         <div>
