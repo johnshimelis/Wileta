@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, ArrowRight, LayoutDashboard, Sparkles } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X, ArrowRight, LayoutDashboard, Sparkles, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from './LanguageToggle';
@@ -14,6 +14,7 @@ export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -35,6 +36,14 @@ export default function Navbar() {
         };
     }, [mobileOpen]);
 
+    const navLinks = [
+        { label: 'How It Works', href: '#how-it-works' },
+        { label: 'Live Demo', href: '#simulator' },
+        { label: 'Revenue Calculator', href: '#calculator' },
+        { label: 'Banks & Telebirr', href: '#payouts' },
+        { label: 'FAQ', href: '#faq' }
+    ];
+
     return (
         <header 
             className="public-navbar" 
@@ -42,22 +51,42 @@ export default function Navbar() {
                 position: 'sticky', 
                 top: 0, 
                 zIndex: 'var(--z-sticky)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                background: scrolled ? 'rgba(var(--card-bg-rgb, 255, 255, 255), 0.92)' : 'var(--bg-color)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                background: scrolled ? 'rgba(var(--card-bg-rgb, 255, 255, 255), 0.94)' : 'var(--bg-color)',
                 borderBottom: '1px solid ' + (scrolled ? 'var(--border-color)' : 'transparent'),
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
         >
-            <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0.75rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+            <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
                     <Logo size="small" />
-                    <nav className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                        <a href="#how-it-works" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.9rem', transition: 'color 0.15s' }}>How It Works</a>
-                        <a href="#simulator" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.9rem', transition: 'color 0.15s' }}>Live Demo</a>
-                        <a href="#calculator" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.9rem', transition: 'color 0.15s' }}>Calculator</a>
-                        <a href="#payouts" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.9rem', transition: 'color 0.15s' }}>Banks & Telebirr</a>
-                        <a href="#faq" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.9rem', transition: 'color 0.15s' }}>FAQ</a>
+                    <nav className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                        {navLinks.map((link, idx) => (
+                            <a 
+                                key={idx}
+                                href={link.href} 
+                                style={{ 
+                                    textDecoration: 'none', 
+                                    color: 'var(--text-secondary)', 
+                                    fontWeight: 600, 
+                                    fontSize: '0.875rem', 
+                                    padding: '0.35rem 0.65rem',
+                                    borderRadius: 'var(--radius-sm)',
+                                    transition: 'all 0.15s ease' 
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.color = 'var(--text-main)';
+                                    e.currentTarget.style.background = 'var(--card-bg-subtle)';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.color = 'var(--text-secondary)';
+                                    e.currentTarget.style.background = 'transparent';
+                                }}
+                            >
+                                {link.label}
+                            </a>
+                        ))}
                     </nav>
                 </div>
 
@@ -81,7 +110,17 @@ export default function Navbar() {
                             <Link 
                                 to="/login" 
                                 className="desktop-only" 
-                                style={{ textDecoration: 'none', color: 'var(--text-main)', fontWeight: 700, fontSize: '0.875rem', padding: '0.45rem 0.75rem', borderRadius: 'var(--radius-md)' }}
+                                style={{ 
+                                    textDecoration: 'none', 
+                                    color: 'var(--text-main)', 
+                                    fontWeight: 700, 
+                                    fontSize: '0.875rem', 
+                                    padding: '0.5rem 0.85rem', 
+                                    borderRadius: 'var(--radius-md)',
+                                    transition: 'background 0.15s ease'
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.background = 'var(--card-bg-subtle)'}
+                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                             >
                                 Log in
                             </Link>
@@ -106,11 +145,12 @@ export default function Navbar() {
                             border: '1px solid var(--border-color)',
                             color: 'var(--text-main)',
                             cursor: 'pointer',
-                            padding: '0.45rem',
-                            borderRadius: 'var(--radius-sm)',
+                            padding: '0.5rem',
+                            borderRadius: 'var(--radius-md)',
                             display: 'none',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            transition: 'all 0.15s ease'
                         }}
                         aria-label="Toggle navigation menu"
                     >
@@ -129,18 +169,35 @@ export default function Navbar() {
                         borderBottom: '1px solid var(--border-color)',
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '1rem',
+                        gap: '0.5rem',
                         boxShadow: 'var(--shadow-xl)'
                     }}
                 >
-                    <a href="#how-it-works" onClick={() => setMobileOpen(false)} style={{ textDecoration: 'none', color: 'var(--text-main)', fontWeight: 700, fontSize: '1rem', padding: '0.4rem 0' }}>How It Works</a>
-                    <a href="#simulator" onClick={() => setMobileOpen(false)} style={{ textDecoration: 'none', color: 'var(--text-main)', fontWeight: 700, fontSize: '1rem', padding: '0.4rem 0' }}>Live Demo</a>
-                    <a href="#calculator" onClick={() => setMobileOpen(false)} style={{ textDecoration: 'none', color: 'var(--text-main)', fontWeight: 700, fontSize: '1rem', padding: '0.4rem 0' }}>Earnings Calculator</a>
-                    <a href="#payouts" onClick={() => setMobileOpen(false)} style={{ textDecoration: 'none', color: 'var(--text-main)', fontWeight: 700, fontSize: '1rem', padding: '0.4rem 0' }}>Banks & Telebirr</a>
-                    <a href="#faq" onClick={() => setMobileOpen(false)} style={{ textDecoration: 'none', color: 'var(--text-main)', fontWeight: 700, fontSize: '1rem', padding: '0.4rem 0' }}>FAQ</a>
+                    {navLinks.map((link, idx) => (
+                        <a 
+                            key={idx}
+                            href={link.href} 
+                            onClick={() => setMobileOpen(false)} 
+                            style={{ 
+                                textDecoration: 'none', 
+                                color: 'var(--text-main)', 
+                                fontWeight: 700, 
+                                fontSize: '0.95rem', 
+                                padding: '0.65rem 0.85rem',
+                                borderRadius: 'var(--radius-md)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                background: 'var(--card-bg-subtle)'
+                            }}
+                        >
+                            <span>{link.label}</span>
+                            <ChevronRight size={16} color="var(--text-muted)" />
+                        </a>
+                    ))}
                     
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
-                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)' }}>Preferences</span>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '1rem', marginTop: '0.5rem', borderTop: '1px solid var(--border-color)' }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-muted)' }}>Preferences</span>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
                             <LanguageToggle />
                             <ThemeToggle />
@@ -148,7 +205,7 @@ export default function Navbar() {
                     </div>
 
                     {!user && (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.75rem' }}>
                             <Link to="/login" onClick={() => setMobileOpen(false)}>
                                 <Button variant="outline" size="md" className="btn-full">
                                     Log In

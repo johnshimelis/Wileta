@@ -97,7 +97,7 @@ export default function PublicProfile() {
 
     const handleTip = async (e) => {
         e.preventDefault();
-        const phoneRegex = /^(09|07)d{8}$/;
+        const phoneRegex = /^(09|07)\d{8}$/;
         if (!phoneRegex.test(tipperPhone)) {
             showAlert("Please enter a valid 10-digit Ethiopian mobile number (09XXXXXXXX or 07XXXXXXXX)", "error");
             return;
@@ -143,8 +143,8 @@ export default function PublicProfile() {
         return (
             <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)' }}>
                 <div style={{ textAlign: 'center' }}>
-                    <div style={{ width: '44px', height: '44px', borderRadius: '50%', border: '3px solid var(--border-color)', borderTopColor: 'var(--primary)', animation: 'spin 0.8s linear infinite', margin: '0 auto 1rem' }}></div>
-                    <div style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Loading creator profile...</div>
+                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', border: '3px solid var(--border-color)', borderTopColor: 'var(--primary)', animation: 'spin 0.8s linear infinite', margin: '0 auto 1.25rem' }}></div>
+                    <div style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.925rem' }}>Loading creator profile...</div>
                 </div>
             </div>
         );
@@ -153,7 +153,7 @@ export default function PublicProfile() {
     if (error || !creator) {
         return (
             <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)', padding: '1.5rem' }}>
-                <div style={{ maxWidth: '440px', width: '100%', textAlign: 'center', padding: '2.5rem', background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '16px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.08)' }}>
+                <div style={{ maxWidth: '440px', width: '100%', textAlign: 'center', padding: '2.5rem', background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)' }}>
                     <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--danger-light)', color: 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
                         <AlertCircle size={28} />
                     </div>
@@ -176,7 +176,7 @@ export default function PublicProfile() {
             {alert && <TopAlert message={alert.message} type={alert.type} onClose={() => setAlert(null)} />}
 
             {/* Top Navigation Bar */}
-            <header style={{ padding: '0.75rem 1.25rem', background: 'var(--card-bg)', borderBottom: '1px solid var(--border-color)', position: 'sticky', top: 0, zIndex: 100 }}>
+            <header style={{ padding: '0.85rem 1.25rem', background: 'var(--card-bg)', borderBottom: '1px solid var(--border-color)', position: 'sticky', top: 0, zIndex: 100 }}>
                 <div style={{ maxWidth: '580px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Logo size="compact" />
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -190,24 +190,24 @@ export default function PublicProfile() {
             </header>
 
             {/* Main Single-Column Flow: Creator -> Amount -> Message -> Pay */}
-            <main style={{ flex: 1, maxWidth: '540px', width: '100%', margin: '0 auto', padding: '1.75rem 1.25rem 3.5rem', boxSizing: 'border-box' }}>
+            <main style={{ flex: 1, maxWidth: '540px', width: '100%', margin: '0 auto', padding: '2rem 1.25rem 4rem', boxSizing: 'border-box' }}>
                 
                 {/* 1. CREATOR PRESENTATION CARD */}
                 <div style={{
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
-                    borderRadius: '16px',
+                    borderRadius: 'var(--radius-xl)',
                     overflow: 'hidden',
-                    marginBottom: '1.25rem',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'
+                    marginBottom: '1.5rem',
+                    boxShadow: 'var(--shadow-sm)'
                 }}>
                     {/* Cover Banner with Ethiopian Emerald */}
-                    <div style={{ height: '80px', background: 'linear-gradient(135deg, #064E3B 0%, #047857 50%, #059669 100%)', position: 'relative' }}></div>
+                    <div style={{ height: '90px', background: 'linear-gradient(135deg, #064E3B 0%, #047857 50%, #059669 100%)', position: 'relative' }}></div>
 
                     {/* Creator Info */}
-                    <div style={{ padding: '0 1.5rem 1.25rem', position: 'relative' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '-36px', marginBottom: '0.75rem' }}>
-                            <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: 'var(--primary)', color: '#FFFFFF', border: '3.5px solid var(--card-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.75rem', fontWeight: 900, boxShadow: '0 4px 10px rgba(0,0,0,0.12)', overflow: 'hidden', flexShrink: 0 }}>
+                    <div style={{ padding: '0 1.5rem 1.5rem', position: 'relative' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '-40px', marginBottom: '0.85rem' }}>
+                            <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--primary)', color: '#FFFFFF', border: '4px solid var(--card-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 900, boxShadow: 'var(--shadow-md)', overflow: 'hidden', flexShrink: 0 }}>
                                 {creator.profilePicUrl ? (
                                     <img
                                         src={creator.profilePicUrl.startsWith('http') ? creator.profilePicUrl : ('https://wileta-backend.onrender.com' + creator.profilePicUrl)}
@@ -224,14 +224,14 @@ export default function PublicProfile() {
                             </Badge>
                         </div>
 
-                        <h1 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-main)', margin: '0 0 0.15rem', letterSpacing: '-0.025em' }}>
+                        <h1 style={{ fontSize: '1.45rem', fontWeight: 900, color: 'var(--text-main)', margin: '0 0 0.2rem', letterSpacing: '-0.025em' }}>
                             {creator.name}
                         </h1>
-                        <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                        <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.875rem', marginBottom: '0.65rem' }}>
                             @{creator.username}
                         </div>
                         {creator.bio && (
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: 1.5, margin: 0 }}>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: 1.55, margin: 0 }}>
                                 {creator.bio}
                             </p>
                         )}
@@ -243,15 +243,15 @@ export default function PublicProfile() {
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
+                        borderRadius: 'var(--radius-xl)',
                         padding: '1.75rem',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'
+                        boxShadow: 'var(--shadow-sm)'
                     }}>
                         <form onSubmit={handleTip}>
                             {/* Step A: Amount Selection */}
                             <div style={{ marginBottom: '1.5rem' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                                    <label style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                                    <label style={{ fontSize: '0.8125rem', fontWeight: 800, color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                         Select Gursha Amount
                                     </label>
                                     <span style={{ color: 'var(--primary)', fontWeight: 900, fontSize: '1.15rem' }}>
@@ -260,7 +260,7 @@ export default function PublicProfile() {
                                 </div>
 
                                 {/* 4 Tactile Preset Chips */}
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '0.65rem' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '0.75rem' }}>
                                     {presetGurshas.map((p) => {
                                         const active = !isCustom && amount === p.etb;
                                         return (
@@ -272,23 +272,23 @@ export default function PublicProfile() {
                                                     setIsCustom(false);
                                                 }}
                                                 style={{
-                                                    padding: '0.75rem 0.25rem',
-                                                    borderRadius: '10px',
+                                                    padding: '0.85rem 0.25rem',
+                                                    borderRadius: 'var(--radius-md)',
                                                     border: active ? '2px solid var(--primary)' : '1px solid var(--border-color)',
                                                     background: active ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
                                                     color: active ? 'var(--primary)' : 'var(--text-main)',
                                                     fontWeight: 800,
-                                                    fontSize: '0.85rem',
+                                                    fontSize: '0.875rem',
                                                     cursor: 'pointer',
                                                     transition: 'all 0.15s ease',
                                                     display: 'flex',
                                                     flexDirection: 'column',
                                                     alignItems: 'center',
-                                                    gap: '0.2rem',
+                                                    gap: '0.25rem',
                                                     boxShadow: active ? '0 2px 6px rgba(5, 150, 105, 0.15)' : 'none'
                                                 }}
                                             >
-                                                <span style={{ fontSize: '1.15rem' }}>{p.emoji}</span>
+                                                <span style={{ fontSize: '1.25rem' }}>{p.emoji}</span>
                                                 <span style={{ fontWeight: 800 }}>{p.etb} ETB</span>
                                             </button>
                                         );
@@ -305,13 +305,13 @@ export default function PublicProfile() {
                                         }}
                                         style={{
                                             width: '100%',
-                                            padding: '0.55rem',
-                                            borderRadius: '8px',
+                                            padding: '0.6rem',
+                                            borderRadius: 'var(--radius-md)',
                                             border: '1px dashed var(--border-color)',
                                             background: 'transparent',
                                             color: 'var(--text-muted)',
                                             fontWeight: 700,
-                                            fontSize: '0.8rem',
+                                            fontSize: '0.8125rem',
                                             cursor: 'pointer',
                                             transition: 'all 0.15s ease'
                                         }}
@@ -338,7 +338,7 @@ export default function PublicProfile() {
 
                             {/* Step B: Supporter Details */}
                             <div style={{ marginBottom: '1.25rem' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
                                     <label className="form-label" style={{ margin: 0 }}>Your Name (Optional)</label>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
                                         <input
@@ -379,14 +379,14 @@ export default function PublicProfile() {
                                         required
                                     />
                                 </div>
-                                <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)', marginTop: '0.25rem', display: 'block' }}>
-                                    A direct Telebirr USSD payment prompt will be pushed to this device.
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.3rem', display: 'block' }}>
+                                    A direct Telebirr USSD payment prompt will be pushed to this mobile device.
                                 </span>
                             </div>
 
                             {/* Step D: Shout-out Message & Quick Chips */}
                             <div style={{ marginBottom: '1.75rem' }}>
-                                <label className="form-label" style={{ marginBottom: '0.35rem' }}>Encouraging Message (Optional)</label>
+                                <label className="form-label" style={{ marginBottom: '0.4rem' }}>Encouraging Message (Optional)</label>
                                 <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
                                     {quickMessages.map((msg, i) => (
                                         <button
@@ -396,7 +396,7 @@ export default function PublicProfile() {
                                             style={{
                                                 fontSize: '0.75rem',
                                                 padding: '0.25rem 0.55rem',
-                                                borderRadius: '9999px',
+                                                borderRadius: 'var(--radius-full)',
                                                 border: '1px solid var(--border-color)',
                                                 background: shoutOutMessage === msg ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
                                                 color: shoutOutMessage === msg ? 'var(--primary)' : 'var(--text-muted)',
@@ -424,11 +424,11 @@ export default function PublicProfile() {
                                 type="submit"
                                 style={{
                                     width: '100%',
-                                    height: '50px',
+                                    height: '52px',
                                     background: 'var(--primary)',
                                     color: '#FFFFFF',
                                     border: 'none',
-                                    borderRadius: '10px',
+                                    borderRadius: 'var(--radius-md)',
                                     fontWeight: 800,
                                     fontSize: '1rem',
                                     cursor: 'pointer',
@@ -448,8 +448,8 @@ export default function PublicProfile() {
                                 <span>Send {currentTipVal} ETB with Telebirr</span>
                             </button>
 
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', marginTop: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                <Lock size={12} color="var(--primary)" />
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', marginTop: '1rem', fontSize: '0.775rem', color: 'var(--text-muted)' }}>
+                                <Lock size={13} color="var(--primary)" />
                                 <span>Secure instant Telebirr settlement • Zero fan processing fee</span>
                             </div>
                         </form>
@@ -461,14 +461,14 @@ export default function PublicProfile() {
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
+                        borderRadius: 'var(--radius-xl)',
                         padding: '3rem 1.5rem',
                         textAlign: 'center',
-                        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.08)'
+                        boxShadow: 'var(--shadow-md)'
                     }}>
                         <div style={{ width: '52px', height: '52px', borderRadius: '50%', border: '3px solid var(--border-color)', borderTopColor: 'var(--primary)', animation: 'spin 0.8s linear infinite', margin: '0 auto 1.25rem' }}></div>
                         <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>Connecting to Telebirr...</h3>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>Pushing secure payment request to {tipperPhone}</p>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', margin: 0 }}>Pushing secure payment request to {tipperPhone}</p>
                     </div>
                 )}
 
@@ -477,21 +477,21 @@ export default function PublicProfile() {
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
-                        padding: '2.5rem 1.5rem',
+                        borderRadius: 'var(--radius-xl)',
+                        padding: '2.75rem 1.75rem',
                         textAlign: 'center',
-                        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.08)'
+                        boxShadow: 'var(--shadow-md)'
                     }}>
-                        <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.12)', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-                            <Smartphone size={30} />
+                        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(0, 114, 206, 0.12)', color: '#0072CE', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+                            <Smartphone size={32} />
                         </div>
-                        <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>Check Your Phone!</h3>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>Check Your Phone!</h3>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', marginBottom: '1.5rem', lineHeight: 1.55 }}>
                             A Telebirr USSD payment prompt has been pushed to <strong>{tipperPhone}</strong>.
                             <br />Enter your Telebirr PIN to confirm the <strong>{currentTipVal} ETB</strong> tip.
                         </p>
 
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--card-bg-subtle)', padding: '0.6rem 1.25rem', borderRadius: '9999px', border: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.5rem' }}>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--card-bg-subtle)', padding: '0.65rem 1.35rem', borderRadius: 'var(--radius-full)', border: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.75rem' }}>
                             <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary)', animation: 'pulse 1.5s infinite' }}></span>
                             Waiting for Telebirr PIN Confirmation...
                         </div>
@@ -513,30 +513,30 @@ export default function PublicProfile() {
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
-                        padding: '2.5rem 1.75rem',
+                        borderRadius: 'var(--radius-xl)',
+                        padding: '2.75rem 1.75rem',
                         textAlign: 'center',
-                        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.08)'
+                        boxShadow: 'var(--shadow-md)'
                     }}>
-                        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-                            <CheckCircle size={36} />
+                        <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+                            <CheckCircle size={38} />
                         </div>
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>Gursha Sent Successfully! 🎉</h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                        <h2 style={{ fontSize: '1.55rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>Gursha Sent Successfully! 🎉</h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', marginBottom: '1.5rem' }}>
                             Your {currentTipVal} ETB tip was received by <strong>{creator.name}</strong>.
                         </p>
 
-                        <div style={{ background: 'var(--card-bg-subtle)', borderRadius: '12px', padding: '1.15rem', border: '1px solid var(--border-color)', textAlign: 'left', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                        <div style={{ background: 'var(--card-bg-subtle)', borderRadius: 'var(--radius-lg)', padding: '1.25rem', border: '1px solid var(--border-color)', textAlign: 'left', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
                                 <span style={{ color: 'var(--text-muted)' }}>Amount</span>
                                 <span style={{ fontWeight: 800, color: 'var(--primary)' }}>{currentTipVal} ETB</span>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
                                 <span style={{ color: 'var(--text-muted)' }}>Recipient</span>
                                 <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>@{creator.username}</span>
                             </div>
                             {shoutOutMessage && (
-                                <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '0.5rem', marginTop: '0.5rem', fontStyle: 'italic', color: 'var(--text-secondary)' }}>
+                                <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '0.6rem', marginTop: '0.6rem', fontStyle: 'italic', color: 'var(--text-secondary)' }}>
                                     "{shoutOutMessage}"
                                 </div>
                             )}
@@ -556,16 +556,16 @@ export default function PublicProfile() {
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
+                        borderRadius: 'var(--radius-xl)',
                         padding: '2.5rem 1.75rem',
                         textAlign: 'center',
-                        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.08)'
+                        boxShadow: 'var(--shadow-md)'
                     }}>
                         <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--danger-light)', color: 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
                             <AlertCircle size={30} />
                         </div>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>Payment Could Not Be Completed</h3>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+                        <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>Payment Could Not Be Completed</h3>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem', lineHeight: 1.55 }}>
                             The Telebirr payment prompt timed out or was cancelled. Please check your Telebirr wallet balance and try again.
                         </p>
                         <Button variant="primary" size="md" className="btn-full" onClick={() => setTippingState('idle')}>
@@ -575,8 +575,8 @@ export default function PublicProfile() {
                 )}
 
                 {/* Platform Trust Footer */}
-                <div style={{ textAlign: 'center', marginTop: '2.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
-                    <ShieldCheck size={14} color="var(--primary)" />
+                <div style={{ textAlign: 'center', marginTop: '2.5rem', color: 'var(--text-muted)', fontSize: '0.8125rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
+                    <ShieldCheck size={15} color="var(--primary)" />
                     <span>Secured by GurshaPay Financial Compliance • 🇪🇹 Ethiopia</span>
                 </div>
             </main>
