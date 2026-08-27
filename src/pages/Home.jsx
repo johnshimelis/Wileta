@@ -5,7 +5,8 @@ import {
     CheckCircle, MessageSquare, Heart, Video, Sparkles,
     ChevronDown, ChevronUp, Copy, Users, Play, Volume2,
     DollarSign, Sliders, ExternalLink, Award, Check, RefreshCw,
-    TrendingUp, Star, Bell, Gift, ArrowUpRight, Lock, CheckCircle2
+    TrendingUp, Star, Bell, Gift, ArrowUpRight, Lock, CheckCircle2,
+    Radio, Flame, Coffee, Rocket, Crown
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -56,6 +57,7 @@ export default function Home() {
 
     const [simAmount, setSimAmount] = useState('100');
     const [simCustomMode, setSimCustomMode] = useState(false);
+    const [simCustomVal, setSimCustomVal] = useState('');
     const [simMessage, setSimMessage] = useState('Loved your latest video! Gursha on me ☕');
     const [simState, setSimState] = useState('idle'); // 'idle' | 'ussd_prompt' | 'pin_entering' | 'success'
     const [simPin, setSimPin] = useState('');
@@ -71,6 +73,7 @@ export default function Home() {
 
     const handleSendSimTip = (e) => {
         if (e) e.preventDefault();
+        const effectiveAmount = simCustomMode && simCustomVal ? simCustomVal : simAmount;
         setSimState('ussd_prompt');
         setSimPin('');
         setTimeout(() => {
@@ -141,6 +144,8 @@ export default function Home() {
         }
     ];
 
+    const effectiveTipDisplay = simCustomMode && simCustomVal ? simCustomVal : simAmount;
+
     return (
         <div style={{ minHeight: '100vh', background: 'var(--bg-color)', overflowX: 'hidden' }}>
             <Navbar />
@@ -156,10 +161,10 @@ export default function Home() {
                         background: '#0F172A',
                         color: '#FFFFFF',
                         border: '1px solid #334155',
-                        borderRadius: 'var(--radius-lg)',
+                        borderRadius: '14px',
                         padding: '1rem 1.25rem',
-                        boxShadow: 'var(--shadow-xl)',
-                        zIndex: 'var(--z-toast)',
+                        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
+                        zIndex: 9999,
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.85rem',
@@ -174,7 +179,7 @@ export default function Home() {
                             <span>🔔 Live Stream Alert Fired!</span>
                         </div>
                         <div style={{ fontSize: '0.775rem', color: '#94A3B8' }}>
-                            {activeCreator.name} received +{simAmount} ETB via Telebirr USSD.
+                            {activeCreator.name} received +{effectiveTipDisplay} ETB via Telebirr USSD.
                         </div>
                     </div>
                 </div>
@@ -186,8 +191,8 @@ export default function Home() {
                     
                     {/* Left: Value Proposition */}
                     <div>
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.35rem 0.85rem', borderRadius: 'var(--radius-full)', background: 'var(--primary-light)', color: 'var(--primary)', fontWeight: 700, fontSize: '0.85rem', marginBottom: '1.25rem', border: '1px solid rgba(5, 150, 105, 0.2)' }}>
-                            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary)', display: 'inline-block', animation: 'pulse 2s infinite' }}></span>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.35rem 0.85rem', borderRadius: '9999px', background: 'var(--primary-light)', color: 'var(--primary)', fontWeight: 700, fontSize: '0.85rem', marginBottom: '1.25rem', border: '1px solid rgba(5, 150, 105, 0.2)' }}>
+                            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary)', display: 'inline-block' }}></span>
                             Ethiopia's #1 Creator Monetization Platform
                         </div>
 
@@ -204,7 +209,7 @@ export default function Home() {
                         <div style={{ 
                             background: 'var(--card-bg)', 
                             border: '1px solid var(--border-color)', 
-                            borderRadius: 'var(--radius-lg)', 
+                            borderRadius: '12px', 
                             padding: '0.45rem 0.45rem 0.45rem 1rem', 
                             display: 'flex', 
                             alignItems: 'center', 
@@ -212,7 +217,7 @@ export default function Home() {
                             maxWidth: '460px', 
                             marginBottom: '0.75rem', 
                             boxShadow: 'var(--shadow-sm)',
-                            transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
+                            transition: 'all 0.15s ease'
                         }}>
                             <span style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>gurshapay.com/@</span>
                             <input
@@ -265,7 +270,7 @@ export default function Home() {
                     {/* Right: INTERACTIVE TIPPING WIDGET SIMULATOR */}
                     <div id="simulator">
                         {/* Creator Switcher Tabs */}
-                        <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '0.75rem', background: 'var(--card-bg-subtle)', padding: '0.3rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
+                        <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '0.75rem', background: 'var(--card-bg-subtle)', padding: '0.3rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                             {sampleCreators.map((c, i) => (
                                 <button
                                     key={i}
@@ -273,22 +278,25 @@ export default function Home() {
                                     onClick={() => {
                                         setSelectedCreatorIdx(i);
                                         setSimAmount(c.preset);
+                                        setSimCustomMode(false);
                                         setSimMessage(c.note);
                                         setSimState('idle');
                                     }}
                                     style={{
                                         flex: 1,
                                         padding: '0.5rem 0.5rem',
-                                        borderRadius: 'var(--radius-md)',
+                                        borderRadius: '8px',
                                         border: 'none',
                                         background: selectedCreatorIdx === i ? 'var(--card-bg)' : 'transparent',
                                         color: selectedCreatorIdx === i ? 'var(--primary)' : 'var(--text-muted)',
                                         fontWeight: 700,
                                         fontSize: '0.8125rem',
                                         cursor: 'pointer',
-                                        boxShadow: selectedCreatorIdx === i ? 'var(--shadow-xs)' : 'none',
+                                        boxShadow: selectedCreatorIdx === i ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
                                         transition: 'all 0.15s ease'
                                     }}
+                                    onMouseEnter={e => { if (selectedCreatorIdx !== i) e.currentTarget.style.color = 'var(--text-main)'; }}
+                                    onMouseLeave={e => { if (selectedCreatorIdx !== i) e.currentTarget.style.color = 'var(--text-muted)'; }}
                                 >
                                     {c.avatar} {c.name.split(' ')[0]}
                                 </button>
@@ -296,7 +304,7 @@ export default function Home() {
                         </div>
 
                         {/* Interactive Card */}
-                        <div style={{ background: 'var(--card-bg)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-lg)', overflow: 'hidden' }}>
+                        <div style={{ background: 'var(--card-bg)', borderRadius: '16px', border: '1px solid var(--border-color)', boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)', overflow: 'hidden' }}>
                             {/* Card Top Profile Header */}
                             <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
@@ -313,7 +321,7 @@ export default function Home() {
                                         </div>
                                     </div>
                                 </div>
-                                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)', background: 'var(--primary-light)', padding: '0.25rem 0.65rem', borderRadius: 'var(--radius-full)', border: '1px solid rgba(5, 150, 105, 0.2)' }}>
+                                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)', background: 'var(--primary-light)', padding: '0.25rem 0.65rem', borderRadius: '9999px', border: '1px solid rgba(5, 150, 105, 0.2)' }}>
                                     {activeCreator.supporters.toLocaleString()} fans
                                 </span>
                             </div>
@@ -325,33 +333,48 @@ export default function Home() {
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
                                             <label className="form-label" style={{ margin: 0, fontSize: '0.825rem' }}>Select Tip Amount</label>
                                             <span style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1rem' }}>
-                                                {simAmount} ETB <span style={{ fontSize: '0.775rem', fontWeight: 600, color: 'var(--text-muted)' }}>({Math.max(1, Math.round(Number(simAmount) / 50))} Gurshas ☕)</span>
+                                                {effectiveTipDisplay} ETB <span style={{ fontSize: '0.775rem', fontWeight: 600, color: 'var(--text-muted)' }}>({Math.max(1, Math.round(Number(effectiveTipDisplay) / 50))} Gurshas ☕)</span>
                                             </span>
                                         </div>
 
                                         {/* Amount Chips */}
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '1rem' }}>
-                                            {['50', '100', '250', '500'].map((amt) => (
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                                            {[
+                                                { val: '50', icon: '☕' },
+                                                { val: '100', icon: '🍕' },
+                                                { val: '250', icon: '🚀' },
+                                                { val: '500', icon: '👑' }
+                                            ].map((item) => (
                                                 <button
-                                                    key={amt}
+                                                    key={item.val}
                                                     type="button"
                                                     onClick={() => {
-                                                        setSimAmount(amt);
+                                                        setSimAmount(item.val);
                                                         setSimCustomMode(false);
                                                     }}
                                                     style={{
                                                         padding: '0.65rem 0',
-                                                        borderRadius: 'var(--radius-md)',
-                                                        border: (!simCustomMode && simAmount === amt) ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                                                        background: (!simCustomMode && simAmount === amt) ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                                        color: (!simCustomMode && simAmount === amt) ? 'var(--primary)' : 'var(--text-main)',
+                                                        borderRadius: '8px',
+                                                        border: (!simCustomMode && simAmount === item.val) ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                                                        background: (!simCustomMode && simAmount === item.val) ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                                        color: (!simCustomMode && simAmount === item.val) ? 'var(--primary)' : 'var(--text-main)',
                                                         fontWeight: 800,
                                                         fontSize: '0.875rem',
                                                         cursor: 'pointer',
                                                         transition: 'all 0.15s ease'
                                                     }}
+                                                    onMouseEnter={e => {
+                                                        if (simCustomMode || simAmount !== item.val) {
+                                                            e.currentTarget.style.borderColor = 'var(--primary)';
+                                                        }
+                                                    }}
+                                                    onMouseLeave={e => {
+                                                        if (simCustomMode || simAmount !== item.val) {
+                                                            e.currentTarget.style.borderColor = 'var(--border-color)';
+                                                        }
+                                                    }}
                                                 >
-                                                    {amt} ETB
+                                                    {item.val} ETB {item.icon}
                                                 </button>
                                             ))}
                                         </div>
@@ -367,13 +390,16 @@ export default function Home() {
                                                         style={{
                                                             fontSize: '0.75rem',
                                                             padding: '0.25rem 0.55rem',
-                                                            borderRadius: 'var(--radius-full)',
+                                                            borderRadius: '9999px',
                                                             border: '1px solid var(--border-color)',
                                                             background: simMessage === q ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
                                                             color: simMessage === q ? 'var(--primary)' : 'var(--text-muted)',
                                                             fontWeight: 600,
-                                                            cursor: 'pointer'
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.15s ease'
                                                         }}
+                                                        onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
+                                                        onMouseLeave={e => { if (simMessage !== q) e.currentTarget.style.borderColor = 'var(--border-color)'; }}
                                                     >
                                                         {q}
                                                     </button>
@@ -395,8 +421,9 @@ export default function Home() {
                                             size="md"
                                             icon={Smartphone}
                                             className="btn-full"
+                                            style={{ height: '48px', fontSize: '0.95rem', fontWeight: 800 }}
                                         >
-                                            Send {simAmount} ETB with Telebirr
+                                            Send {effectiveTipDisplay} ETB with Telebirr ⚡
                                         </Button>
                                     </form>
                                 )}
@@ -410,10 +437,10 @@ export default function Home() {
                                             Telebirr USSD Push Prompt
                                         </div>
                                         <p style={{ color: 'var(--text-muted)', fontSize: '0.825rem', marginBottom: '1rem' }}>
-                                            Transferring {simAmount} ETB to {activeCreator.name}...
+                                            Transferring {effectiveTipDisplay} ETB to {activeCreator.name}...
                                         </p>
-                                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'var(--card-bg-subtle)', padding: '0.45rem 0.95rem', borderRadius: 'var(--radius-full)', fontSize: '0.8125rem', fontWeight: 700, color: '#0072CE', border: '1px solid var(--border-color)' }}>
-                                            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#0072CE', animation: 'pulse 1.5s infinite' }}></span>
+                                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'var(--card-bg-subtle)', padding: '0.45rem 0.95rem', borderRadius: '9999px', fontSize: '0.8125rem', fontWeight: 700, color: '#0072CE', border: '1px solid var(--border-color)' }}>
+                                            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#0072CE' }}></span>
                                             <span>Pushing USSD Request...</span>
                                         </div>
                                     </div>
@@ -442,16 +469,16 @@ export default function Home() {
                                             <CheckCircle size={28} />
                                         </div>
                                         <h3 style={{ fontSize: '1.2rem', fontWeight: 900, marginBottom: '0.25rem' }}>
-                                            {simAmount} ETB Received! 🎉
+                                            {effectiveTipDisplay} ETB Received! 🎉
                                         </h3>
                                         <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontStyle: 'italic', marginBottom: '1rem' }}>
                                             "{simMessage}"
                                         </p>
                                         <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'center', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
-                                            <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.25rem 0.6rem', borderRadius: 'var(--radius-full)', background: 'var(--success-light)', color: 'var(--success)' }}>
+                                            <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.25rem 0.6rem', borderRadius: '9999px', background: 'var(--success-light)', color: 'var(--success)' }}>
                                                 Telebirr Settled ✓
                                             </span>
-                                            <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.25rem 0.6rem', borderRadius: 'var(--radius-full)', background: 'rgba(217, 119, 6, 0.12)', color: 'var(--secondary)' }}>
+                                            <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.25rem 0.6rem', borderRadius: '9999px', background: 'rgba(217, 119, 6, 0.12)', color: 'var(--secondary)' }}>
                                                 OBS Alert Fired ⚡
                                             </span>
                                         </div>
@@ -471,7 +498,7 @@ export default function Home() {
             </section>
 
             {/* ── FINANCIAL SERVICES & BANK INTEGRATIONS ───────────────── */}
-            <section id="payouts" style={{ padding: '4rem 1.25rem', background: 'var(--card-bg)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
+            <section id="payouts" style={{ padding: '4.5rem 1.25rem', background: 'var(--card-bg)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
                 <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
                         <p style={{ fontSize: '0.775rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--primary)', marginBottom: '0.35rem' }}>
@@ -480,35 +507,48 @@ export default function Home() {
                         <h2 style={{ fontSize: '1.75rem', fontWeight: 900 }}>Direct Settlement with Ethiopian Banks</h2>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '1rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '1.15rem' }}>
                         {[
-                            { name: 'Telebirr', tag: 'Instant Push USSD', color: '#0072CE', badge: 'Fastest' },
-                            { name: 'Commercial Bank (CBE)', tag: 'CBE Birr & Accounts', color: '#5C2D91', badge: 'Popular' },
-                            { name: 'Bank of Abyssinia', tag: 'Apollo Direct', color: '#E5A91E', badge: 'Direct' },
-                            { name: 'Awash Bank', tag: 'Awash Birr Pro', color: '#00539F', badge: 'Direct' },
-                            { name: 'Dashen Bank', tag: 'Amole Settlement', color: '#F37021', badge: 'Direct' },
-                            { name: 'Coop Bank Oromia', tag: 'CoopPay Verified', color: '#00AEEF', badge: 'Direct' }
+                            { name: 'Telebirr', tag: 'Instant Push USSD', color: '#0072CE', badge: 'Fastest', initial: 'TB' },
+                            { name: 'Commercial Bank (CBE)', tag: 'CBE Birr & Accounts', color: '#5C2D91', badge: 'Popular', initial: 'CBE' },
+                            { name: 'Bank of Abyssinia', tag: 'Apollo Direct', color: '#E5A91E', badge: 'Direct', initial: 'BOA' },
+                            { name: 'Awash Bank', tag: 'Awash Birr Pro', color: '#00539F', badge: 'Direct', initial: 'AWB' },
+                            { name: 'Dashen Bank', tag: 'Amole Settlement', color: '#F37021', badge: 'Direct', initial: 'DSH' },
+                            { name: 'Coop Bank Oromia', tag: 'CoopPay Verified', color: '#00AEEF', badge: 'Direct', initial: 'CBO' }
                         ].map((bank, i) => (
                             <div
                                 key={i}
                                 style={{
-                                    padding: '1.15rem 1rem',
-                                    borderRadius: 'var(--radius-lg)',
+                                    padding: '1.25rem 1.15rem',
+                                    borderRadius: '12px',
                                     background: 'var(--card-bg-subtle)',
                                     border: '1px solid var(--border-color)',
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    gap: '0.4rem',
-                                    transition: 'all 0.15s ease'
+                                    gap: '0.45rem',
+                                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                                    cursor: 'pointer'
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.transform = 'translateY(-3px)';
+                                    e.currentTarget.style.boxShadow = '0 8px 16px -2px rgba(15, 23, 42, 0.08)';
+                                    e.currentTarget.style.borderColor = bank.color;
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = 'none';
+                                    e.currentTarget.style.borderColor = 'var(--border-color)';
                                 }}
                             >
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: bank.color }}></div>
-                                    <span style={{ fontSize: '0.675rem', fontWeight: 700, padding: '0.15rem 0.45rem', borderRadius: 'var(--radius-full)', background: 'var(--card-bg)', color: 'var(--text-muted)', border: '1px solid var(--border-color)' }}>
+                                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: bank.color, color: '#FFFFFF', fontWeight: 900, fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {bank.initial}
+                                    </div>
+                                    <span style={{ fontSize: '0.675rem', fontWeight: 700, padding: '0.15rem 0.45rem', borderRadius: '9999px', background: 'var(--card-bg)', color: 'var(--text-muted)', border: '1px solid var(--border-color)' }}>
                                         {bank.badge}
                                     </span>
                                 </div>
-                                <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-main)', marginTop: '0.2rem' }}>{bank.name}</div>
+                                <div style={{ fontWeight: 800, fontSize: '0.925rem', color: 'var(--text-main)', marginTop: '0.2rem' }}>{bank.name}</div>
                                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{bank.tag}</div>
                             </div>
                         ))}
@@ -517,64 +557,42 @@ export default function Home() {
             </section>
 
             {/* ── EARNINGS ESTIMATOR CALCULATOR ───────────────────────── */}
-            <section id="calculator" style={{ padding: '5rem 1.25rem', maxWidth: '880px', margin: '0 auto' }}>
-                <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', padding: '2.5rem 1.75rem', boxShadow: 'var(--shadow-md)' }}>
-                    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <section id="calculator" style={{ padding: '5rem 1.25rem', maxWidth: '900px', margin: '0 auto' }}>
+                <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '2.75rem 2rem', boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.06)' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '2.25rem' }}>
                         <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', letterSpacing: '0.06em' }}>Revenue Estimator</span>
-                        <h2 style={{ fontSize: '1.85rem', fontWeight: 900, marginTop: '0.35rem' }}>How Much Could You Earn on GurshaPay?</h2>
+                        <h2 style={{ fontSize: '1.95rem', fontWeight: 900, marginTop: '0.35rem' }}>How Much Could You Earn on GurshaPay?</h2>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.35rem' }}>Select a preset tier or slide to match your Ethiopian audience</p>
                     </div>
 
                     {/* Preset Tiers */}
-                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginBottom: '2.25rem', flexWrap: 'wrap' }}>
-                        <button
-                            type="button"
-                            onClick={() => setTier(50, 50)}
-                            style={{
-                                padding: '0.45rem 0.95rem',
-                                borderRadius: 'var(--radius-full)',
-                                border: (fanCount === 50 && avgTip === 50) ? '1px solid var(--primary)' : '1px solid var(--border-color)',
-                                background: (fanCount === 50 && avgTip === 50) ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                color: (fanCount === 50 && avgTip === 50) ? 'var(--primary)' : 'var(--text-secondary)',
-                                fontWeight: 700,
-                                fontSize: '0.8125rem',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            🌱 Starter Creator (50 fans)
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setTier(250, 100)}
-                            style={{
-                                padding: '0.45rem 0.95rem',
-                                borderRadius: 'var(--radius-full)',
-                                border: (fanCount === 250 && avgTip === 100) ? '1px solid var(--primary)' : '1px solid var(--border-color)',
-                                background: (fanCount === 250 && avgTip === 100) ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                color: (fanCount === 250 && avgTip === 100) ? 'var(--primary)' : 'var(--text-secondary)',
-                                fontWeight: 700,
-                                fontSize: '0.8125rem',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            🚀 Growing YouTuber (250 fans)
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setTier(1000, 200)}
-                            style={{
-                                padding: '0.45rem 0.95rem',
-                                borderRadius: 'var(--radius-full)',
-                                border: (fanCount === 1000 && avgTip === 200) ? '1px solid var(--primary)' : '1px solid var(--border-color)',
-                                background: (fanCount === 1000 && avgTip === 200) ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                color: (fanCount === 1000 && avgTip === 200) ? 'var(--primary)' : 'var(--text-secondary)',
-                                fontWeight: 700,
-                                fontSize: '0.8125rem',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            👑 Top Streamer (1,000 fans)
-                        </button>
+                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
+                        {[
+                            { fans: 50, tip: 50, label: '🌱 Starter Creator (50 fans)' },
+                            { fans: 250, tip: 100, label: '🚀 Growing YouTuber (250 fans)' },
+                            { fans: 1000, tip: 200, label: '👑 Top Streamer (1,000 fans)' }
+                        ].map((tier, idx) => (
+                            <button
+                                key={idx}
+                                type="button"
+                                onClick={() => setTier(tier.fans, tier.tip)}
+                                style={{
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '9999px',
+                                    border: (fanCount === tier.fans && avgTip === tier.tip) ? '1px solid var(--primary)' : '1px solid var(--border-color)',
+                                    background: (fanCount === tier.fans && avgTip === tier.tip) ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                    color: (fanCount === tier.fans && avgTip === tier.tip) ? 'var(--primary)' : 'var(--text-secondary)',
+                                    fontWeight: 700,
+                                    fontSize: '0.8125rem',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.15s ease'
+                                }}
+                                onMouseEnter={e => { if (fanCount !== tier.fans || avgTip !== tier.tip) e.currentTarget.style.borderColor = 'var(--primary)'; }}
+                                onMouseLeave={e => { if (fanCount !== tier.fans || avgTip !== tier.tip) e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+                            >
+                                {tier.label}
+                            </button>
+                        ))}
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem', alignItems: 'center' }}>
@@ -592,6 +610,7 @@ export default function Home() {
                                     step="10"
                                     value={fanCount}
                                     onChange={(e) => setFanCount(Number(e.target.value))}
+                                    style={{ accentColor: 'var(--primary)', width: '100%', cursor: 'pointer' }}
                                 />
                                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.725rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
                                     <span>10 fans</span>
@@ -611,6 +630,7 @@ export default function Home() {
                                     step="25"
                                     value={avgTip}
                                     onChange={(e) => setAvgTip(Number(e.target.value))}
+                                    style={{ accentColor: 'var(--primary)', width: '100%', cursor: 'pointer' }}
                                 />
                                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.725rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
                                     <span>25 ETB</span>
@@ -620,7 +640,7 @@ export default function Home() {
                         </div>
 
                         {/* Result Container */}
-                        <div style={{ background: 'linear-gradient(145deg, #059669 0%, #047857 100%)', padding: '2rem 1.75rem', borderRadius: 'var(--radius-lg)', color: '#FFFFFF', textAlign: 'center', boxShadow: 'var(--shadow-md)' }}>
+                        <div style={{ background: 'linear-gradient(145deg, #059669 0%, #047857 100%)', padding: '2.25rem 2rem', borderRadius: '14px', color: '#FFFFFF', textAlign: 'center', boxShadow: '0 10px 20px -5px rgba(5, 150, 105, 0.4)' }}>
                             <div style={{ fontSize: '0.8rem', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
                                 Estimated Monthly Earnings
                             </div>
@@ -630,15 +650,29 @@ export default function Home() {
                             <div style={{ fontSize: '0.85rem', opacity: 0.9, marginBottom: '1.5rem' }}>
                                 ≈ {annualEstimate.toLocaleString()} ETB per year
                             </div>
-                            <Button
-                                variant="secondary"
-                                size="md"
-                                className="btn-full"
-                                style={{ background: '#FFFFFF', color: 'var(--primary)', fontWeight: 800 }}
+                            <button
+                                type="button"
                                 onClick={() => navigate('/signup')}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.75rem 1.25rem',
+                                    borderRadius: '8px',
+                                    border: 'none',
+                                    background: '#FFFFFF',
+                                    color: 'var(--primary)',
+                                    fontWeight: 800,
+                                    fontSize: '0.95rem',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                                    transition: 'all 0.15s ease'
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+                                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                                onMouseDown={e => e.currentTarget.style.transform = 'scale(0.985)'}
+                                onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
                             >
-                                Start Earning Today
-                            </Button>
+                                Start Earning Today →
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -667,14 +701,14 @@ export default function Home() {
                         </div>
 
                         {/* Interactive OBS Preview Screen */}
-                        <div style={{ position: 'relative', background: '#090D14', borderRadius: 'var(--radius-xl)', padding: '1.75rem', minHeight: '250px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', border: '1px solid #1E293B', overflow: 'hidden', boxShadow: 'var(--shadow-lg)' }}>
+                        <div style={{ position: 'relative', background: '#090D14', borderRadius: '16px', padding: '1.75rem', minHeight: '260px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', border: '1px solid #1E293B', overflow: 'hidden', boxShadow: '0 15px 30px -5px rgba(0, 0, 0, 0.4)' }}>
                             <div style={{ position: 'absolute', top: '14px', left: '18px', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                                 <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#EF4444' }}></span>
                                 <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#EF4444', textTransform: 'uppercase', letterSpacing: '0.05em' }}>OBS Live Stream 1080p</span>
                             </div>
 
                             {obsAlertActive ? (
-                                <div className="animate-fade-in" style={{ background: 'var(--primary)', border: '2px solid #10B981', borderRadius: 'var(--radius-lg)', padding: '1.25rem 1.75rem', color: '#FFFFFF', textAlign: 'center', maxWidth: '90%', boxShadow: '0 10px 25px rgba(5, 150, 105, 0.4)' }}>
+                                <div className="animate-fade-in" style={{ background: 'var(--primary)', border: '2px solid #10B981', borderRadius: '12px', padding: '1.25rem 1.75rem', color: '#FFFFFF', textAlign: 'center', maxWidth: '90%', boxShadow: '0 10px 25px rgba(5, 150, 105, 0.4)' }}>
                                     <div style={{ fontSize: '1.2rem', fontWeight: 900 }}>
                                         🎉 {obsCustomName} tipped {obsCustomTip} ETB!
                                     </div>
@@ -685,7 +719,7 @@ export default function Home() {
                             ) : (
                                 <div style={{ textAlign: 'center', color: '#64748B' }}>
                                     <Video size={40} style={{ opacity: 0.35, margin: '0 auto 0.65rem' }} />
-                                    <div style={{ fontSize: '0.875rem', fontWeight: 700 }}>OBS Browser Source Preview</div>
+                                    <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#E2E8F0' }}>OBS Browser Source Preview</div>
                                     <div style={{ fontSize: '0.775rem', marginTop: '0.25rem' }}>Click "Test Live Alert Banner" to simulate an alert</div>
                                 </div>
                             )}
@@ -702,8 +736,12 @@ export default function Home() {
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.75rem' }}>
-                    <div style={{ padding: '1.75rem', borderRadius: 'var(--radius-lg)', background: 'var(--card-bg)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.85rem', boxShadow: 'var(--shadow-sm)' }}>
-                        <div style={{ width: '42px', height: '42px', borderRadius: 'var(--radius-md)', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.15rem' }}>
+                    <div 
+                        style={{ padding: '1.75rem', borderRadius: '14px', background: 'var(--card-bg)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.85rem', boxShadow: 'var(--shadow-sm)', transition: 'all 0.2s ease', cursor: 'pointer' }}
+                        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+                    >
+                        <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.15rem' }}>
                             1
                         </div>
                         <h3 style={{ fontSize: '1.15rem', fontWeight: 800 }}>1. Claim Your @handle</h3>
@@ -712,8 +750,12 @@ export default function Home() {
                         </p>
                     </div>
 
-                    <div style={{ padding: '1.75rem', borderRadius: 'var(--radius-lg)', background: 'var(--card-bg)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.85rem', boxShadow: 'var(--shadow-sm)' }}>
-                        <div style={{ width: '42px', height: '42px', borderRadius: 'var(--radius-md)', background: 'rgba(217, 119, 6, 0.12)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.15rem' }}>
+                    <div 
+                        style={{ padding: '1.75rem', borderRadius: '14px', background: 'var(--card-bg)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.85rem', boxShadow: 'var(--shadow-sm)', transition: 'all 0.2s ease', cursor: 'pointer' }}
+                        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = 'var(--secondary)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+                    >
+                        <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.15rem' }}>
                             2
                         </div>
                         <h3 style={{ fontSize: '1.15rem', fontWeight: 800 }}>2. Share with Your Fans</h3>
@@ -722,8 +764,12 @@ export default function Home() {
                         </p>
                     </div>
 
-                    <div style={{ padding: '1.75rem', borderRadius: 'var(--radius-lg)', background: 'var(--card-bg)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.85rem', boxShadow: 'var(--shadow-sm)' }}>
-                        <div style={{ width: '42px', height: '42px', borderRadius: 'var(--radius-md)', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.15rem' }}>
+                    <div 
+                        style={{ padding: '1.75rem', borderRadius: '14px', background: 'var(--card-bg)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.85rem', boxShadow: 'var(--shadow-sm)', transition: 'all 0.2s ease', cursor: 'pointer' }}
+                        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = 'var(--success)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+                    >
+                        <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.15rem' }}>
                             3
                         </div>
                         <h3 style={{ fontSize: '1.15rem', fontWeight: 800 }}>3. Instant Cash Out</h3>
@@ -735,7 +781,7 @@ export default function Home() {
             </section>
 
             {/* ── FAQ ACCORDION ───────────────────────────────────────── */}
-            <section id="faq" style={{ padding: '4.5rem 1.25rem', maxWidth: '760px', margin: '0 auto' }}>
+            <section id="faq" style={{ padding: '4.5rem 1.25rem', maxWidth: '780px', margin: '0 auto' }}>
                 <div style={{ textAlign: 'center', marginBottom: '2.75rem' }}>
                     <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.06em' }}>Got Questions?</span>
                     <h2 style={{ fontSize: '1.95rem', fontWeight: 900, marginTop: '0.35rem' }}>Frequently Asked Questions</h2>
@@ -745,15 +791,26 @@ export default function Home() {
                     {faqs.map((faq, index) => (
                         <div
                             key={index}
-                            style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.15s ease' }}
+                            style={{ 
+                                background: 'var(--card-bg)', 
+                                border: '1px solid var(--border-color)', 
+                                borderRadius: '10px', 
+                                overflow: 'hidden', 
+                                cursor: 'pointer', 
+                                transition: 'all 0.15s ease' 
+                            }}
                             onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                            onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
+                            onMouseLeave={e => { if (openFaq !== index) e.currentTarget.style.borderColor = 'var(--border-color)'; }}
                         >
-                            <div style={{ padding: '1.15rem 1.35rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'var(--text-main)' }}>{faq.q}</span>
+                            <div style={{ padding: '1.15rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+                                <h3 style={{ fontSize: '0.975rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>
+                                    {faq.q}
+                                </h3>
                                 {openFaq === index ? <ChevronUp size={18} color="var(--primary)" /> : <ChevronDown size={18} color="var(--text-muted)" />}
                             </div>
                             {openFaq === index && (
-                                <div style={{ padding: '0 1.35rem 1.15rem', color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: 1.6, borderTop: '1px solid var(--border-color)', paddingTop: '0.85rem' }}>
+                                <div style={{ padding: '0 1.25rem 1.25rem', color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: 1.6, borderTop: '1px solid var(--border-color)', paddingTop: '0.85rem' }}>
                                     {faq.a}
                                 </div>
                             )}
@@ -762,34 +819,37 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* ── FINAL CTA BANNER ────────────────────────────────────── */}
-            <section style={{ padding: '2rem 1.25rem 5.5rem', maxWidth: 'var(--container-max)', margin: '0 auto' }}>
-                <div
-                    style={{
-                        background: 'linear-gradient(145deg, #059669 0%, #047857 100%)',
-                        color: '#FFFFFF',
-                        padding: '3.75rem 1.75rem',
-                        textAlign: 'center',
-                        borderRadius: 'var(--radius-xl)',
-                        boxShadow: 'var(--shadow-lg)'
-                    }}
-                >
-                    <h2 style={{ fontSize: 'clamp(1.85rem, 4vw, 2.6rem)', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.85rem' }}>
-                        Ready to Start Receiving Support?
+            {/* ── HIGH CONVERSION FOOTER CTA ──────────────────────────── */}
+            <section style={{ padding: '5rem 1.25rem', background: 'linear-gradient(145deg, #059669 0%, #047857 100%)', color: '#FFFFFF', textAlign: 'center' }}>
+                <div style={{ maxWidth: '640px', margin: '0 auto' }}>
+                    <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: 900, letterSpacing: '-0.03em', color: '#FFFFFF', marginBottom: '1rem' }}>
+                        Ready to Monetize Your Ethiopian Audience?
                     </h2>
-                    <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.92)', maxWidth: '560px', margin: '0 auto 2rem', lineHeight: 1.6 }}>
-                        Join Ethiopia's top creators and start accepting direct Telebirr & bank tips in minutes.
+                    <p style={{ fontSize: '1.05rem', opacity: 0.95, lineHeight: 1.6, marginBottom: '2rem' }}>
+                        Join thousands of Ethiopian creators earning direct tips via Telebirr and local banks today.
                     </p>
-                    <Button
-                        variant="secondary"
-                        size="lg"
-                        icon={ArrowRight}
-                        iconPosition="right"
+                    <button
+                        type="button"
                         onClick={() => navigate('/signup')}
-                        style={{ background: '#FFFFFF', color: 'var(--primary)', fontWeight: 800 }}
+                        style={{
+                            padding: '0.85rem 2rem',
+                            borderRadius: '8px',
+                            border: 'none',
+                            background: '#FFFFFF',
+                            color: 'var(--primary)',
+                            fontWeight: 800,
+                            fontSize: '1rem',
+                            cursor: 'pointer',
+                            boxShadow: '0 4px 14px rgba(0,0,0,0.2)',
+                            transition: 'all 0.15s ease'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+                        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                        onMouseDown={e => e.currentTarget.style.transform = 'scale(0.985)'}
+                        onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
                     >
-                        Claim Your Free Link Now
-                    </Button>
+                        Claim Your Free Link →
+                    </button>
                 </div>
             </section>
 
