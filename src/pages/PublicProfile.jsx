@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import {
     Smartphone, CheckCircle, AlertCircle, MessageSquare, ShieldCheck,
     Heart, Sparkles, Share2, Copy, Send, Coffee, Award, ExternalLink,
-    Clock, RefreshCw, Check, ArrowRight, Lock
+    Clock, RefreshCw, Check, ArrowRight, Lock, User
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -14,6 +14,34 @@ import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import './PublicProfile.css';
+
+// Verified Blue Tick Emblem
+const VerifiedBlueTick = ({ size = 22, title = "Verified Creator" }) => (
+    <span 
+        title={title}
+        style={{ 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            verticalAlign: 'middle',
+            cursor: 'pointer'
+        }}
+    >
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path 
+                d="M10.5 2.5C11.3 1.8 12.7 1.8 13.5 2.5L14.7 3.6C15.2 4.1 15.9 4.3 16.6 4.3L18.2 4.2C19.3 4.1 20.3 5.0 20.2 6.1L20.1 7.7C20.1 8.4 20.4 9.1 20.8 9.6L22.0 10.8C22.7 11.6 22.7 12.9 22.0 13.7L20.8 14.9C20.4 15.4 20.1 16.1 20.1 16.8L20.2 18.4C20.3 19.5 19.3 20.4 18.2 20.3L16.6 20.2C15.9 20.2 15.2 20.4 14.7 20.9L13.5 22.0C12.7 22.7 11.3 22.7 10.5 22.0L9.3 20.9C8.8 20.4 8.1 20.2 7.4 20.2L5.8 20.3C4.7 20.4 3.7 19.5 3.8 18.4L3.9 16.8C3.9 16.1 3.6 15.4 3.2 14.9L2.0 13.7C1.3 12.9 1.3 11.6 2.0 10.8L3.2 9.6C3.6 9.1 3.9 8.4 3.9 7.7L3.8 6.1C3.7 5.0 4.7 4.1 5.8 4.2L7.4 4.3C8.1 4.3 8.8 4.1 9.3 3.6L10.5 2.5Z" 
+                fill="#1D9BF0" 
+            />
+            <path 
+                d="M8.5 12.5L10.8 14.8L15.8 9.5" 
+                stroke="#FFFFFF" 
+                strokeWidth="2.2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+            />
+        </svg>
+    </span>
+);
 
 export default function PublicProfile() {
     const { api } = useAuth();
@@ -153,7 +181,7 @@ export default function PublicProfile() {
     if (error || !creator) {
         return (
             <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)', padding: '1.5rem' }}>
-                <div style={{ maxWidth: '440px', width: '100%', textAlign: 'center', padding: '2.5rem', background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)' }}>
+                <div style={{ maxWidth: '440px', width: '100%', textAlign: 'center', padding: '2.5rem', background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '16px', boxShadow: 'var(--shadow-lg)' }}>
                     <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--danger-light)', color: 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
                         <AlertCircle size={28} />
                     </div>
@@ -170,6 +198,7 @@ export default function PublicProfile() {
     }
 
     const currentTipVal = isCustom ? (customAmount || '0') : amount;
+    const isVerified = creator.kycStatus === 'approved' || creator.isVerified;
 
     return (
         <div style={{ minHeight: '100vh', background: 'var(--bg-color)', display: 'flex', flexDirection: 'column' }}>
@@ -196,7 +225,7 @@ export default function PublicProfile() {
                 <div style={{
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
-                    borderRadius: 'var(--radius-xl)',
+                    borderRadius: '16px',
                     overflow: 'hidden',
                     marginBottom: '1.5rem',
                     boxShadow: 'var(--shadow-sm)'
@@ -219,14 +248,16 @@ export default function PublicProfile() {
                                 )}
                             </div>
 
-                            <Badge variant={creator.kycStatus === 'approved' ? 'success' : 'primary'} size="sm" icon={ShieldCheck}>
-                                {creator.kycStatus === 'approved' ? 'Verified Creator' : 'Creator'}
-                            </Badge>
+                            {isVerified && <VerifiedBlueTick size={24} title="Verified GurshaPay Creator" />}
                         </div>
 
-                        <h1 style={{ fontSize: '1.45rem', fontWeight: 900, color: 'var(--text-main)', margin: '0 0 0.2rem', letterSpacing: '-0.025em' }}>
-                            {creator.name}
-                        </h1>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.2rem' }}>
+                            <h1 style={{ fontSize: '1.45rem', fontWeight: 900, color: 'var(--text-main)', margin: 0, letterSpacing: '-0.025em' }}>
+                                {creator.name}
+                            </h1>
+                            {isVerified && <VerifiedBlueTick size={20} title="Verified GurshaPay Creator" />}
+                        </div>
+
                         <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.875rem', marginBottom: '0.65rem' }}>
                             @{creator.username}
                         </div>
@@ -243,7 +274,7 @@ export default function PublicProfile() {
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: 'var(--radius-xl)',
+                        borderRadius: '16px',
                         padding: '1.75rem',
                         boxShadow: 'var(--shadow-sm)'
                     }}>
@@ -273,7 +304,7 @@ export default function PublicProfile() {
                                                 }}
                                                 style={{
                                                     padding: '0.85rem 0.25rem',
-                                                    borderRadius: 'var(--radius-md)',
+                                                    borderRadius: '8px',
                                                     border: active ? '2px solid var(--primary)' : '1px solid var(--border-color)',
                                                     background: active ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
                                                     color: active ? 'var(--primary)' : 'var(--text-main)',
@@ -304,43 +335,57 @@ export default function PublicProfile() {
                                             setCustomAmount('');
                                         }}
                                         style={{
-                                            width: '100%',
-                                            padding: '0.6rem',
-                                            borderRadius: 'var(--radius-md)',
-                                            border: '1px dashed var(--border-color)',
-                                            background: 'transparent',
-                                            color: 'var(--text-muted)',
+                                            background: 'none',
+                                            border: 'none',
+                                            color: 'var(--primary)',
                                             fontWeight: 700,
-                                            fontSize: '0.8125rem',
+                                            fontSize: '0.825rem',
                                             cursor: 'pointer',
-                                            transition: 'all 0.15s ease'
+                                            padding: '0.25rem 0'
                                         }}
                                     >
-                                        + Enter Custom ETB Amount
+                                        + Enter Custom Amount
                                     </button>
                                 ) : (
-                                    <div className="input-group">
-                                        <span style={{ position: 'absolute', left: '1rem', fontWeight: 800, color: 'var(--text-muted)', fontSize: '0.85rem' }}>ETB</span>
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            placeholder="Enter custom amount (e.g. 350)"
-                                            className="form-input"
-                                            value={customAmount}
-                                            onChange={(e) => setCustomAmount(e.target.value)}
-                                            style={{ paddingLeft: '3.5rem' }}
-                                            autoFocus
-                                            required
-                                        />
+                                    <div style={{ marginTop: '0.5rem' }}>
+                                        <div className="input-group">
+                                            <span style={{ position: 'absolute', left: '1rem', fontWeight: 800, color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                                                ETB
+                                            </span>
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                placeholder="Custom amount (e.g. 300)"
+                                                className="form-input"
+                                                value={customAmount}
+                                                onChange={(e) => setCustomAmount(e.target.value)}
+                                                style={{ paddingLeft: '3.5rem' }}
+                                                autoFocus
+                                            />
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsCustom(false)}
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                color: 'var(--text-muted)',
+                                                fontSize: '0.75rem',
+                                                cursor: 'pointer',
+                                                marginTop: '0.25rem'
+                                            }}
+                                        >
+                                            ← Back to presets
+                                        </button>
                                     </div>
                                 )}
                             </div>
 
-                            {/* Step B: Supporter Details */}
+                            {/* Step B: Supporter Name & Anonymous Option */}
                             <div style={{ marginBottom: '1.25rem' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
                                     <label className="form-label" style={{ margin: 0 }}>Your Name (Optional)</label>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.775rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
                                         <input
                                             type="checkbox"
                                             checked={isAnonymous}
@@ -354,16 +399,18 @@ export default function PublicProfile() {
                                     <input
                                         type="text"
                                         className="form-input"
-                                        placeholder="e.g. Abebe K."
+                                        placeholder="e.g. Natnael T."
                                         value={tipperName}
                                         onChange={(e) => setTipperName(e.target.value)}
                                     />
                                 )}
                             </div>
 
-                            {/* Step C: Telebirr Mobile Number */}
+                            {/* Step C: Telebirr Phone Number */}
                             <div style={{ marginBottom: '1.25rem' }}>
-                                <label className="form-label">Telebirr Mobile Number</label>
+                                <label className="form-label">
+                                    Your Telebirr Mobile Number <span style={{ color: 'var(--danger)' }}>*</span>
+                                </label>
                                 <div className="input-group">
                                     <span style={{ position: 'absolute', left: '0.85rem', fontWeight: 800, color: 'var(--text-muted)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                                         <span>🇪🇹</span> +251
@@ -371,7 +418,7 @@ export default function PublicProfile() {
                                     <input
                                         type="tel"
                                         className="form-input"
-                                        placeholder="09XXXXXXXX or 07XXXXXXXX"
+                                        placeholder="0911000000"
                                         value={tipperPhone}
                                         onChange={(e) => setTipperPhone(e.target.value.replace(/[^0-9]/g, ''))}
                                         maxLength={10}
@@ -379,30 +426,29 @@ export default function PublicProfile() {
                                         required
                                     />
                                 </div>
-                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.3rem', display: 'block' }}>
-                                    A direct Telebirr USSD payment prompt will be pushed to this mobile device.
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem', display: 'block' }}>
+                                    A USSD payment prompt will pop up on this phone to enter your Telebirr PIN.
                                 </span>
                             </div>
 
-                            {/* Step D: Shout-out Message & Quick Chips */}
+                            {/* Step D: Shout-Out Message */}
                             <div style={{ marginBottom: '1.75rem' }}>
-                                <label className="form-label" style={{ marginBottom: '0.4rem' }}>Encouraging Message (Optional)</label>
+                                <label className="form-label">Shout-Out Note (Optional)</label>
                                 <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
-                                    {quickMessages.map((msg, i) => (
+                                    {quickMessages.map((msg, idx) => (
                                         <button
-                                            key={i}
+                                            key={idx}
                                             type="button"
                                             onClick={() => setShoutOutMessage(msg)}
                                             style={{
                                                 fontSize: '0.75rem',
                                                 padding: '0.25rem 0.55rem',
-                                                borderRadius: 'var(--radius-full)',
+                                                borderRadius: '9999px',
                                                 border: '1px solid var(--border-color)',
                                                 background: shoutOutMessage === msg ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
                                                 color: shoutOutMessage === msg ? 'var(--primary)' : 'var(--text-muted)',
                                                 fontWeight: 600,
-                                                cursor: 'pointer',
-                                                transition: 'all 0.15s ease'
+                                                cursor: 'pointer'
                                             }}
                                         >
                                             {msg}
@@ -411,24 +457,25 @@ export default function PublicProfile() {
                                 </div>
                                 <textarea
                                     className="form-input"
-                                    rows={2}
-                                    placeholder="Say something nice for the livestream alert..."
+                                    rows="2"
+                                    placeholder="Leave an encouraging note for their stream or channel..."
                                     value={shoutOutMessage}
                                     onChange={(e) => setShoutOutMessage(e.target.value)}
-                                    maxLength={250}
+                                    maxLength={200}
+                                    style={{ resize: 'vertical' }}
                                 />
                             </div>
 
-                            {/* Step E: Primary Payment CTA */}
+                            {/* Step E: Primary CTA Button */}
                             <button
                                 type="submit"
                                 style={{
                                     width: '100%',
-                                    height: '52px',
+                                    height: '50px',
                                     background: 'var(--primary)',
                                     color: '#FFFFFF',
                                     border: 'none',
-                                    borderRadius: 'var(--radius-md)',
+                                    borderRadius: '10px',
                                     fontWeight: 800,
                                     fontSize: '1rem',
                                     cursor: 'pointer',
@@ -436,7 +483,7 @@ export default function PublicProfile() {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     gap: '0.5rem',
-                                    boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)',
+                                    boxShadow: '0 4px 14px rgba(5, 150, 105, 0.3)',
                                     transition: 'all 0.15s ease'
                                 }}
                                 onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-hover)'}
@@ -444,141 +491,156 @@ export default function PublicProfile() {
                                 onMouseDown={e => e.currentTarget.style.transform = 'scale(0.985)'}
                                 onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
                             >
-                                <Smartphone size={20} />
-                                <span>Send {currentTipVal} ETB with Telebirr</span>
+                                <Smartphone size={18} />
+                                Send {currentTipVal} ETB with Telebirr ⚡
                             </button>
 
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', marginTop: '1rem', fontSize: '0.775rem', color: 'var(--text-muted)' }}>
-                                <Lock size={13} color="var(--primary)" />
-                                <span>Secure instant Telebirr settlement • Zero fan processing fee</span>
+                            <div style={{ textAlign: 'center', marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+                                <Lock size={12} /> Encrypted financial transaction • Direct to creator
                             </div>
                         </form>
                     </div>
                 )}
 
-                {/* 3. PROCESSING STATE */}
+                {/* 3. PAYMENT PROCESSING / USSD PROMPT STATE */}
                 {tippingState === 'processing' && (
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: 'var(--radius-xl)',
-                        padding: '3rem 1.5rem',
+                        borderRadius: '16px',
+                        padding: '3rem 2rem',
                         textAlign: 'center',
                         boxShadow: 'var(--shadow-md)'
                     }}>
-                        <div style={{ width: '52px', height: '52px', borderRadius: '50%', border: '3px solid var(--border-color)', borderTopColor: 'var(--primary)', animation: 'spin 0.8s linear infinite', margin: '0 auto 1.25rem' }}></div>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>Connecting to Telebirr...</h3>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', margin: 0 }}>Pushing secure payment request to {tipperPhone}</p>
+                        <div style={{ width: '56px', height: '56px', borderRadius: '50%', border: '3px solid var(--border-color)', borderTopColor: 'var(--primary)', animation: 'spin 0.8s linear infinite', margin: '0 auto 1.5rem' }}></div>
+                        <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                            Connecting to Telebirr Gateway...
+                        </h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                            Securing your transaction session with Ethio Telecom rails.
+                        </p>
                     </div>
                 )}
 
-                {/* 4. PIN PROMPT / WAITING STATE */}
                 {tippingState === 'pin_prompt' && (
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: 'var(--radius-xl)',
-                        padding: '2.75rem 1.75rem',
+                        borderRadius: '16px',
+                        padding: '2.5rem 2rem',
                         textAlign: 'center',
                         boxShadow: 'var(--shadow-md)'
                     }}>
                         <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(0, 114, 206, 0.12)', color: '#0072CE', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
                             <Smartphone size={32} />
                         </div>
-                        <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>Check Your Phone!</h3>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', marginBottom: '1.5rem', lineHeight: 1.55 }}>
-                            A Telebirr USSD payment prompt has been pushed to <strong>{tipperPhone}</strong>.
-                            <br />Enter your Telebirr PIN to confirm the <strong>{currentTipVal} ETB</strong> tip.
+                        <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                            Check Your Phone 📱
+                        </h2>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+                            A Telebirr USSD prompt has been sent to <strong>+251 {tipperPhone}</strong>. Enter your Telebirr PIN on your phone to complete the payment of <strong>{currentTipVal} ETB</strong>.
                         </p>
 
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--card-bg-subtle)', padding: '0.65rem 1.35rem', borderRadius: 'var(--radius-full)', border: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.75rem' }}>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '9999px', background: 'var(--card-bg-subtle)', border: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.75rem' }}>
                             <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary)', animation: 'pulse 1.5s infinite' }}></span>
-                            Waiting for Telebirr PIN Confirmation...
+                            Waiting for Telebirr PIN confirmation...
                         </div>
 
                         <div>
                             <button
                                 type="button"
                                 onClick={() => setTippingState('idle')}
-                                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
+                                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline' }}
                             >
-                                Cancel / Change Details
+                                Cancel / Change details
                             </button>
                         </div>
                     </div>
                 )}
 
-                {/* 5. SUCCESS RECEIPT STATE */}
+                {/* 4. SUCCESS RECEIPT STATE */}
                 {tippingState === 'success' && (
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: 'var(--radius-xl)',
-                        padding: '2.75rem 1.75rem',
+                        borderRadius: '16px',
+                        padding: '2.5rem 2rem',
                         textAlign: 'center',
                         boxShadow: 'var(--shadow-md)'
                     }}>
-                        <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-                            <CheckCircle size={38} />
+                        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+                            <CheckCircle size={36} />
                         </div>
-                        <h2 style={{ fontSize: '1.55rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>Gursha Sent Successfully! 🎉</h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', marginBottom: '1.5rem' }}>
-                            Your {currentTipVal} ETB tip was received by <strong>{creator.name}</strong>.
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                            Tip Sent Successfully! 🎉
+                        </h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                            Your support has been transferred directly to <strong>{creator.name}</strong>.
                         </p>
 
-                        <div style={{ background: 'var(--card-bg-subtle)', borderRadius: 'var(--radius-lg)', padding: '1.25rem', border: '1px solid var(--border-color)', textAlign: 'left', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-                                <span style={{ color: 'var(--text-muted)' }}>Amount</span>
-                                <span style={{ fontWeight: 800, color: 'var(--primary)' }}>{currentTipVal} ETB</span>
+                        {/* Itemized Receipt */}
+                        <div style={{ background: 'var(--card-bg-subtle)', borderRadius: '12px', padding: '1.25rem', border: '1px solid var(--border-color)', marginBottom: '1.75rem', textAlign: 'left', fontSize: '0.85rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                                <span style={{ color: 'var(--text-muted)' }}>Amount Sent</span>
+                                <span style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.95rem' }}>{currentTipVal} ETB</span>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
                                 <span style={{ color: 'var(--text-muted)' }}>Recipient</span>
-                                <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>@{creator.username}</span>
+                                <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>{creator.name} (@{creator.username})</span>
                             </div>
                             {shoutOutMessage && (
-                                <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '0.6rem', marginTop: '0.6rem', fontStyle: 'italic', color: 'var(--text-secondary)' }}>
-                                    "{shoutOutMessage}"
+                                <div style={{ paddingTop: '0.65rem', borderTop: '1px solid var(--border-color)' }}>
+                                    <div style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Your Note:</div>
+                                    <div style={{ fontStyle: 'italic', color: 'var(--text-main)' }}>"{shoutOutMessage}"</div>
                                 </div>
                             )}
                         </div>
 
-                        <Button variant="primary" size="md" className="btn-full" onClick={() => {
-                            setTippingState('idle');
-                            setShoutOutMessage('');
-                        }}>
+                        <Button
+                            variant="primary"
+                            size="md"
+                            className="btn-full"
+                            onClick={() => {
+                                setTippingState('idle');
+                                setShoutOutMessage('');
+                                setTipperPhone('');
+                            }}
+                        >
                             Send Another Tip
                         </Button>
                     </div>
                 )}
 
-                {/* 6. ERROR / FAILED STATE */}
+                {/* 5. ERROR / RETRY STATE */}
                 {tippingState === 'error' && (
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: 'var(--radius-xl)',
-                        padding: '2.5rem 1.75rem',
+                        borderRadius: '16px',
+                        padding: '2.5rem 2rem',
                         textAlign: 'center',
                         boxShadow: 'var(--shadow-md)'
                     }}>
-                        <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--danger-light)', color: 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-                            <AlertCircle size={30} />
+                        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--danger-light)', color: 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+                            <AlertCircle size={36} />
                         </div>
-                        <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>Payment Could Not Be Completed</h3>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem', lineHeight: 1.55 }}>
-                            The Telebirr payment prompt timed out or was cancelled. Please check your Telebirr wallet balance and try again.
+                        <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                            Payment Not Completed
+                        </h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.75rem' }}>
+                            The Telebirr session timed out or was cancelled on the device. No funds were deducted.
                         </p>
-                        <Button variant="primary" size="md" className="btn-full" onClick={() => setTippingState('idle')}>
+
+                        <Button
+                            variant="primary"
+                            size="md"
+                            className="btn-full"
+                            onClick={() => setTippingState('idle')}
+                        >
                             Try Again
                         </Button>
                     </div>
                 )}
-
-                {/* Platform Trust Footer */}
-                <div style={{ textAlign: 'center', marginTop: '2.5rem', color: 'var(--text-muted)', fontSize: '0.8125rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
-                    <ShieldCheck size={15} color="var(--primary)" />
-                    <span>Secured by GurshaPay Financial Compliance • 🇪🇹 Ethiopia</span>
-                </div>
             </main>
         </div>
     );
