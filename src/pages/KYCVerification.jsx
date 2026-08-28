@@ -206,7 +206,7 @@ export default function KYCVerification() {
 
             <main className="main-content" style={{
                 background: 'radial-gradient(circle at top right, rgba(15, 157, 88, 0.05), transparent 500px), radial-gradient(circle at bottom left, rgba(66, 133, 244, 0.05), transparent 500px), var(--bg-color)',
-                minHeight: '100vh',
+                minHeight: '100vh', maxWidth: '100vw', overflowX: 'hidden',
                 position: 'relative'
             }}>
                 <div style={{ maxWidth: '620px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
