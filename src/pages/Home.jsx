@@ -184,10 +184,10 @@ export default function Home() {
             highlightColor: '#F37021'
         },
         {
-            name: 'Coop Bank Oromia',
-            logo: null,
-            tag: 'CoopPay Verified',
-            badge: 'Direct',
+            name: 'Coop Bank of Oromia',
+            logo: '/banks/coop.png',
+            tag: 'CoopPay Verified Rail',
+            badge: '⚡ Direct',
             highlightColor: '#00AEEF'
         }
     ];

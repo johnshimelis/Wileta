@@ -56,6 +56,7 @@ const getBankLogo = (name) => {
     if (n.includes('abyssinia') || n.includes('boa')) return '/banks/abyssinia.png';
     if (n.includes('awash')) return '/banks/awash.png';
     if (n.includes('dashen')) return '/banks/dashen.png';
+    if (n.includes('coop') || n.includes('oromia')) return '/banks/coop.png';
     return null;
 };
 

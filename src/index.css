@@ -70,30 +70,31 @@
 }
 
 [data-theme='dark'] {
-  --bg-color: #09090B;
-  --card-bg: #121215;
-  --card-bg-subtle: #18181B;
-  --border-color: #27272A;
-  --border-hover: #3F3F46;
+  --bg-color: #0A0D14;
+  --card-bg: #121824;
+  --card-bg-subtle: #192233;
+  --card-glass: rgba(18, 24, 36, 0.9);
+  --border-color: #26334A;
+  --border-hover: #3D5072;
   --border-focus: #10B981;
 
-  --text-main: #FAFAFA;
-  --text-secondary: #D4D4D8;
-  --text-muted: #A1A1AA;
+  --text-main: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
 
-  --primary-light: rgba(16, 185, 129, 0.12);
-  --primary-subtle: rgba(16, 185, 129, 0.2);
-  --secondary-light: rgba(217, 119, 6, 0.15);
+  --primary-light: rgba(16, 185, 129, 0.14);
+  --primary-subtle: rgba(16, 185, 129, 0.22);
+  --secondary-light: rgba(217, 119, 6, 0.18);
 
-  --input-bg: #18181B;
-  --input-border: #27272A;
-  --input-focus-ring: rgba(16, 185, 129, 0.25);
+  --input-bg: #121824;
+  --input-border: #26334A;
+  --input-focus-ring: rgba(16, 185, 129, 0.3);
 
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.6);
-  --shadow-xl: 0 20px 30px rgba(0, 0, 0, 0.7);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 *, *::before, *::after {
@@ -432,4 +433,10 @@ button, input, select, textarea {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  .mobile-toggle-btn {
+    display: flex !important;
+  }
 }
