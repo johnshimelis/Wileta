@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 export default function Logo({ size = 'medium', className = '', showText = true }) {
     const sizeConfig = {
-        compact: { height: '30px', fontSize: '1.15rem' },
-        small: { height: '36px', fontSize: '1.25rem' },
-        medium: { height: '44px', fontSize: '1.45rem' },
-        large: { height: '52px', fontSize: '1.7rem' }
-    }[size] || { height: '44px', fontSize: '1.45rem' };
+        compact: { height: '34px', fontSize: '1.25rem' },
+        small: { height: '40px', fontSize: '1.4rem' },
+        medium: { height: '48px', fontSize: '1.6rem' },
+        large: { height: '58px', fontSize: '1.85rem' }
+    }[size] || { height: '48px', fontSize: '1.6rem' };
 
     return (
         <Link 
@@ -16,7 +16,7 @@ export default function Logo({ size = 'medium', className = '', showText = true 
             style={{ 
                 display: 'inline-flex', 
                 alignItems: 'center', 
-                gap: '0.28rem',
+                gap: '0.12rem',
                 textDecoration: 'none', 
                 cursor: 'pointer',
                 userSelect: 'none',
@@ -41,7 +41,8 @@ export default function Logo({ size = 'medium', className = '', showText = true 
                     color: 'var(--text-main)',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    lineHeight: 1
+                    lineHeight: 1,
+                    marginLeft: '-1px'
                 }}>
                     Gursha<span style={{ color: 'var(--primary)' }}>Pay</span>
                     <span style={{ display: 'inline-block', width: '5px', height: '5px', borderRadius: '50%', background: 'var(--secondary)', marginLeft: '2px', marginBottom: '3px' }}></span>

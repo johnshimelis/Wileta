@@ -708,48 +708,104 @@ export default function Home() {
             </section>
 
             {/* ── OBS LIVE STREAM OVERLAY SHOWCASE ─────────────────────── */}
-            <section style={{ padding: '4.5rem 1.25rem', background: 'var(--card-bg-subtle)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
+            <section id="obs-alerts" style={{ padding: '5rem 1.25rem', background: 'var(--card-bg-subtle)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
                 <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', alignItems: 'center' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '3.5rem', alignItems: 'center' }}>
                         <div>
-                            <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', letterSpacing: '0.06em' }}>OBS & Streamlabs</span>
-                            <h2 style={{ fontSize: '1.85rem', fontWeight: 800, margin: '0.35rem 0 1rem' }}>
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.25rem 0.7rem', borderRadius: '9999px', background: 'rgba(217, 119, 6, 0.1)', color: 'var(--secondary)', fontWeight: 800, fontSize: '0.775rem', marginBottom: '1rem', border: '1px solid rgba(217, 119, 6, 0.2)' }}>
+                                <Radio size={14} /> OBS Studio & Streamlabs Ready
+                            </div>
+                            <h2 style={{ fontSize: '2.1rem', fontWeight: 800, margin: '0 0 1rem', letterSpacing: '-0.03em', lineHeight: 1.2 }}>
                                 Real-Time On-Screen Alerts for Streamers
                             </h2>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.975rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-                                Connect GurshaPay to OBS Studio, Streamlabs, or TikTok in 10 seconds. When any supporter sends a tip, an animated banner pops up on screen with sound and customized text.
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.65, marginBottom: '1.75rem' }}>
+                                Connect GurshaPay to OBS Studio, Streamlabs, or TikTok in 10 seconds. When any supporter sends a tip via Telebirr, an animated banner pops up on stream in real-time with sound effects and custom shoutout text.
                             </p>
-                            <Button
-                                variant="primary"
-                                size="md"
-                                icon={Play}
-                                onClick={triggerObsAlertDemo}
-                            >
-                                Test Live Alert Banner
-                            </Button>
+
+                            {/* Interactive Demo Controls */}
+                            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem', boxShadow: 'var(--shadow-xs)' }}>
+                                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.65rem' }}>
+                                    Select Test Alert Amount
+                                </div>
+                                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+                                    {[
+                                        { amt: 50, label: '50 ETB ☕' },
+                                        { amt: 250, label: '250 ETB 🚀' },
+                                        { amt: 500, label: '500 ETB 👑' }
+                                    ].map((t) => (
+                                        <button
+                                            key={t.amt}
+                                            type="button"
+                                            onClick={() => setObsCustomTip(t.amt)}
+                                            style={{
+                                                flex: 1,
+                                                padding: '0.55rem 0.25rem',
+                                                borderRadius: '6px',
+                                                border: obsCustomTip === t.amt ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                                                background: obsCustomTip === t.amt ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                                color: obsCustomTip === t.amt ? 'var(--primary)' : 'var(--text-main)',
+                                                fontWeight: 800,
+                                                fontSize: '0.825rem',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.12s ease'
+                                            }}
+                                        >
+                                            {t.label}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <Button
+                                    variant="primary"
+                                    size="lg"
+                                    icon={Play}
+                                    className="btn-full"
+                                    onClick={triggerObsAlertDemo}
+                                    style={{
+                                        height: '52px',
+                                        fontSize: '1rem',
+                                        fontWeight: 800,
+                                        boxShadow: '0 4px 14px rgba(4, 120, 87, 0.3)'
+                                    }}
+                                >
+                                    ▷ Trigger Live Stream Alert ({obsCustomTip} ETB)
+                                </Button>
+                            </div>
                         </div>
 
                         {/* Interactive OBS Preview Screen */}
-                        <div style={{ position: 'relative', background: '#09090B', borderRadius: '14px', padding: '1.75rem', minHeight: '260px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', border: '1px solid #27272A', overflow: 'hidden', boxShadow: '0 15px 30px -5px rgba(0, 0, 0, 0.4)' }}>
-                            <div style={{ position: 'absolute', top: '14px', left: '18px', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#EF4444' }}></span>
-                                <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#EF4444', textTransform: 'uppercase', letterSpacing: '0.05em' }}>OBS Live Stream 1080p</span>
+                        <div style={{ position: 'relative', background: '#09090B', borderRadius: '16px', padding: '2rem', minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', border: '1px solid #27272A', overflow: 'hidden', boxShadow: '0 20px 35px -10px rgba(0, 0, 0, 0.5)' }}>
+                            <div style={{ position: 'absolute', top: '16px', left: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#EF4444', animation: 'pulse 1.5s infinite' }}></span>
+                                <span style={{ fontSize: '0.725rem', fontWeight: 800, color: '#EF4444', textTransform: 'uppercase', letterSpacing: '0.06em' }}>LIVE BROADCAST 1080P</span>
                             </div>
 
                             {obsAlertActive ? (
-                                <div className="animate-fade-in" style={{ background: 'var(--primary)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '10px', padding: '1.25rem 1.75rem', color: '#FFFFFF', textAlign: 'center', maxWidth: '90%', boxShadow: '0 10px 25px rgba(4, 120, 87, 0.4)' }}>
-                                    <div style={{ fontSize: '1.2rem', fontWeight: 800 }}>
-                                        🎉 {obsCustomName} tipped {obsCustomTip} ETB!
+                                <div className="animate-fade-in" style={{
+                                    background: 'linear-gradient(135deg, #047857 0%, #065F46 100%)',
+                                    border: '1px solid rgba(255, 255, 255, 0.25)',
+                                    borderRadius: '12px',
+                                    padding: '1.5rem 2rem',
+                                    color: '#FFFFFF',
+                                    textAlign: 'center',
+                                    maxWidth: '92%',
+                                    boxShadow: '0 12px 30px rgba(4, 120, 87, 0.45)'
+                                }}>
+                                    <div style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', opacity: 0.9, marginBottom: '0.35rem' }}>
+                                        🎉 NEW GURSHA RECEIVED!
                                     </div>
-                                    <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', opacity: 0.95, fontStyle: 'italic' }}>
+                                    <div style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.35rem' }}>
+                                        {obsCustomName} tipped +{obsCustomTip} ETB
+                                    </div>
+                                    <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.95, fontStyle: 'italic' }}>
                                         "{obsCustomNote}"
                                     </p>
                                 </div>
                             ) : (
                                 <div style={{ textAlign: 'center', color: '#71717A' }}>
-                                    <Video size={40} style={{ opacity: 0.35, margin: '0 auto 0.65rem' }} />
-                                    <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#E4E4E7' }}>OBS Browser Source Preview</div>
-                                    <div style={{ fontSize: '0.775rem', marginTop: '0.25rem' }}>Click "Test Live Alert Banner" to simulate an alert</div>
+                                    <Video size={48} style={{ opacity: 0.3, margin: '0 auto 0.85rem' }} />
+                                    <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#E4E4E7' }}>OBS Browser Source Viewport</div>
+                                    <div style={{ fontSize: '0.825rem', marginTop: '0.35rem', color: '#A1A1AA' }}>Click "Trigger Live Stream Alert" to simulate a real-time overlay</div>
                                 </div>
                             )}
                         </div>
