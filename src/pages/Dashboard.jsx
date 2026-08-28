@@ -48,6 +48,17 @@ const VerifiedBlueTick = ({ size = 24, title = "Verified Creator" }) => (
     </span>
 );
 
+const getBankLogo = (name) => {
+    if (!name) return null;
+    const n = name.toLowerCase();
+    if (n.includes('telebirr')) return '/banks/telebirr.jpg';
+    if (n.includes('commercial') || n.includes('cbe')) return '/banks/cbe.jpg';
+    if (n.includes('abyssinia') || n.includes('boa')) return '/banks/abyssinia.png';
+    if (n.includes('awash')) return '/banks/awash.png';
+    if (n.includes('dashen')) return '/banks/dashen.png';
+    return null;
+};
+
 const getBankColor = (name) => {
     const colors = {
         'Commercial Bank of Ethiopia (CBE)': '#5C2D91',
@@ -86,7 +97,7 @@ const WithdrawModal = ({
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: 'rgba(15, 23, 42, 0.65)',
+                background: 'rgba(9, 9, 11, 0.7)',
                 zIndex: 9000,
                 display: 'flex',
                 alignItems: 'center',
@@ -104,7 +115,7 @@ const WithdrawModal = ({
                     maxWidth: '460px',
                     width: '100%',
                     padding: '2rem',
-                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
                     boxSizing: 'border-box'
                 }}
                 onClick={e => e.stopPropagation()}
@@ -126,48 +137,53 @@ const WithdrawModal = ({
 
                 {/* Destination */}
                 <div style={{ marginBottom: '1.25rem' }}>
-                    <label style={{ display: 'block', fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         Payout Destination
                     </label>
                     {isBank ? (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            {banks.length > 0 ? banks.map((bank, index) => (
-                                <div
-                                    key={index}
-                                    onClick={() => setSelectedBankIndex(index)}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '0.75rem',
-                                        padding: '0.85rem 1rem',
-                                        border: '1.5px solid ' + (selectedBankIndex === index ? 'var(--primary)' : 'var(--border-color)'),
-                                        borderRadius: '10px',
-                                        cursor: 'pointer',
-                                        background: selectedBankIndex === index ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                        transition: 'all 0.15s ease'
-                                    }}
-                                >
-                                    {bank.logoUrl ? (
-                                        <img src={bank.logoUrl} alt={bank.bankName} style={{ width: '34px', height: '34px', borderRadius: '50%', objectFit: 'cover' }} />
-                                    ) : (
-                                        <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: getBankColor(bank.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.75rem' }}>
-                                            {getBankInitials(bank.bankName)}
+                            {banks.length > 0 ? banks.map((bank, index) => {
+                                const logo = bank.logoUrl || getBankLogo(bank.bankName);
+                                return (
+                                    <div
+                                        key={index}
+                                        onClick={() => setSelectedBankIndex(index)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            padding: '0.85rem 1rem',
+                                            border: '1.5px solid ' + (selectedBankIndex === index ? 'var(--primary)' : 'var(--border-color)'),
+                                            borderRadius: '10px',
+                                            cursor: 'pointer',
+                                            background: selectedBankIndex === index ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                    >
+                                        <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
+                                            {logo ? (
+                                                <img src={logo} alt={bank.bankName} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                            ) : (
+                                                <div style={{ width: '100%', height: '100%', borderRadius: '6px', background: getBankColor(bank.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.75rem' }}>
+                                                    {getBankInitials(bank.bankName)}
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
-                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                        <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{bank.bankName}</div>
-                                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{bank.accountNumber} • {bank.accountHolderName}</div>
+                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{bank.bankName}</div>
+                                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{bank.accountNumber} • {bank.accountHolderName}</div>
+                                        </div>
+                                        {selectedBankIndex === index && <CheckCircle size={18} color="var(--primary)" />}
                                     </div>
-                                    {selectedBankIndex === index && <CheckCircle size={18} color="var(--primary)" />}
-                                </div>
-                            )) : (
+                                );
+                            }) : (
                                 <p style={{ color: 'var(--danger)', fontSize: '0.85rem' }}>No bank accounts configured.</p>
                             )}
                         </div>
                     ) : (
                         <div style={{ padding: '0.85rem 1rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(5, 150, 105, 0.12)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Smartphone size={18} />
+                            <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
+                                <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                             </div>
                             <div>
                                 <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-main)' }}>Telebirr Wallet</div>
@@ -179,7 +195,7 @@ const WithdrawModal = ({
 
                 {/* Amount Option */}
                 <div style={{ marginBottom: '1.5rem' }}>
-                    <label style={{ display: 'block', fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         Withdrawal Amount
                     </label>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.75rem' }}>
@@ -260,7 +276,7 @@ const WithdrawSuccessModal = ({ data, onClose, user }) => {
     if (!data) return null;
     return (
         <div
-            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.65)', zIndex: 9000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(6px)', padding: '1rem' }}
+            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(9, 9, 11, 0.7)', zIndex: 9000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(6px)', padding: '1rem' }}
             onClick={onClose}
         >
             <div
@@ -476,6 +492,12 @@ export default function Dashboard() {
 
     const isVerified = user?.kycStatus === 'approved' || user?.isVerified;
 
+    // Resolve Active Payout Rail Logo
+    const activeBankName = user?.payoutMethod === 'bank' ? bankAccounts[0]?.bankName : 'Telebirr';
+    const activeRailLogo = user?.payoutMethod === 'bank'
+        ? (bankAccounts[0]?.logoUrl || getBankLogo(activeBankName))
+        : '/banks/telebirr.jpg';
+
     return (
         <div className="app-layout">
             {/* Mobile Header (Hidden on Desktop) */}
@@ -501,7 +523,7 @@ export default function Dashboard() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
-                            <h1 style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.025em', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                                 <span>{t('welcome')}, {user?.name?.split(' ')[0] || 'Creator'}</span>
                                 <span style={{ fontSize: '1.5rem' }}>👋</span>
                                 <VerifiedBlueTick size={24} title="GurshaPay Verified Creator" />
@@ -567,13 +589,13 @@ export default function Dashboard() {
                         style={{
                             background: 'var(--card-bg)',
                             border: '1px solid var(--border-color)',
-                            borderRadius: '16px',
+                            borderRadius: '14px',
                             padding: '1.5rem',
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'space-between',
-                            boxShadow: 'var(--shadow-sm)',
-                            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                            boxShadow: 'var(--shadow-xs)',
+                            transition: 'all 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
                             cursor: 'pointer'
                         }}
                         onMouseEnter={e => {
@@ -583,14 +605,14 @@ export default function Dashboard() {
                         }}
                         onMouseLeave={e => {
                             e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                            e.currentTarget.style.boxShadow = 'var(--shadow-xs)';
                             e.currentTarget.style.borderColor = 'var(--border-color)';
                         }}
                     >
                         <div>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                                    <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    <span style={{ fontSize: '0.775rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                                         {t('currentBalance')}
                                     </span>
                                     <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }}></span>
@@ -601,7 +623,7 @@ export default function Dashboard() {
                             </div>
 
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBottom: '1rem' }}>
-                                <span style={{ fontSize: '2.1rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                                <span style={{ fontSize: '2.1rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1 }}>
                                     {isLoading ? '...' : metrics.pending_balance.toFixed(2)}
                                 </span>
                                 <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--primary)' }}>ETB</span>
@@ -630,13 +652,13 @@ export default function Dashboard() {
                         style={{
                             background: 'var(--card-bg)',
                             border: '1px solid var(--border-color)',
-                            borderRadius: '16px',
+                            borderRadius: '14px',
                             padding: '1.5rem',
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'space-between',
-                            boxShadow: 'var(--shadow-sm)',
-                            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                            boxShadow: 'var(--shadow-xs)',
+                            transition: 'all 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
                             cursor: 'pointer'
                         }}
                         onMouseEnter={e => {
@@ -646,22 +668,22 @@ export default function Dashboard() {
                         }}
                         onMouseLeave={e => {
                             e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                            e.currentTarget.style.boxShadow = 'var(--shadow-xs)';
                             e.currentTarget.style.borderColor = 'var(--border-color)';
                         }}
                     >
                         <div>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                <span style={{ fontSize: '0.775rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                                     {t('totalTips')}
                                 </span>
-                                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(5, 150, 105, 0.1)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(4, 120, 87, 0.1)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <TrendingUp size={16} />
                                 </div>
                             </div>
 
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBottom: '1rem' }}>
-                                <span style={{ fontSize: '2.1rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                                <span style={{ fontSize: '2.1rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1 }}>
                                     {isLoading ? '...' : metrics.total_earned.toFixed(2)}
                                 </span>
                                 <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-muted)' }}>ETB</span>
@@ -669,23 +691,23 @@ export default function Dashboard() {
                         </div>
 
                         <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                            <Sparkles size={13} color="#F59E0B" />
+                            <Sparkles size={13} color="#D97706" />
                             <span>Lifetime total received from audience</span>
                         </div>
                     </div>
 
-                    {/* Card 3: PAYOUT RAIL */}
+                    {/* Card 3: PAYOUT RAIL (WITH REAL BANK LOGO) */}
                     <div
                         style={{
                             background: 'var(--card-bg)',
                             border: '1px solid var(--border-color)',
-                            borderRadius: '16px',
+                            borderRadius: '14px',
                             padding: '1.5rem',
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'space-between',
-                            boxShadow: 'var(--shadow-sm)',
-                            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                            boxShadow: 'var(--shadow-xs)',
+                            transition: 'all 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
                             cursor: 'pointer'
                         }}
                         onMouseEnter={e => {
@@ -695,21 +717,25 @@ export default function Dashboard() {
                         }}
                         onMouseLeave={e => {
                             e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                            e.currentTarget.style.boxShadow = 'var(--shadow-xs)';
                             e.currentTarget.style.borderColor = 'var(--border-color)';
                         }}
                     >
                         <div>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                <span style={{ fontSize: '0.775rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                                     Payout Rail
                                 </span>
-                                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.1)', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    {user?.payoutMethod === 'bank' ? <Building size={16} /> : <Smartphone size={16} />}
+                                <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px' }}>
+                                    {activeRailLogo ? (
+                                        <img src={activeRailLogo} alt={activeBankName} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                    ) : (
+                                        <Building size={16} color="var(--primary)" />
+                                    )}
                                 </div>
                             </div>
 
-                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <div style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {user?.payoutMethod === 'bank' ? (bankAccounts[0]?.bankName || 'Bank Transfer') : 'Telebirr Wallet'}
                             </div>
                         </div>
@@ -718,7 +744,7 @@ export default function Dashboard() {
                             <span style={{ color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {user?.payoutMethod === 'bank' ? (bankAccounts[0]?.accountNumber || 'Configured') : (user?.telebirr_number || user?.phone || 'Configured')}
                             </span>
-                            <Badge variant="primary" size="sm">Active</Badge>
+                            <Badge variant="primary" size="sm">Active Rail</Badge>
                         </div>
                     </div>
                 </div>
@@ -726,7 +752,7 @@ export default function Dashboard() {
                 {/* QUICK INTEGRATIONS & SHARING TOOLSTRIP */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem', marginBottom: '1.75rem' }}>
                     {/* Share Tipping Handle */}
-                    <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '1.25rem', boxShadow: 'var(--shadow-sm)' }}>
+                    <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.25rem', boxShadow: 'var(--shadow-xs)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
                             <span style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)' }}>
                                 {t('tippingLinkTitle')}
@@ -747,10 +773,10 @@ export default function Dashboard() {
                     </div>
 
                     {/* OBS Livestream Overlay */}
-                    <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '1.25rem', boxShadow: 'var(--shadow-sm)' }}>
+                    <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.25rem', boxShadow: 'var(--shadow-xs)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
                             <span style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                                <Sparkles size={16} color="#F59E0B" /> {t('obsOverlayTitle')}
+                                <Sparkles size={16} color="#D97706" /> {t('obsOverlayTitle')}
                             </span>
                             <Badge variant="warning" size="sm">OBS 1080p</Badge>
                         </div>
@@ -768,17 +794,17 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {/* 2-COLUMN SECTION: RECENT TRANSACTIONS (60%) & TOP SUPPORTERS LEADERBOARD (40%) */}
+                {/* 2-COLUMN SECTION: RECENT TRANSACTIONS & TOP SUPPORTERS */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
                     {/* Recent Transactions List with Tab Filter */}
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
+                        borderRadius: '14px',
                         padding: '1.5rem',
                         display: 'flex',
                         flexDirection: 'column',
-                        boxShadow: 'var(--shadow-sm)'
+                        boxShadow: 'var(--shadow-xs)'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                             <div>
@@ -791,20 +817,20 @@ export default function Dashboard() {
                             </div>
 
                             {/* Filter Tabs */}
-                            <div style={{ display: 'flex', background: 'var(--card-bg-subtle)', padding: '0.2rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                            <div style={{ display: 'flex', background: 'var(--card-bg-subtle)', padding: '0.2rem', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
                                 <button
                                     onClick={() => setTxFilter('all')}
                                     style={{
                                         border: 'none',
                                         background: txFilter === 'all' ? 'var(--card-bg)' : 'transparent',
                                         color: txFilter === 'all' ? 'var(--primary)' : 'var(--text-muted)',
-                                        padding: '0.35rem 0.75rem',
-                                        borderRadius: '6px',
+                                        padding: '0.3rem 0.7rem',
+                                        borderRadius: '4px',
                                         fontSize: '0.75rem',
                                         fontWeight: 700,
                                         cursor: 'pointer',
                                         boxShadow: txFilter === 'all' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
-                                        transition: 'all 0.15s ease'
+                                        transition: 'all 0.12s ease'
                                     }}
                                 >
                                     All
@@ -815,13 +841,13 @@ export default function Dashboard() {
                                         border: 'none',
                                         background: txFilter === 'tips' ? 'var(--card-bg)' : 'transparent',
                                         color: txFilter === 'tips' ? 'var(--primary)' : 'var(--text-muted)',
-                                        padding: '0.35rem 0.75rem',
-                                        borderRadius: '6px',
+                                        padding: '0.3rem 0.7rem',
+                                        borderRadius: '4px',
                                         fontSize: '0.75rem',
                                         fontWeight: 700,
                                         cursor: 'pointer',
                                         boxShadow: txFilter === 'tips' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
-                                        transition: 'all 0.15s ease'
+                                        transition: 'all 0.12s ease'
                                     }}
                                 >
                                     Tips
@@ -832,13 +858,13 @@ export default function Dashboard() {
                                         border: 'none',
                                         background: txFilter === 'withdrawals' ? 'var(--card-bg)' : 'transparent',
                                         color: txFilter === 'withdrawals' ? 'var(--primary)' : 'var(--text-muted)',
-                                        padding: '0.35rem 0.75rem',
-                                        borderRadius: '6px',
+                                        padding: '0.3rem 0.7rem',
+                                        borderRadius: '4px',
                                         fontSize: '0.75rem',
                                         fontWeight: 700,
                                         cursor: 'pointer',
                                         boxShadow: txFilter === 'withdrawals' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
-                                        transition: 'all 0.15s ease'
+                                        transition: 'all 0.12s ease'
                                     }}
                                 >
                                     Payouts
@@ -870,7 +896,7 @@ export default function Dashboard() {
                                     </thead>
                                     <tbody>
                                         {filteredTransactions.slice(0, 10).map((tx) => (
-                                            <tr key={tx._id} style={{ transition: 'background 0.15s ease' }}>
+                                            <tr key={tx._id} style={{ transition: 'background 0.12s ease' }}>
                                                 <td style={{ fontSize: '0.825rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                                                     {new Date(tx.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                                 </td>
@@ -921,11 +947,11 @@ export default function Dashboard() {
                     <div style={{
                         background: 'var(--card-bg)',
                         border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
+                        borderRadius: '14px',
                         padding: '1.5rem',
                         display: 'flex',
                         flexDirection: 'column',
-                        boxShadow: 'var(--shadow-sm)'
+                        boxShadow: 'var(--shadow-xs)'
                     }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
                             <div>
@@ -1006,10 +1032,10 @@ export default function Dashboard() {
                 <div style={{
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
-                    borderRadius: '16px',
+                    borderRadius: '14px',
                     padding: '1.75rem',
                     marginBottom: '2rem',
-                    boxShadow: 'var(--shadow-sm)'
+                    boxShadow: 'var(--shadow-xs)'
                 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                         <div>
@@ -1064,7 +1090,10 @@ export default function Dashboard() {
                         </div>
 
                         {payoutMethod === 'telebirr' ? (
-                            <div style={{ background: 'var(--card-bg-subtle)', padding: '1.15rem', borderRadius: '10px', border: '1px solid var(--border-color)', marginBottom: '1.25rem', fontSize: '0.875rem' }}>
+                            <div style={{ background: 'var(--card-bg-subtle)', padding: '1.15rem', borderRadius: '10px', border: '1px solid var(--border-color)', marginBottom: '1.25rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
+                                    <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                </div>
                                 <p style={{ margin: 0, color: 'var(--text-secondary)' }}>
                                     {t('telebirrWithdrawNotice')}{' '}
                                     <strong style={{ color: 'var(--primary)' }}>{user?.telebirr_number || user?.phone}</strong>
@@ -1072,49 +1101,37 @@ export default function Dashboard() {
                             </div>
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
-                                {bankAccounts.map((account, index) => (
-                                    <div
-                                        key={index}
-                                        style={{
-                                            padding: '1.25rem',
-                                            borderRadius: '12px',
-                                            border: '1px solid var(--border-color)',
-                                            background: 'var(--card-bg-subtle)',
-                                            position: 'relative'
-                                        }}
-                                    >
-                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                                <label
-                                                    title="Upload / Change logo"
-                                                    style={{ position: 'relative', width: '38px', height: '38px', cursor: 'pointer', flexShrink: 0 }}
-                                                >
-                                                    {account.logoUrl ? (
-                                                        <img src={account.logoUrl} alt="Bank Logo" style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--border-color)' }} />
-                                                    ) : (
-                                                        <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: getBankColor(account.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8rem' }}>
-                                                            {getBankInitials(account.bankName)}
+                                {bankAccounts.map((account, index) => {
+                                    const logo = account.logoUrl || getBankLogo(account.bankName);
+                                    return (
+                                        <div
+                                            key={index}
+                                            style={{
+                                                padding: '1.25rem',
+                                                borderRadius: '12px',
+                                                border: '1px solid var(--border-color)',
+                                                background: 'var(--card-bg-subtle)',
+                                                position: 'relative'
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                    <label
+                                                        title="Upload / Change logo"
+                                                        style={{ position: 'relative', width: '38px', height: '38px', cursor: 'pointer', flexShrink: 0 }}
+                                                    >
+                                                        <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px' }}>
+                                                            {logo ? (
+                                                                <img src={logo} alt={account.bankName} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                                            ) : (
+                                                                <div style={{ width: '100%', height: '100%', borderRadius: '6px', background: getBankColor(account.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8rem' }}>
+                                                                    {getBankInitials(account.bankName)}
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    )}
-                                                    <div style={{ position: 'absolute', bottom: '-2px', right: '-2px', background: '#10B981', color: 'white', width: '16px', height: '16px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--card-bg)' }}>
-                                                        <Edit2 size={8} />
-                                                    </div>
-                                                    <input
-                                                        type="file"
-                                                        accept="image/*"
-                                                        style={{ display: 'none' }}
-                                                        onChange={(e) => {
-                                                            if (e.target.files && e.target.files[0]) {
-                                                                handleLogoUpload(e.target.files[0], index);
-                                                            }
-                                                        }}
-                                                    />
-                                                </label>
-                                                <div>
-                                                    <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-main)' }}>Bank Account {index + 1}</span>
-                                                    <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--primary)', cursor: 'pointer', fontWeight: 600 }}>
-                                                        <Upload size={10} style={{ display: 'inline', marginRight: '3px' }} />
-                                                        {account.logoUrl ? 'Change Logo' : 'Upload Custom Logo'}
+                                                        <div style={{ position: 'absolute', bottom: '-2px', right: '-2px', background: '#10B981', color: 'white', width: '16px', height: '16px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--card-bg)' }}>
+                                                            <Edit2 size={8} />
+                                                        </div>
                                                         <input
                                                             type="file"
                                                             accept="image/*"
@@ -1126,67 +1143,84 @@ export default function Dashboard() {
                                                             }}
                                                         />
                                                     </label>
+                                                    <div>
+                                                        <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-main)' }}>Bank Account {index + 1}</span>
+                                                        <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--primary)', cursor: 'pointer', fontWeight: 600 }}>
+                                                            <Upload size={10} style={{ display: 'inline', marginRight: '3px' }} />
+                                                            {account.logoUrl ? 'Change Custom Logo' : 'Upload Custom Logo'}
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                style={{ display: 'none' }}
+                                                                onChange={(e) => {
+                                                                    if (e.target.files && e.target.files[0]) {
+                                                                        handleLogoUpload(e.target.files[0], index);
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </label>
+                                                    </div>
                                                 </div>
+
+                                                {bankAccounts.length > 1 && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setBankAccounts(bankAccounts.filter((_, i) => i !== index))}
+                                                        style={{ background: 'var(--danger-light)', border: 'none', color: 'var(--danger)', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 700, padding: '0.25rem 0.5rem', borderRadius: '6px' }}
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                )}
                                             </div>
 
-                                            {bankAccounts.length > 1 && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setBankAccounts(bankAccounts.filter((_, i) => i !== index))}
-                                                    style={{ background: 'var(--danger-light)', border: 'none', color: 'var(--danger)', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 700, padding: '0.25rem 0.5rem', borderRadius: '6px' }}
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
+                                                <select
+                                                    className="form-select"
+                                                    value={account.bankName}
+                                                    onChange={e => {
+                                                        const newAccounts = [...bankAccounts];
+                                                        newAccounts[index].bankName = e.target.value;
+                                                        setBankAccounts(newAccounts);
+                                                    }}
+                                                    required
                                                 >
-                                                    Remove
-                                                </button>
-                                            )}
+                                                    <option value="">{t('selectBank')}</option>
+                                                    <option value="Commercial Bank of Ethiopia (CBE)">Commercial Bank of Ethiopia (CBE)</option>
+                                                    <option value="Awash International Bank">Awash International Bank</option>
+                                                    <option value="Dashen Bank">Dashen Bank</option>
+                                                    <option value="Bank of Abyssinia">Bank of Abyssinia</option>
+                                                    <option value="Wegagen Bank">Wegagen Bank</option>
+                                                    <option value="Nib International Bank">Nib International Bank</option>
+                                                    <option value="Cooperative Bank of Oromia">Cooperative Bank of Oromia</option>
+                                                </select>
+                                                <input
+                                                    type="text"
+                                                    className="form-input"
+                                                    placeholder={t('accountNumber')}
+                                                    value={account.accountNumber}
+                                                    onChange={e => {
+                                                        const newAccounts = [...bankAccounts];
+                                                        newAccounts[index].accountNumber = e.target.value;
+                                                        setBankAccounts(newAccounts);
+                                                    }}
+                                                    required
+                                                />
+                                                <input
+                                                    type="text"
+                                                    className="form-input"
+                                                    placeholder={t('accountHolder')}
+                                                    value={account.accountHolderName}
+                                                    onChange={e => {
+                                                        const newAccounts = [...bankAccounts];
+                                                        newAccounts[index].accountHolderName = e.target.value;
+                                                        setBankAccounts(newAccounts);
+                                                    }}
+                                                    required
+                                                />
+                                            </div>
                                         </div>
-
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
-                                            <select
-                                                className="form-select"
-                                                value={account.bankName}
-                                                onChange={e => {
-                                                    const newAccounts = [...bankAccounts];
-                                                    newAccounts[index].bankName = e.target.value;
-                                                    setBankAccounts(newAccounts);
-                                                }}
-                                                required
-                                            >
-                                                <option value="">{t('selectBank')}</option>
-                                                <option value="Commercial Bank of Ethiopia (CBE)">Commercial Bank of Ethiopia (CBE)</option>
-                                                <option value="Awash International Bank">Awash International Bank</option>
-                                                <option value="Dashen Bank">Dashen Bank</option>
-                                                <option value="Bank of Abyssinia">Bank of Abyssinia</option>
-                                                <option value="Wegagen Bank">Wegagen Bank</option>
-                                                <option value="Nib International Bank">Nib International Bank</option>
-                                                <option value="Cooperative Bank of Oromia">Cooperative Bank of Oromia</option>
-                                            </select>
-                                            <input
-                                                type="text"
-                                                className="form-input"
-                                                placeholder={t('accountNumber')}
-                                                value={account.accountNumber}
-                                                onChange={e => {
-                                                    const newAccounts = [...bankAccounts];
-                                                    newAccounts[index].accountNumber = e.target.value;
-                                                    setBankAccounts(newAccounts);
-                                                }}
-                                                required
-                                            />
-                                            <input
-                                                type="text"
-                                                className="form-input"
-                                                placeholder={t('accountHolder')}
-                                                value={account.accountHolderName}
-                                                onChange={e => {
-                                                    const newAccounts = [...bankAccounts];
-                                                    newAccounts[index].accountHolderName = e.target.value;
-                                                    setBankAccounts(newAccounts);
-                                                }}
-                                                required
-                                            />
-                                        </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
 
                                 <button
                                     type="button"
