@@ -579,12 +579,7 @@ export default function Dashboard() {
                 )}
 
                 {/* 3 EQUAL-WIDTH TOP METRIC CARDS */}
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                    gap: '1.25rem',
-                    marginBottom: '1.75rem'
-                }}>
+                <div className="dashboard-metrics-grid" style={{ marginBottom: '1.75rem' }}>
                     {/* Card 1: CURRENT BALANCE */}
                     <div
                         style={{
@@ -796,7 +791,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* 2-COLUMN SECTION: RECENT TRANSACTIONS & TOP SUPPORTERS */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+                <div className="dashboard-two-col-grid" style={{ marginBottom: '2rem' }}>
                     {/* Recent Transactions List with Tab Filter */}
                     <div style={{
                         background: 'var(--card-bg)',

@@ -233,7 +233,7 @@ export default function Home() {
 
             {/* ── HERO SECTION ────────────────────────────────────────── */}
             <section style={{ position: 'relative', padding: '4rem 1.25rem 5rem', maxWidth: 'var(--container-max)', margin: '0 auto' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '3.5rem', alignItems: 'center' }}>
+                <div className="hero-grid">
                     
                     {/* Left: Value Proposition */}
                     <div>
@@ -252,16 +252,16 @@ export default function Home() {
                         </p>
 
                         {/* Interactive Handle Claim Bar */}
-                        <div style={{ 
-                            background: 'var(--card-bg)', 
-                            border: '1px solid var(--border-color)', 
-                            borderRadius: '10px', 
-                            padding: '0.4rem 0.4rem 0.4rem 0.85rem', 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            gap: '0.5rem', 
-                            maxWidth: '460px', 
-                            marginBottom: '0.75rem', 
+                        <div className="claim-bar-responsive" style={{
+                            background: 'var(--card-bg)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '10px',
+                            padding: '0.4rem 0.4rem 0.4rem 0.85rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            maxWidth: '460px',
+                            marginBottom: '0.75rem',
                             boxShadow: 'var(--shadow-sm)',
                             transition: 'all 0.15s ease'
                         }}>
@@ -539,7 +539,7 @@ export default function Home() {
                         <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Direct Settlement with Ethiopian Banks & Telebirr</h2>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.15rem' }}>
+                    <div className="bank-grid">
                         {nationalRails.map((bank, i) => (
                             <div
                                 key={i}
@@ -624,7 +624,7 @@ export default function Home() {
                         ))}
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem', alignItems: 'center' }}>
+                    <div className="calc-grid">
                         {/* Sliders */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
                             <div>
@@ -710,7 +710,7 @@ export default function Home() {
             {/* ── OBS LIVE STREAM OVERLAY SHOWCASE ─────────────────────── */}
             <section id="obs-alerts" style={{ padding: '5rem 1.25rem', background: 'var(--card-bg-subtle)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
                 <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '3.5rem', alignItems: 'center' }}>
+                    <div className="obs-grid">
                         <div>
                             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.25rem 0.7rem', borderRadius: '9999px', background: 'rgba(217, 119, 6, 0.1)', color: 'var(--secondary)', fontWeight: 800, fontSize: '0.775rem', marginBottom: '1rem', border: '1px solid rgba(217, 119, 6, 0.2)' }}>
                                 <Radio size={14} /> OBS Studio & Streamlabs Ready
@@ -820,7 +820,7 @@ export default function Home() {
                     <h2 style={{ fontSize: '1.85rem', fontWeight: 800, marginTop: '0.35rem' }}>How GurshaPay Works</h2>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.75rem' }}>
+                <div className="steps-grid">
                     <div 
                         style={{ padding: '1.75rem', borderRadius: '12px', background: 'var(--card-bg)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.85rem', boxShadow: 'var(--shadow-xs)', transition: 'all 0.15s ease', cursor: 'pointer' }}
                         onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
