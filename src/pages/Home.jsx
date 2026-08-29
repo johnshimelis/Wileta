@@ -252,41 +252,29 @@ export default function Home() {
                         </p>
 
                         {/* Interactive Handle Claim Bar */}
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            background: 'var(--card-bg)',
-                            border: '1.5px solid var(--border-color)',
-                            borderRadius: '10px',
-                            padding: '0.35rem 0.35rem 0.35rem 0.85rem',
-                            maxWidth: '460px',
-                            width: '100%',
-                            boxShadow: 'var(--shadow-sm)',
-                            boxSizing: 'border-box',
-                            marginBottom: '0.75rem',
-                            gap: '0.35rem',
-                            transition: 'border-color 0.15s ease'
-                        }}>
-                            <span style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.875rem', whiteSpace: 'nowrap', userSelect: 'none' }}>
-                                gurshapay.com/@
-                            </span>
-                            <input
-                                type="text"
-                                placeholder="yourname"
-                                value={claimUsername}
-                                onChange={(e) => handleCheckUsername(e.target.value)}
-                                style={{
-                                    border: 'none',
-                                    background: 'transparent',
-                                    outline: 'none',
-                                    fontWeight: 700,
-                                    fontSize: '0.95rem',
-                                    color: 'var(--text-main)',
-                                    flex: 1,
-                                    minWidth: 0,
-                                    padding: '0.35rem 0.25rem'
-                                }}
-                            />
+                        <div className="claim-bar-box">
+                            <div className="claim-input-row" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flex: 1, minWidth: 0 }}>
+                                <span style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.875rem', whiteSpace: 'nowrap', userSelect: 'none' }}>
+                                    gurshapay.com/@
+                                </span>
+                                <input
+                                    type="text"
+                                    placeholder="yourname"
+                                    value={claimUsername}
+                                    onChange={(e) => handleCheckUsername(e.target.value)}
+                                    style={{
+                                        border: 'none',
+                                        background: 'transparent',
+                                        outline: 'none',
+                                        fontWeight: 700,
+                                        fontSize: '0.95rem',
+                                        color: 'var(--text-main)',
+                                        flex: 1,
+                                        minWidth: 0,
+                                        padding: '0.35rem 0.25rem'
+                                    }}
+                                />
+                            </div>
                             <Button
                                 variant="primary"
                                 size="sm"

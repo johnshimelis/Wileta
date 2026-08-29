@@ -528,7 +528,7 @@ export default function Dashboard() {
                             <h1 style={{ fontSize: 'clamp(1.35rem, 5vw, 1.75rem)', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                                 <span>{t('welcome')}, {user?.name?.split(' ')[0] || 'Creator'}</span>
                                 <span style={{ fontSize: '1.35rem' }}>👋</span>
-                                <VerifiedBlueTick size={22} title="GurshaPay Verified Creator" />
+                                {isVerified && <VerifiedBlueTick size={22} title="GurshaPay Verified Creator" />}
                             </h1>
                         </div>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.25rem', marginBottom: 0 }}>
@@ -551,8 +551,7 @@ export default function Dashboard() {
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
                     borderRadius: '14px',
-                    padding: '1.25rem',
-                    marginBottom: '1.5rem',
+                    padding: '1.25rem', marginTop: '0.5rem', marginBottom: '2rem',
                     boxShadow: 'var(--shadow-xs)',
                     width: '100%',
                     boxSizing: 'border-box'
@@ -594,7 +593,7 @@ export default function Dashboard() {
 
                         {/* Item 2: KYC Identity */}
                         <div 
-                            onClick={() => navigate('/kyc')}
+                            onClick={() => { if (!isVerified) navigate('/kyc'); }}
                             style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 0.85rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease' }}
                             onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
                             onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
@@ -878,15 +877,7 @@ export default function Dashboard() {
                 {/* 2-COLUMN SECTION: RECENT TRANSACTIONS & TOP SUPPORTERS */}
                 <div className="dashboard-two-col-grid" style={{ marginBottom: '2rem' }}>
                     {/* Recent Transactions List with Tab Filter */}
-                    <div style={{
-                        background: 'var(--card-bg)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '14px',
-                        padding: '1.5rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        boxShadow: 'var(--shadow-xs)'
-                    }}>
+                    <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '1.25rem 1rem', display: 'flex', flexDirection: 'column', boxShadow: 'var(--shadow-xs)', width: '100%', maxWidth: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                             <div>
                                 <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>
@@ -1025,15 +1016,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* Top Fans Leaderboard */}
-                    <div style={{
-                        background: 'var(--card-bg)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '14px',
-                        padding: '1.5rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        boxShadow: 'var(--shadow-xs)'
-                    }}>
+                    <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '1.25rem 1rem', display: 'flex', flexDirection: 'column', boxShadow: 'var(--shadow-xs)', width: '100%', maxWidth: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
                             <div>
                                 <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>
