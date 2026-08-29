@@ -19,11 +19,37 @@ import ResetPassword from './pages/ResetPassword';
 import Home from './pages/Home';
 import './index.css';
 
+const PageLoader = () => (
+  <div style={{
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'var(--bg-color, #09090b)',
+    gap: '1rem'
+  }}>
+    <div style={{
+      width: '40px',
+      height: '40px',
+      border: '3px solid rgba(5, 150, 105, 0.2)',
+      borderTopColor: '#059669',
+      borderRadius: '50%',
+      animation: 'spin 0.8s linear infinite'
+    }} />
+    <style>{`
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    `}</style>
+  </div>
+);
+
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <PageLoader />;
 
   if (!user) return <Navigate to="/login" replace />;
 
@@ -38,7 +64,7 @@ const ProtectedRoute = ({ children }) => {
 const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <PageLoader />;
   if (user) {
     return <Navigate to={user.isOnboarded ? "/dashboard" : "/onboarding"} replace />;
   }

@@ -128,7 +128,7 @@ const WithdrawModal = ({
                         </div>
                         <div>
                             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>{t('withdrawFunds')}</h3>
-                            <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>Available: {balance.toFixed(2)} ETB</span>
+                            <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>Available: {Number(balance || 0).toFixed(2)} ETB</span>
                         </div>
                     </div>
                     <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}>
@@ -215,7 +215,7 @@ const WithdrawModal = ({
                                 transition: 'all 0.15s ease'
                             }}
                         >
-                            Full Balance ({balance.toFixed(2)} ETB)
+                            Full Balance ({Number(balance || 0).toFixed(2)} ETB)
                         </button>
                         <button
                             type="button"
@@ -302,7 +302,7 @@ const WithdrawSuccessModal = ({ data, onClose, user }) => {
                 <div style={{ background: 'var(--card-bg-subtle)', borderRadius: '12px', padding: '1.15rem', border: '1px solid var(--border-color)', marginBottom: '1.5rem', textAlign: 'left', fontSize: '0.85rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
                         <span style={{ color: 'var(--text-muted)' }}>Amount Requested</span>
-                        <span style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.95rem' }}>{data.amount.toFixed(2)} ETB</span>
+                        <span style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.95rem' }}>{Number(data?.amount || 0).toFixed(2)} ETB</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
                         <span style={{ color: 'var(--text-muted)' }}>Payout Method</span>
@@ -310,7 +310,7 @@ const WithdrawSuccessModal = ({ data, onClose, user }) => {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.65rem', borderTop: '1px solid var(--border-color)' }}>
                         <span style={{ color: 'var(--text-muted)' }}>Remaining Balance</span>
-                        <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>{data.newBalance.toFixed(2)} ETB</span>
+                        <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>{Number(data?.newBalance || 0).toFixed(2)} ETB</span>
                     </div>
                 </div>
 
@@ -704,7 +704,7 @@ export default function Dashboard() {
 
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBottom: '1rem' }}>
                                 <span style={{ fontSize: '2.1rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                                    {isLoading ? '...' : metrics.pending_balance.toFixed(2)}
+                                    {isLoading ? '...' : metrics.pending_Number(balance || 0).toFixed(2)}
                                 </span>
                                 <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--primary)' }}>ETB</span>
                             </div>
@@ -764,7 +764,7 @@ export default function Dashboard() {
 
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBottom: '1rem' }}>
                                 <span style={{ fontSize: '2.1rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                                    {isLoading ? '...' : metrics.total_earned.toFixed(2)}
+                                    {isLoading ? '...' : Number(metrics?.total_earned || 0).toFixed(2)}
                                 </span>
                                 <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-muted)' }}>ETB</span>
                             </div>
@@ -1000,7 +1000,7 @@ export default function Dashboard() {
                                                     </div>
                                                 </td>
                                                 <td style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: tx.type === 'tip' ? 'var(--success)' : 'var(--text-main)', whiteSpace: 'nowrap' }}>
-                                                    {tx.type === 'tip' ? '+' : '-'}{tx.amount.toFixed(2)} ETB
+                                                    {tx.type === 'tip' ? '+' : '-'}{Number(tx?.amount || tx?.grossAmount || 0).toFixed(2)} ETB
                                                 </td>
                                                 <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
                                                     <Badge variant={tx.status === 'success' ? 'success' : tx.status === 'pending' ? 'warning' : 'danger'} size="sm">
