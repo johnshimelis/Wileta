@@ -232,17 +232,17 @@ export default function Home() {
             )}
 
             {/* ── HERO SECTION ────────────────────────────────────────── */}
-            <section style={{ position: 'relative', padding: '4rem 1.25rem 5rem', maxWidth: 'var(--container-max)', margin: '0 auto' }}>
+            <section style={{ position: 'relative', padding: '3rem 1rem 4rem', width: '100%', boxSizing: 'border-box', overflow: 'hidden', maxWidth: 'var(--container-max)', margin: '0 auto' }}>
                 <div className="hero-grid">
                     
                     {/* Left: Value Proposition */}
                     <div>
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.3rem 0.75rem', borderRadius: '9999px', background: 'var(--primary-light)', color: 'var(--primary)', fontWeight: 700, fontSize: '0.8125rem', marginBottom: '1.25rem', border: '1px solid rgba(4, 120, 87, 0.2)' }}>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.25rem 0.65rem', borderRadius: '9999px', background: 'var(--primary-light)', color: 'var(--primary)', fontWeight: 700, fontSize: '0.75rem', marginBottom: '1rem', border: '1px solid rgba(4, 120, 87, 0.2)', maxWidth: '100%', boxSizing: 'border-box' }}>
                             <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: 'var(--primary)', display: 'inline-block' }}></span>
                             Ethiopia's Creator Monetization Infrastructure 🇪🇹
                         </div>
 
-                        <h1 style={{ fontSize: 'clamp(2.4rem, 5vw, 3.8rem)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.12, marginBottom: '1.25rem', color: 'var(--text-main)' }}>
+                        <h1 style={{ fontSize: 'clamp(1.75rem, 5.5vw, 3.4rem)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.12, marginBottom: '1.25rem', color: 'var(--text-main)' }}>
                             The direct monetization rail for <br />
                             <span style={{ color: 'var(--primary)' }}>Ethiopian creators.</span>
                         </h1>
@@ -252,63 +252,53 @@ export default function Home() {
                         </p>
 
                         {/* Interactive Handle Claim Bar */}
-                        <div className="claim-bar-responsive" style={{
-                            background: 'var(--card-bg)',
-                            border: '1px solid var(--border-color)',
-                            borderRadius: '10px',
-                            padding: '0.4rem 0.4rem 0.4rem 0.85rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            maxWidth: '460px',
-                            marginBottom: '0.75rem',
-                            boxShadow: 'var(--shadow-sm)',
-                            transition: 'all 0.15s ease'
-                        }}>
-                            <span style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>gurshapay.com/@</span>
-                            <input
-                                type="text"
-                                placeholder="yourname"
-                                value={claimUsername}
-                                onChange={(e) => handleCheckUsername(e.target.value)}
-                                style={{ border: 'none', background: 'transparent', outline: 'none', fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)', flex: 1, minWidth: 0 }}
-                            />
+                        <div className="claim-box-unified" style={{ marginBottom: '0.75rem' }}>
+                            <div className="claim-input-row" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flex: 1, minWidth: 0 }}>
+                                <span className="claim-prefix">gurshapay.com/@</span>
+                                <input
+                                    type="text"
+                                    className="claim-input"
+                                    placeholder="yourname"
+                                    value={claimUsername}
+                                    onChange={(e) => handleCheckUsername(e.target.value)}
+                                />
+                            </div>
                             <Button
                                 variant="primary"
                                 size="sm"
                                 icon={ArrowRight}
                                 iconPosition="right"
                                 onClick={() => navigate('/signup' + (claimUsername ? '?username=' + claimUsername : ''))}
+                                style={{ whiteSpace: 'nowrap' }}
                             >
                                 Claim Link
                             </Button>
                         </div>
-
                         {claimStatus === 'available' ? (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary)', fontSize: '0.825rem', fontWeight: 700, marginBottom: '1.5rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary)', fontSize: '0.825rem', fontWeight: 700, marginBottom: '1.25rem' }}>
                                 <CheckCircle size={14} /> @{claimUsername} is available! Claim it in 30 seconds.
                             </div>
                         ) : (
-                            <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+                            <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
                                 Free custom URL • Instant Telebirr setup in 30 seconds
                             </div>
                         )}
 
                         {/* Trust Pillars */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', flexWrap: 'wrap' }}>
+                        <div className="trust-pillars-mobile" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', flexWrap: 'wrap', width: '100%' }}>
                             <div>
-                                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>0% Fee</div>
-                                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>To create account</div>
+                                <div style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)' }}>0% Fee</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>To create account</div>
                             </div>
-                            <div style={{ width: '1px', height: '28px', background: 'var(--border-color)' }}></div>
+                            <div className="trust-pillar-divider" style={{ width: '1px', height: '24px', background: 'var(--border-color)' }}></div>
                             <div>
-                                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--primary)' }}>Instant</div>
-                                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Telebirr payout</div>
+                                <div style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--primary)' }}>Instant</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Telebirr payout</div>
                             </div>
-                            <div style={{ width: '1px', height: '28px', background: 'var(--border-color)' }}></div>
+                            <div className="trust-pillar-divider" style={{ width: '1px', height: '24px', background: 'var(--border-color)' }}></div>
                             <div>
-                                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--secondary)' }}>OBS 1080p</div>
-                                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Stream sound alerts</div>
+                                <div style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--secondary)' }}>OBS 1080p</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Stream alerts</div>
                             </div>
                         </div>
                     </div>
@@ -684,15 +674,22 @@ export default function Home() {
                                 onClick={() => navigate('/signup')}
                                 style={{
                                     width: '100%',
-                                    padding: '0.75rem 1.25rem',
-                                    borderRadius: '6px',
+                                    height: '46px',
+                                    padding: '0 1rem',
+                                    borderRadius: '8px',
                                     border: '1px solid #FFFFFF',
                                     background: '#FFFFFF',
                                     color: 'var(--primary)',
                                     fontWeight: 700,
                                     fontSize: '0.925rem',
                                     cursor: 'pointer',
-                                    boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
+                                    boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.4rem',
+                                    whiteSpace: 'nowrap',
+                                    boxSizing: 'border-box',
                                     transition: 'all 0.12s ease'
                                 }}
                                 onMouseEnter={e => e.currentTarget.style.background = '#F4F4F5'}
@@ -700,7 +697,8 @@ export default function Home() {
                                 onMouseDown={e => e.currentTarget.style.transform = 'translateY(1px)'}
                                 onMouseUp={e => e.currentTarget.style.transform = 'translateY(0)'}
                             >
-                                Start Earning Today →
+                                <span>Start Earning Today</span>
+                                <span>→</span>
                             </button>
                         </div>
                     </div>
@@ -715,7 +713,7 @@ export default function Home() {
                             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.25rem 0.7rem', borderRadius: '9999px', background: 'rgba(217, 119, 6, 0.1)', color: 'var(--secondary)', fontWeight: 800, fontSize: '0.775rem', marginBottom: '1rem', border: '1px solid rgba(217, 119, 6, 0.2)' }}>
                                 <Radio size={14} /> OBS Studio & Streamlabs Ready
                             </div>
-                            <h2 style={{ fontSize: '2.1rem', fontWeight: 800, margin: '0 0 1rem', letterSpacing: '-0.03em', lineHeight: 1.2 }}>
+                            <h2 style={{ fontSize: 'clamp(1.45rem, 5vw, 2.1rem)', fontWeight: 800, margin: '0 0 0.85rem', letterSpacing: '-0.03em', lineHeight: 1.2, wordBreak: 'break-word' }}>
                                 Real-Time On-Screen Alerts for Streamers
                             </h2>
                             <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.65, marginBottom: '1.75rem' }}>
@@ -768,13 +766,13 @@ export default function Home() {
                                         boxShadow: '0 4px 14px rgba(4, 120, 87, 0.3)'
                                     }}
                                 >
-                                    ▷ Trigger Live Stream Alert ({obsCustomTip} ETB)
+                                    Trigger Live Stream Alert ({obsCustomTip} ETB)
                                 </Button>
                             </div>
                         </div>
 
                         {/* Interactive OBS Preview Screen */}
-                        <div style={{ position: 'relative', background: '#09090B', borderRadius: '16px', padding: '2rem', minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', border: '1px solid #27272A', overflow: 'hidden', boxShadow: '0 20px 35px -10px rgba(0, 0, 0, 0.5)' }}>
+                        <div style={{ position: 'relative', background: '#09090B', borderRadius: '16px', padding: '2rem', minHeight: '260px', width: '100%', maxWidth: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', border: '1px solid #27272A', overflow: 'hidden', boxShadow: '0 20px 35px -10px rgba(0, 0, 0, 0.5)' }}>
                             <div style={{ position: 'absolute', top: '16px', left: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                 <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#EF4444', animation: 'pulse 1.5s infinite' }}></span>
                                 <span style={{ fontSize: '0.725rem', fontWeight: 800, color: '#EF4444', textTransform: 'uppercase', letterSpacing: '0.06em' }}>LIVE BROADCAST 1080P</span>
