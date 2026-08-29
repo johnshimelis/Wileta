@@ -3,7 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import {
     Smartphone, CheckCircle, AlertCircle, MessageSquare, ShieldCheck,
     Heart, Sparkles, Share2, Copy, Send, Coffee, Award, ExternalLink,
-    Clock, RefreshCw, Check, ArrowRight, Lock, User
+    Clock, RefreshCw, Check, ArrowRight, Lock, User, QrCode, Download,
+    CreditCard, Building, X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -15,7 +16,7 @@ import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import './PublicProfile.css';
 
-// Verified Blue Tick Emblem
+// Verified Blue Tick SVG Emblem
 const VerifiedBlueTick = ({ size = 22, title = "Verified Creator" }) => (
     <span 
         title={title}
@@ -50,18 +51,20 @@ export default function PublicProfile() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    // Tipping state
-    const [amount, setAmount] = useState('50');
+    // Tipping amount state
+    const [amount, setAmount] = useState('100');
     const [customAmount, setCustomAmount] = useState('');
     const [isCustom, setIsCustom] = useState(false);
     const [tipperPhone, setTipperPhone] = useState('');
     const [tipperName, setTipperName] = useState('');
     const [isAnonymous, setIsAnonymous] = useState(false);
     const [shoutOutMessage, setShoutOutMessage] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('telebirr'); // telebirr | chapa_checkout
     const [tippingState, setTippingState] = useState('idle'); // idle | processing | pin_prompt | success | error
     const [txRef, setTxRef] = useState('');
     const [alert, setAlert] = useState(null);
     const [copiedShare, setCopiedShare] = useState(false);
+    const [showQrModal, setShowQrModal] = useState(false);
 
     const { t } = useLanguage();
 
@@ -72,11 +75,12 @@ export default function PublicProfile() {
         '❤️ Proud supporter since day one!'
     ];
 
-    const presetGurshas = [
-        { count: 1, etb: '50', emoji: '☕', label: '1 Gursha' },
-        { count: 3, etb: '150', emoji: '🍕', label: '3 Gurshas' },
-        { count: 5, etb: '250', emoji: '🚀', label: '5 Gurshas' },
-        { count: 10, etb: '500', emoji: '👑', label: '10 Gurshas' }
+    const presetAmounts = [
+        { count: 1, etb: '50', emoji: '☕', label: '50 ETB' },
+        { count: 2, etb: '100', emoji: '🥐', label: '100 ETB' },
+        { count: 5, etb: '250', emoji: '🚀', label: '250 ETB' },
+        { count: 10, etb: '500', emoji: '👑', label: '500 ETB' },
+        { count: 20, etb: '1000', emoji: '💎', label: '1,000 ETB' }
     ];
 
     const showAlert = (message, type = 'success') => {
@@ -90,6 +94,31 @@ export default function PublicProfile() {
                 const cleanUsername = username?.startsWith('@') ? username.slice(1) : username;
                 const res = await api.get('/public/' + cleanUsername);
                 setCreator(res.data);
+
+                // Set SEO Open Graph Metadata
+                const creatorName = res.data.name || cleanUsername;
+                document.title = `${creatorName} — Support on GurshaPay`;
+
+                // Update meta tags dynamically
+                const updateMeta = (name, content) => {
+                    let element = document.querySelector(`meta[property="${name}"]`) || document.querySelector(`meta[name="${name}"]`);
+                    if (!element) {
+                        element = document.createElement('meta');
+                        if (name.startsWith('og:')) {
+                            element.setAttribute('property', name);
+                        } else {
+                            element.setAttribute('name', name);
+                        }
+                        document.head.appendChild(element);
+                    }
+                    element.setAttribute('content', content);
+                };
+
+                updateMeta('og:title', `${creatorName} — Support on GurshaPay`);
+                updateMeta('og:description', `Support ${creatorName} directly through GurshaPay.`);
+                updateMeta('og:url', `https://gurshapay.com/@${cleanUsername}`);
+                updateMeta('description', `Support ${creatorName} directly through GurshaPay.`);
+
             } catch (err) {
                 setError("We couldn't find this creator profile. Please check the handle and try again.");
             }
@@ -98,6 +127,7 @@ export default function PublicProfile() {
         fetchProfile();
     }, [username, api]);
 
+    // Polling for Telebirr PIN completion
     useEffect(() => {
         let intervalId;
         if (tippingState === 'pin_prompt' && txRef) {
@@ -105,10 +135,10 @@ export default function PublicProfile() {
                 try {
                     const res = await api.get('/payments/status/' + txRef);
                     if (res.data && res.data.success) {
-                        if (res.data.status === 'success') {
+                        if (res.data.status === 'SUCCESS' || res.data.status === 'success') {
                             setTippingState('success');
                             clearInterval(intervalId);
-                        } else if (res.data.status === 'failed') {
+                        } else if (res.data.status === 'FAILED' || res.data.status === 'failed') {
                             setTippingState('error');
                             clearInterval(intervalId);
                         }
@@ -126,15 +156,15 @@ export default function PublicProfile() {
     const handleTip = async (e) => {
         e.preventDefault();
         const phoneRegex = /^(09|07)\d{8}$/;
-        if (!phoneRegex.test(tipperPhone)) {
+        if (paymentMethod === 'telebirr' && !phoneRegex.test(tipperPhone)) {
             showAlert("Please enter a valid 10-digit Ethiopian mobile number (09XXXXXXXX or 07XXXXXXXX)", "error");
             return;
         }
         setTippingState('processing');
 
         const finalAmount = isCustom ? customAmount : amount;
-        if (!finalAmount || Number(finalAmount) <= 0) {
-            showAlert("Please enter a valid tip amount", "error");
+        if (!finalAmount || Number(finalAmount) < 10) {
+            showAlert("Minimum tip amount is 10 ETB.", "error");
             setTippingState('idle');
             return;
         }
@@ -143,37 +173,70 @@ export default function PublicProfile() {
             const finalMessage = (isAnonymous ? '[Anonymous Supporter] ' : (tipperName ? '[' + tipperName + '] ' : '')) + shoutOutMessage;
             const response = await api.post('/payments/initialize-tip', {
                 creatorId: creator.id,
-                tipperPhone,
+                creatorUsername: creator.username,
+                tipperPhone: tipperPhone || '0900000000',
+                supporterName: isAnonymous ? 'Anonymous' : (tipperName || 'Fan'),
+                isAnonymous,
                 amount: finalAmount,
-                message: finalMessage
+                message: finalMessage,
+                paymentMethod
             });
 
             if (response.data && response.data.success) {
-                const receivedTxRef = response.data.tx_ref || response.data.txRef;
-                setTxRef(receivedTxRef);
+                setTxRef(response.data.tx_ref);
+
+                if (response.data.paymentMethod === 'chapa_checkout' && response.data.checkout_url) {
+                    // Redirect to Chapa hosted checkout
+                    window.location.href = response.data.checkout_url;
+                    return;
+                }
+
                 setTippingState('pin_prompt');
+                showAlert(response.data.message || "USSD PIN prompt sent! Please confirm on your mobile.", "success");
             } else {
-                showAlert(response.data?.message || "Failed to initialize Telebirr payment", "error");
-                setTippingState('idle');
+                setTippingState('error');
+                showAlert(response.data.error || "Failed to initialize payment", "error");
             }
         } catch (err) {
-            showAlert(err.response?.data?.error || err.response?.data?.message || "Payment initialization failed", "error");
-            setTippingState('idle');
+            setTippingState('error');
+            showAlert(err.response?.data?.error || "Error connecting to payment provider.", "error");
         }
     };
 
-    const handleShareLink = () => {
-        navigator.clipboard.writeText(window.location.href);
+    const handleCopyLink = () => {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url);
         setCopiedShare(true);
-        setTimeout(() => setCopiedShare(false), 2000);
+        showAlert("Tip page link copied to clipboard!", "success");
+        setTimeout(() => setCopiedShare(false), 3000);
     };
+
+    const handleNativeShare = async () => {
+        const url = window.location.href;
+        const shareData = {
+            title: `Support ${creator?.name || 'Creator'} on GurshaPay`,
+            text: `Send a Gursha tip directly to ${creator?.name || 'this creator'} on GurshaPay!`,
+            url
+        };
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+            } catch (e) {}
+        } else {
+            handleCopyLink();
+        }
+    };
+
+    const shareUrl = encodeURIComponent(window.location.href);
+    const shareText = encodeURIComponent(`Support ${creator?.name || 'this creator'} on GurshaPay! ☕🇪🇹`);
 
     if (loading) {
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)' }}>
-                <div style={{ textAlign: 'center' }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', border: '3px solid var(--border-color)', borderTopColor: 'var(--primary)', animation: 'spin 0.8s linear infinite', margin: '0 auto 1.25rem' }}></div>
-                    <div style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.925rem' }}>Loading creator profile...</div>
+            <div style={{ minHeight: '100vh', background: 'var(--bg-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+                <div style={{ width: '100%', maxWidth: '480px', background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '2.5rem', textAlign: 'center' }}>
+                    <div style={{ width: '84px', height: '84px', borderRadius: '50%', background: 'var(--border-color)', margin: '0 auto 1.5rem', animation: 'pulse 1.5s infinite ease-in-out' }}></div>
+                    <div style={{ height: '24px', width: '60%', background: 'var(--border-color)', margin: '0 auto 1rem', borderRadius: '6px' }}></div>
+                    <div style={{ height: '16px', width: '80%', background: 'var(--border-color)', margin: '0 auto', borderRadius: '6px' }}></div>
                 </div>
             </div>
         );
@@ -181,468 +244,580 @@ export default function PublicProfile() {
 
     if (error || !creator) {
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)', padding: '1.5rem' }}>
-                <div style={{ maxWidth: '440px', width: '100%', textAlign: 'center', padding: '2.5rem', background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '16px', boxShadow: 'var(--shadow-lg)' }}>
-                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--danger-light)', color: 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+            <div style={{ minHeight: '100vh', background: 'var(--bg-color)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+                <div style={{ maxWidth: '460px', width: '100%', background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '2.5rem', textAlign: 'center', boxShadow: 'var(--shadow-sm)' }}>
+                    <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'var(--danger-light)', color: 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
                         <AlertCircle size={28} />
                     </div>
-                    <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.5rem' }}>Creator Not Found</h2>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>{error}</p>
-                    <Link to="/">
-                        <Button variant="primary" size="md" className="btn-full">
-                            Go to GurshaPay Home
-                        </Button>
+                    <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.75rem' }}>Creator Not Found</h2>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1.75rem' }}>
+                        {error || "The handle you entered doesn't exist or is no longer active."}
+                    </p>
+                    <Link to="/" style={{ textDecoration: 'none' }}>
+                        <Button variant="primary" style={{ width: '100%' }}>Explore GurshaPay Creators</Button>
                     </Link>
                 </div>
             </div>
         );
     }
 
-    const currentTipVal = isCustom ? (customAmount || '0') : amount;
-    const isVerified = creator.kycStatus === 'approved' || creator.isVerified;
-
     return (
-        <div style={{ minHeight: '100vh', background: 'var(--bg-color)', display: 'flex', flexDirection: 'column' }}>
-            {alert && <TopAlert message={alert.message} type={alert.type} onClose={() => setAlert(null)} />}
+        <div style={{ minHeight: '100vh', background: 'var(--bg-color)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1.5rem 1rem', boxSizing: 'border-box' }}>
+            {alert && <TopAlert message={alert.message} type={alert.type} />}
 
-            {/* Top Navigation Bar */}
-            <header style={{ padding: '0.85rem 1.25rem', background: 'var(--card-bg)', borderBottom: '1px solid var(--border-color)', position: 'sticky', top: 0, zIndex: 100 }}>
-                <div style={{ maxWidth: '580px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Logo size="compact" />
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <Button variant="ghost" size="sm" icon={copiedShare ? Check : Share2} onClick={handleShareLink}>
-                            {copiedShare ? 'Copied!' : 'Share'}
-                        </Button>
-                        <LanguageToggle />
-                        <ThemeToggle />
-                    </div>
+            {/* Top Navigation Controls */}
+            <div style={{ width: '100%', maxWidth: '520px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                <Logo size="small" />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <button
+                        onClick={() => setShowQrModal(true)}
+                        style={{
+                            background: 'var(--card-bg)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '8px',
+                            padding: '0.45rem 0.65rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            fontSize: '0.8rem',
+                            fontWeight: 700,
+                            color: 'var(--text-main)',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <QrCode size={15} /> QR Code
+                    </button>
+                    <LanguageToggle />
+                    <ThemeToggle />
                 </div>
-            </header>
+            </div>
 
-            {/* Main Single-Column Flow: Creator -> Amount -> Message -> Pay */}
-            <main style={{ flex: 1, maxWidth: '540px', width: '100%', margin: '0 auto', padding: '2rem 1.25rem 4rem', boxSizing: 'border-box' }}>
-                
-                {/* 1. CREATOR PRESENTATION CARD */}
-                <div style={{
-                    background: 'var(--card-bg)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '16px',
-                    overflow: 'hidden',
-                    marginBottom: '1.5rem',
-                    boxShadow: 'var(--shadow-sm)'
-                }}>
-                    {/* Cover Banner with Ethiopian Emerald */}
-                    <div style={{ height: '90px', background: 'linear-gradient(135deg, #064E3B 0%, #047857 50%, #059669 100%)', position: 'relative' }}></div>
-
-                    {/* Creator Info */}
-                    <div style={{ padding: '0 1.5rem 1.5rem', position: 'relative' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '-40px', marginBottom: '0.85rem' }}>
-                            <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--primary)', color: '#FFFFFF', border: '4px solid var(--card-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 900, boxShadow: 'var(--shadow-md)', overflow: 'hidden', flexShrink: 0 }}>
-                                {creator.profilePicUrl ? (
-                                    <img
-                                        src={creator.profilePicUrl.startsWith('http') ? creator.profilePicUrl : ('https://wileta-backend.onrender.com' + creator.profilePicUrl)}
-                                        alt={creator.name}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    />
-                                ) : (
-                                    creator.name?.charAt(0) || '?'
-                                )}
+            {/* Main Creator Card */}
+            <div style={{
+                width: '100%',
+                maxWidth: '520px',
+                background: 'var(--card-bg)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '20px',
+                padding: '2rem 1.75rem',
+                boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)',
+                boxSizing: 'border-box'
+            }}>
+                {/* Creator Header Profile */}
+                <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+                    <div style={{ position: 'relative', width: '84px', height: '84px', margin: '0 auto 1rem' }}>
+                        {creator.profilePicUrl ? (
+                            <img
+                                src={creator.profilePicUrl}
+                                alt={creator.name}
+                                style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--primary)' }}
+                            />
+                        ) : (
+                            <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', fontWeight: 800, border: '3px solid var(--primary)' }}>
+                                {creator.name ? creator.name.charAt(0).toUpperCase() : 'G'}
                             </div>
-
-                            {isVerified && <VerifiedBlueTick size={24} title="Verified GurshaPay Creator" />}
-                        </div>
-
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.2rem' }}>
-                            <h1 style={{ fontSize: '1.45rem', fontWeight: 900, color: 'var(--text-main)', margin: 0, letterSpacing: '-0.025em' }}>
-                                {creator.name}
-                            </h1>
-                            {isVerified && <VerifiedBlueTick size={20} title="Verified GurshaPay Creator" />}
-                        </div>
-
-                        <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.875rem', marginBottom: '0.65rem' }}>
-                            @{creator.username}
-                        </div>
-                        {creator.bio && (
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: 1.55, margin: 0 }}>
-                                {creator.bio}
-                            </p>
                         )}
                     </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', marginBottom: '0.25rem' }}>
+                        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
+                            {creator.name}
+                        </h1>
+                        {creator.isVerified && <VerifiedBlueTick size={20} />}
+                    </div>
+
+                    <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--primary)' }}>
+                        @{creator.username}
+                    </span>
+
+                    {creator.bio && (
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.5, marginTop: '0.75rem', marginBottom: 0 }}>
+                            {creator.bio}
+                        </p>
+                    )}
+
+                    {/* Social Media Links */}
+                    {creator.socialLinks && creator.socialLinks.length > 0 && (
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '0.85rem', flexWrap: 'wrap' }}>
+                            {creator.socialLinks.map((s, idx) => (
+                                <a
+                                    key={idx}
+                                    href={s.username.startsWith('http') ? s.username : `https://${s.platform}.com/${s.username.replace('@', '')}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.3rem',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 600,
+                                        color: 'var(--text-muted)',
+                                        background: 'var(--bg-color)',
+                                        padding: '0.3rem 0.6rem',
+                                        borderRadius: '6px',
+                                        border: '1px solid var(--border-color)',
+                                        textDecoration: 'none'
+                                    }}
+                                >
+                                    <span>{s.platform}</span>
+                                    <ExternalLink size={11} />
+                                </a>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
-                {/* 2. TIPPING CHECKOUT INTERACTION CONTAINER */}
-                {tippingState === 'idle' && (
-                    <div style={{
-                        background: 'var(--card-bg)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
-                        padding: '1.75rem',
-                        boxShadow: 'var(--shadow-sm)'
-                    }}>
-                        <form onSubmit={handleTip}>
-                            {/* Step A: Amount Selection */}
-                            <div style={{ marginBottom: '1.5rem' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                                    <label style={{ fontSize: '0.8125rem', fontWeight: 800, color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                        Select Gursha Amount
-                                    </label>
-                                    <span style={{ color: 'var(--primary)', fontWeight: 900, fontSize: '1.15rem' }}>
-                                        {currentTipVal} <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>ETB</span>
-                                    </span>
-                                </div>
-
-                                {/* 4 Tactile Preset Chips */}
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                                    {presetGurshas.map((p) => {
-                                        const active = !isCustom && amount === p.etb;
-                                        return (
-                                            <button
-                                                key={p.etb}
-                                                type="button"
-                                                onClick={() => {
-                                                    setAmount(p.etb);
-                                                    setIsCustom(false);
-                                                }}
-                                                style={{
-                                                    padding: '0.85rem 0.25rem',
-                                                    borderRadius: '8px',
-                                                    border: active ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                                                    background: active ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                                    color: active ? 'var(--primary)' : 'var(--text-main)',
-                                                    fontWeight: 800,
-                                                    fontSize: '0.875rem',
-                                                    cursor: 'pointer',
-                                                    transition: 'all 0.15s ease',
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    alignItems: 'center',
-                                                    gap: '0.25rem',
-                                                    boxShadow: active ? '0 2px 6px rgba(5, 150, 105, 0.15)' : 'none'
-                                                }}
-                                            >
-                                                <span style={{ fontSize: '1.25rem' }}>{p.emoji}</span>
-                                                <span style={{ fontWeight: 800 }}>{p.etb} ETB</span>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-
-                                {/* Custom Amount Switcher */}
-                                {!isCustom ? (
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setIsCustom(true);
-                                            setCustomAmount('');
-                                        }}
-                                        style={{
-                                            background: 'none',
-                                            border: 'none',
-                                            color: 'var(--primary)',
-                                            fontWeight: 700,
-                                            fontSize: '0.825rem',
-                                            cursor: 'pointer',
-                                            padding: '0.25rem 0'
-                                        }}
-                                    >
-                                        + Enter Custom Amount
-                                    </button>
-                                ) : (
-                                    <div style={{ marginTop: '0.5rem' }}>
-                                        <div className="input-group">
-                                            <span style={{ position: 'absolute', left: '1rem', fontWeight: 800, color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                                                ETB
-                                            </span>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                placeholder="Custom amount (e.g. 300)"
-                                                className="form-input"
-                                                value={customAmount}
-                                                onChange={(e) => setCustomAmount(e.target.value)}
-                                                style={{ paddingLeft: '3.5rem' }}
-                                                autoFocus
-                                            />
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={() => setIsCustom(false)}
-                                            style={{
-                                                background: 'none',
-                                                border: 'none',
-                                                color: 'var(--text-muted)',
-                                                fontSize: '0.75rem',
-                                                cursor: 'pointer',
-                                                marginTop: '0.25rem'
-                                            }}
-                                        >
-                                            ← Back to presets
-                                        </button>
-                                    </div>
-                                )}
+                {/* SUCCESS STATE CELEBRATION */}
+                {tippingState === 'success' ? (
+                    <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+                        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.12)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', border: '2px solid #10B981' }}>
+                            <Check size={32} strokeWidth={3} />
+                        </div>
+                        <h2 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+                            Tip sent successfully ❤️
+                        </h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', marginBottom: '1.5rem' }}>
+                            You sent <strong>{isCustom ? customAmount : amount} ETB</strong> to <strong>{creator.name}</strong>.
+                        </p>
+                        <div style={{ background: 'var(--bg-color)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1rem', marginBottom: '1.5rem', textAlign: 'left', fontSize: '0.85rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
+                                <span style={{ color: 'var(--text-muted)' }}>Status</span>
+                                <span style={{ fontWeight: 700, color: '#10B981' }}>COMPLETED ✓</span>
                             </div>
-
-                            {/* Step B: Supporter Name & Anonymous Option */}
-                            <div style={{ marginBottom: '1.25rem' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                                    <label className="form-label" style={{ margin: 0 }}>Your Name (Optional)</label>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.775rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
-                                        <input
-                                            type="checkbox"
-                                            checked={isAnonymous}
-                                            onChange={(e) => setIsAnonymous(e.target.checked)}
-                                            style={{ accentColor: 'var(--primary)' }}
-                                        />
-                                        Tip Anonymously
-                                    </label>
-                                </div>
-                                {!isAnonymous && (
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        placeholder="e.g. Natnael T."
-                                        value={tipperName}
-                                        onChange={(e) => setTipperName(e.target.value)}
-                                    />
-                                )}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
+                                <span style={{ color: 'var(--text-muted)' }}>Reference</span>
+                                <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>{txRef || 'GP-TIP'}</span>
                             </div>
-
-                            {/* Step C: Telebirr Phone Number */}
-                            <div style={{ marginBottom: '1.25rem' }}>
-                                <label className="form-label">
-                                    Your Telebirr Mobile Number <span style={{ color: 'var(--danger)' }}>*</span>
-                                </label>
-                                <div className="input-group">
-                                    <span style={{ position: 'absolute', left: '0.85rem', fontWeight: 800, color: 'var(--text-muted)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                                        <span>🇪🇹</span> +251
-                                    </span>
-                                    <input
-                                        type="tel"
-                                        className="form-input"
-                                        placeholder="0911000000"
-                                        value={tipperPhone}
-                                        onChange={(e) => setTipperPhone(e.target.value.replace(/[^0-9]/g, ''))}
-                                        maxLength={10}
-                                        style={{ paddingLeft: '5.5rem' }}
-                                        required
-                                    />
-                                </div>
-                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem', display: 'block' }}>
-                                    A USSD payment prompt will pop up on this phone to enter your Telebirr PIN.
-                                </span>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: 'var(--text-muted)' }}>Payment Rail</span>
+                                <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>{paymentMethod === 'telebirr' ? 'Telebirr USSD' : 'Chapa Gateway'}</span>
                             </div>
-
-                            {/* Step D: Shout-Out Message */}
-                            <div style={{ marginBottom: '1.75rem' }}>
-                                <label className="form-label">Shout-Out Note (Optional)</label>
-                                <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
-                                    {quickMessages.map((msg, idx) => (
+                        </div>
+                        <Button
+                            variant="primary"
+                            style={{ width: '100%', marginBottom: '0.75rem' }}
+                            onClick={() => {
+                                setTippingState('idle');
+                                setShoutOutMessage('');
+                            }}
+                        >
+                            Send Another Gursha
+                        </Button>
+                    </div>
+                ) : tippingState === 'pin_prompt' ? (
+                    /* PIN PROMPT STATE */
+                    <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+                        <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+                            <Smartphone size={28} />
+                        </div>
+                        <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                            Check your mobile phone! 📱
+                        </h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
+                            A Telebirr USSD PIN prompt has been sent to <strong>{tipperPhone}</strong>. Please enter your PIN on your phone to complete your tip of <strong>{isCustom ? customAmount : amount} ETB</strong>.
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--primary)', fontSize: '0.85rem', fontWeight: 700, marginBottom: '1.5rem' }}>
+                            <RefreshCw size={16} style={{ animation: 'spin 2s linear infinite' }} /> Waiting for PIN confirmation...
+                        </div>
+                        <Button
+                            variant="outline"
+                            style={{ width: '100%' }}
+                            onClick={() => setTippingState('idle')}
+                        >
+                            Cancel / Modify Tip
+                        </Button>
+                    </div>
+                ) : (
+                    /* INTERACTIVE TIPPING FORM */
+                    <form onSubmit={handleTip}>
+                        {/* Preset Amount Grid */}
+                        <div style={{ marginBottom: '1.25rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Select Tip Amount
+                            </label>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginBottom: '0.65rem' }}>
+                                {presetAmounts.map((p, idx) => {
+                                    const selected = !isCustom && amount === p.etb;
+                                    return (
                                         <button
                                             key={idx}
                                             type="button"
-                                            onClick={() => setShoutOutMessage(msg)}
+                                            onClick={() => {
+                                                setAmount(p.etb);
+                                                setIsCustom(false);
+                                            }}
                                             style={{
-                                                fontSize: '0.75rem',
-                                                padding: '0.25rem 0.55rem',
-                                                borderRadius: '9999px',
-                                                border: '1px solid var(--border-color)',
-                                                background: shoutOutMessage === msg ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                                color: shoutOutMessage === msg ? 'var(--primary)' : 'var(--text-muted)',
-                                                fontWeight: 600,
-                                                cursor: 'pointer'
+                                                padding: '0.75rem 0.5rem',
+                                                border: `1.5px solid ${selected ? 'var(--primary)' : 'var(--border-color)'}`,
+                                                borderRadius: '10px',
+                                                background: selected ? 'var(--primary-light)' : 'var(--bg-color)',
+                                                color: selected ? 'var(--primary)' : 'var(--text-main)',
+                                                fontWeight: 800,
+                                                fontSize: '0.9rem',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                gap: '0.2rem',
+                                                transition: 'all 0.15s ease'
                                             }}
                                         >
-                                            {msg}
+                                            <span style={{ fontSize: '1.1rem' }}>{p.emoji}</span>
+                                            <span>{p.label}</span>
                                         </button>
-                                    ))}
-                                </div>
-                                <textarea
-                                    className="form-input"
-                                    rows="2"
-                                    placeholder="Leave an encouraging note for their stream or channel..."
-                                    value={shoutOutMessage}
-                                    onChange={(e) => setShoutOutMessage(e.target.value)}
-                                    maxLength={200}
-                                    style={{ resize: 'vertical' }}
-                                />
+                                    );
+                                })}
+
+                                <button
+                                    type="button"
+                                    onClick={() => setIsCustom(true)}
+                                    style={{
+                                        padding: '0.75rem 0.5rem',
+                                        border: `1.5px solid ${isCustom ? 'var(--primary)' : 'var(--border-color)'}`,
+                                        borderRadius: '10px',
+                                        background: isCustom ? 'var(--primary-light)' : 'var(--bg-color)',
+                                        color: isCustom ? 'var(--primary)' : 'var(--text-main)',
+                                        fontWeight: 800,
+                                        fontSize: '0.9rem',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.2rem',
+                                        transition: 'all 0.15s ease'
+                                    }}
+                                >
+                                    <span>✍️</span>
+                                    <span>Custom</span>
+                                </button>
                             </div>
 
-                            {/* Step E: Primary CTA Button */}
-                            <button
-                                type="submit"
-                                style={{
-                                    width: '100%',
-                                    height: '50px',
-                                    background: 'var(--primary)',
-                                    color: '#FFFFFF',
-                                    border: 'none',
-                                    borderRadius: '10px',
-                                    fontWeight: 800,
-                                    fontSize: '1rem',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem',
-                                    boxShadow: '0 4px 14px rgba(5, 150, 105, 0.3)',
-                                    transition: 'all 0.15s ease'
-                                }}
-                                onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-hover)'}
-                                onMouseLeave={e => e.currentTarget.style.background = 'var(--primary)'}
-                                onMouseDown={e => e.currentTarget.style.transform = 'scale(0.985)'}
-                                onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-                            >
-                                <Smartphone size={18} />
-                                Send {currentTipVal} ETB with Telebirr ⚡
-                            </button>
-
-                            <div style={{ textAlign: 'center', marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
-                                <Lock size={12} /> Encrypted financial transaction • Direct to creator
-                            </div>
-                        </form>
-                    </div>
-                )}
-
-                {/* 3. PAYMENT PROCESSING / USSD PROMPT STATE */}
-                {tippingState === 'processing' && (
-                    <div style={{
-                        background: 'var(--card-bg)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
-                        padding: '3rem 2rem',
-                        textAlign: 'center',
-                        boxShadow: 'var(--shadow-md)'
-                    }}>
-                        <div style={{ width: '56px', height: '56px', borderRadius: '50%', border: '3px solid var(--border-color)', borderTopColor: 'var(--primary)', animation: 'spin 0.8s linear infinite', margin: '0 auto 1.5rem' }}></div>
-                        <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
-                            Connecting to Telebirr Gateway...
-                        </h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                            Securing your transaction session with Ethio Telecom rails.
-                        </p>
-                    </div>
-                )}
-
-                {tippingState === 'pin_prompt' && (
-                    <div style={{
-                        background: 'var(--card-bg)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
-                        padding: '2.5rem 2rem',
-                        textAlign: 'center',
-                        boxShadow: 'var(--shadow-md)'
-                    }}>
-                        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(0, 114, 206, 0.12)', color: '#0072CE', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-                            <Smartphone size={32} />
-                        </div>
-                        <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
-                            Check Your Phone 📱
-                        </h2>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
-                            A Telebirr USSD prompt has been sent to <strong>+251 {tipperPhone}</strong>. Enter your Telebirr PIN on your phone to complete the payment of <strong>{currentTipVal} ETB</strong>.
-                        </p>
-
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '9999px', background: 'var(--card-bg-subtle)', border: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.75rem' }}>
-                            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary)', animation: 'pulse 1.5s infinite' }}></span>
-                            Waiting for Telebirr PIN confirmation...
-                        </div>
-
-                        <div>
-                            <button
-                                type="button"
-                                onClick={() => setTippingState('idle')}
-                                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline' }}
-                            >
-                                Cancel / Change details
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {/* 4. SUCCESS RECEIPT STATE */}
-                {tippingState === 'success' && (
-                    <div style={{
-                        background: 'var(--card-bg)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
-                        padding: '2.5rem 2rem',
-                        textAlign: 'center',
-                        boxShadow: 'var(--shadow-md)'
-                    }}>
-                        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-                            <CheckCircle size={36} />
-                        </div>
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
-                            Tip Sent Successfully! 🎉
-                        </h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-                            Your support has been transferred directly to <strong>{creator.name}</strong>.
-                        </p>
-
-                        {/* Itemized Receipt */}
-                        <div style={{ background: 'var(--card-bg-subtle)', borderRadius: '12px', padding: '1.25rem', border: '1px solid var(--border-color)', marginBottom: '1.75rem', textAlign: 'left', fontSize: '0.85rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
-                                <span style={{ color: 'var(--text-muted)' }}>Amount Sent</span>
-                                <span style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.95rem' }}>{currentTipVal} ETB</span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
-                                <span style={{ color: 'var(--text-muted)' }}>Recipient</span>
-                                <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>{creator.name} (@{creator.username})</span>
-                            </div>
-                            {shoutOutMessage && (
-                                <div style={{ paddingTop: '0.65rem', borderTop: '1px solid var(--border-color)' }}>
-                                    <div style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Your Note:</div>
-                                    <div style={{ fontStyle: 'italic', color: 'var(--text-main)' }}>"{shoutOutMessage}"</div>
+                            {/* Custom Amount Field */}
+                            {isCustom && (
+                                <div style={{ position: 'relative', marginTop: '0.5rem' }}>
+                                    <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 800, color: 'var(--text-muted)' }}>ETB</span>
+                                    <input
+                                        type="number"
+                                        min="10"
+                                        max="50000"
+                                        placeholder="Enter custom ETB amount (min 10)"
+                                        value={customAmount}
+                                        onChange={(e) => setCustomAmount(e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.75rem 1rem 0.75rem 3.5rem',
+                                            border: '1.5px solid var(--primary)',
+                                            borderRadius: '8px',
+                                            background: 'var(--bg-color)',
+                                            color: 'var(--text-main)',
+                                            fontSize: '0.95rem',
+                                            fontWeight: 700,
+                                            boxSizing: 'border-box'
+                                        }}
+                                        required
+                                    />
                                 </div>
                             )}
                         </div>
 
-                        <Button
-                            variant="primary"
-                            size="md"
-                            className="btn-full"
-                            onClick={() => {
-                                setTippingState('idle');
-                                setShoutOutMessage('');
-                                setTipperPhone('');
+                        {/* Supporter Name & Anonymous Checkbox */}
+                        <div style={{ marginBottom: '1rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                                <label style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    Your Name (Optional)
+                                </label>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', cursor: 'pointer' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={isAnonymous}
+                                        onChange={(e) => setIsAnonymous(e.target.checked)}
+                                        style={{ accentColor: 'var(--primary)' }}
+                                    />
+                                    Tip Anonymously
+                                </label>
+                            </div>
+                            {!isAnonymous && (
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Dawit from Addis"
+                                    value={tipperName}
+                                    onChange={(e) => setTipperName(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        padding: '0.75rem 1rem',
+                                        border: '1px solid var(--border-color)',
+                                        borderRadius: '8px',
+                                        background: 'var(--bg-color)',
+                                        color: 'var(--text-main)',
+                                        fontSize: '0.9rem',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            )}
+                        </div>
+
+                        {/* Shoutout Message */}
+                        <div style={{ marginBottom: '1rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Shoutout Message (Optional)
+                            </label>
+                            <textarea
+                                rows={2}
+                                placeholder="Say something nice to support this creator..."
+                                value={shoutOutMessage}
+                                onChange={(e) => setShoutOutMessage(e.target.value)}
+                                maxLength={200}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.75rem 1rem',
+                                    border: '1px solid var(--border-color)',
+                                    borderRadius: '8px',
+                                    background: 'var(--bg-color)',
+                                    color: 'var(--text-main)',
+                                    fontSize: '0.9rem',
+                                    resize: 'none',
+                                    boxSizing: 'border-box'
+                                }}
+                            />
+                            {/* Quick Message Chips */}
+                            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginTop: '0.4rem' }}>
+                                {quickMessages.map((msg, i) => (
+                                    <button
+                                        key={i}
+                                        type="button"
+                                        onClick={() => setShoutOutMessage(msg)}
+                                        style={{
+                                            background: 'var(--bg-color)',
+                                            border: '1px solid var(--border-color)',
+                                            borderRadius: '6px',
+                                            padding: '0.25rem 0.5rem',
+                                            fontSize: '0.75rem',
+                                            color: 'var(--text-muted)',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        {msg}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Payment Method Selector */}
+                        <div style={{ marginBottom: '1.25rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Payment Method
+                            </label>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                                <div
+                                    onClick={() => setPaymentMethod('telebirr')}
+                                    style={{
+                                        padding: '0.75rem',
+                                        border: `1.5px solid ${paymentMethod === 'telebirr' ? 'var(--primary)' : 'var(--border-color)'}`,
+                                        borderRadius: '10px',
+                                        background: paymentMethod === 'telebirr' ? 'var(--primary-light)' : 'var(--bg-color)',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem'
+                                    }}
+                                >
+                                    <Smartphone size={20} color="var(--primary)" />
+                                    <div>
+                                        <div style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)' }}>Telebirr</div>
+                                        <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>USSD Push</div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    onClick={() => setPaymentMethod('chapa_checkout')}
+                                    style={{
+                                        padding: '0.75rem',
+                                        border: `1.5px solid ${paymentMethod === 'chapa_checkout' ? 'var(--primary)' : 'var(--border-color)'}`,
+                                        borderRadius: '10px',
+                                        background: paymentMethod === 'chapa_checkout' ? 'var(--primary-light)' : 'var(--bg-color)',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem'
+                                    }}
+                                >
+                                    <CreditCard size={20} color="var(--primary)" />
+                                    <div>
+                                        <div style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)' }}>Bank / Cards</div>
+                                        <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>CBE & Telebirr</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Phone Number Field for Telebirr */}
+                        {paymentMethod === 'telebirr' && (
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    Your Telebirr Phone Number
+                                </label>
+                                <div style={{ position: 'relative' }}>
+                                    <span style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 800, color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                                        🇪🇹 +251
+                                    </span>
+                                    <input
+                                        type="tel"
+                                        placeholder="09XXXXXXXX"
+                                        value={tipperPhone}
+                                        onChange={(e) => setTipperPhone(e.target.value.replace(/[^0-9]/g, ''))}
+                                        maxLength={10}
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.75rem 1rem 0.75rem 5.5rem',
+                                            border: '1px solid var(--border-color)',
+                                            borderRadius: '8px',
+                                            background: 'var(--bg-color)',
+                                            color: 'var(--text-main)',
+                                            fontSize: '0.95rem',
+                                            fontWeight: 700,
+                                            boxSizing: 'border-box'
+                                        }}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Send Gursha Button CTA */}
+                        <button
+                            type="submit"
+                            disabled={tippingState === 'processing'}
+                            style={{
+                                width: '100%',
+                                height: '50px',
+                                background: '#059669',
+                                color: '#FFFFFF',
+                                border: 'none',
+                                borderRadius: '10px',
+                                fontWeight: 800,
+                                fontSize: '1rem',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem',
+                                boxShadow: '0 4px 12px rgba(5, 150, 105, 0.25)',
+                                transition: 'all 0.15s ease'
                             }}
                         >
-                            Send Another Tip
-                        </Button>
-                    </div>
-                )}
+                            {tippingState === 'processing' ? (
+                                <RefreshCw size={20} style={{ animation: 'spin 1s linear infinite' }} />
+                            ) : (
+                                <>
+                                    <Coffee size={20} />
+                                    <span>Send {isCustom ? (customAmount || '0') : amount} ETB Gursha</span>
+                                </>
+                            )}
+                        </button>
 
-                {/* 5. ERROR / RETRY STATE */}
-                {tippingState === 'error' && (
-                    <div style={{
-                        background: 'var(--card-bg)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
-                        padding: '2.5rem 2rem',
-                        textAlign: 'center',
-                        boxShadow: 'var(--shadow-md)'
-                    }}>
-                        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--danger-light)', color: 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-                            <AlertCircle size={36} />
+                        <div style={{ textAlign: 'center', marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+                            <Lock size={12} />
+                            <span>256-bit encrypted checkout &bull; Operated by Birana Labs</span>
                         </div>
-                        <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
-                            Payment Not Completed
-                        </h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.75rem' }}>
-                            The Telebirr session timed out or was cancelled on the device. No funds were deducted.
+                    </form>
+                )}
+            </div>
+
+            {/* Social Share & QR Code Strip */}
+            <div style={{ width: '100%', maxWidth: '520px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.25rem', padding: '0 0.5rem' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)' }}>Share Page</span>
+                <div style={{ display: 'flex', gap: '0.4rem' }}>
+                    <button
+                        onClick={handleCopyLink}
+                        title="Copy Link"
+                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '0.4rem 0.6rem', color: 'var(--text-main)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.75rem', fontWeight: 600 }}
+                    >
+                        {copiedShare ? <Check size={14} color="#10B981" /> : <Copy size={14} />} Link
+                    </button>
+
+                    <a
+                        href={`https://t.me/share/url?url=${shareUrl}&text=${shareText}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Share on Telegram"
+                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '0.4rem 0.6rem', color: '#0088CC', textDecoration: 'none', fontSize: '0.75rem', fontWeight: 600 }}
+                    >
+                        Telegram
+                    </a>
+
+                    <a
+                        href={`https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Share on WhatsApp"
+                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '0.4rem 0.6rem', color: '#25D366', textDecoration: 'none', fontSize: '0.75rem', fontWeight: 600 }}
+                    >
+                        WhatsApp
+                    </a>
+
+                    <a
+                        href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Share on X"
+                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '0.4rem 0.6rem', color: 'var(--text-main)', textDecoration: 'none', fontSize: '0.75rem', fontWeight: 600 }}
+                    >
+                        X
+                    </a>
+
+                    <button
+                        onClick={handleNativeShare}
+                        title="More Sharing Options"
+                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '0.4rem 0.6rem', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                    >
+                        <Share2 size={14} />
+                    </button>
+                </div>
+            </div>
+
+            {/* QR CODE MODAL */}
+            {showQrModal && (
+                <div
+                    style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}
+                    onClick={() => setShowQrModal(false)}
+                >
+                    <div
+                        style={{ maxWidth: '380px', width: '100%', background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '2rem', textAlign: 'center', boxShadow: 'var(--shadow-lg)' }}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                            <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)' }}>Creator Tip QR Code</h3>
+                            <button onClick={() => setShowQrModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={18} /></button>
+                        </div>
+
+                        <div style={{ background: '#FFFFFF', padding: '1.25rem', borderRadius: '12px', display: 'inline-block', marginBottom: '1.25rem', border: '1px solid #E2E8F0' }}>
+                            {/* QR Code SVG / API Image */}
+                            <img
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://gurshapay.com/@${creator.username}&color=059669`}
+                                alt="Creator Tip QR Code"
+                                style={{ width: '180px', height: '180px', display: 'block' }}
+                            />
+                        </div>
+
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '0 0 1.25rem' }}>
+                            Scan to support <strong>@{creator.username}</strong> directly on GurshaPay
                         </p>
 
-                        <Button
-                            variant="primary"
-                            size="md"
-                            className="btn-full"
-                            onClick={() => setTippingState('idle')}
+                        <a
+                            href={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=https://gurshapay.com/@${creator.username}&color=059669`}
+                            download={`${creator.username}-gurshapay-qr.png`}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ textDecoration: 'none' }}
                         >
-                            Try Again
-                        </Button>
+                            <Button variant="primary" icon={Download} style={{ width: '100%' }}>
+                                Download High-Res QR
+                            </Button>
+                        </a>
                     </div>
-                )}
-            </main>
+                </div>
+            )}
         </div>
     );
 }
