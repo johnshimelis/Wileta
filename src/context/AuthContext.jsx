@@ -5,11 +5,18 @@ const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-// Axios instance with base URL & interceptors - DEFINED OUTSIDE TO PREVENT INFINITE INTERCEPTOR LOOP
-const api = axios.create({
-    baseURL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+const getApiBaseUrl = () => {
+    if (import.meta.env.VITE_API_URL) {
+        return import.meta.env.VITE_API_URL.replace(/\/$/, '') + '/api';
+    }
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:5000/api'
-        : 'https://wileta-backend.onrender.com/api',
+        : 'https://wileta-backend.onrender.com/api';
+};
+
+// Axios instance with base URL & interceptors
+const api = axios.create({
+    baseURL: getApiBaseUrl(),
 });
 
 api.interceptors.request.use(config => {
@@ -62,7 +69,18 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => {
+    const logout = async () => {
+        try {
+            await api.post('/auth/logout');
+        } catch (e) {}
+        localStorage.removeItem('token');
+        setUser(null);
+    };
+
+    const logoutAll = async () => {
+        try {
+            await api.post('/auth/logout-all');
+        } catch (e) {}
         localStorage.removeItem('token');
         setUser(null);
     };
@@ -73,6 +91,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         logout,
+        logoutAll,
         onboard,
         api
     };
