@@ -149,7 +149,8 @@ export default function PublicProfile() {
             });
 
             if (response.data && response.data.success) {
-                setTxRef(response.data.txRef);
+                const receivedTxRef = response.data.tx_ref || response.data.txRef;
+                setTxRef(receivedTxRef);
                 setTippingState('pin_prompt');
             } else {
                 showAlert(response.data?.message || "Failed to initialize Telebirr payment", "error");
