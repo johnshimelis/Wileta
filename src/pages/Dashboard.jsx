@@ -713,7 +713,7 @@ export default function Dashboard() {
 
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBottom: '1rem' }}>
                                 <span style={{ fontSize: '2.1rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                                    {isLoading ? '...' : metrics.pending_Number(balance || 0).toFixed(2)}
+                                    {isLoading ? '...' : Number(metrics?.pending_balance || metrics?.walletBalance || 0).toFixed(2)}
                                 </span>
                                 <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--primary)' }}>ETB</span>
                             </div>
