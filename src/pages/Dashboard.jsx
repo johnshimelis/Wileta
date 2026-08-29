@@ -1092,7 +1092,7 @@ export default function Dashboard() {
                                             </div>
                                         </div>
                                         <div style={{ fontWeight: 900, fontSize: '0.925rem', color: 'var(--primary)' }}>
-                                            {fan.totalTipped.toFixed(2)} ETB
+                                            {Number(fan?.totalContributed || fan?.totalTipped || fan?.total || 0).toFixed(2)} ETB
                                         </div>
                                     </div>
                                 ))}
