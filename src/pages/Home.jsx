@@ -232,7 +232,7 @@ export default function Home() {
             )}
 
             {/* ── HERO SECTION ────────────────────────────────────────── */}
-            <section style={{ position: 'relative', padding: '3rem 1rem 4rem', width: '100%', boxSizing: 'border-box', overflow: 'hidden', maxWidth: 'var(--container-max)', margin: '0 auto' }}>
+            <section style={{ position: 'relative', padding: '3rem 1rem 4rem', width: '100%', maxWidth: 'var(--container-max)', boxSizing: 'border-box', overflow: 'hidden', margin: '0 auto' }}>
                 <div className="hero-grid">
                     
                     {/* Left: Value Proposition */}
@@ -545,7 +545,7 @@ export default function Home() {
 
             {/* ── FINANCIAL SERVICES & BANK INTEGRATIONS (REAL LOGOS) ──── */}
             <section id="payouts" style={{ padding: '4.5rem 1.25rem', background: 'var(--card-bg)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
-                <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto' }}>
+                <div style={{ maxWidth: 'var(--container-max)', width: '100%', boxSizing: 'border-box', margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
                         <p style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--primary)', marginBottom: '0.35rem' }}>
                             National Financial Infrastructure
@@ -731,7 +731,7 @@ export default function Home() {
 
             {/* ── OBS LIVE STREAM OVERLAY SHOWCASE ─────────────────────── */}
             <section id="obs-alerts" style={{ padding: '5rem 1.25rem', background: 'var(--card-bg-subtle)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
-                <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto' }}>
+                <div style={{ maxWidth: 'var(--container-max)', width: '100%', boxSizing: 'border-box', margin: '0 auto' }}>
                     <div className="obs-grid">
                         <div>
                             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.25rem 0.7rem', borderRadius: '9999px', background: 'rgba(217, 119, 6, 0.1)', color: 'var(--secondary)', fontWeight: 800, fontSize: '0.775rem', marginBottom: '1rem', border: '1px solid rgba(217, 119, 6, 0.2)' }}>
@@ -836,7 +836,7 @@ export default function Home() {
             </section>
 
             {/* ── HOW GURSHAPAY WORKS ─────────────────────────────────── */}
-            <section id="how-it-works" style={{ padding: '5rem 1.25rem', maxWidth: 'var(--container-max)', margin: '0 auto' }}>
+            <section id="how-it-works" style={{ padding: '5rem 1.25rem', maxWidth: 'var(--container-max)', width: '100%', boxSizing: 'border-box', margin: '0 auto' }}>
                 <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
                     <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', letterSpacing: '0.06em' }}>3-Step Simplicity</span>
                     <h2 style={{ fontSize: '1.85rem', fontWeight: 800, marginTop: '0.35rem' }}>How GurshaPay Works</h2>
