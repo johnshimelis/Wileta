@@ -530,6 +530,88 @@ export default function Dashboard() {
                                 <VerifiedBlueTick size={24} title="GurshaPay Verified Creator" />
                             </h1>
                         </div>
+
+                {/* Handshake-Style Action Checklist */}
+                <div style={{
+                    background: 'var(--card-bg)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '14px',
+                    padding: '1.5rem',
+                    marginBottom: '1.75rem',
+                    boxShadow: 'var(--shadow-xs)'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        <div>
+                            <h3 style={{ fontSize: '1.05rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>
+                                Creator Monetization Checklist
+                            </h3>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                                Complete these steps to maximize your tip conversion
+                            </span>
+                        </div>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.2rem 0.6rem', borderRadius: '9999px', background: 'var(--primary-light)', color: 'var(--primary)' }}>
+                            {isVerified ? '3 of 3 Completed' : '2 of 3 Completed'}
+                        </span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem' }}>
+                        {/* Item 1: Payout Method */}
+                        <div 
+                            onClick={() => {
+                                const el = document.getElementById('payout-section');
+                                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease' }}
+                            onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
+                            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                                <CheckCircle size={18} color="var(--primary)" />
+                                <div>
+                                    <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)' }}>Set up payout rail</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Telebirr / Bank connected</div>
+                                </div>
+                            </div>
+                            <Badge variant="success" size="sm">Active</Badge>
+                        </div>
+
+                        {/* Item 2: KYC Identity */}
+                        <div 
+                            onClick={() => navigate('/kyc')}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease' }}
+                            onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
+                            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                                {isVerified ? <CheckCircle size={18} color="var(--primary)" /> : <ShieldCheck size={18} color="var(--warning)" />}
+                                <div>
+                                    <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)' }}>Verify National ID</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Fayda ID / Passport verification</div>
+                                </div>
+                            </div>
+                            <Badge variant={isVerified ? 'success' : 'warning'} size="sm">
+                                {isVerified ? 'Verified' : 'Required'}
+                            </Badge>
+                        </div>
+
+                        {/* Item 3: Public Page */}
+                        <div 
+                            onClick={copyToClipboard}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease' }}
+                            onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
+                            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                                <CheckCircle size={18} color="var(--primary)" />
+                                <div>
+                                    <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)' }}>Share your link</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>gurshapay.com/@{user?.username}</div>
+                                </div>
+                            </div>
+                            <Badge variant="primary" size="sm">Ready</Badge>
+                        </div>
+                    </div>
+                </div>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.25rem', marginBottom: 0 }}>
                             Real-time overview of your monetization and incoming Telebirr support.
                         </p>
@@ -1025,7 +1107,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* PAYOUT ROUTING & MULTI-BANK MANAGER */}
-                <div style={{
+                <div id="payout-section" style={{
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
                     borderRadius: '14px',

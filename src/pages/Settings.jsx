@@ -142,7 +142,7 @@ export default function Settings() {
                     </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '2rem' }}>
+                <div className="dashboard-two-col-grid">
                     {/* Left Column: Profile Info */}
                     <Card style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>{t('generalSettings')}</h3>

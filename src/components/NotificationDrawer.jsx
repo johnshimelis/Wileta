@@ -117,12 +117,9 @@ export default function NotificationDrawer() {
             </button>
 
             {isDrawerOpen && (
-                <div style={{
-                    position: 'absolute',
-                    top: 'calc(100% + 10px)',
-                    right: 0,
-                    width: '380px',
-                    maxWidth: 'calc(100vw - 2rem)',
+                <div 
+                className="notification-popover-menu" 
+                style={{
                     maxHeight: '490px',
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
@@ -132,7 +129,9 @@ export default function NotificationDrawer() {
                     display: 'flex',
                     flexDirection: 'column',
                     overflow: 'hidden'
-                }} onClick={(e) => e.stopPropagation()}>
+                }} 
+                onClick={(e) => e.stopPropagation()}
+            >
                     
                     {/* Header */}
                     <div style={{
