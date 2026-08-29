@@ -23,8 +23,14 @@ export const NotificationProvider = ({ children }) => {
         if (!user || !api) return;
         try {
             const res = await api.get('/notifications');
-            setDrawerNotifications(res.data);
-            setUnreadCount(res.data.filter(n => !n.isRead).length);
+            const list = Array.isArray(res.data) 
+                ? res.data 
+                : (res.data?.notifications || res.data?.data || []);
+            setDrawerNotifications(list);
+            const unread = res.data?.unreadCount !== undefined 
+                ? res.data.unreadCount 
+                : list.filter(n => !n.isRead && !n.read).length;
+            setUnreadCount(unread);
         } catch (error) {
             console.error('Failed to fetch backend notifications', error);
         }

@@ -378,8 +378,14 @@ export default function Dashboard() {
                 api.get('/dashboard/leaderboard').catch(() => ({ data: [] }))
             ]);
             setMetrics(metricsRes.data);
-            setTransactions(txRes.data);
-            setLeaderboard(leaderboardRes.data);
+            const txList = Array.isArray(txRes.data) 
+                ? txRes.data 
+                : (txRes.data?.transactions || []);
+            setTransactions(txList);
+            const lbList = Array.isArray(leaderboardRes.data) 
+                ? leaderboardRes.data 
+                : (leaderboardRes.data?.leaderboard || []);
+            setLeaderboard(lbList);
         } catch (error) {
             console.error("Error fetching dashboard data", error);
         }
@@ -478,7 +484,10 @@ export default function Dashboard() {
 
     // Filtered transactions
     const filteredTransactions = useMemo(() => {
-        return transactions.filter(tx => {
+        const list = Array.isArray(transactions) 
+            ? transactions 
+            : (transactions?.transactions || []);
+        return list.filter(tx => {
             if (txFilter === 'tips' && tx.type !== 'tip') return false;
             if (txFilter === 'withdrawals' && tx.type === 'tip') return false;
             if (searchQuery) {
