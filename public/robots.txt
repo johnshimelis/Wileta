@@ -1,0 +1,21 @@
+# GurshaPay Robots.txt
+User-agent: *
+Allow: /
+Allow: /privacy.html
+Allow: /delete-account.html
+Allow: /*
+
+# Disallow indexing of private dashboard and admin areas
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /settings
+Disallow: /settings/*
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /onboarding
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+
+Sitemap: https://gurshapay.com/sitemap.xml
