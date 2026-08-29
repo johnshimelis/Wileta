@@ -366,6 +366,48 @@ export default function PublicProfile() {
                         </div>
                     )}
                 </div>
+                {/* Creator Active Goal Widget (Polished, Non-Intrusive) */}
+                {creator.goal && (
+                    <div style={{
+                        background: 'var(--bg-color)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '14px',
+                        padding: '1rem 1.25rem',
+                        marginBottom: '1.5rem',
+                        textAlign: 'left'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                            <span style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                                <span>🎯</span> {creator.goal.title}
+                            </span>
+                            <span style={{ fontWeight: 800, fontSize: '0.8rem', color: '#059669', background: 'rgba(5, 150, 105, 0.1)', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
+                                {creator.goal.progressPercentage}%
+                            </span>
+                        </div>
+
+                        {creator.goal.description && (
+                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 0.65rem 0', lineHeight: 1.4 }}>
+                                {creator.goal.description}
+                            </p>
+                        )}
+
+                        {/* Progress Track */}
+                        <div style={{ width: '100%', height: '8px', background: 'var(--border-color)', borderRadius: '4px', overflow: 'hidden', marginBottom: '0.5rem' }}>
+                            <div style={{
+                                width: `${creator.goal.progressPercentage}%`,
+                                height: '100%',
+                                background: 'linear-gradient(90deg, #059669, #10B981)',
+                                borderRadius: '4px',
+                                transition: 'width 0.5s ease'
+                            }}></div>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)' }}>
+                            <span><strong>{(creator.goal.raisedAmount || 0).toLocaleString()} ETB</strong> raised</span>
+                            <span>Target: <strong>{creator.goal.targetAmount.toLocaleString()} ETB</strong></span>
+                        </div>
+                    </div>
+                )}
 
                 {/* SUCCESS STATE CELEBRATION */}
                 {tippingState === 'success' ? (
