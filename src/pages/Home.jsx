@@ -384,7 +384,7 @@ export default function Home() {
                                         </div>
 
                                         {/* Amount Chips */}
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '0.5rem', marginBottom: '0.75rem' }}>
                                             {[
                                                 { val: '50', icon: '☕' },
                                                 { val: '100', icon: '🍕' },
