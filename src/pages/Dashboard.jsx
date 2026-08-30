@@ -987,48 +987,67 @@ export default function Dashboard() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredTransactions.slice(0, 10).map((tx) => (
-                                            <tr key={tx._id} style={{ transition: 'background 0.12s ease' }}>
-                                                <td style={{ fontSize: '0.825rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                                                    {new Date(tx.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                                                </td>
-                                                <td>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                                                        <div style={{
-                                                            width: '30px',
-                                                            height: '30px',
-                                                            borderRadius: '50%',
-                                                            background: tx.type === 'tip' ? 'var(--success-light)' : 'var(--danger-light)',
-                                                            color: tx.type === 'tip' ? 'var(--success)' : 'var(--danger)',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            flexShrink: 0
-                                                        }}>
-                                                            {tx.type === 'tip' ? <ArrowDownRight size={15} /> : <ArrowUpRight size={15} />}
-                                                        </div>
-                                                        <div>
-                                                            <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-main)' }}>
-                                                                {tx.type === 'tip' ? maskPhone(tx.tipperPhone) : 'Withdrawal Request'}
+                                        {filteredTransactions.slice(0, 15).map((tx) => {
+                                            const isWithdrawal = tx.type === 'withdrawal';
+                                            const isSuccess = tx.status === 'success' || tx.status === 'COMPLETED' || tx.status === 'completed';
+                                            const isPending = tx.status === 'pending' || tx.status === 'REQUESTED' || tx.status === 'requested' || tx.status === 'PROCESSING';
+                                            const isRefunded = tx.status === 'refunded' || tx.status === 'REJECTED' || tx.status === 'rejected';
+
+                                            let methodLabel = '';
+                                            if (isWithdrawal) {
+                                                const destName = tx.bankName || (tx.payoutMethod === 'bank' ? 'Bank Account' : 'Telebirr');
+                                                const destAcc = tx.accountNumberMasked || tx.accountNumber || '';
+                                                methodLabel = `${destName}${destAcc ? ` (${destAcc})` : ''}`;
+                                            } else {
+                                                methodLabel = tx.supporterName && tx.supporterName !== 'Fan' ? tx.supporterName : (tx.tipperPhone ? maskPhone(tx.tipperPhone) : 'Supporter Tip');
+                                            }
+
+                                            return (
+                                                <tr key={tx._id || tx.id} style={{ transition: 'background 0.12s ease' }}>
+                                                    <td style={{ fontSize: '0.825rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                                                        {new Date(tx.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                    </td>
+                                                    <td>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                                                            <div style={{
+                                                                width: '30px',
+                                                                height: '30px',
+                                                                borderRadius: '50%',
+                                                                background: isWithdrawal ? (isRefunded ? 'rgba(239, 68, 68, 0.12)' : (isPending ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.12)')) : 'var(--success-light)',
+                                                                color: isWithdrawal ? (isRefunded ? 'var(--danger)' : (isPending ? '#D97706' : 'var(--success)')) : 'var(--success)',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                flexShrink: 0
+                                                            }}>
+                                                                {isWithdrawal ? <ArrowUpRight size={15} /> : <ArrowDownRight size={15} />}
                                                             </div>
-                                                            {tx.message && (
-                                                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                                                    "{tx.message}"
+                                                            <div>
+                                                                <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-main)' }}>
+                                                                    {isWithdrawal ? `Withdrawal • ${methodLabel}` : methodLabel}
                                                                 </div>
-                                                            )}
+                                                                {tx.message && (
+                                                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                                        "{tx.message}"
+                                                                    </div>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: tx.type === 'tip' ? 'var(--success)' : 'var(--text-main)', whiteSpace: 'nowrap' }}>
-                                                    {tx.type === 'tip' ? '+' : '-'}{Number(tx?.amount || tx?.grossAmount || 0).toFixed(2)} ETB
-                                                </td>
-                                                <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-                                                    <Badge variant={tx.status === 'success' ? 'success' : tx.status === 'pending' ? 'warning' : 'danger'} size="sm">
-                                                        {tx.status}
-                                                    </Badge>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    </td>
+                                                    <td style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: isWithdrawal ? 'var(--text-main)' : 'var(--success)', whiteSpace: 'nowrap' }}>
+                                                        {isWithdrawal ? '-' : '+'}{Number(tx.amount || tx.grossAmount || 0).toFixed(2)} ETB
+                                                    </td>
+                                                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
+                                                        <Badge
+                                                            variant={isSuccess ? 'success' : isPending ? 'warning' : 'danger'}
+                                                            size="sm"
+                                                        >
+                                                            {isSuccess ? 'Completed' : isPending ? 'Pending' : 'Rejected'}
+                                                        </Badge>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
