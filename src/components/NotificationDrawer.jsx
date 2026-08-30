@@ -1,6 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useNotification } from '../context/NotificationContext';
-import { Bell, X, CheckCheck, Trash2, Smartphone, ShieldCheck, Heart, Sparkles, Check } from 'lucide-react';
+import {
+    Bell, X, CheckCheck, Trash2, Smartphone, ShieldCheck, Heart, Sparkles,
+    Check, CheckCircle2, Clock, RefreshCw, AlertTriangle, Wallet, Lock, Building
+} from 'lucide-react';
 
 export default function NotificationDrawer() {
     const {
@@ -40,24 +43,93 @@ export default function NotificationDrawer() {
     const getNotificationTypeIcon = (notif) => {
         const title = (notif.title || '').toLowerCase();
         const msg = (notif.message || '').toLowerCase();
+        const type = (notif.type || '').toLowerCase();
 
-        if (title.includes('tip') || msg.includes('tip') || msg.includes('etb')) {
+        // 1. Telebirr Transfer / Completed Payout with Telebirr
+        if ((title.includes('completed') || title.includes('sent') || title.includes('success')) && (title.includes('telebirr') || msg.includes('telebirr'))) {
             return (
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(5, 150, 105, 0.12)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Sparkles size={16} />
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                    <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
             );
         }
-        if (title.includes('kyc') || title.includes('verified') || title.includes('security')) {
+
+        // 2. Bank Transfer / Completed Payout with Bank
+        if ((title.includes('completed') || title.includes('sent') || title.includes('success')) && (title.includes('bank') || msg.includes('cbe') || msg.includes('bank') || msg.includes('abyssinia') || msg.includes('awash') || msg.includes('dashen'))) {
             return (
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(2, 132, 199, 0.12)', color: '#0284C7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <ShieldCheck size={16} />
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                    <CheckCircle2 size={18} />
                 </div>
             );
         }
+
+        // 3. Withdrawal Completed / Payment Sent (General Success)
+        if (title.includes('completed') || title.includes('sent') || title.includes('transferred') || (type === 'success' && title.includes('withdraw'))) {
+            return (
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.14)', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                    <CheckCircle2 size={18} />
+                </div>
+            );
+        }
+
+        // 4. Withdrawal Approved / In Processing on Chapa
+        if (title.includes('approved') || title.includes('processing') || msg.includes('processing on the payment network') || msg.includes('approved by admin')) {
+            return (
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(2, 132, 199, 0.12)', color: '#0284C7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(2, 132, 199, 0.2)' }}>
+                    <RefreshCw size={17} />
+                </div>
+            );
+        }
+
+        // 5. Withdrawal Pending / Requested
+        if (title.includes('pending') || title.includes('requested') || title.includes('review') || msg.includes('pending review') || title.includes('withdraw')) {
+            return (
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(245, 158, 11, 0.14)', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(245, 158, 11, 0.25)' }}>
+                    <Clock size={17} />
+                </div>
+            );
+        }
+
+        // 6. Tip Received / Fan Support
+        if (title.includes('tip') || title.includes('received') || title.includes('supporter') || msg.includes('tip of') || msg.includes('tipped you') || msg.includes('support')) {
+            return (
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                    <Heart size={17} fill="var(--primary)" fillOpacity={0.2} />
+                </div>
+            );
+        }
+
+        // 7. Security / Login / Account changes
+        if (title.includes('login') || title.includes('device') || title.includes('password') || title.includes('security') || title.includes('auth')) {
+            return (
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(99, 102, 241, 0.12)', color: '#6366F1', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(99, 102, 241, 0.2)' }}>
+                    <ShieldCheck size={18} />
+                </div>
+            );
+        }
+
+        // 8. KYC / Profile Verification
+        if (title.includes('kyc') || title.includes('verified') || title.includes('identity') || title.includes('onboarding')) {
+            return (
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(14, 165, 233, 0.12)', color: '#0EA5E9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(14, 165, 233, 0.2)' }}>
+                    <Sparkles size={17} />
+                </div>
+            );
+        }
+
+        // 9. Rejections / Failures / Warnings
+        if (type === 'danger' || type === 'warning' || title.includes('failed') || title.includes('rejected') || title.includes('refund')) {
+            return (
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(239, 68, 68, 0.12)', color: '#EF4444', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                    <AlertTriangle size={17} />
+                </div>
+            );
+        }
+
+        // 10. Default General
         return (
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(217, 119, 6, 0.12)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Bell size={16} />
+            <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'var(--card-bg-subtle)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--border-color)' }}>
+                <Bell size={17} />
             </div>
         );
     };
