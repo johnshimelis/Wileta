@@ -724,7 +724,7 @@ export default function Dashboard() {
 
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBottom: '1rem' }}>
                                 <span style={{ fontSize: '2.1rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                                    {isLoading ? '...' : Number(metrics?.pending_balance || metrics?.walletBalance || 0).toFixed(2)}
+                                    {isLoading ? '...' : Number(metrics?.availableBalance ?? metrics?.walletBalance ?? metrics?.wallet_balance ?? 0).toFixed(2)}
                                 </span>
                                 <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--primary)' }}>ETB</span>
                             </div>
@@ -736,7 +736,7 @@ export default function Dashboard() {
                                 size="sm"
                                 icon={ArrowUpRight}
                                 iconPosition="right"
-                                disabled={metrics.pending_balance <= 0 || !isVerified}
+                                disabled={Number(metrics?.availableBalance ?? metrics?.walletBalance ?? metrics?.wallet_balance ?? 0) <= 0 || !isVerified}
                                 onClick={() => setShowWithdrawModal(true)}
                             >
                                 {t('withdrawFunds')}
@@ -989,9 +989,10 @@ export default function Dashboard() {
                                     <tbody>
                                         {filteredTransactions.slice(0, 15).map((tx) => {
                                             const isWithdrawal = tx.type === 'withdrawal';
-                                            const isSuccess = tx.status === 'success' || tx.status === 'COMPLETED' || tx.status === 'completed';
-                                            const isPending = tx.status === 'pending' || tx.status === 'REQUESTED' || tx.status === 'requested' || tx.status === 'PROCESSING';
-                                            const isRefunded = tx.status === 'refunded' || tx.status === 'REJECTED' || tx.status === 'rejected';
+                                            const rawStatus = (tx.rawStatus || tx.status || '').toUpperCase();
+                                            const isSuccess = rawStatus === 'SUCCESS' || rawStatus === 'COMPLETED';
+                                            const isPending = rawStatus === 'PENDING' || rawStatus === 'REQUESTED' || rawStatus === 'PROCESSING';
+                                            const isRefunded = rawStatus === 'REFUNDED' || rawStatus === 'REJECTED' || rawStatus === 'FAILED' || rawStatus === 'CANCELLED';
 
                                             let methodLabel = '';
                                             if (isWithdrawal) {
@@ -1042,7 +1043,7 @@ export default function Dashboard() {
                                                             variant={isSuccess ? 'success' : isPending ? 'warning' : 'danger'}
                                                             size="sm"
                                                         >
-                                                            {isSuccess ? 'Completed' : isPending ? 'Pending' : 'Rejected'}
+                                                            {isSuccess ? 'Completed' : isPending ? 'Pending' : (rawStatus === 'REFUNDED' || rawStatus === 'REJECTED' ? 'Rejected & Refunded' : 'Failed')}
                                                         </Badge>
                                                     </td>
                                                 </tr>
