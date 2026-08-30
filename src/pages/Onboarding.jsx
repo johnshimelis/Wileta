@@ -118,10 +118,14 @@ export default function Onboarding() {
                             <input
                                 type="tel"
                                 className="form-input"
-                                placeholder="0911000000"
+                                placeholder="911000000"
                                 value={telebirrInfo}
-                                onChange={(e) => setTelebirrInfo(e.target.value.replace(/[^0-9]/g, ''))}
-                                maxLength={10}
+                                onChange={(e) => {
+                                    let val = e.target.value.replace(/[^0-9]/g, '');
+                                    if (val.startsWith('0')) val = val.substring(1);
+                                    setTelebirrInfo(val.slice(0, 9));
+                                }}
+                                maxLength={9}
                                 style={{ paddingLeft: '5.5rem' }}
                                 required
                             />

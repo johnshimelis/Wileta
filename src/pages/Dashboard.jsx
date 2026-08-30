@@ -188,7 +188,15 @@ const WithdrawModal = ({
                             </div>
                             <div>
                                 <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-main)' }}>Telebirr Wallet</div>
-                                <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>{user?.telebirr_number || user?.phone}</div>
+                                <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
+                                    {(() => {
+                                        const raw = (user?.telebirr_number || user?.phone || '').toString();
+                                        if (raw.startsWith('+251')) return raw;
+                                        if (raw.startsWith('0') && raw.length === 10) return `+251 ${raw.substring(1)}`;
+                                        if (raw.length === 9) return `+251 ${raw}`;
+                                        return raw || 'No phone configured';
+                                    })()}
+                                </div>
                             </div>
                         </div>
                     )}
@@ -395,7 +403,8 @@ export default function Dashboard() {
     const handleWithdraw = async (bankAccount) => {
         setIsWithdrawing(true);
         try {
-            const withdrawAmount = withdrawType === 'all' ? metrics.pending_balance : Number(customAmount);
+            const availableBal = Number(metrics.availableBalance || metrics.walletBalance || metrics.wallet_balance || metrics.pending_balance || 0);
+            const withdrawAmount = withdrawType === 'all' ? availableBal : Number(customAmount);
             const payload = {
                 amount: withdrawAmount,
                 type: withdrawType
@@ -406,7 +415,7 @@ export default function Dashboard() {
             const res = await api.post('/dashboard/withdraw', payload);
             setWithdrawSuccessData({
                 amount: withdrawAmount,
-                newBalance: res.data.newBalance !== undefined ? res.data.newBalance : metrics.pending_balance - withdrawAmount
+                newBalance: res.data.newBalance !== undefined ? res.data.newBalance : Math.max(0, availableBal - withdrawAmount)
             });
             setShowWithdrawModal(false);
             setCustomAmount('');
@@ -1327,7 +1336,7 @@ export default function Dashboard() {
                     onClose={() => setShowWithdrawModal(false)}
                     withdrawType={withdrawType}
                     setWithdrawType={setWithdrawType}
-                    balance={metrics.pending_balance}
+                    balance={metrics?.availableBalance || metrics?.walletBalance || metrics?.wallet_balance || metrics?.pending_balance || 0}
                     customAmount={customAmount}
                     setCustomAmount={setCustomAmount}
                     onConfirm={handleWithdraw}

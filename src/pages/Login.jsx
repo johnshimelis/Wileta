@@ -385,13 +385,21 @@ export default function Login() {
                                             <label className="form-label">{t('phoneNumber')}</label>
                                             <div style={{ display: 'flex', gap: '0.5rem' }}>
                                                 <div className="input-group" style={{ flex: 1 }}>
-                                                    <Phone size={18} />
+                                                    <span style={{ position: 'absolute', left: '0.85rem', fontWeight: 800, color: 'var(--text-muted)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                                        <span>🇪🇹</span> +251
+                                                    </span>
                                                     <input
                                                         type="tel"
                                                         className="form-input"
-                                                        placeholder="0911000000"
+                                                        placeholder="911000000"
                                                         value={phone}
-                                                        onChange={e => setPhone(e.target.value)}
+                                                        onChange={e => {
+                                                            let val = e.target.value.replace(/[^0-9]/g, '');
+                                                            if (val.startsWith('0')) val = val.substring(1);
+                                                            setPhone(val.slice(0, 9));
+                                                        }}
+                                                        maxLength={9}
+                                                        style={{ paddingLeft: '5.5rem' }}
                                                         required
                                                     />
                                                 </div>

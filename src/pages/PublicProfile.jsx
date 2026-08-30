@@ -155,9 +155,13 @@ export default function PublicProfile() {
 
     const handleTip = async (e) => {
         e.preventDefault();
-        const phoneRegex = /^(09|07)\d{8}$/;
-        if (paymentMethod === 'telebirr' && !phoneRegex.test(tipperPhone)) {
-            showAlert("Please enter a valid 10-digit Ethiopian mobile number (09XXXXXXXX or 07XXXXXXXX)", "error");
+        let cleanPhone = (tipperPhone || '').replace(/[^0-9]/g, '');
+        if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.substring(1);
+        if (cleanPhone.startsWith('251') && cleanPhone.length === 12) cleanPhone = cleanPhone.substring(3);
+
+        const phoneRegex = /^[97]\d{8}$/;
+        if (paymentMethod === 'telebirr' && !phoneRegex.test(cleanPhone)) {
+            showAlert("Please enter a valid 9-digit Ethiopian mobile number starting with 9 (e.g. 967432143)", "error");
             return;
         }
         setTippingState('processing');
@@ -174,7 +178,7 @@ export default function PublicProfile() {
             const response = await api.post('/payments/initialize-tip', {
                 creatorId: creator.id,
                 creatorUsername: creator.username,
-                tipperPhone: tipperPhone || '0900000000',
+                tipperPhone: cleanPhone || '900000000',
                 supporterName: isAnonymous ? 'Anonymous' : (tipperName || 'Fan'),
                 isAnonymous,
                 amount: finalAmount,
@@ -456,7 +460,7 @@ export default function PublicProfile() {
                             Check your mobile phone! 📱
                         </h2>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
-                            A Telebirr USSD PIN prompt has been sent to <strong>{tipperPhone}</strong>. Please enter your PIN on your phone to complete your tip of <strong>{isCustom ? customAmount : amount} ETB</strong>.
+                            A Telebirr USSD PIN prompt has been sent to <strong>+251 {tipperPhone}</strong>. Please enter your PIN on your phone to complete your tip of <strong>{isCustom ? customAmount : amount} ETB</strong>.
                         </p>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--primary)', fontSize: '0.85rem', fontWeight: 700, marginBottom: '1.5rem' }}>
                             <RefreshCw size={16} style={{ animation: 'spin 2s linear infinite' }} /> Waiting for PIN confirmation...
@@ -705,10 +709,14 @@ export default function PublicProfile() {
                                     </span>
                                     <input
                                         type="tel"
-                                        placeholder="09XXXXXXXX"
+                                        placeholder="967432143"
                                         value={tipperPhone}
-                                        onChange={(e) => setTipperPhone(e.target.value.replace(/[^0-9]/g, ''))}
-                                        maxLength={10}
+                                        onChange={(e) => {
+                                            let val = e.target.value.replace(/[^0-9]/g, '');
+                                            if (val.startsWith('0')) val = val.substring(1);
+                                            setTipperPhone(val.slice(0, 9));
+                                        }}
+                                        maxLength={9}
                                         style={{
                                             width: '100%',
                                             padding: '0.75rem 1rem 0.75rem 5.5rem',
