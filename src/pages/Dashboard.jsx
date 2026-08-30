@@ -316,7 +316,7 @@ const WithdrawSuccessModal = ({ data, onClose, user }) => {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
                         <span style={{ color: 'var(--text-muted)' }}>Payout Method</span>
-                        <span style={{ fontWeight: 700, textTransform: 'capitalize', color: 'var(--text-main)' }}>{user?.payoutMethod || 'telebirr'}</span>
+                        <span style={{ fontWeight: 700, textTransform: 'capitalize', color: 'var(--text-main)' }}>{data?.payoutMethod || user?.payoutMethod || 'telebirr'}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.65rem', borderTop: '1px solid var(--border-color)' }}>
                         <span style={{ color: 'var(--text-muted)' }}>Remaining Balance</span>
@@ -406,10 +406,11 @@ export default function Dashboard() {
         setIsWithdrawing(true);
         try {
             const availableBal = Number(metrics.availableBalance || metrics.walletBalance || metrics.wallet_balance || metrics.pending_balance || 0);
-            const withdrawAmount = withdrawType === 'all' ? availableBal : Number(customAmount);
+            const activePayoutMethod = bankAccount ? 'bank' : (user?.payoutMethod || 'telebirr');
             const payload = {
                 amount: withdrawAmount,
-                type: withdrawType
+                type: withdrawType,
+                payoutMethod: activePayoutMethod
             };
             if (bankAccount) {
                 payload.bankAccount = bankAccount;
@@ -417,7 +418,8 @@ export default function Dashboard() {
             const res = await api.post('/dashboard/withdraw', payload);
             setWithdrawSuccessData({
                 amount: withdrawAmount,
-                newBalance: res.data.newBalance !== undefined ? res.data.newBalance : Math.max(0, availableBal - withdrawAmount)
+                newBalance: res.data.newBalance !== undefined ? res.data.newBalance : Math.max(0, availableBal - withdrawAmount),
+                payoutMethod: activePayoutMethod
             });
             setShowWithdrawModal(false);
             setCustomAmount('');
