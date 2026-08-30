@@ -80,22 +80,10 @@ const getBankInitials = (name) => {
 
 const WithdrawModal = ({
     show, onClose, withdrawType, setWithdrawType, balance,
-    customAmount, setCustomAmount, onConfirm, loading, user
+    customAmount, setCustomAmount, onConfirm, user
 }) => {
     const { t } = useLanguage();
-    const [step, setStep] = useState(1); // 1 = Details, 2 = Password Authorization Prompt
     const [selectedBankIndex, setSelectedBankIndex] = useState(0);
-    const [accountPassword, setAccountPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-
-    // Reset step & password whenever modal is closed or reopened
-    useEffect(() => {
-        if (!show) {
-            setStep(1);
-            setAccountPassword('');
-            setShowPassword(false);
-        }
-    }, [show]);
 
     if (!show) return null;
 
@@ -103,30 +91,12 @@ const WithdrawModal = ({
     const isBank = user?.payoutMethod === 'bank';
     const availableBal = Number(balance || 0);
     const amountVal = withdrawType === 'all' ? availableBal : Number(customAmount || 0);
-    const transferFee = amountVal <= 15 ? 0 : 15.00;
-    const amountToSend = Math.max(0, amountVal - transferFee);
 
-    const selectedBank = banks[selectedBankIndex];
-    const destinationLabel = isBank 
-        ? `${selectedBank?.bankName || 'Bank'} (${selectedBank?.accountNumber ? `•••• ${selectedBank.accountNumber.slice(-4)}` : 'Configured'})`
-        : `Telebirr (${(() => {
-            const raw = (user?.telebirr_number || user?.phone || '').toString();
-            if (raw.startsWith('+251')) return raw;
-            if (raw.startsWith('0') && raw.length === 10) return `+251 ${raw.substring(1)}`;
-            return raw || 'Configured';
-        })()})`;
-
-    const handleProceedToPassword = () => {
+    const handleConfirmClick = () => {
         if (amountVal <= 0 || isNaN(amountVal)) return;
         if (amountVal > availableBal) return;
         if (isBank && banks.length === 0) return;
-        setStep(2);
-    };
-
-    const handleFinalConfirm = (e) => {
-        if (e) e.preventDefault();
-        if (!accountPassword.trim()) return;
-        onConfirm(isBank ? selectedBank : null, accountPassword);
+        onConfirm(isBank ? banks[selectedBankIndex] : null);
     };
 
     return (
@@ -160,261 +130,277 @@ const WithdrawModal = ({
                 }}
                 onClick={e => e.stopPropagation()}
             >
-                {step === 1 ? (
-                    /* STEP 1: Amount & Destination Selection */
-                    <>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <Wallet size={22} />
-                                </div>
-                                <div>
-                                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>{t('withdrawFunds')}</h3>
-                                    <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>Available: {availableBal.toFixed(2)} ETB</span>
-                                </div>
-                            </div>
-                            <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}>
-                                <X size={20} />
-                            </button>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Wallet size={22} />
                         </div>
+                        <div>
+                            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>{t('withdrawFunds')}</h3>
+                            <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>Available: {availableBal.toFixed(2)} ETB</span>
+                        </div>
+                    </div>
+                    <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}>
+                        <X size={20} />
+                    </button>
+                </div>
 
-                        {/* Destination */}
-                        <div style={{ marginBottom: '1.25rem' }}>
-                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                Payout Destination
-                            </label>
-                            {isBank ? (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                    {banks.length > 0 ? banks.map((bank, index) => {
-                                        const logo = bank.logoUrl || getBankLogo(bank.bankName);
-                                        return (
-                                            <div
-                                                key={index}
-                                                onClick={() => setSelectedBankIndex(index)}
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '0.75rem',
-                                                    padding: '0.85rem 1rem',
-                                                    border: '1.5px solid ' + (selectedBankIndex === index ? 'var(--primary)' : 'var(--border-color)'),
-                                                    borderRadius: '10px',
-                                                    cursor: 'pointer',
-                                                    background: selectedBankIndex === index ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                                    transition: 'all 0.15s ease'
-                                                }}
-                                            >
-                                                <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
-                                                    {logo ? (
-                                                        <img src={logo} alt={bank.bankName} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                                                    ) : (
-                                                        <div style={{ width: '100%', height: '100%', borderRadius: '6px', background: getBankColor(bank.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.75rem' }}>
-                                                            {getBankInitials(bank.bankName)}
-                                                        </div>
-                                                    )}
+                {/* Destination */}
+                <div style={{ marginBottom: '1.25rem' }}>
+                    <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Payout Destination
+                    </label>
+                    {isBank ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            {banks.length > 0 ? banks.map((bank, index) => {
+                                const logo = bank.logoUrl || getBankLogo(bank.bankName);
+                                return (
+                                    <div
+                                        key={index}
+                                        onClick={() => setSelectedBankIndex(index)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            padding: '0.85rem 1rem',
+                                            border: '1.5px solid ' + (selectedBankIndex === index ? 'var(--primary)' : 'var(--border-color)'),
+                                            borderRadius: '10px',
+                                            cursor: 'pointer',
+                                            background: selectedBankIndex === index ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                    >
+                                        <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
+                                            {logo ? (
+                                                <img src={logo} alt={bank.bankName} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                            ) : (
+                                                <div style={{ width: '100%', height: '100%', borderRadius: '6px', background: getBankColor(bank.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.75rem' }}>
+                                                    {getBankInitials(bank.bankName)}
                                                 </div>
-                                                <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-                                                    <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{bank.bankName}</div>
-                                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                                        {bank.accountNumber} {bank.accountHolderName ? `• ${bank.accountHolderName}` : ''}
-                                                    </div>
-                                                </div>
-                                                {selectedBankIndex === index && <CheckCircle size={18} color="var(--primary)" />}
-                                            </div>
-                                        );
-                                    }) : (
-                                        <p style={{ color: 'var(--danger)', fontSize: '0.85rem' }}>No bank accounts configured.</p>
-                                    )}
-                                </div>
-                            ) : (
-                                <div style={{ padding: '0.85rem 1rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                    <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
-                                        <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                                    </div>
-                                    <div>
-                                        <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-main)' }}>Telebirr Wallet</div>
-                                        <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
-                                            {(() => {
-                                                const raw = (user?.telebirr_number || user?.phone || '').toString();
-                                                if (raw.startsWith('+251')) return raw;
-                                                if (raw.startsWith('0') && raw.length === 10) return `+251 ${raw.substring(1)}`;
-                                                if (raw.length === 9) return `+251 ${raw}`;
-                                                return raw || 'No phone configured';
-                                            })()}
+                                            )}
                                         </div>
+                                        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                                            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{bank.bankName}</div>
+                                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                {bank.accountNumber} {bank.accountHolderName ? `• ${bank.accountHolderName}` : ''}
+                                            </div>
+                                        </div>
+                                        {selectedBankIndex === index && <CheckCircle size={18} color="var(--primary)" />}
                                     </div>
-                                </div>
+                                );
+                            }) : (
+                                <p style={{ color: 'var(--danger)', fontSize: '0.85rem' }}>No bank accounts configured.</p>
                             )}
                         </div>
-
-                        {/* Amount Option */}
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                Withdrawal Amount
-                            </label>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                                <button
-                                    type="button"
-                                    onClick={() => setWithdrawType('all')}
-                                    style={{
-                                        padding: '0.75rem',
-                                        borderRadius: '8px',
-                                        border: '1.5px solid ' + (withdrawType === 'all' ? 'var(--primary)' : 'var(--border-color)'),
-                                        background: withdrawType === 'all' ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                        color: withdrawType === 'all' ? 'var(--primary)' : 'var(--text-main)',
-                                        fontWeight: 700,
-                                        fontSize: '0.85rem',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.15s ease'
-                                    }}
-                                >
-                                    Full Balance ({availableBal.toFixed(2)} ETB)
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setWithdrawType('custom')}
-                                    style={{
-                                        padding: '0.75rem',
-                                        borderRadius: '8px',
-                                        border: '1.5px solid ' + (withdrawType === 'custom' ? 'var(--primary)' : 'var(--border-color)'),
-                                        background: withdrawType === 'custom' ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                        color: withdrawType === 'custom' ? 'var(--primary)' : 'var(--text-main)',
-                                        fontWeight: 700,
-                                        fontSize: '0.85rem',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.15s ease'
-                                    }}
-                                >
-                                    Custom Amount
-                                </button>
+                    ) : (
+                        <div style={{ padding: '0.85rem 1rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
+                                <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                             </div>
-
-                            {withdrawType === 'custom' && (
-                                <div className="input-group">
-                                    <span style={{ position: 'absolute', left: '1rem', fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.85rem' }}>ETB</span>
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        placeholder="0.00"
-                                        className="form-input"
-                                        value={customAmount}
-                                        onChange={(e) => setCustomAmount(e.target.value)}
-                                        style={{ paddingLeft: '3.5rem' }}
-                                        autoFocus
-                                    />
-                                </div>
-                            )}
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '0.75rem' }}>
-                            <Button variant="secondary" size="md" onClick={onClose}>
-                                Cancel
-                            </Button>
-                            <Button
-                                variant="primary"
-                                size="md"
-                                disabled={availableBal <= 0 || (isBank && banks.length === 0) || (withdrawType === 'custom' && (!customAmount || Number(customAmount) <= 0))}
-                                onClick={handleProceedToPassword}
-                            >
-                                Confirm Payout →
-                            </Button>
-                        </div>
-                    </>
-                ) : (
-                    /* STEP 2: Dedicated Password Authorization Prompt Modal */
-                    <form onSubmit={handleFinalConfirm}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <Lock size={22} />
-                                </div>
-                                <div>
-                                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>Authorize Payout</h3>
-                                    <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>Security verification required</span>
+                            <div>
+                                <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-main)' }}>Telebirr Wallet</div>
+                                <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
+                                    {(() => {
+                                        const raw = (user?.telebirr_number || user?.phone || '').toString();
+                                        if (raw.startsWith('+251')) return raw;
+                                        if (raw.startsWith('0') && raw.length === 10) return `+251 ${raw.substring(1)}`;
+                                        if (raw.length === 9) return `+251 ${raw}`;
+                                        return raw || 'No phone configured';
+                                    })()}
                                 </div>
                             </div>
-                            <button type="button" onClick={() => setStep(1)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}>
-                                <X size={20} />
-                            </button>
                         </div>
+                    )}
+                </div>
 
-                        {/* Summary breakdown card */}
-                        <div style={{ background: 'var(--card-bg-subtle)', borderRadius: '12px', padding: '1rem 1.15rem', border: '1px solid var(--border-color)', marginBottom: '1.35rem', fontSize: '0.85rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
-                                <span style={{ color: 'var(--text-muted)' }}>Withdrawal Amount</span>
-                                <span style={{ fontWeight: 800, color: 'var(--text-main)' }}>{amountVal.toFixed(2)} ETB</span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
-                                <span style={{ color: 'var(--text-muted)' }}>Transfer Fee</span>
-                                <span style={{ fontWeight: 700, color: transferFee === 0 ? 'var(--success)' : 'var(--text-main)' }}>
-                                    {transferFee === 0 ? '0.00 ETB (Free)' : `${transferFee.toFixed(2)} ETB`}
-                                </span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
-                                <span style={{ color: 'var(--text-muted)' }}>Destination</span>
-                                <span style={{ fontWeight: 700, color: 'var(--primary)' }}>{destinationLabel}</span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.45rem', borderTop: '1px dashed var(--border-color)', marginTop: '0.45rem' }}>
-                                <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>Net Disbursement</span>
-                                <span style={{ fontWeight: 800, color: 'var(--success)', fontSize: '1rem' }}>{amountToSend.toFixed(2)} ETB</span>
-                            </div>
-                        </div>
+                {/* Amount Option */}
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Withdrawal Amount
+                    </label>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                        <button
+                            type="button"
+                            onClick={() => setWithdrawType('all')}
+                            style={{
+                                padding: '0.75rem',
+                                borderRadius: '8px',
+                                border: '1.5px solid ' + (withdrawType === 'all' ? 'var(--primary)' : 'var(--border-color)'),
+                                background: withdrawType === 'all' ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                color: withdrawType === 'all' ? 'var(--primary)' : 'var(--text-main)',
+                                fontWeight: 700,
+                                fontSize: '0.85rem',
+                                cursor: 'pointer',
+                                transition: 'all 0.15s ease'
+                            }}
+                        >
+                            Full Balance ({availableBal.toFixed(2)} ETB)
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setWithdrawType('custom')}
+                            style={{
+                                padding: '0.75rem',
+                                borderRadius: '8px',
+                                border: '1.5px solid ' + (withdrawType === 'custom' ? 'var(--primary)' : 'var(--border-color)'),
+                                background: withdrawType === 'custom' ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                color: withdrawType === 'custom' ? 'var(--primary)' : 'var(--text-main)',
+                                fontWeight: 700,
+                                fontSize: '0.85rem',
+                                cursor: 'pointer',
+                                transition: 'all 0.15s ease'
+                            }}
+                        >
+                            Custom Amount
+                        </button>
+                    </div>
 
-                        {/* Password Prompt Input */}
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                Enter Account Password
-                            </label>
-                            <div style={{ position: 'relative' }}>
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Enter your account password"
-                                    className="form-input"
-                                    value={accountPassword}
-                                    onChange={(e) => setAccountPassword(e.target.value)}
-                                    style={{ paddingRight: '2.75rem', width: '100%', boxSizing: 'border-box' }}
-                                    autoFocus
-                                    required
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(prev => !prev)}
-                                    style={{
-                                        position: 'absolute',
-                                        right: '0.75rem',
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        background: 'none',
-                                        border: 'none',
-                                        color: 'var(--text-muted)',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }}
-                                >
-                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                </button>
-                            </div>
-                            <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)', marginTop: '0.35rem', display: 'block' }}>
-                                Please enter your login password to confirm and authorize this payout.
-                            </span>
+                    {withdrawType === 'custom' && (
+                        <div className="input-group">
+                            <span style={{ position: 'absolute', left: '1rem', fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.85rem' }}>ETB</span>
+                            <input
+                                type="number"
+                                min="1"
+                                placeholder="0.00"
+                                className="form-input"
+                                value={customAmount}
+                                onChange={(e) => setCustomAmount(e.target.value)}
+                                style={{ paddingLeft: '3.5rem' }}
+                                autoFocus
+                            />
                         </div>
+                    )}
+                </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '0.75rem' }}>
-                            <Button type="button" variant="secondary" size="md" onClick={() => setStep(1)}>
-                                ← Back
-                            </Button>
-                            <Button
-                                type="submit"
-                                variant="primary"
-                                size="md"
-                                loading={loading}
-                                disabled={!accountPassword.trim() || loading}
-                            >
-                                Authorize & Withdraw
-                            </Button>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '0.75rem' }}>
+                    <Button variant="secondary" size="md" onClick={onClose}>
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="primary"
+                        size="md"
+                        disabled={availableBal <= 0 || (isBank && banks.length === 0) || (withdrawType === 'custom' && (!customAmount || Number(customAmount) <= 0))}
+                        onClick={handleConfirmClick}
+                    >
+                        Confirm Payout
+                    </Button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const PasswordModal = ({ show, onClose, onConfirm, loading }) => {
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+
+    useEffect(() => {
+        if (show) {
+            setPassword('');
+            setShowPassword(false);
+        }
+    }, [show]);
+
+    if (!show) return null;
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!password.trim()) return;
+        onConfirm(password);
+    };
+
+    return (
+        <div
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'rgba(9, 9, 11, 0.75)',
+                zIndex: 9999,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backdropFilter: 'blur(6px)',
+                padding: '1rem'
+            }}
+            onClick={onClose}
+        >
+            <div
+                style={{
+                    background: 'var(--card-bg)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '16px',
+                    maxWidth: '380px',
+                    width: '100%',
+                    padding: '2rem 1.75rem',
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
+                    boxSizing: 'border-box'
+                }}
+                onClick={e => e.stopPropagation()}
+            >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Lock size={20} />
                         </div>
-                    </form>
-                )}
+                        <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>
+                            Confirm Password
+                        </h3>
+                    </div>
+                    <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}>
+                        <X size={20} />
+                    </button>
+                </div>
+
+                <form onSubmit={handleSubmit}>
+                    <div style={{ position: 'relative', marginBottom: '1.25rem' }}>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter account password"
+                            className="form-input"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            style={{ paddingRight: '2.5rem', width: '100%', boxSizing: 'border-box' }}
+                            autoFocus
+                            required
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(prev => !prev)}
+                            style={{
+                                position: 'absolute',
+                                right: '0.75rem',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                background: 'none',
+                                border: 'none',
+                                color: 'var(--text-muted)',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center'
+                            }}
+                        >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '0.75rem' }}>
+                        <Button type="button" variant="secondary" size="md" onClick={onClose}>
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            size="md"
+                            loading={loading}
+                            disabled={!password.trim() || loading}
+                        >
+                            Confirm
+                        </Button>
+                    </div>
+                </form>
             </div>
         </div>
     );
@@ -486,6 +472,8 @@ export default function Dashboard() {
     const [isWithdrawing, setIsWithdrawing] = useState(false);
     const [alert, setAlert] = useState(null);
     const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [pendingWithdrawBank, setPendingWithdrawBank] = useState(null);
     const [withdrawType, setWithdrawType] = useState('all');
     const [customAmount, setCustomAmount] = useState('');
     const [withdrawSuccessData, setWithdrawSuccessData] = useState(null);
@@ -546,6 +534,12 @@ export default function Dashboard() {
         setIsLoading(false);
     };
 
+    const handleRequestPassword = (bankAccount) => {
+        setPendingWithdrawBank(bankAccount);
+        setShowWithdrawModal(false);
+        setShowPasswordModal(true);
+    };
+
     const handleWithdraw = async (bankAccount, password) => {
         setIsWithdrawing(true);
         try {
@@ -575,12 +569,13 @@ export default function Dashboard() {
                 payload.bankAccount = bankAccount;
             }
             const res = await api.post('/dashboard/withdraw', payload);
+            setShowPasswordModal(false);
+            setPendingWithdrawBank(null);
             setWithdrawSuccessData({
                 amount: withdrawAmount,
                 newBalance: res.data.newBalance !== undefined ? res.data.newBalance : Math.max(0, availableBal - withdrawAmount),
                 payoutMethod: activePayoutMethod
             });
-            setShowWithdrawModal(false);
             setCustomAmount('');
             fetchDashboardData();
         } catch (error) {
@@ -1578,9 +1573,19 @@ export default function Dashboard() {
                     balance={metrics?.availableBalance || metrics?.walletBalance || metrics?.wallet_balance || metrics?.pending_balance || 0}
                     customAmount={customAmount}
                     setCustomAmount={setCustomAmount}
-                    onConfirm={handleWithdraw}
-                    loading={isWithdrawing}
+                    onConfirm={handleRequestPassword}
                     user={user}
+                />
+
+                {/* Password Modal Prompt */}
+                <PasswordModal
+                    show={showPasswordModal}
+                    onClose={() => {
+                        setShowPasswordModal(false);
+                        setPendingWithdrawBank(null);
+                    }}
+                    onConfirm={(pwd) => handleWithdraw(pendingWithdrawBank, pwd)}
+                    loading={isWithdrawing}
                 />
 
                 {/* Withdraw Success Modal */}
