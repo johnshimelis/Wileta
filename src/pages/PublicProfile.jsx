@@ -266,13 +266,13 @@ export default function PublicProfile() {
     }
 
     return (
-        <div style={{ minHeight: '100vh', background: 'var(--bg-color)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1.5rem 1rem', boxSizing: 'border-box' }}>
+        <div style={{ minHeight: '100vh', background: 'var(--bg-color)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem 0.75rem 3rem 0.75rem', boxSizing: 'border-box' }}>
             {alert && <TopAlert message={alert.message} type={alert.type} />}
 
             {/* Top Navigation Controls */}
-            <div style={{ width: '100%', maxWidth: '520px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+            <div style={{ width: '100%', maxWidth: '480px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', padding: '0 0.25rem' }}>
                 <Logo size="small" />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                     <button
                         onClick={() => setShowQrModal(true)}
                         style={{
@@ -299,11 +299,11 @@ export default function PublicProfile() {
             {/* Main Creator Card */}
             <div style={{
                 width: '100%',
-                maxWidth: '520px',
+                maxWidth: '480px',
                 background: 'var(--card-bg)',
                 border: '1px solid var(--border-color)',
-                borderRadius: '20px',
-                padding: '2rem 1.75rem',
+                borderRadius: '16px',
+                padding: '1.5rem 1.15rem',
                 boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)',
                 boxSizing: 'border-box'
             }}>
@@ -775,13 +775,16 @@ export default function PublicProfile() {
             </div>
 
             {/* Social Share & QR Code Strip */}
-            <div style={{ width: '100%', maxWidth: '520px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.25rem', padding: '0 0.5rem' }}>
-                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)' }}>Share Page</span>
-                <div style={{ display: 'flex', gap: '0.4rem' }}>
+            <div style={{ width: '100%', maxWidth: '480px', marginTop: '1.25rem', padding: '0 0.25rem', boxSizing: 'border-box' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Share Page</span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Support creator</span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr) auto', gap: '0.4rem', width: '100%' }}>
                     <button
                         onClick={handleCopyLink}
                         title="Copy Link"
-                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '0.4rem 0.6rem', color: 'var(--text-main)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.75rem', fontWeight: 600 }}
+                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: 'var(--text-main)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
                     >
                         {copiedShare ? <Check size={14} color="#10B981" /> : <Copy size={14} />} Link
                     </button>
@@ -791,7 +794,7 @@ export default function PublicProfile() {
                         target="_blank"
                         rel="noreferrer"
                         title="Share on Telegram"
-                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '0.4rem 0.6rem', color: '#0088CC', textDecoration: 'none', fontSize: '0.75rem', fontWeight: 600 }}
+                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: '#0088CC', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
                     >
                         Telegram
                     </a>
@@ -801,7 +804,7 @@ export default function PublicProfile() {
                         target="_blank"
                         rel="noreferrer"
                         title="Share on WhatsApp"
-                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '0.4rem 0.6rem', color: '#25D366', textDecoration: 'none', fontSize: '0.75rem', fontWeight: 600 }}
+                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: '#25D366', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
                     >
                         WhatsApp
                     </a>
@@ -811,7 +814,7 @@ export default function PublicProfile() {
                         target="_blank"
                         rel="noreferrer"
                         title="Share on X"
-                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '0.4rem 0.6rem', color: 'var(--text-main)', textDecoration: 'none', fontSize: '0.75rem', fontWeight: 600 }}
+                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: 'var(--text-main)', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
                     >
                         X
                     </a>
@@ -819,9 +822,9 @@ export default function PublicProfile() {
                     <button
                         onClick={handleNativeShare}
                         title="More Sharing Options"
-                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '0.4rem 0.6rem', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.65rem', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}
                     >
-                        <Share2 size={14} />
+                        <Share2 size={15} />
                     </button>
                 </div>
             </div>

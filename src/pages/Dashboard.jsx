@@ -170,9 +170,11 @@ const WithdrawModal = ({
                                                 </div>
                                             )}
                                         </div>
-                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                                             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{bank.bankName}</div>
-                                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{bank.accountNumber} • {bank.accountHolderName}</div>
+                                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                {bank.accountNumber} {bank.accountHolderName ? `• ${bank.accountHolderName}` : ''}
+                                            </div>
                                         </div>
                                         {selectedBankIndex === index && <CheckCircle size={18} color="var(--primary)" />}
                                     </div>
