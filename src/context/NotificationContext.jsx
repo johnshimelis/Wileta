@@ -51,41 +51,54 @@ export const NotificationProvider = ({ children }) => {
     const markAsRead = async (id) => {
         if (!api) return;
 
-        // OPTIMISTIC UPDATE: Hide instantly
-        setDrawerNotifications(prev => prev.filter(n => n._id !== id));
+        // OPTIMISTIC UPDATE: Mark item as read
+        setDrawerNotifications(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n));
         setUnreadCount(prev => Math.max(0, prev - 1));
 
         try {
-            await api.delete(`/notifications/${id}`);
-            await fetchNotifications();
+            await api.put(`/notifications/${id}/read`);
         } catch (error) {
-            console.error('Failed to permanently delete notification', error);
-            // Fallback for older backend
-            try { await api.put(`/notifications/${id}/read`); } catch (e) { }
+            console.error('Failed to mark notification as read', error);
+            try { await api.post(`/notifications/${id}/read`); } catch (e) { }
+        }
+    };
+
+    const dismissNotification = async (id) => {
+        if (!api) return;
+
+        // OPTIMISTIC UPDATE: Remove item from list
+        setDrawerNotifications(prev => {
+            const target = prev.find(n => n._id === id);
+            if (target && !target.isRead) {
+                setUnreadCount(u => Math.max(0, u - 1));
+            }
+            return prev.filter(n => n._id !== id);
+        });
+
+        try {
+            await api.delete(`/notifications/${id}`);
+        } catch (error) {
+            console.error('Failed to delete notification', error);
         }
     };
 
     const markAllAsRead = async () => {
         if (!api || unreadCount === 0) return;
 
-        const currentUnread = drawerNotifications.filter(n => !n.isRead);
-
         // OPTIMISTIC UPDATE: Mark all instantly
         setDrawerNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
         setUnreadCount(0);
 
         try {
-            await api.post('/notifications/mark-all-read');
-            await fetchNotifications();
+            await api.put('/notifications/read-all');
         } catch (error) {
             console.error('Failed to mark all notifications as read', error);
-            try { await Promise.all(currentUnread.map(n => api.put(`/notifications/${n._id}/read`))); } catch (e) { }
+            try { await api.post('/notifications/mark-all-read'); } catch (e) { }
         }
     };
 
     const deleteAllNotifications = async () => {
         if (!api || drawerNotifications.length === 0) return;
-        const currentNotifs = [...drawerNotifications];
 
         // OPTIMISTIC UPDATE: Clear instantly
         setDrawerNotifications([]);
@@ -93,15 +106,8 @@ export const NotificationProvider = ({ children }) => {
 
         try {
             await api.delete('/notifications');
-            await fetchNotifications();
         } catch (error) {
             console.error('Bulk delete failed', error);
-            try {
-                await Promise.all(currentNotifs.map(n => api.delete(`/notifications/${n._id}`)));
-            } catch (e) {
-                console.error('Individual deletes failed too', e);
-                try { await Promise.all(currentNotifs.map(n => api.put(`/notifications/${n._id}/read`))); } catch (err) { }
-            }
         }
     };
 
@@ -143,6 +149,7 @@ export const NotificationProvider = ({ children }) => {
             drawerNotifications,
             unreadCount,
             markAsRead,
+            dismissNotification,
             markAllAsRead,
             deleteAllNotifications,
             getIcon,

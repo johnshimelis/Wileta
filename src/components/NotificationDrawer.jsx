@@ -5,7 +5,7 @@ import { Bell, X, CheckCheck, Trash2, Smartphone, ShieldCheck, Heart, Sparkles, 
 export default function NotificationDrawer() {
     const {
         drawerNotifications, unreadCount,
-        markAsRead, markAllAsRead, deleteAllNotifications, getIcon
+        markAsRead, dismissNotification, markAllAsRead, deleteAllNotifications, getIcon
     } = useNotification();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const toggleDrawer = () => setIsDrawerOpen(prev => !prev);
@@ -226,7 +226,7 @@ export default function NotificationDrawer() {
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            markAsRead(notif._id);
+                                            dismissNotification(notif._id);
                                         }}
                                         style={{
                                             position: 'absolute',

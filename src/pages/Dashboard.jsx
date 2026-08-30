@@ -406,6 +406,20 @@ export default function Dashboard() {
         setIsWithdrawing(true);
         try {
             const availableBal = Number(metrics.availableBalance || metrics.walletBalance || metrics.wallet_balance || metrics.pending_balance || 0);
+            const withdrawAmount = withdrawType === 'all' ? availableBal : Number(customAmount);
+
+            if (!withdrawAmount || isNaN(withdrawAmount) || withdrawAmount <= 0) {
+                setAlert({ message: "Please specify a valid withdrawal amount.", type: "error" });
+                setIsWithdrawing(false);
+                return;
+            }
+
+            if (withdrawAmount > availableBal) {
+                setAlert({ message: `Insufficient balance. Available: ${availableBal.toFixed(2)} ETB.`, type: "error" });
+                setIsWithdrawing(false);
+                return;
+            }
+
             const activePayoutMethod = bankAccount ? 'bank' : (user?.payoutMethod || 'telebirr');
             const payload = {
                 amount: withdrawAmount,
@@ -425,7 +439,8 @@ export default function Dashboard() {
             setCustomAmount('');
             fetchDashboardData();
         } catch (error) {
-            setAlert({ message: error.response?.data?.error || "Withdrawal failed", type: "error" });
+            console.error("Withdrawal error:", error);
+            setAlert({ message: error.response?.data?.error || error.message || "Withdrawal failed", type: "error" });
         }
         setIsWithdrawing(false);
     };
