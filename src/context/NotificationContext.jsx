@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { X, CheckCircle, AlertCircle, Info, Bell, XCircle } from 'lucide-react';
+import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext';
+import { soundFx } from '../utils/soundFx';
 
 const NotificationContext = createContext();
 
@@ -36,16 +38,70 @@ export const NotificationProvider = ({ children }) => {
         }
     };
 
-    // Poll periodically or fetch on user change
+    // Real-time WebSocket connection + 30s background sync
     useEffect(() => {
-        if (user && api) {
-            fetchNotifications();
-            const interval = setInterval(fetchNotifications, 60000); // Poll every 60s
-            return () => clearInterval(interval);
-        } else {
+        if (!user || !api) {
             setDrawerNotifications([]);
             setUnreadCount(0);
+            return;
         }
+
+        fetchNotifications();
+
+        const socketBaseUrl = import.meta.env.VITE_API_URL 
+            ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') 
+            : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:5000'
+                : 'https://wileta-backend.onrender.com');
+
+        const socket = io(socketBaseUrl, {
+            transports: ['websocket', 'polling'],
+            reconnectionAttempts: 5,
+            timeout: 10000
+        });
+
+        const userId = (user._id || user.id)?.toString();
+
+        socket.on('connect', () => {
+            if (userId) {
+                socket.emit('join', userId);
+            }
+        });
+
+        socket.on('new_notification', (data) => {
+            // On-the-fly badge and list update without reload!
+            setUnreadCount(prev => prev + 1);
+
+            setDrawerNotifications(prev => {
+                const exists = prev.some(n => (data._id && n._id === data._id));
+                if (exists) return prev;
+                return [{
+                    _id: data._id || `live-${Date.now()}`,
+                    title: data.title || 'New Notification',
+                    message: data.body || data.message || '',
+                    category: data.category || 'system',
+                    type: data.type || 'info',
+                    isRead: false,
+                    createdAt: data.createdAt || new Date().toISOString()
+                }, ...prev];
+            });
+
+            try { soundFx.playPop(); } catch (e) {}
+
+            triggerNotification({
+                title: data.title || 'GurshaPay Alert',
+                message: data.body || data.message || '',
+                type: data.type || 'info',
+                duration: 5000
+            });
+        });
+
+        const interval = setInterval(fetchNotifications, 30000);
+
+        return () => {
+            socket.disconnect();
+            clearInterval(interval);
+        };
     }, [user, api]);
 
     const markAsRead = async (id) => {
