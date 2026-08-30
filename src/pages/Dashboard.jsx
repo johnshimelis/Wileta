@@ -6,7 +6,7 @@ import {
     TrendingUp, AlertTriangle, ShieldCheck, XCircle, User,
     ExternalLink, Menu, X, Smartphone, Upload, Edit2, AlertCircle, Sparkles,
     Search, Filter, ArrowRight, Share2, DollarSign, Building, RefreshCw, QrCode,
-    Zap, Check
+    Zap, Check, Eye, EyeOff, ChevronDown
 } from 'lucide-react';
 import TopAlert from '../components/TopAlert';
 import NotificationDrawer from '../components/NotificationDrawer';
@@ -84,6 +84,8 @@ const WithdrawModal = ({
 }) => {
     const { t } = useLanguage();
     const [selectedBankIndex, setSelectedBankIndex] = useState(0);
+    const [accountPassword, setAccountPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     if (!show) return null;
 
@@ -205,7 +207,7 @@ const WithdrawModal = ({
                 </div>
 
                 {/* Amount Option */}
-                <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{ marginBottom: '1.25rem' }}>
                     <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         Withdrawal Amount
                     </label>
@@ -263,6 +265,44 @@ const WithdrawModal = ({
                     )}
                 </div>
 
+                {/* Account Password Confirmation */}
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Account Password
+                    </label>
+                    <div style={{ position: 'relative' }}>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter account password to authorize"
+                            className="form-input"
+                            value={accountPassword}
+                            onChange={(e) => setAccountPassword(e.target.value)}
+                            style={{ paddingRight: '2.75rem', width: '100%', boxSizing: 'border-box' }}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(prev => !prev)}
+                            style={{
+                                position: 'absolute',
+                                right: '0.75rem',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                background: 'none',
+                                border: 'none',
+                                color: 'var(--text-muted)',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center'
+                            }}
+                        >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                    </div>
+                    <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)', marginTop: '0.35rem', display: 'block' }}>
+                        Enter your login password to confirm and authorize this payout.
+                    </span>
+                </div>
+
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '0.75rem' }}>
                     <Button variant="secondary" size="md" onClick={onClose}>
                         Cancel
@@ -271,8 +311,8 @@ const WithdrawModal = ({
                         variant="primary"
                         size="md"
                         loading={loading}
-                        disabled={balance <= 0 || (isBank && banks.length === 0) || (withdrawType === 'custom' && (!customAmount || Number(customAmount) <= 0))}
-                        onClick={() => onConfirm(isBank ? banks[selectedBankIndex] : null)}
+                        disabled={balance <= 0 || (isBank && banks.length === 0) || (withdrawType === 'custom' && (!customAmount || Number(customAmount) <= 0)) || !accountPassword.trim()}
+                        onClick={() => onConfirm(isBank ? banks[selectedBankIndex] : null, accountPassword)}
                     >
                         Confirm Payout
                     </Button>
@@ -356,6 +396,12 @@ export default function Dashboard() {
     // Transaction filter tab: 'all' | 'tips' | 'withdrawals'
     const [txFilter, setTxFilter] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+    const [txPageSize, setTxPageSize] = useState(10);
+    const [visibleTxCount, setVisibleTxCount] = useState(10);
+
+    useEffect(() => {
+        setVisibleTxCount(txPageSize);
+    }, [txFilter, txPageSize]);
 
     // Payout settings
     const [payoutMethod, setPayoutMethod] = useState(user?.payoutMethod || 'telebirr');
@@ -402,7 +448,7 @@ export default function Dashboard() {
         setIsLoading(false);
     };
 
-    const handleWithdraw = async (bankAccount) => {
+    const handleWithdraw = async (bankAccount, password) => {
         setIsWithdrawing(true);
         try {
             const availableBal = Number(metrics.availableBalance || metrics.walletBalance || metrics.wallet_balance || metrics.pending_balance || 0);
@@ -424,7 +470,8 @@ export default function Dashboard() {
             const payload = {
                 amount: withdrawAmount,
                 type: withdrawType,
-                payoutMethod: activePayoutMethod
+                payoutMethod: activePayoutMethod,
+                password: password
             };
             if (bankAccount) {
                 payload.bankAccount = bankAccount;
@@ -925,59 +972,89 @@ export default function Dashboard() {
                                 </span>
                             </div>
 
-                            {/* Filter Tabs */}
-                            <div style={{ display: 'flex', background: 'var(--card-bg-subtle)', padding: '0.2rem', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
-                                <button
-                                    onClick={() => setTxFilter('all')}
-                                    style={{
-                                        border: 'none',
-                                        background: txFilter === 'all' ? 'var(--card-bg)' : 'transparent',
-                                        color: txFilter === 'all' ? 'var(--primary)' : 'var(--text-muted)',
-                                        padding: '0.3rem 0.7rem',
-                                        borderRadius: '4px',
-                                        fontSize: '0.75rem',
-                                        fontWeight: 700,
-                                        cursor: 'pointer',
-                                        boxShadow: txFilter === 'all' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
-                                        transition: 'all 0.12s ease'
-                                    }}
-                                >
-                                    All
-                                </button>
-                                <button
-                                    onClick={() => setTxFilter('tips')}
-                                    style={{
-                                        border: 'none',
-                                        background: txFilter === 'tips' ? 'var(--card-bg)' : 'transparent',
-                                        color: txFilter === 'tips' ? 'var(--primary)' : 'var(--text-muted)',
-                                        padding: '0.3rem 0.7rem',
-                                        borderRadius: '4px',
-                                        fontSize: '0.75rem',
-                                        fontWeight: 700,
-                                        cursor: 'pointer',
-                                        boxShadow: txFilter === 'tips' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
-                                        transition: 'all 0.12s ease'
-                                    }}
-                                >
-                                    Tips
-                                </button>
-                                <button
-                                    onClick={() => setTxFilter('withdrawals')}
-                                    style={{
-                                        border: 'none',
-                                        background: txFilter === 'withdrawals' ? 'var(--card-bg)' : 'transparent',
-                                        color: txFilter === 'withdrawals' ? 'var(--primary)' : 'var(--text-muted)',
-                                        padding: '0.3rem 0.7rem',
-                                        borderRadius: '4px',
-                                        fontSize: '0.75rem',
-                                        fontWeight: 700,
-                                        cursor: 'pointer',
-                                        boxShadow: txFilter === 'withdrawals' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
-                                        transition: 'all 0.12s ease'
-                                    }}
-                                >
-                                    Payouts
-                                </button>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                                {/* Show items count selector */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', background: 'var(--card-bg-subtle)', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid var(--border-color)', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)' }}>
+                                    <span>Show:</span>
+                                    {[10, 20, 30, 50].map((num) => (
+                                        <button
+                                            key={num}
+                                            onClick={() => {
+                                                setTxPageSize(num);
+                                                setVisibleTxCount(num);
+                                            }}
+                                            style={{
+                                                border: 'none',
+                                                background: txPageSize === num ? 'var(--card-bg)' : 'transparent',
+                                                color: txPageSize === num ? 'var(--primary)' : 'var(--text-muted)',
+                                                padding: '0.2rem 0.45rem',
+                                                borderRadius: '4px',
+                                                fontSize: '0.75rem',
+                                                fontWeight: 800,
+                                                cursor: 'pointer',
+                                                boxShadow: txPageSize === num ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                                                transition: 'all 0.12s ease'
+                                            }}
+                                        >
+                                            {num}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Filter Tabs */}
+                                <div style={{ display: 'flex', background: 'var(--card-bg-subtle)', padding: '0.2rem', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
+                                    <button
+                                        onClick={() => setTxFilter('all')}
+                                        style={{
+                                            border: 'none',
+                                            background: txFilter === 'all' ? 'var(--card-bg)' : 'transparent',
+                                            color: txFilter === 'all' ? 'var(--primary)' : 'var(--text-muted)',
+                                            padding: '0.3rem 0.7rem',
+                                            borderRadius: '4px',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 700,
+                                            cursor: 'pointer',
+                                            boxShadow: txFilter === 'all' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                                            transition: 'all 0.12s ease'
+                                        }}
+                                    >
+                                        All
+                                    </button>
+                                    <button
+                                        onClick={() => setTxFilter('tips')}
+                                        style={{
+                                            border: 'none',
+                                            background: txFilter === 'tips' ? 'var(--card-bg)' : 'transparent',
+                                            color: txFilter === 'tips' ? 'var(--primary)' : 'var(--text-muted)',
+                                            padding: '0.3rem 0.7rem',
+                                            borderRadius: '4px',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 700,
+                                            cursor: 'pointer',
+                                            boxShadow: txFilter === 'tips' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                                            transition: 'all 0.12s ease'
+                                        }}
+                                    >
+                                        Tips
+                                    </button>
+                                    <button
+                                        onClick={() => setTxFilter('withdrawals')}
+                                        style={{
+                                            border: 'none',
+                                            background: txFilter === 'withdrawals' ? 'var(--card-bg)' : 'transparent',
+                                            color: txFilter === 'withdrawals' ? 'var(--primary)' : 'var(--text-muted)',
+                                            padding: '0.3rem 0.7rem',
+                                            borderRadius: '4px',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 700,
+                                            cursor: 'pointer',
+                                            boxShadow: txFilter === 'withdrawals' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                                            transition: 'all 0.12s ease'
+                                        }}
+                                    >
+                                        Payouts
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -1004,7 +1081,7 @@ export default function Dashboard() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredTransactions.slice(0, 15).map((tx) => {
+                                        {filteredTransactions.slice(0, visibleTxCount).map((tx) => {
                                             const isWithdrawal = tx.type === 'withdrawal';
                                             const rawStatus = (tx.rawStatus || tx.status || '').toUpperCase();
                                             const isSuccess = rawStatus === 'SUCCESS' || rawStatus === 'COMPLETED';
@@ -1068,6 +1145,31 @@ export default function Dashboard() {
                                         })}
                                     </tbody>
                                 </table>
+
+                                {visibleTxCount < filteredTransactions.length && (
+                                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.25rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border-color)' }}>
+                                        <button
+                                            onClick={() => setVisibleTxCount(prev => Math.min(filteredTransactions.length, prev + txPageSize))}
+                                            style={{
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '0.5rem',
+                                                padding: '0.55rem 1.25rem',
+                                                background: 'var(--card-bg-subtle)',
+                                                border: '1px solid var(--border-color)',
+                                                borderRadius: '8px',
+                                                color: 'var(--text-main)',
+                                                fontWeight: 700,
+                                                fontSize: '0.825rem',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.15s ease'
+                                            }}
+                                        >
+                                            <span>See More ({filteredTransactions.length - visibleTxCount} remaining)</span>
+                                            <ChevronDown size={15} />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
