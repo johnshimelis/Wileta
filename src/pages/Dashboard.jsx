@@ -16,6 +16,7 @@ import { useLanguage } from '../context/LanguageContext';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import ForcedMobileKYCModal from '../components/ForcedMobileKYCModal';
 
 // Official Verified Blue Tick SVG Emblem
 const VerifiedBlueTick = ({ size = 24, title = "Verified Creator" }) => (
@@ -473,6 +474,7 @@ export default function Dashboard() {
     const [alert, setAlert] = useState(null);
     const [showWithdrawModal, setShowWithdrawModal] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [showForcedKYCModal, setShowForcedKYCModal] = useState(false);
     const [pendingWithdrawBank, setPendingWithdrawBank] = useState(null);
     const [withdrawType, setWithdrawType] = useState('all');
     const [customAmount, setCustomAmount] = useState('');
@@ -770,7 +772,7 @@ export default function Dashboard() {
 
                         {/* Item 2: KYC Identity */}
                         <div 
-                            onClick={() => { if (!isVerified) navigate('/kyc'); }}
+                            onClick={() => { if (!isVerified) setShowForcedKYCModal(true); }}
                             style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 0.85rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease' }}
                             onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
                             onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
@@ -832,8 +834,8 @@ export default function Dashboard() {
                             </div>
                         </div>
                         {user?.kycStatus !== 'pending' && (
-                            <Button variant="primary" size="sm" onClick={() => navigate('/kyc')}>
-                                Verify Now
+                            <Button variant="primary" size="sm" onClick={() => setShowForcedKYCModal(true)}>
+                                Verify on Mobile
                             </Button>
                         )}
                     </div>
@@ -893,8 +895,14 @@ export default function Dashboard() {
                                 size="sm"
                                 icon={ArrowUpRight}
                                 iconPosition="right"
-                                disabled={Number(metrics?.availableBalance ?? metrics?.walletBalance ?? metrics?.wallet_balance ?? 0) <= 0 || !isVerified}
-                                onClick={() => setShowWithdrawModal(true)}
+                                disabled={Number(metrics?.availableBalance ?? metrics?.walletBalance ?? metrics?.wallet_balance ?? 0) <= 0}
+                                onClick={() => {
+                                    if (!isVerified) {
+                                        setShowForcedKYCModal(true);
+                                    } else {
+                                        setShowWithdrawModal(true);
+                                    }
+                                }}
                             >
                                 {t('withdrawFunds')}
                             </Button>
@@ -1649,6 +1657,14 @@ export default function Dashboard() {
                     data={withdrawSuccessData}
                     onClose={() => setWithdrawSuccessData(null)}
                     user={user}
+                />
+
+                {/* Forced Mobile KYC Verification Modal */}
+                <ForcedMobileKYCModal
+                    isOpen={showForcedKYCModal}
+                    onClose={() => setShowForcedKYCModal(false)}
+                    user={user}
+                    onRefreshStatus={fetchDashboardData}
                 />
             </main>
         </div>

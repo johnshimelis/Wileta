@@ -24,7 +24,7 @@ export default function Logo({ size = 'medium', className = '', showText = true 
             }}
         >
             <img 
-                src="/gp-logo-transparent.png" 
+                src="/gp-official-logo.png" 
                 alt="GurshaPay" 
                 className="brand-logo-img"
                 style={{ 
@@ -32,6 +32,9 @@ export default function Logo({ size = 'medium', className = '', showText = true 
                     width: 'auto', 
                     objectFit: 'contain'
                 }} 
+                onError={(e) => {
+                    e.currentTarget.src = '/gp-logo-transparent.png';
+                }}
             />
             {showText && (
                 <span style={{ 

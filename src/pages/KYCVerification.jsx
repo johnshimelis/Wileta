@@ -1,367 +1,314 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import NotificationDrawer from '../components/NotificationDrawer';
 import {
-    Upload, Camera, CheckCircle, AlertCircle,
-    ArrowRight, ArrowLeft, ShieldCheck, LayoutDashboard,
-    User, Settings, LogOut, TrendingUp, X, RefreshCw, Menu
+    ShieldCheck, Smartphone, CheckCircle, ArrowRight,
+    Copy, Check, RefreshCw, Menu, X, ExternalLink, QrCode, Lock, AlertTriangle
 } from 'lucide-react';
-import ThemeToggle from '../components/ThemeToggle';
+import Logo from '../components/Logo';
+import Button from '../components/ui/Button';
+import Badge from '../components/ui/Badge';
 import { useNotification } from '../context/NotificationContext';
 import { useLanguage } from '../context/LanguageContext';
-import Logo from '../components/Logo';
 
 export default function KYCVerification() {
-    const { user, api, logout, setUser } = useAuth();
+    const { user, api, setUser } = useAuth();
     const { triggerNotification } = useNotification();
     const { t } = useLanguage();
     const navigate = useNavigate();
-    const [step, setStep] = useState(1);
-    const [files, setFiles] = useState({ idFront: null, idBack: null, liveness: null });
-    const [previews, setPreviews] = useState({ idFront: null, idBack: null, liveness: null });
-    const [uploading, setUploading] = useState(false);
-    const [error, setError] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [copied, setCopied] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
-    // Close on navigation
-    React.useEffect(() => {
-        setIsMobileMenuOpen(false);
-    }, [window.location.pathname]);
+    const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.gurshapay.app';
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(playStoreUrl)}`;
 
-    // Camera state
-    const [cameraActive, setCameraActive] = useState(false);
-    const [cameraError, setCameraError] = useState('');
-    const videoRef = useRef(null);
-    const streamRef = useRef(null);
+    const isVerified = user?.kycStatus === 'approved' || user?.isVerified;
 
-    const NavItem = ({ to, icon: Icon, label, active }) => (
-        <Link to={to} className={`nav-item ${active ? 'active' : ''}`}>
-            <Icon size={20} />
-            <span className="nav-text">{label}</span>
-        </Link>
-    );
-
-    const handleFileChange = (e, type) => {
-        const file = e.target.files[0];
-        if (file) {
-            setFiles(prev => ({ ...prev, [type]: file }));
-            setPreviews(prev => ({ ...prev, [type]: URL.createObjectURL(file) }));
-            setError('');
-        }
+    const handleCopyLink = () => {
+        navigator.clipboard.writeText(playStoreUrl);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+        triggerNotification({
+            title: 'Link Copied',
+            message: 'Google Play Store link copied to clipboard.',
+            type: 'info'
+        });
     };
 
-    // ── Camera helpers ──────────────────────────────────────────────────
-    const startCamera = useCallback(async () => {
-        setCameraError('');
+    const handleCheckStatus = async () => {
+        setRefreshing(true);
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }
-            });
-            streamRef.current = stream;
-            if (videoRef.current) {
-                videoRef.current.srcObject = stream;
+            const res = await api.get('/auth/me');
+            if (res.data) {
+                setUser(res.data);
+                triggerNotification({
+                    title: 'Status Updated',
+                    message: res.data.kycStatus === 'approved' 
+                        ? 'Congratulations! Your KYC is approved.' 
+                        : `Current status: ${res.data.kycStatus || 'Action Required'}`,
+                    type: res.data.kycStatus === 'approved' ? 'success' : 'info'
+                });
             }
-            setCameraActive(true);
         } catch (err) {
-            setCameraError(t('cameraAccessDenied'));
-        }
-    }, [t]);
-
-    const stopCamera = useCallback(() => {
-        if (streamRef.current) {
-            streamRef.current.getTracks().forEach(t => t.stop());
-            streamRef.current = null;
-        }
-        setCameraActive(false);
-    }, []);
-
-    const capturePhoto = useCallback(() => {
-        if (!videoRef.current) return;
-
-        // Visual flash effect
-        videoRef.current.style.opacity = '0.3';
-        setTimeout(() => {
-            if (videoRef.current) videoRef.current.style.opacity = '1';
-        }, 150);
-
-        const canvas = document.createElement('canvas');
-        canvas.width = videoRef.current.videoWidth;
-        canvas.height = videoRef.current.videoHeight;
-        canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
-
-        canvas.toBlob(blob => {
-            if (!blob) return;
-            // Store as a blob, let the FormData submission handle the filename
-            const url = URL.createObjectURL(blob);
-            setFiles(prev => ({ ...prev, liveness: blob }));
-            setPreviews(prev => ({ ...prev, liveness: url }));
-            setError('');
-            stopCamera();
-        }, 'image/jpeg', 0.9);
-    }, [stopCamera]);
-
-    const retakeSelfie = useCallback(() => {
-        setFiles(prev => ({ ...prev, liveness: null }));
-        setPreviews(prev => ({ ...prev, liveness: null }));
-        startCamera();
-    }, [startCamera]);
-
-    const handleSubmit = async () => {
-        if (!files.idFront || !files.idBack || !files.liveness) {
-            setError(t('kycCompleteStepsError'));
-            return;
-        }
-        setUploading(true);
-        setError('');
-        try {
-            const formData = new FormData();
-            if (files.idFront) formData.append('idFront', files.idFront, files.idFront.name || 'idFront.jpg');
-            if (files.idBack) formData.append('idBack', files.idBack, files.idBack.name || 'idBack.jpg');
-            if (files.liveness) formData.append('liveness', files.liveness, files.liveness.name || 'selfie.jpg');
-
-            const res = await api.post('/kyc/upload', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-
-            // Instantly update global context so Dashboard reflects 'pending'
-            if (res.data && res.data.user) {
-                setUser(res.data.user);
-            }
-
-            triggerNotification({
-                title: t('kycSubmittedTitle'),
-                message: t('kycSubmittedMessage'),
-                type: 'success'
-            });
-
-            navigate('/dashboard');
-        } catch (err) {
-            setError(err.response?.data?.error || 'Failed to submit KYC. Please try again.');
-            triggerNotification({
-                title: t('kycFailedTitle'),
-                message: err.response?.data?.error || 'Failed to submit KYC. Please try again.',
-                type: 'error'
-            });
+            console.error('Failed to refresh KYC status:', err);
         } finally {
-            setUploading(false);
+            setTimeout(() => setRefreshing(false), 600);
         }
     };
-
-    const StepIndicator = () => (
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem' }}>
-            {[1, 2, 3].map(s => (
-                <div key={s} style={{
-                    flex: 1, height: '5px', borderRadius: '3px',
-                    background: step >= s ? 'var(--primary)' : 'var(--border-color)',
-                    transition: 'all 0.3s ease'
-                }} />
-            ))}
-        </div>
-    );
-
-    const UploadBox = ({ previewSrc, inputId, fieldName, label }) => (
-        <div
-            onClick={() => document.getElementById(inputId).click()}
-            style={{
-                height: '220px', border: `2px dashed ${previewSrc ? 'var(--primary)' : 'var(--border-color)'}`,
-                borderRadius: '1rem', display: 'flex', flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                overflow: 'hidden', background: previewSrc ? '#000' : 'var(--bg-color)', transition: 'all 0.2s'
-            }}
-        >
-            {previewSrc ? (
-                <img src={previewSrc} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-            ) : (
-                <>
-                    <Upload size={36} color="var(--text-muted)" style={{ marginBottom: '0.75rem' }} />
-                    <p style={{ fontWeight: 600, color: 'var(--text-main)' }}>{label}</p>
-                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>{t('kycUploadLimit')}</p>
-                </>
-            )}
-            <input type="file" id={inputId} accept="image/*" hidden onChange={(e) => handleFileChange(e, fieldName)} />
-        </div>
-    );
 
     return (
         <div className="app-layout">
+            {/* Mobile Top Header */}
             <div className="mobile-header">
+                <Logo size="small" />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <Logo size="small" />
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <NotificationDrawer />
-                    <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex' }}>
-                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    <button
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex' }}
+                    >
+                        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
                 </div>
             </div>
 
-            {isMobileMenuOpen && (
-                <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
-            )}
-
             <Sidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
 
-            <main className="main-content" style={{
-                background: 'radial-gradient(circle at top right, rgba(15, 157, 88, 0.05), transparent 500px), radial-gradient(circle at bottom left, rgba(66, 133, 244, 0.05), transparent 500px), var(--bg-color)',
-                minHeight: '100vh', maxWidth: '100vw', overflowX: 'hidden',
-                position: 'relative'
-            }}>
-                <div style={{ maxWidth: '620px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-                    <header style={{ marginBottom: '2rem', textAlign: 'center' }}>
-                        <div className="auth-icon" style={{ width: '60px', height: '60px', margin: '0 auto 1.25rem', background: 'var(--primary-light)', color: 'var(--primary)', boxShadow: '0 10px 25px -5px rgba(15, 157, 88, 0.3)' }}>
-                            <ShieldCheck size={28} />
-                        </div>
-                        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em' }}>{t('identityVerification')}</h1>
-                        <p style={{ color: 'var(--text-muted)', marginTop: '0.4rem' }}>{t('kycSubtitle2')}</p>
-                    </header>
+            <main className="main-content" style={{ maxWidth: '900px', margin: '0 auto', width: '100%' }}>
+                {/* Header */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div>
+                        <h1 style={{ fontSize: 'clamp(1.4rem, 5vw, 1.85rem)', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span>National ID & KYC Verification</span>
+                            <ShieldCheck size={26} color="var(--primary)" />
+                        </h1>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.25rem', marginBottom: 0 }}>
+                            Secure compliance verification for instant Telebirr and CBE bank payouts.
+                        </p>
+                    </div>
 
-                    <StepIndicator />
-
-                    {error && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(239,68,68,0.08)', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: '0.875rem', padding: '0.875rem 1.25rem', marginBottom: '1.5rem', fontWeight: 500 }}>
-                            <AlertCircle size={18} /> {error}
-                        </div>
-                    )}
-
-                    <div className="dashboard-card" style={{
-                        background: 'rgba(255, 255, 255, 0.7)',
-                        backdropFilter: 'blur(24px)',
-                        WebkitBackdropFilter: 'blur(24px)',
-                        border: '1px solid rgba(226, 232, 240, 0.5)',
-                        boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(226, 232, 240, 0.5)'
-                    }}>
-                        {/* STEP 1 - ID Front */}
-                        {step === 1 && (
-                            <div>
-                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.4rem' }}>{t('kycStep1')}</h3>
-                                <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{t('kycStep1Desc')}</p>
-                                <UploadBox previewSrc={previews.idFront} inputId="idFront" fieldName="idFront" label={t('clickToUploadIdFront')} />
-                                {previews.idFront && (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem', color: 'var(--primary)', fontSize: '0.875rem', fontWeight: 600 }}>
-                                        <CheckCircle size={14} /> {t('imageUploaded')}
-                                    </div>
-                                )}
-                                <button className="btn-primary" style={{ marginTop: '1.5rem' }} onClick={() => previews.idFront && setStep(2)} disabled={!previews.idFront}>
-                                    {t('nextStep')} <ArrowRight size={18} />
-                                </button>
-                            </div>
-                        )}
-
-                        {/* STEP 2 - ID Back */}
-                        {step === 2 && (
-                            <div>
-                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.4rem' }}>{t('kycStep2')}</h3>
-                                <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{t('kycStep2Desc')}</p>
-                                <UploadBox previewSrc={previews.idBack} inputId="idBack" fieldName="idBack" label={t('clickToUploadIdBack')} />
-                                {previews.idBack && (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem', color: 'var(--primary)', fontSize: '0.875rem', fontWeight: 600 }}>
-                                        <CheckCircle size={14} /> {t('imageUploaded')}
-                                    </div>
-                                )}
-                                <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-                                    <button className="btn-primary" style={{ background: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }} onClick={() => setStep(1)}>
-                                        <ArrowLeft size={18} /> {t('back')}
-                                    </button>
-                                    <button className="btn-primary" onClick={() => previews.idBack && setStep(3)} disabled={!previews.idBack}>
-                                        {t('nextStep')} <ArrowRight size={18} />
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* STEP 3 - Live Selfie */}
-                        {step === 3 && (
-                            <div>
-                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.4rem' }}>{t('kycStep3')}</h3>
-                                <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{t('kycStep3Desc')}</p>
-
-                                {/* Camera active */}
-                                <div style={{ position: 'relative', borderRadius: '50%', overflow: 'hidden', background: '#000', marginBottom: '2rem', width: '100%', maxWidth: '260px', aspectRatio: '1/1', margin: '0 auto 1.5rem', border: `4px solid ${previews.liveness ? 'var(--success)' : 'var(--primary-light)'}`, boxShadow: '0 10px 25px rgba(0,0,0,0.1)', display: cameraActive || previews.liveness ? 'block' : 'none' }}>
-                                    <video
-                                        ref={videoRef}
-                                        autoPlay
-                                        playsInline
-                                        muted
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: previews.liveness ? 'none' : 'block' }}
-                                    />
-                                    {previews.liveness && (
-                                        <img src={previews.liveness} alt="Selfie" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                    )}
-                                    {cameraActive && !previews.liveness && (
-                                        <>
-                                            <button onClick={stopCamera} style={{ position: 'absolute', top: '15px', right: '15px', background: 'rgba(0,0,0,0.5)', border: 'none', color: 'white', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
-                                                <X size={16} />
-                                            </button>
-                                            <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '0.75rem', zIndex: 10 }}>
-                                                <button
-                                                    onClick={capturePhoto}
-                                                    style={{ background: 'var(--primary)', border: '4px solid rgba(255,255,255,0.8)', color: '#fff', width: '56px', height: '56px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.2)', transition: 'transform 0.2s' }}
-                                                    onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-                                                    onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                                                >
-                                                    <Camera size={24} />
-                                                </button>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-
-                                {/* Not camera active & no preview: show start UI */}
-                                {!cameraActive && !previews.liveness && (
-                                    <>
-                                        <div style={{ height: '220px', border: '2px dashed var(--border-color)', borderRadius: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                                            <Camera size={42} color="var(--text-muted)" />
-                                            <p style={{ fontWeight: 600, color: 'var(--text-main)' }}>{t('liveSelfieRequired')}</p>
-                                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('useDeviceCameraNotice')}</p>
-                                        </div>
-
-                                        {cameraError && (
-                                            <div style={{ fontSize: '0.85rem', color: 'var(--danger)', marginBottom: '0.75rem', fontWeight: 500 }}>{cameraError}</div>
-                                        )}
-
-                                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}>
-                                            <button
-                                                onClick={startCamera}
-                                                className="btn-primary"
-                                                style={{ minWidth: '200px' }}
-                                            >
-                                                <Camera size={18} /> {t('openCamera')}
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
-
-                                {/* Retake buttons when preview exists */}
-                                {previews.liveness && (
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary)', fontSize: '0.875rem', fontWeight: 600 }}>
-                                            <CheckCircle size={14} /> {t('selfieCapturedSuccess')}
-                                        </div>
-                                        <button
-                                            onClick={retakeSelfie}
-                                            className="btn-primary"
-                                            style={{ minWidth: '200px', background: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }}
-                                        >
-                                            <RefreshCw size={18} /> {t('retakeSelfie')}
-                                        </button>
-                                    </div>
-                                )}
-
-                                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                                    <button className="btn-primary" style={{ flex: 1, background: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', boxShadow: 'none' }} onClick={() => { stopCamera(); setStep(2); }}>
-                                        <ArrowLeft size={18} /> {t('back')}
-                                    </button>
-                                    <button className="btn-primary" style={{ flex: 2 }} onClick={handleSubmit} disabled={uploading || !previews.liveness}>
-                                        {uploading ? <span className="spinner"></span> : <><CheckCircle size={18} /> {t('completeVerification')}</>}
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+                    <div className="desktop-only" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                        <NotificationDrawer />
+                        <Button variant="outline" size="sm" onClick={() => navigate('/dashboard')}>
+                            Back to Dashboard
+                        </Button>
                     </div>
                 </div>
+
+                {/* If already approved */}
+                {isVerified ? (
+                    <div style={{
+                        background: 'var(--card-bg)',
+                        border: '1.5px solid var(--primary)',
+                        borderRadius: '20px',
+                        padding: '2.5rem',
+                        textAlign: 'center',
+                        boxShadow: 'var(--shadow-md)'
+                    }}>
+                        <div style={{
+                            width: '64px',
+                            height: '64px',
+                            borderRadius: '50%',
+                            background: 'var(--primary-light)',
+                            color: 'var(--primary)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: '1.25rem'
+                        }}>
+                            <CheckCircle size={36} />
+                        </div>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                            Account Fully Verified!
+                        </h2>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', maxWidth: '500px', margin: '0 auto 1.5rem' }}>
+                            Your Fayda National ID and identity verification is active. You have full access to high-volume Telebirr, CBE, and multi-bank withdrawals.
+                        </p>
+                        <Button variant="primary" size="md" onClick={() => navigate('/dashboard')}>
+                            Go to Dashboard
+                        </Button>
+                    </div>
+                ) : (
+                    /* Interactive Forced Mobile Experience */
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        {/* Main Callout Hero Card */}
+                        <div style={{
+                            background: 'var(--card-bg)',
+                            border: '1.5px solid var(--border-color)',
+                            borderRadius: '24px',
+                            padding: 'clamp(1.5rem, 5vw, 2.5rem)',
+                            boxShadow: 'var(--shadow-sm)',
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}>
+                            {/* Decorative ambient corner glow */}
+                            <div style={{
+                                position: 'absolute',
+                                top: '-60px',
+                                right: '-60px',
+                                width: '200px',
+                                height: '200px',
+                                borderRadius: '50%',
+                                background: 'radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%)',
+                                pointerEvents: 'none'
+                            }} />
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.85rem' }}>
+                                <Badge variant="warning" size="md">
+                                    <Lock size={12} style={{ marginRight: '4px' }} />
+                                    Mobile App Required
+                                </Badge>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                                    Compliance Directive No. GP-2026/NBE
+                                </span>
+                            </div>
+
+                            <h2 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.6rem)', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>
+                                Verify Fayda National ID on GurshaPay Mobile App
+                            </h2>
+
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', lineHeight: 1.6, marginBottom: '2rem' }}>
+                                Under National Bank of Ethiopia fintech compliance requirements, biometric face match and Fayda ID verification must be captured live using the on-device biometric security scanner in the <strong>GurshaPay Mobile App</strong>.
+                            </p>
+
+                            {/* Two Column Interactive Center: QR Code + Steps */}
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                                gap: '1.75rem',
+                                background: 'var(--card-bg-subtle)',
+                                border: '1px solid var(--border-color)',
+                                borderRadius: '20px',
+                                padding: '1.5rem',
+                                marginBottom: '2rem'
+                            }}>
+                                {/* QR Code Box */}
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', justifyContent: 'center' }}>
+                                    <div style={{
+                                        background: '#FFFFFF',
+                                        padding: '10px',
+                                        borderRadius: '16px',
+                                        boxShadow: '0 8px 20px rgba(0, 0, 0, 0.08)',
+                                        border: '1px solid var(--border-color)',
+                                        marginBottom: '0.85rem'
+                                    }}>
+                                        <img 
+                                            src={qrCodeUrl} 
+                                            alt="Scan to download GurshaPay App" 
+                                            style={{ width: '150px', height: '150px', display: 'block', borderRadius: '10px' }} 
+                                        />
+                                    </div>
+                                    <span style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                                        Scan with Mobile Camera
+                                    </span>
+                                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                        Direct link to Google Play Store
+                                    </span>
+                                </div>
+
+                                {/* Step-by-Step Flow */}
+                                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1rem' }}>
+                                    <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'flex-start' }}>
+                                        <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--primary)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', flexShrink: 0 }}>
+                                            1
+                                        </div>
+                                        <div>
+                                            <div style={{ fontSize: '0.875rem', fontWeight: 800, color: 'var(--text-main)' }}>Download GurshaPay App</div>
+                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Available on Google Play Store & Direct APK.</div>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'flex-start' }}>
+                                        <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--primary)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', flexShrink: 0 }}>
+                                            2
+                                        </div>
+                                        <div>
+                                            <div style={{ fontSize: '0.875rem', fontWeight: 800, color: 'var(--text-main)' }}>Scan Fayda ID & Live Selfie</div>
+                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Takes less than 60 seconds with on-device AI liveness.</div>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'flex-start' }}>
+                                        <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--primary)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', flexShrink: 0 }}>
+                                            3
+                                        </div>
+                                        <div>
+                                            <div style={{ fontSize: '0.875rem', fontWeight: 800, color: 'var(--text-main)' }}>Instant Payout Unlock</div>
+                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Direct Telebirr and Commercial Bank transfers activated.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Action Row */}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+                                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', flex: 1 }}>
+                                    <a 
+                                        href={playStoreUrl} 
+                                        target="_blank" 
+                                        rel="noreferrer" 
+                                        style={{ textDecoration: 'none' }}
+                                    >
+                                        <Button variant="primary" size="md" icon={Smartphone}>
+                                            Get on Google Play
+                                        </Button>
+                                    </a>
+
+                                    <Button 
+                                        variant="outline" 
+                                        size="md" 
+                                        icon={copied ? Check : Copy} 
+                                        onClick={handleCopyLink}
+                                    >
+                                        {copied ? 'Link Copied!' : 'Copy Play Store Link'}
+                                    </Button>
+                                </div>
+
+                                <Button 
+                                    variant="ghost" 
+                                    size="md" 
+                                    icon={RefreshCw} 
+                                    onClick={handleCheckStatus}
+                                    disabled={refreshing}
+                                >
+                                    {refreshing ? 'Checking Verification...' : 'I completed on mobile (Refresh)'}
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Status Check Helper */}
+                        <div style={{
+                            background: 'var(--card-bg)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '16px',
+                            padding: '1.25rem 1.5rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            flexWrap: 'wrap',
+                            gap: '1rem'
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                <AlertTriangle size={20} color="#D97706" />
+                                <div>
+                                    <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                                        Current Verification Status:
+                                    </span>
+                                    <span style={{ marginLeft: '0.5rem', fontSize: '0.85rem', fontWeight: 800, color: user?.kycStatus === 'pending' ? 'var(--info)' : '#D97706' }}>
+                                        {user?.kycStatus === 'pending' ? 'Verification In Review ⏳' : 'Not Verified (Action Required) 🔒'}
+                                    </span>
+                                </div>
+                            </div>
+                            <Button variant="outline" size="sm" onClick={handleCheckStatus} disabled={refreshing}>
+                                <RefreshCw size={14} style={{ marginRight: '6px' }} />
+                                Refresh Status
+                            </Button>
+                        </div>
+                    </div>
+                )}
             </main>
         </div>
     );
