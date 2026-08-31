@@ -44,92 +44,120 @@ export default function NotificationDrawer() {
         const title = (notif.title || '').toLowerCase();
         const msg = (notif.message || '').toLowerCase();
         const type = (notif.type || '').toLowerCase();
+        const combined = `${title} ${msg}`;
 
-        // 1. Telebirr Transfer / Completed Payout with Telebirr
-        if ((title.includes('completed') || title.includes('sent') || title.includes('success')) && (title.includes('telebirr') || msg.includes('telebirr'))) {
+        // 1. Commercial Bank of Ethiopia (CBE)
+        if (combined.includes('commercial bank') || combined.includes('cbe') || combined.includes('commercial bank of ethiopia')) {
             return (
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                    <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(147, 51, 234, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
+                    <img src="/banks/cbe.jpg" alt="Commercial Bank of Ethiopia" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 </div>
             );
         }
 
-        // 2. Bank Transfer / Completed Payout with Bank
-        if ((title.includes('completed') || title.includes('sent') || title.includes('success')) && (title.includes('bank') || msg.includes('cbe') || msg.includes('bank') || msg.includes('abyssinia') || msg.includes('awash') || msg.includes('dashen'))) {
+        // 2. Telebirr
+        if (combined.includes('telebirr')) {
             return (
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                    <CheckCircle2 size={18} />
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(14, 165, 233, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
+                    <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 </div>
             );
         }
 
-        // 3. Withdrawal Completed / Payment Sent (General Success)
-        if (title.includes('completed') || title.includes('sent') || title.includes('transferred') || (type === 'success' && title.includes('withdraw'))) {
+        // 3. Bank of Abyssinia
+        if (combined.includes('abyssinia') || combined.includes('boa')) {
             return (
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.14)', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                    <CheckCircle2 size={18} />
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(245, 158, 11, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
+                    <img src="/banks/abyssinia.png" alt="Bank of Abyssinia" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 </div>
             );
         }
 
-        // 4. Withdrawal Approved / In Processing on Chapa
-        if (title.includes('approved') || title.includes('processing') || msg.includes('processing on the payment network') || msg.includes('approved by admin')) {
+        // 4. Awash Bank
+        if (combined.includes('awash')) {
             return (
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(2, 132, 199, 0.12)', color: '#0284C7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(2, 132, 199, 0.2)' }}>
-                    <RefreshCw size={17} />
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(34, 197, 94, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
+                    <img src="/banks/awash.png" alt="Awash Bank" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 </div>
             );
         }
 
-        // 5. Withdrawal Pending / Requested
-        if (title.includes('pending') || title.includes('requested') || title.includes('review') || msg.includes('pending review') || title.includes('withdraw')) {
+        // 5. Dashen Bank
+        if (combined.includes('dashen')) {
             return (
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(245, 158, 11, 0.14)', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(245, 158, 11, 0.25)' }}>
-                    <Clock size={17} />
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(59, 130, 246, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
+                    <img src="/banks/dashen.png" alt="Dashen Bank" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 </div>
             );
         }
 
-        // 6. Tip Received / Fan Support
-        if (title.includes('tip') || title.includes('received') || title.includes('supporter') || msg.includes('tip of') || msg.includes('tipped you') || msg.includes('support')) {
+        // 6. Cooperative Bank of Oromia
+        if (combined.includes('coop') || combined.includes('oromia')) {
             return (
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                    <Heart size={17} fill="var(--primary)" fillOpacity={0.2} />
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(234, 88, 12, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
+                    <img src="/banks/coop.png" alt="Cooperative Bank" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 </div>
             );
         }
 
-        // 7. Security / Login / Account changes
-        if (title.includes('login') || title.includes('device') || title.includes('password') || title.includes('security') || title.includes('auth')) {
+        // 7. Payment Received / Tip / Fan Support
+        if (title.includes('payment') || title.includes('tip') || title.includes('received') || combined.includes('net credited') || combined.includes('tipped you')) {
             return (
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(99, 102, 241, 0.12)', color: '#6366F1', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(99, 102, 241, 0.2)' }}>
-                    <ShieldCheck size={18} />
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.12)', border: '1.5px solid rgba(16, 185, 129, 0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '4px', flexShrink: 0, boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)' }}>
+                    <img src="/gp-official-logo.png" alt="GurshaPay Tip" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.src = '/gp-logo-transparent.png'; }} />
                 </div>
             );
         }
 
-        // 8. KYC / Profile Verification
-        if (title.includes('kyc') || title.includes('verified') || title.includes('identity') || title.includes('onboarding')) {
+        // 8. Withdrawal Approved / In Processing on Chapa
+        if (title.includes('approved') || combined.includes('processing on the payment network') || combined.includes('approved by admin')) {
             return (
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(14, 165, 233, 0.12)', color: '#0EA5E9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(14, 165, 233, 0.2)' }}>
-                    <Sparkles size={17} />
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(2, 132, 199, 0.12)', color: '#0284C7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1.5px solid rgba(2, 132, 199, 0.25)', boxShadow: '0 2px 6px rgba(2, 132, 199, 0.15)' }}>
+                    <RefreshCw size={19} />
                 </div>
             );
         }
 
-        // 9. Rejections / Failures / Warnings
+        // 9. Withdrawal Pending / Requested
+        if (title.includes('pending') || title.includes('requested') || combined.includes('pending review') || title.includes('withdraw')) {
+            return (
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(245, 158, 11, 0.14)', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1.5px solid rgba(245, 158, 11, 0.3)', boxShadow: '0 2px 6px rgba(245, 158, 11, 0.15)' }}>
+                    <Clock size={19} />
+                </div>
+            );
+        }
+
+        // 10. Security / Login / Account changes
+        if (combined.includes('login') || combined.includes('device') || combined.includes('password') || combined.includes('security')) {
+            return (
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(99, 102, 241, 0.12)', color: '#6366F1', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1.5px solid rgba(99, 102, 241, 0.25)', boxShadow: '0 2px 6px rgba(99, 102, 241, 0.15)' }}>
+                    <ShieldCheck size={20} />
+                </div>
+            );
+        }
+
+        // 11. KYC / Profile Verification
+        if (combined.includes('kyc') || combined.includes('verified') || combined.includes('identity') || combined.includes('onboarding')) {
+            return (
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(14, 165, 233, 0.12)', color: '#0EA5E9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1.5px solid rgba(14, 165, 233, 0.25)' }}>
+                    <Sparkles size={19} />
+                </div>
+            );
+        }
+
+        // 12. Rejections / Failures / Warnings
         if (type === 'danger' || type === 'warning' || title.includes('failed') || title.includes('rejected') || title.includes('refund')) {
             return (
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(239, 68, 68, 0.12)', color: '#EF4444', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-                    <AlertTriangle size={17} />
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(239, 68, 68, 0.12)', color: '#EF4444', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1.5px solid rgba(239, 68, 68, 0.25)' }}>
+                    <AlertTriangle size={19} />
                 </div>
             );
         }
 
-        // 10. Default General
+        // 13. Default General
         return (
-            <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'var(--card-bg-subtle)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--border-color)' }}>
-                <Bell size={17} />
+            <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'var(--card-bg-subtle)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--border-color)' }}>
+                <Bell size={19} />
             </div>
         );
     };

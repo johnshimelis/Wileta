@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, User, Settings as SettingsIcon, LogOut, ShieldCheck, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, User, Settings as SettingsIcon, LogOut, ShieldCheck, ExternalLink, LifeBuoy } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import LanguageToggle from './LanguageToggle';
 import Logo from './Logo';
@@ -49,6 +49,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                     <NavItem to="/dashboard" icon={LayoutDashboard} label={t('dashboardTitle')} />
                     <NavItem to="/profile" icon={User} label={t('profile')} />
                     <NavItem to="/settings" icon={SettingsIcon} label={t('settings')} />
+                    <NavItem to="/support" icon={LifeBuoy} label="Support & Help" />
                     {user?.kycStatus !== 'approved' && (
                         <NavItem
                             to="/kyc"

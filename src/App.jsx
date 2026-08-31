@@ -16,6 +16,7 @@ import Overlay from './pages/Overlay';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import DataDeletion from './pages/DataDeletion';
 import ResetPassword from './pages/ResetPassword';
+import Support from './pages/Support';
 import Home from './pages/Home';
 import './index.css';
 
@@ -123,6 +124,10 @@ const AnimatedRoutes = () => {
         {/* OBS Stream Overlay */}
         <Route path="/overlay/:creatorId" element={<PageTransition><Overlay /></PageTransition>} />
         
+        {/* Support & Contact Pages */}
+        <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
+        <Route path="/contact" element={<PageTransition><Support /></PageTransition>} />
+
         {/* Public Legal / Compliance Pages */}
         <Route path="/privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
         <Route path="/data-deletion" element={<PageTransition><DataDeletion /></PageTransition>} />
