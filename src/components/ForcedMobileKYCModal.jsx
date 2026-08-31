@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Smartphone, QrCode, ExternalLink, Check, Copy, RefreshCw, X, Lock } from 'lucide-react';
+import { ShieldCheck, Check, Copy, RefreshCw, X } from 'lucide-react';
 import Button from './ui/Button';
-import Badge from './ui/Badge';
+
+// High-fidelity Official Google Play Store Vector Icon
+export const GooglePlayIcon = ({ size = 20, style = {} }) => (
+    <svg width={size} height={size} viewBox="0 0 512 512" style={{ flexShrink: 0, ...style }}>
+        <path fill="#4285F4" d="M47.5 35.7C44.7 41.5 43 48.7 43 57.1v397.8c0 8.4 1.7 15.6 4.5 21.4l230.1-220.3L47.5 35.7z"/>
+        <path fill="#EA4335" d="M47.5 35.7l230.1 220.3 74.9-71.7-279.9-147.7c-9.7-5.4-18.4-4.6-25.1-0.9z"/>
+        <path fill="#FBBC05" d="M352.5 321.4l-74.9-71.7-230.1 220.3c6.7 3.7 15.4 4.5 25.1-0.9l279.9-147.7z"/>
+        <path fill="#34A853" d="M451.9 238.1l-99.4-52.4-74.9 70.3 74.9 71.7 99.4-52.4c16.1-8.5 16.1-28.7 0-37.2z"/>
+    </svg>
+);
 
 export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshStatus }) {
     const [copied, setCopied] = useState(false);
@@ -9,9 +18,8 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
 
     if (!isOpen) return null;
 
-    const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.gurshapay.app';
-    const apkDirectUrl = 'https://gurshapay.com/app-release.apk';
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=${encodeURIComponent(playStoreUrl)}`;
+    const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.gursha.pay';
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(playStoreUrl)}`;
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(playStoreUrl);
@@ -138,7 +146,7 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
                     }}>
                         <img 
                             src={qrCodeUrl} 
-                            alt="Scan to download GurshaPay" 
+                            alt="Scan to download GurshaPay on Google Play" 
                             style={{ width: '120px', height: '120px', display: 'block', borderRadius: '8px' }} 
                         />
                     </div>
@@ -168,10 +176,10 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
                             <Button 
                                 variant="primary" 
                                 size="md" 
-                                style={{ width: '100%', justifyContent: 'center' }}
-                                icon={Smartphone}
+                                style={{ width: '100%', justifyContent: 'center', gap: '0.5rem' }}
                             >
-                                Get on Google Play
+                                <GooglePlayIcon size={18} />
+                                <span>Get on Google Play</span>
                             </Button>
                         </a>
 

@@ -10,6 +10,7 @@ import {
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import { GooglePlayIcon } from '../components/ForcedMobileKYCModal';
 import { useNotification } from '../context/NotificationContext';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -22,7 +23,7 @@ export default function KYCVerification() {
     const [copied, setCopied] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
 
-    const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.gurshapay.app';
+    const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.gursha.pay';
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(playStoreUrl)}`;
 
     const isVerified = user?.kycStatus === 'approved' || user?.isVerified;
@@ -252,8 +253,9 @@ export default function KYCVerification() {
                                         rel="noreferrer" 
                                         style={{ textDecoration: 'none' }}
                                     >
-                                        <Button variant="primary" size="md" icon={Smartphone}>
-                                            Get on Google Play
+                                        <Button variant="primary" size="md" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                                            <GooglePlayIcon size={18} />
+                                            <span>Get on Google Play</span>
                                         </Button>
                                     </a>
 
