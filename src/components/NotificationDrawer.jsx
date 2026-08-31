@@ -46,7 +46,31 @@ export default function NotificationDrawer() {
         const type = (notif.type || '').toLowerCase();
         const combined = `${title} ${msg}`;
 
-        // 1. Commercial Bank of Ethiopia (CBE)
+        // 1. PAYMENT RECEIVED / FAN TIPS
+        if (title.includes('payment') || title.includes('tip') || title.includes('received') || combined.includes('net credited') || combined.includes('tipped you') || combined.includes('payment received')) {
+            if (combined.includes('telebirr')) {
+                return (
+                    <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(14, 165, 233, 0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 8px rgba(14, 165, 233, 0.2)' }}>
+                        <img src="/banks/telebirr.jpg" alt="Telebirr Payment" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                    </div>
+                );
+            }
+            if (combined.includes('cbe') || combined.includes('commercial bank')) {
+                return (
+                    <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(147, 51, 234, 0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 8px rgba(147, 51, 234, 0.2)' }}>
+                        <img src="/banks/cbe.jpg" alt="CBE Payment" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                    </div>
+                );
+            }
+            // General GurshaPay Tip Celebration Badge
+            return (
+                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(16, 185, 129, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '4px', flexShrink: 0, boxShadow: '0 2px 8px rgba(16, 185, 129, 0.25)' }}>
+                    <img src="/gp-official-logo.png" alt="GurshaPay Tip" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.src = '/final-favicon-small.png'; }} />
+                </div>
+            );
+        }
+
+        // 2. Commercial Bank of Ethiopia (CBE) Payouts / Transfers
         if (combined.includes('commercial bank') || combined.includes('cbe') || combined.includes('commercial bank of ethiopia')) {
             return (
                 <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(147, 51, 234, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
@@ -55,7 +79,7 @@ export default function NotificationDrawer() {
             );
         }
 
-        // 2. Telebirr
+        // 3. Telebirr Payouts / Transfers
         if (combined.includes('telebirr')) {
             return (
                 <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(14, 165, 233, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
@@ -64,8 +88,8 @@ export default function NotificationDrawer() {
             );
         }
 
-        // 3. Bank of Abyssinia
-        if (combined.includes('abyssinia') || combined.includes('boa')) {
+        // 4. Bank of Abyssinia (Strict Match to avoid false positives with 'dashboard')
+        if (combined.includes('abyssinia') || combined.includes('bank of abyssinia') || /\bboa\b/i.test(combined)) {
             return (
                 <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(245, 158, 11, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
                     <img src="/banks/abyssinia.png" alt="Bank of Abyssinia" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
@@ -73,7 +97,7 @@ export default function NotificationDrawer() {
             );
         }
 
-        // 4. Awash Bank
+        // 5. Awash Bank
         if (combined.includes('awash')) {
             return (
                 <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(34, 197, 94, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
@@ -82,7 +106,7 @@ export default function NotificationDrawer() {
             );
         }
 
-        // 5. Dashen Bank
+        // 6. Dashen Bank
         if (combined.includes('dashen')) {
             return (
                 <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(59, 130, 246, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
@@ -91,20 +115,11 @@ export default function NotificationDrawer() {
             );
         }
 
-        // 6. Cooperative Bank of Oromia
+        // 7. Cooperative Bank of Oromia
         if (combined.includes('coop') || combined.includes('oromia')) {
             return (
                 <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#FFFFFF', border: '1.5px solid rgba(234, 88, 12, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '3px', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
                     <img src="/banks/coop.png" alt="Cooperative Bank" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                </div>
-            );
-        }
-
-        // 7. Payment Received / Tip / Fan Support
-        if (title.includes('payment') || title.includes('tip') || title.includes('received') || combined.includes('net credited') || combined.includes('tipped you')) {
-            return (
-                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.12)', border: '1.5px solid rgba(16, 185, 129, 0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '4px', flexShrink: 0, boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)' }}>
-                    <img src="/gp-official-logo.png" alt="GurshaPay Tip" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.src = '/gp-logo-transparent.png'; }} />
                 </div>
             );
         }
