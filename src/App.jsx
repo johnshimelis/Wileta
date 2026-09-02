@@ -118,7 +118,10 @@ const AnimatedRoutes = () => {
             <PageTransition><Settings /></PageTransition>
           </ProtectedRoute>
         } />
-        {/* Public Tipping Page */}
+        {/* Public Creator & Tipping Pages */}
+        <Route path="/creator/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+        <Route path="/c/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+        <Route path="/tip/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
         <Route path="/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
         <Route path="/@:username" element={<PageTransition><PublicProfile /></PageTransition>} />
         {/* OBS Stream Overlay */}

@@ -1,0 +1,25 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAMID.com.gurshapay.app",
+        "paths": [
+          "/creator/*",
+          "/c/*",
+          "/tip/*",
+          "/profile/*",
+          "/user/*",
+          "/@*",
+          "/notifications",
+          "/notification-detail",
+          "/activity",
+          "/support",
+          "/privacy-policy",
+          "/data-deletion",
+          "/reset-password/*"
+        ]
+      }
+    ]
+  }
+}

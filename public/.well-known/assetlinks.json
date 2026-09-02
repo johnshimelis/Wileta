@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.gursha.pay",
+      "sha256_cert_fingerprints": [
+        "14:6D:E9:7D:0E:52:D7:1E:84:48:9A:6B:47:82:70:E0:4F:9D:69:0E:64:B3:36:16:32:89:DF:16:47:11:0A:79"
+      ]
+    }
+  }
+]
