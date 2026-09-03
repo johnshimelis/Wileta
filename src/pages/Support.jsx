@@ -35,6 +35,9 @@ export default function Support() {
     // User's tickets
     const [myTickets, setMyTickets] = useState([]);
     const [loadingTickets, setLoadingTickets] = useState(false);
+    const [expandedTicketId, setExpandedTicketId] = useState(null);
+    const [userReplyMap, setUserReplyMap] = useState({});
+    const [replyingMap, setReplyingMap] = useState({});
 
     useEffect(() => {
         if (user) {
@@ -56,6 +59,33 @@ export default function Support() {
             // Optional/silent fail if not logged in
         } finally {
             setLoadingTickets(false);
+        }
+    };
+
+    const handleSendUserReply = async (ticketId) => {
+        const text = userReplyMap[ticketId];
+        if (!text || !text.trim()) return;
+
+        setReplyingMap(prev => ({ ...prev, [ticketId]: true }));
+        try {
+            await api.post(`/support/ticket/${ticketId}/reply`, {
+                message: text.trim()
+            });
+            setUserReplyMap(prev => ({ ...prev, [ticketId]: '' }));
+            triggerNotification({
+                title: 'Reply Sent',
+                message: 'Your reply has been added to the ticket.',
+                type: 'success'
+            });
+            fetchMyTickets();
+        } catch (err) {
+            triggerNotification({
+                title: 'Failed to send reply',
+                message: err.response?.data?.error || 'Please try again.',
+                type: 'error'
+            });
+        } finally {
+            setReplyingMap(prev => ({ ...prev, [ticketId]: false }));
         }
     };
 
@@ -479,39 +509,130 @@ export default function Support() {
                         </h2>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                            {myTickets.map(ticket => (
-                                <div 
-                                    key={ticket._id}
-                                    style={{
-                                        background: 'var(--card-bg-subtle)',
-                                        border: '1px solid var(--border-color)',
-                                        borderRadius: '12px',
-                                        padding: '1rem',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        flexWrap: 'wrap',
-                                        gap: '0.75rem'
-                                    }}
-                                >
-                                    <div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                                            <span style={{ fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-main)' }}>
-                                                {ticket.subject}
-                                            </span>
-                                            <Badge variant={ticket.status === 'RESOLVED' ? 'success' : 'primary'} size="sm">
-                                                {ticket.status}
-                                            </Badge>
+                            {myTickets.map(ticket => {
+                                const isExpanded = expandedTicketId === ticket._id;
+                                return (
+                                    <div 
+                                        key={ticket._id}
+                                        style={{
+                                            background: 'var(--card-bg-subtle)',
+                                            border: '1px solid var(--border-color)',
+                                            borderRadius: '12px',
+                                            padding: '1rem',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                    >
+                                        <div 
+                                            onClick={() => setExpandedTicketId(isExpanded ? null : ticket._id)}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                cursor: 'pointer',
+                                                flexWrap: 'wrap',
+                                                gap: '0.75rem'
+                                            }}
+                                        >
+                                            <div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                                                    <span style={{ fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-main)' }}>
+                                                        {ticket.subject}
+                                                    </span>
+                                                    <Badge variant={ticket.status === 'RESOLVED' ? 'success' : 'primary'} size="sm">
+                                                        {ticket.status}
+                                                    </Badge>
+                                                </div>
+                                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                                    Ticket #{ticket.ticketNumber || ticket._id.slice(-6).toUpperCase()} • {new Date(ticket.createdAt).toLocaleDateString()}
+                                                </div>
+                                            </div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <span style={{ fontSize: '0.775rem', color: 'var(--primary)', fontWeight: 700 }}>
+                                                    {isExpanded ? 'Hide Thread' : 'View Thread'}
+                                                </span>
+                                                {isExpanded ? <ChevronUp size={16} color="var(--primary)" /> : <ChevronDown size={16} color="var(--text-muted)" />}
+                                            </div>
                                         </div>
-                                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                            Submitted on {new Date(ticket.createdAt).toLocaleDateString()} • Ref: #{ticket._id.slice(-6).toUpperCase()}
-                                        </div>
+
+                                        {isExpanded && (
+                                            <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
+                                                {/* Messages Thread */}
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '1rem' }}>
+                                                    {ticket.messages && ticket.messages.length > 0 ? (
+                                                        ticket.messages.map((m, idx) => {
+                                                            const isAdmin = m.senderType === 'admin';
+                                                            const isSystem = m.senderType === 'system';
+
+                                                            if (isSystem) {
+                                                                return (
+                                                                    <div key={idx} style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                                                        <em>{m.message}</em>
+                                                                    </div>
+                                                                );
+                                                            }
+
+                                                            return (
+                                                                <div 
+                                                                    key={idx}
+                                                                    style={{
+                                                                        alignSelf: isAdmin ? 'flex-start' : 'flex-end',
+                                                                        maxWidth: '85%',
+                                                                        background: isAdmin ? 'rgba(16, 185, 129, 0.12)' : 'var(--card-bg)',
+                                                                        border: isAdmin ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--border-color)',
+                                                                        borderRadius: '10px',
+                                                                        padding: '0.65rem 0.85rem'
+                                                                    }}
+                                                                >
+                                                                    <div style={{ fontSize: '0.725rem', fontWeight: 800, color: isAdmin ? 'var(--primary)' : 'var(--text-muted)', marginBottom: '2px' }}>
+                                                                        {isAdmin ? '🛡️ GurshaPay Support' : 'You'} • {new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                                    </div>
+                                                                    <div style={{ fontSize: '0.825rem', color: 'var(--text-main)', whiteSpace: 'pre-line', lineHeight: 1.4 }}>
+                                                                        {m.message}
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <div style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
+                                                            {ticket.message}
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* User Reply Input */}
+                                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                    <input
+                                                        type="text"
+                                                        value={userReplyMap[ticket._id] || ''}
+                                                        onChange={(e) => setUserReplyMap({ ...userReplyMap, [ticket._id]: e.target.value })}
+                                                        placeholder="Write a follow-up reply..."
+                                                        onKeyDown={(e) => { if (e.key === 'Enter') handleSendUserReply(ticket._id); }}
+                                                        style={{
+                                                            flex: 1,
+                                                            padding: '0.55rem 0.75rem',
+                                                            borderRadius: '8px',
+                                                            border: '1px solid var(--border-color)',
+                                                            background: 'var(--card-bg)',
+                                                            color: 'var(--text-main)',
+                                                            fontSize: '0.825rem',
+                                                            outline: 'none'
+                                                        }}
+                                                    />
+                                                    <Button
+                                                        variant="primary"
+                                                        size="sm"
+                                                        loading={replyingMap[ticket._id]}
+                                                        disabled={!(userReplyMap[ticket._id] || '').trim()}
+                                                        onClick={() => handleSendUserReply(ticket._id)}
+                                                    >
+                                                        Reply
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                    <span style={{ fontSize: '0.775rem', color: 'var(--text-secondary)', maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                        {ticket.message}
-                                    </span>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 )}
