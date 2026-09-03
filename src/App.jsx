@@ -18,6 +18,7 @@ import DataDeletion from './pages/DataDeletion';
 import ResetPassword from './pages/ResetPassword';
 import Support from './pages/Support';
 import Home from './pages/Home';
+import MaintenanceScreen from './components/MaintenanceScreen';
 import './index.css';
 
 const PageLoader = () => (
@@ -144,13 +145,32 @@ const AnimatedRoutes = () => {
   );
 };
 
+function AppContent() {
+  const { maintenanceInfo, checkSystemStatus } = useAuth();
+
+  if (maintenanceInfo?.isMaintenance) {
+    return (
+      <MaintenanceScreen
+        message={maintenanceInfo.message}
+        supportEmail={maintenanceInfo.supportEmail}
+        supportPhone={maintenanceInfo.supportPhone}
+        onRefresh={checkSystemStatus}
+      />
+    );
+  }
+
+  return (
+    <NotificationProvider>
+      <AnimatedRoutes />
+    </NotificationProvider>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <NotificationProvider>
-          <AnimatedRoutes />
-        </NotificationProvider>
+        <AppContent />
       </AuthProvider>
     </BrowserRouter>
   );

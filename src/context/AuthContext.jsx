@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 
 const AuthContext = createContext();
@@ -15,7 +15,7 @@ const getApiBaseUrl = () => {
 };
 
 // Axios instance with base URL & interceptors
-const api = axios.create({
+export const api = axios.create({
     baseURL: getApiBaseUrl(),
 });
 
@@ -30,9 +30,56 @@ api.interceptors.request.use(config => {
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [maintenanceInfo, setMaintenanceInfo] = useState({
+        isMaintenance: false,
+        message: '',
+        supportEmail: '',
+        supportPhone: ''
+    });
+
+    const checkSystemStatus = useCallback(async () => {
+        try {
+            const res = await api.get('/system/status');
+            if (res.data?.maintenance) {
+                setMaintenanceInfo({
+                    isMaintenance: true,
+                    message: res.data.message,
+                    supportEmail: res.data.supportEmail,
+                    supportPhone: res.data.supportPhone
+                });
+                return true;
+            } else {
+                setMaintenanceInfo(prev => ({ ...prev, isMaintenance: false }));
+                return false;
+            }
+        } catch (e) {
+            return false;
+        }
+    }, []);
+
+    // Intercept 503 Maintenance Mode Responses Globally
+    useEffect(() => {
+        const interceptor = api.interceptors.response.use(
+            response => response,
+            error => {
+                if (error.response?.status === 503 && error.response?.data?.maintenance) {
+                    setMaintenanceInfo({
+                        isMaintenance: true,
+                        message: error.response.data.message || error.response.data.error,
+                        supportEmail: error.response.data.supportEmail,
+                        supportPhone: error.response.data.supportPhone
+                    });
+                }
+                return Promise.reject(error);
+            }
+        );
+
+        return () => api.interceptors.response.eject(interceptor);
+    }, []);
 
     useEffect(() => {
         const initAuth = async () => {
+            await checkSystemStatus();
             const token = localStorage.getItem('token');
             if (token) {
                 try {
@@ -46,7 +93,7 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         };
         initAuth();
-    }, []);
+    }, [checkSystemStatus]);
 
     const login = async (credentials) => {
         try {
@@ -93,7 +140,9 @@ export const AuthProvider = ({ children }) => {
         logout,
         logoutAll,
         onboard,
-        api
+        api,
+        maintenanceInfo,
+        checkSystemStatus
     };
 
     return (
