@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
 import NotificationDrawer from '../components/NotificationDrawer';
@@ -7,12 +7,23 @@ import {
     AlertCircle, HelpCircle, ChevronDown, ChevronUp, Copy, Check,
     ExternalLink, Menu, X, Clock, ShieldCheck, Zap, ArrowRight,
     CornerDownRight, CreditCard, Sparkles, Building, Lock, Activity,
-    Bell, User, Link as LinkIcon, Search, CheckCheck
+    Bell, User, Link as LinkIcon, Search, CheckCheck, RefreshCw,
+    Paperclip, AlertTriangle
 } from 'lucide-react';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import { useNotification } from '../context/NotificationContext';
+import { io } from 'socket.io-client';
+
+const getSocketUrl = () => {
+    if (import.meta.env.VITE_API_URL) {
+        return import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '');
+    }
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : 'https://wileta-backend.onrender.com';
+};
 
 const CATEGORY_CATALOG = [
     {
@@ -172,14 +183,21 @@ export default function Support() {
     const [myCases, setMyCases] = useState([]);
     const [loadingCases, setLoadingCases] = useState(false);
     const [expandedCaseId, setExpandedCaseId] = useState(null);
+    const [caseMessagesMap, setCaseMessagesMap] = useState({});
     const [userReplyMap, setUserReplyMap] = useState({});
     const [replyingMap, setReplyingMap] = useState({});
     const [closingMap, setClosingMap] = useState({});
+    const [agentTypingMap, setAgentTypingMap] = useState({});
+    const [failedMessagesMap, setFailedMessagesMap] = useState({});
 
     // Filter & Search state for My Cases
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('ALL');
     const [categoryFilter, setCategoryFilter] = useState('ALL');
+
+    // Socket Reference
+    const socketRef = useRef(null);
+    const messagesEndRef = useRef(null);
 
     // When category changes, update subcategory default
     const handleCategoryChange = (newCat) => {
@@ -190,15 +208,117 @@ export default function Support() {
         }
     };
 
+    // Socket.io Real-Time Setup
     useEffect(() => {
-        if (user) {
-            setName(user.name || '');
-            setEmail(user.email || '');
-            setPhone(user.phone || '');
-            fetchMyCases();
-            fetchLookupEntities();
+        const socket = io(getSocketUrl(), {
+            transports: ['websocket', 'polling'],
+            reconnectionAttempts: 10,
+            reconnectionDelay: 2000
+        });
+        socketRef.current = socket;
+
+        if (user?._id) {
+            socket.emit('join', user._id);
         }
-    }, [user]);
+
+        // Listen for real-time messages
+        socket.on('new_case_message', ({ caseId, message, caseStatus }) => {
+            setCaseMessagesMap(prev => {
+                const existing = prev[caseId] || [];
+                // Check deduplication
+                if (existing.some(m => m.messageId === message.messageId || m._id === message._id)) {
+                    return prev;
+                }
+                return { ...prev, [caseId]: [...existing, message] };
+            });
+
+            // Update case in list
+            setMyCases(prev => prev.map(c => {
+                const cId = c.caseId || c.ticketNumber || c._id;
+                if (cId === caseId || c._id === caseId) {
+                    return {
+                        ...c,
+                        status: caseStatus || c.status,
+                        lastResponse: {
+                            senderType: message.senderType,
+                            senderRole: message.senderRole,
+                            senderName: message.senderName,
+                            message: message.message,
+                            respondedAt: new Date()
+                        },
+                        updatedAt: new Date(),
+                        unreadCustomerCount: (message.senderRole === 'ADMIN' || message.senderRole === 'SUPPORT_AGENT') ? (c.unreadCustomerCount || 0) + 1 : c.unreadCustomerCount
+                    };
+                }
+                return c;
+            }));
+
+            // Alert user if message is from staff
+            if (message.senderRole === 'ADMIN' || message.senderRole === 'SUPPORT_AGENT' || message.senderType === 'admin') {
+                triggerNotification({
+                    title: `Support Reply #${caseId} 💬`,
+                    message: `${message.senderName || 'Agent'}: "${message.message.substring(0, 70)}..."`,
+                    type: 'info'
+                });
+            }
+        });
+
+        // Listen for read receipts
+        socket.on('case_messages_read', ({ caseId, readByRole, readAt }) => {
+            if (readByRole === 'ADMIN' || readByRole === 'SUPPORT_AGENT') {
+                setCaseMessagesMap(prev => {
+                    const existing = prev[caseId] || [];
+                    return {
+                        ...prev,
+                        [caseId]: existing.map(m => {
+                            if (m.senderRole === 'USER' || m.senderRole === 'CREATOR' || m.senderType === 'user') {
+                                return { ...m, readStatus: 'READ', readAt };
+                            }
+                            return m;
+                        })
+                    };
+                });
+            }
+        });
+
+        // Listen for status changes
+        socket.on('case_status_changed', ({ caseId, status, resolution }) => {
+            setMyCases(prev => prev.map(c => {
+                const cId = c.caseId || c.ticketNumber || c._id;
+                if (cId === caseId || c._id === caseId) {
+                    return { ...c, status, resolution: resolution || c.resolution };
+                }
+                return c;
+            }));
+        });
+
+        // Listen for typing status
+        socket.on('case_typing_status', ({ caseId, senderName, isTyping }) => {
+            setAgentTypingMap(prev => ({
+                ...prev,
+                [caseId]: isTyping ? senderName : null
+            }));
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, [user, triggerNotification]);
+
+    // Handle case room join / leave
+    useEffect(() => {
+        if (!socketRef.current) return;
+        if (expandedCaseId) {
+            socketRef.current.emit('join_case', expandedCaseId);
+            // Fetch latest messages & auto-mark read
+            fetchCaseMessages(expandedCaseId);
+        }
+        return () => {
+            if (expandedCaseId && socketRef.current) {
+                socketRef.current.emit('leave_case', expandedCaseId);
+            }
+        };
+    }, [expandedCaseId]);
 
     const fetchLookupEntities = async () => {
         try {
@@ -223,26 +343,85 @@ export default function Support() {
         }
     };
 
-    const handleSendUserReply = async (caseId) => {
-        const text = userReplyMap[caseId];
+    const fetchCaseMessages = async (caseId) => {
+        try {
+            const res = await api.get(`/support/cases/${caseId}/messages`);
+            if (res.data?.messages) {
+                setCaseMessagesMap(prev => ({
+                    ...prev,
+                    [caseId]: res.data.messages
+                }));
+                // Update unread count to 0 in list
+                setMyCases(prev => prev.map(c => {
+                    const cId = c.caseId || c.ticketNumber || c._id;
+                    if (cId === caseId || c._id === caseId) {
+                        return { ...c, unreadCustomerCount: 0 };
+                    }
+                    return c;
+                }));
+            }
+        } catch (e) {}
+    };
+
+    useEffect(() => {
+        if (user) {
+            setName(user.name || '');
+            setEmail(user.email || '');
+            setPhone(user.phone || '');
+            fetchMyCases();
+            fetchLookupEntities();
+        }
+    }, [user]);
+
+    const handleSendUserReply = async (caseId, retryText = null) => {
+        const text = retryText || userReplyMap[caseId];
         if (!text || !text.trim()) return;
 
+        const optimisticMsgId = `OPT-${Date.now()}`;
+        const optimisticMsg = {
+            messageId: optimisticMsgId,
+            caseId,
+            senderRole: user?.isOnboarded ? 'CREATOR' : 'USER',
+            senderType: 'user',
+            senderName: user?.name || name || 'You',
+            message: text.trim(),
+            deliveryStatus: 'PENDING',
+            readStatus: 'UNREAD',
+            createdAt: new Date(),
+            timestamp: new Date()
+        };
+
+        // Optimistic UI Append
+        setCaseMessagesMap(prev => ({
+            ...prev,
+            [caseId]: [...(prev[caseId] || []), optimisticMsg]
+        }));
+        setUserReplyMap(prev => ({ ...prev, [caseId]: '' }));
+        setFailedMessagesMap(prev => ({ ...prev, [caseId]: null }));
         setReplyingMap(prev => ({ ...prev, [caseId]: true }));
+
         try {
-            await api.post(`/support/cases/${caseId}/reply`, {
+            const res = await api.post(`/support/cases/${caseId}/messages`, {
                 message: text.trim()
             });
-            setUserReplyMap(prev => ({ ...prev, [caseId]: '' }));
-            triggerNotification({
-                title: 'Reply Dispatched 🚀',
-                message: 'Your message has been added to the case thread.',
-                type: 'success'
-            });
+
+            if (res.data?.messageData) {
+                setCaseMessagesMap(prev => ({
+                    ...prev,
+                    [caseId]: (prev[caseId] || []).map(m => m.messageId === optimisticMsgId ? res.data.messageData : m)
+                }));
+            }
             fetchMyCases();
         } catch (err) {
+            // Mark failed for retry
+            setCaseMessagesMap(prev => ({
+                ...prev,
+                [caseId]: (prev[caseId] || []).map(m => m.messageId === optimisticMsgId ? { ...m, deliveryStatus: 'FAILED' } : m)
+            }));
+            setFailedMessagesMap(prev => ({ ...prev, [caseId]: text.trim() }));
             triggerNotification({
-                title: 'Failed to send reply',
-                message: err.response?.data?.error || 'Please try again.',
+                title: 'Message Delivery Failed',
+                message: err.response?.data?.error || 'Could not reach support rail. Tap to retry.',
                 type: 'error'
             });
         } finally {
@@ -319,7 +498,7 @@ export default function Support() {
 
             triggerNotification({
                 title: 'Case Submitted Successfully! 🚀',
-                message: `Your case #${newCaseId} has been submitted to the GurshaPay support team.`,
+                message: `Your case #${newCaseId} has been submitted. You can track real-time responses below.`,
                 type: 'success'
             });
 
@@ -374,7 +553,7 @@ export default function Support() {
         },
         {
             q: 'What should I do if a fan tip did not arrive?',
-            a: 'Select category "Payment & Checkout" or "Tipping & Fans" in the form below and select your linked transaction. Our team will verify the payment rail directly with Chapa/Telebirr.'
+            a: 'Select category "Payment & Checkout" or "Tipping & Fan Support" in the form below and select your linked transaction. Our team will verify the payment rail directly with Chapa/Telebirr.'
         }
     ];
 
@@ -403,11 +582,11 @@ export default function Support() {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>
                         <h1 style={{ fontSize: 'clamp(1.4rem, 5vw, 1.85rem)', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <span>Support & Case Management Center</span>
+                            <span>Support & Case Center</span>
                             <LifeBuoy size={26} color="var(--primary)" />
                         </h1>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.25rem', marginBottom: 0 }}>
-                            Report issues with tips, payouts, Fayda ID, or technical systems. Track your open cases in real-time.
+                            Real-time two-way support case messaging, tracking, and dispute management.
                         </p>
                     </div>
 
@@ -519,7 +698,7 @@ export default function Support() {
                             }}>
                                 <CheckCircle size={20} color="var(--primary)" style={{ flexShrink: 0 }} />
                                 <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontWeight: 600 }}>
-                                    Case <strong>#{submittedCaseId}</strong> recorded! Our operations team has received your ticket and is reviewing it.
+                                    Case <strong>#{submittedCaseId}</strong> logged! Real-time two-way messaging is active in the discussion panel below.
                                 </div>
                             </div>
                         )}
@@ -782,7 +961,7 @@ export default function Support() {
                         }}>
                             <ShieldCheck size={20} color="var(--primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
                             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                                <strong style={{ color: 'var(--text-main)' }}>Bank-Grade Protection:</strong> All cases regarding payouts and transactions are encrypted and audited to protect creator balances and confidentiality.
+                                <strong style={{ color: 'var(--text-main)' }}>Bank-Grade Protection:</strong> Real-time two-way messaging is encrypted and audited with end-to-end delivery tracking.
                             </div>
                         </div>
                     </div>
@@ -838,26 +1017,31 @@ export default function Support() {
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                                 {filteredCases.map(c => {
-                                    const isExpanded = expandedCaseId === c._id;
+                                    const caseId = c.caseId || c.ticketNumber || c._id;
+                                    const isExpanded = expandedCaseId === caseId || expandedCaseId === c._id;
                                     const isResolved = c.status === 'RESOLVED';
                                     const isWaitingUser = c.status === 'WAITING_FOR_USER';
                                     const isClosed = c.status === 'CLOSED';
 
+                                    const messages = caseMessagesMap[caseId] || caseMessagesMap[c._id] || c.messages || [];
                                     const lastResponseMsg = c.lastResponse?.message || c.description || c.message;
+                                    const hasUnread = (c.unreadCustomerCount || 0) > 0;
+                                    const isTypingAgent = agentTypingMap[caseId] || agentTypingMap[c._id];
 
                                     return (
                                         <div 
                                             key={c._id}
                                             style={{
                                                 background: 'var(--card-bg-subtle)',
-                                                border: `1px solid ${isWaitingUser ? '#6366F1' : isResolved ? '#10B981' : isClosed ? 'var(--border-color)' : 'var(--primary)'}`,
+                                                border: `1px solid ${hasUnread ? 'var(--primary)' : isWaitingUser ? '#6366F1' : isResolved ? '#10B981' : isClosed ? 'var(--border-color)' : 'var(--border-color)'}`,
                                                 borderRadius: '12px',
                                                 padding: '1rem',
-                                                transition: 'all 0.15s ease'
+                                                transition: 'all 0.15s ease',
+                                                boxShadow: hasUnread ? '0 0 0 1px var(--primary)' : 'none'
                                             }}
                                         >
                                             <div 
-                                                onClick={() => setExpandedCaseId(isExpanded ? null : c._id)}
+                                                onClick={() => setExpandedCaseId(isExpanded ? null : (c.caseId || c._id))}
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'space-between',
@@ -875,6 +1059,11 @@ export default function Support() {
                                                         <Badge variant={isResolved ? 'success' : isWaitingUser ? 'primary' : isClosed ? 'neutral' : 'warning'} size="sm">
                                                             {c.status}
                                                         </Badge>
+                                                        {hasUnread && (
+                                                            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#fff', background: '#10B981', padding: '1px 7px', borderRadius: '999px' }}>
+                                                                {c.unreadCustomerCount} New
+                                                            </span>
+                                                        )}
                                                         {c.priority && c.priority !== 'NORMAL' && (
                                                             <span style={{ fontSize: '0.7rem', fontWeight: 800, color: c.priority === 'URGENT' ? '#DC2626' : '#D97706', background: c.priority === 'URGENT' ? 'rgba(220,38,38,0.1)' : 'rgba(217,119,6,0.1)', padding: '2px 6px', borderRadius: '4px' }}>
                                                                 {c.priority}
@@ -882,17 +1071,17 @@ export default function Support() {
                                                         )}
                                                     </div>
                                                     <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                                        Case #{c.caseId || c.ticketNumber || c._id.slice(-6).toUpperCase()} • Category: {c.category} • {c.subcategory && `(${c.subcategory}) • `} Updated: {new Date(c.updatedAt || c.createdAt).toLocaleDateString()}
+                                                        Case #{caseId} • Category: {c.category} • {c.subcategory && `(${c.subcategory}) • `} Updated: {new Date(c.updatedAt || c.createdAt).toLocaleDateString()}
                                                     </div>
                                                     {lastResponseMsg && !isExpanded && (
                                                         <div style={{ fontSize: '0.775rem', color: 'var(--text-secondary)', marginTop: '4px', maxWidth: '600px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                                            <em>Last update: {lastResponseMsg}</em>
+                                                            <em>Last response: {lastResponseMsg}</em>
                                                         </div>
                                                     )}
                                                 </div>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                     <span style={{ fontSize: '0.775rem', color: 'var(--primary)', fontWeight: 700 }}>
-                                                        {isExpanded ? 'Hide Discussion' : 'View Discussion'}
+                                                        {isExpanded ? 'Close Chat' : 'Open Two-Way Chat'}
                                                     </span>
                                                     {isExpanded ? <ChevronUp size={16} color="var(--primary)" /> : <ChevronDown size={16} color="var(--text-muted)" />}
                                                 </div>
@@ -918,16 +1107,29 @@ export default function Support() {
                                                         </div>
                                                     )}
 
-                                                    {/* Messages Thread */}
-                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '1rem' }}>
-                                                        {c.messages && c.messages.length > 0 ? (
-                                                            c.messages.map((m, idx) => {
-                                                                const isAdmin = m.senderType === 'admin' || m.senderType === 'SUPPORT_AGENT';
-                                                                const isSystem = m.senderType === 'system';
+                                                    {/* Real-time Two-Way Chat Messages Thread */}
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        gap: '10px',
+                                                        marginBottom: '1rem',
+                                                        maxHeight: '380px',
+                                                        overflowY: 'auto',
+                                                        padding: '4px'
+                                                    }}>
+                                                        {messages.length > 0 ? (
+                                                            messages.map((m, idx) => {
+                                                                const isAdmin = m.senderRole === 'ADMIN' || m.senderRole === 'SUPPORT_AGENT' || m.senderType === 'admin';
+                                                                const isSystem = m.senderType === 'system' || m.senderRole === 'SYSTEM';
+                                                                const isMe = !isAdmin && !isSystem;
+
+                                                                const isRead = m.readStatus === 'READ';
+                                                                const isFailed = m.deliveryStatus === 'FAILED';
+                                                                const isPending = m.deliveryStatus === 'PENDING';
 
                                                                 if (isSystem) {
                                                                     return (
-                                                                        <div key={idx} style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                                                        <div key={idx} style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', padding: '2px 0' }}>
                                                                             <em>{m.message}</em>
                                                                         </div>
                                                                     );
@@ -935,28 +1137,65 @@ export default function Support() {
 
                                                                 return (
                                                                     <div 
-                                                                        key={idx}
+                                                                        key={m.messageId || idx}
                                                                         style={{
                                                                             alignSelf: isAdmin ? 'flex-start' : 'flex-end',
                                                                             maxWidth: '85%',
                                                                             background: isAdmin ? 'rgba(16, 185, 129, 0.12)' : 'var(--card-bg)',
-                                                                            border: isAdmin ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--border-color)',
-                                                                            borderRadius: '10px',
-                                                                            padding: '0.65rem 0.85rem'
+                                                                            border: isFailed ? '1px solid #EF4444' : isAdmin ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--border-color)',
+                                                                            borderRadius: '12px',
+                                                                            padding: '0.65rem 0.85rem',
+                                                                            position: 'relative'
                                                                         }}
                                                                     >
-                                                                        <div style={{ fontSize: '0.725rem', fontWeight: 800, color: isAdmin ? 'var(--primary)' : 'var(--text-muted)', marginBottom: '2px' }}>
-                                                                            {isAdmin ? '🛡️ GurshaPay Support' : 'You'} • {new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                                        <div style={{ fontSize: '0.725rem', fontWeight: 800, color: isAdmin ? 'var(--primary)' : 'var(--text-muted)', marginBottom: '3px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                                                                            <span>{isAdmin ? '🛡️ GurshaPay Support' : 'You'}</span>
+                                                                            <span style={{ fontSize: '0.7rem', fontWeight: 500 }}>
+                                                                                {new Date(m.createdAt || m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                                            </span>
                                                                         </div>
-                                                                        <div style={{ fontSize: '0.825rem', color: 'var(--text-main)', whiteSpace: 'pre-line', lineHeight: 1.4 }}>
+
+                                                                        <div style={{ fontSize: '0.825rem', color: 'var(--text-main)', whiteSpace: 'pre-line', lineHeight: 1.45 }}>
                                                                             {m.message}
                                                                         </div>
+
+                                                                        {/* Status & Read Receipt Indicator */}
+                                                                        {isMe && (
+                                                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '3px', marginTop: '3px', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                                                                                {isPending && <span style={{ color: '#D97706' }}>Sending...</span>}
+                                                                                {isFailed && (
+                                                                                    <span 
+                                                                                        onClick={() => handleSendUserReply(caseId, m.message)}
+                                                                                        style={{ color: '#EF4444', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '2px' }}
+                                                                                    >
+                                                                                        <AlertTriangle size={11} /> Failed (Tap to retry)
+                                                                                    </span>
+                                                                                )}
+                                                                                {!isPending && !isFailed && (
+                                                                                    isRead ? (
+                                                                                        <span style={{ color: '#10B981', display: 'flex', alignItems: 'center', gap: '1px' }}>
+                                                                                            <CheckCheck size={13} /> Read
+                                                                                        </span>
+                                                                                    ) : (
+                                                                                        <span style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '1px' }}>
+                                                                                            <Check size={12} /> Delivered
+                                                                                        </span>
+                                                                                    )
+                                                                                )}
+                                                                            </div>
+                                                                        )}
                                                                     </div>
                                                                 );
                                                             })
                                                         ) : (
                                                             <div style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
                                                                 {c.description || c.message}
+                                                            </div>
+                                                        )}
+
+                                                        {isTypingAgent && (
+                                                            <div style={{ alignSelf: 'flex-start', fontSize: '0.75rem', color: 'var(--primary)', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                                <span className="dot-flashing"></span> Support officer is typing...
                                                             </div>
                                                         )}
                                                     </div>
@@ -967,39 +1206,44 @@ export default function Support() {
                                                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                                                 <input
                                                                     type="text"
-                                                                    value={userReplyMap[c._id] || ''}
-                                                                    onChange={(e) => setUserReplyMap({ ...userReplyMap, [c._id]: e.target.value })}
-                                                                    placeholder="Write a follow-up reply..."
-                                                                    onKeyDown={(e) => { if (e.key === 'Enter') handleSendUserReply(c._id); }}
+                                                                    value={userReplyMap[caseId] || ''}
+                                                                    onChange={(e) => {
+                                                                        setUserReplyMap({ ...userReplyMap, [caseId]: e.target.value });
+                                                                        if (socketRef.current) {
+                                                                            socketRef.current.emit('case_typing', { caseId, senderName: user?.name || 'Customer', isTyping: e.target.value.length > 0 });
+                                                                        }
+                                                                    }}
+                                                                    placeholder="Type your message to support..."
+                                                                    onKeyDown={(e) => { if (e.key === 'Enter') handleSendUserReply(caseId); }}
                                                                     style={{
                                                                         flex: 1,
-                                                                        padding: '0.55rem 0.75rem',
-                                                                        borderRadius: '8px',
+                                                                        padding: '0.65rem 0.85rem',
+                                                                        borderRadius: '10px',
                                                                         border: '1px solid var(--border-color)',
                                                                         background: 'var(--card-bg)',
                                                                         color: 'var(--text-main)',
-                                                                        fontSize: '0.825rem',
+                                                                        fontSize: '0.85rem',
                                                                         outline: 'none'
                                                                     }}
                                                                 />
                                                                 <Button
                                                                     variant="primary"
                                                                     size="sm"
-                                                                    loading={replyingMap[c._id]}
-                                                                    disabled={!(userReplyMap[c._id] || '').trim()}
-                                                                    onClick={() => handleSendUserReply(c._id)}
+                                                                    loading={replyingMap[caseId]}
+                                                                    disabled={!(userReplyMap[caseId] || '').trim()}
+                                                                    onClick={() => handleSendUserReply(caseId)}
                                                                 >
-                                                                    Reply
+                                                                    <Send size={14} /> Send
                                                                 </Button>
                                                             </div>
 
                                                             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                                                                 <button
-                                                                    onClick={() => handleCloseCase(c._id)}
-                                                                    disabled={closingMap[c._id]}
+                                                                    onClick={() => handleCloseCase(caseId)}
+                                                                    disabled={closingMap[caseId]}
                                                                     style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.75rem', cursor: 'pointer', textDecoration: 'underline' }}
                                                                 >
-                                                                    {closingMap[c._id] ? 'Closing case...' : 'Mark case as resolved & close'}
+                                                                    {closingMap[caseId] ? 'Closing case...' : 'Mark case as resolved & close'}
                                                                 </button>
                                                             </div>
                                                         </div>
