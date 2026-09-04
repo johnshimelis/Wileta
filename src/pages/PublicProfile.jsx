@@ -14,7 +14,7 @@ import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
-import { Gift3DIcon, playAudioEffect, TikTokLiveGiftShowcase } from '../components/Ethiopian3DGifts';
+import { Gift3DIcon, playAudioEffect, TikTokLiveGiftShowcase, ETHIOPIAN_GIFTS_CATALOG } from '../components/Ethiopian3DGifts';
 import './PublicProfile.css';
 
 // Verified Blue Tick SVG Emblem
@@ -45,30 +45,6 @@ const VerifiedBlueTick = ({ size = 22, title = "Verified Creator" }) => (
     </span>
 );
 
-// ── Ethiopian Cultural Virtual Gifts Catalog (10 ETB / 100 Coins to 100,000 ETB / 1,000,000 Coins) ──
-// Ratio: 10 Coins = 1 ETB
-const CULTURAL_GIFTS = [
-    // Cultural & Heritage Tiers
-    { id: 'adey_abeba', nameEn: 'Adey Flower', nameAm: 'አደይ አበባ', emoji: '🌼', etb: '10', coins: 100, category: 'cultural', badge: 'Highland', description: 'Fresh Ethiopian highland Adey bloom' },
-    { id: 'rose', nameEn: 'Highland Rose', nameAm: 'ጽጌረዳ', emoji: '🌹', etb: '25', coins: 250, category: 'cultural', description: 'Fragrant Highland Rose' },
-    { id: 'buna', nameEn: 'Sini Buna Cup', nameAm: 'ሲኒ ቡና', emoji: '☕', etb: '50', coins: 500, category: 'cultural', badge: 'Popular', description: 'Fresh roasted Buna cup with steam' },
-    { id: 'mesob', nameEn: 'Mesob Basket', nameAm: 'መሶብ', emoji: '🧺', etb: '100', coins: 1000, category: 'cultural', badge: 'Heritage', description: 'Handcrafted colorful Mesob' },
-    { id: 'bible', nameEn: 'Holy Bible', nameAm: 'መጽሐፍ ቅዱስ', emoji: '📖', etb: '150', coins: 1500, category: 'cultural', badge: 'Sacred', description: 'Leatherbound Holy Ethiopian Bible' },
-    { id: 'quran', nameEn: 'Holy Quran', nameAm: 'ቁርኣን', emoji: '📗', etb: '150', coins: 1500, category: 'cultural', badge: 'Sacred', description: 'Gilded Emerald Holy Quran' },
-    { id: 'jebena', nameEn: 'Clay Jebena', nameAm: 'ጀበና', emoji: '🫖', etb: '250', coins: 2500, category: 'cultural', description: 'Clay boiled traditional Jebena' },
-    { id: 'enjera', nameEn: 'Gursha Feast', nameAm: 'የጉርሻ ግብዣ', emoji: '🍲', etb: '350', coins: 3500, category: 'cultural', badge: 'Festive', description: 'Warm Beyaynetu platter feast' },
-    { id: 'kemis', nameEn: 'Habesha Kemis', nameAm: 'የሐበሻ ቀሚስ', emoji: '👗', etb: '500', coins: 5000, category: 'cultural', description: 'Handwoven Tibeb royal dress' },
-    { id: 'anbessa', nameEn: 'Lion of Judah', nameAm: 'አንበሳ', emoji: '🦁', etb: '1000', coins: 10000, category: 'cultural', badge: 'King', description: 'Majestic 3D Roaring Ethiopian Lion' },
-
-    // VIP & Luxury Tiers (25,000 Coins to 1,000,000 Coins)
-    { id: 'crown', nameEn: 'Negus Crown', nameAm: 'የንጉሥ ዘውድ', emoji: '👑', etb: '2500', coins: 25000, category: 'vip', badge: 'VIP', description: 'Royal Emperor Golden Crown' },
-    { id: 'diamond', nameEn: 'Telebirr Gem', nameAm: 'ቴሌብር አልማዝ', emoji: '💎', etb: '5000', coins: 50000, category: 'vip', description: 'Sparkling brilliant-cut gemstone' },
-    { id: 'car', nameEn: 'Addis Supercar', nameAm: 'ስፖርት መኪና', emoji: '🏎️', etb: '10000', coins: 100000, category: 'vip', badge: 'Speed', description: 'High-speed luxury hypercar with drift' },
-    { id: 'lalibela', nameEn: 'Lalibela Church', nameAm: 'ላሊበላ ቤተ ጊዮርጊስ', emoji: '⛪', etb: '25000', coins: 250000, category: 'vip', badge: 'World Heritage', description: 'Exact Monolithic Bet Giyorgis Rock Church' },
-    { id: 'plane', nameEn: 'Ethiopian Jet', nameAm: 'ቦይንግ ጄት', emoji: '✈️', etb: '50000', coins: 500000, category: 'vip', description: 'Flagship Dreamliner 787 airliner' },
-    { id: 'national_honor', nameEn: 'National Honor', nameAm: 'ታላቅ ክብር', emoji: '🏆', etb: '100000', coins: 1000000, category: 'vip', badge: 'Legendary', description: 'Supreme 24K Ethiopian National Honor' }
-];
-
 export default function PublicProfile() {
     const { api } = useAuth();
     const { username } = useParams();
@@ -76,8 +52,8 @@ export default function PublicProfile() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    // Virtual Gift & Coin Tipping State
-    const [selectedGift, setSelectedGift] = useState(CULTURAL_GIFTS[0]); // Default Adey Flower (10 ETB)
+    // Virtual Gift & Coin Tipping State (24 Cultural Gifts Catalog)
+    const [selectedGift, setSelectedGift] = useState(ETHIOPIAN_GIFTS_CATALOG[0]); // Default Adey Flower (10 ETB)
     const [giftCategory, setGiftCategory] = useState('all'); // 'all' | 'cultural' | 'vip' | 'custom'
     const [amount, setAmount] = useState('10');
     const [customAmount, setCustomAmount] = useState('');
@@ -556,7 +532,7 @@ export default function PublicProfile() {
                             {!isCustom ? (
                                 <div className="tiktok-gift-tray">
                                     <div className="tiktok-gift-grid">
-                                        {CULTURAL_GIFTS.filter(g => giftCategory === 'all' || g.category === giftCategory).map((gift) => {
+                                        {ETHIOPIAN_GIFTS_CATALOG.filter(g => giftCategory === 'all' || g.category === giftCategory).map((gift) => {
                                             const isSelected = selectedGift?.id === gift.id && !isCustom;
                                             return (
                                                 <button

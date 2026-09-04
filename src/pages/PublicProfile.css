@@ -82,18 +82,288 @@
     animation: tiktok-3d-sway 2s infinite ease-in-out;
 }
 
+/* 3D HOLOGRAPHIC ORB CONTAINER & REALISTIC IMAGE VISUALS */
+.gift-3d-orb-container {
+    position: relative;
+    border-radius: 50%;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gift-orb-glow-aura {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, rgba(245, 158, 11, 0) 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: auraPulse 2.5s infinite ease-in-out;
+}
+
+@keyframes auraPulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.15); opacity: 0.95; }
+}
+
+.gift-orb-lens {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    background: radial-gradient(circle at 35% 30%, #2a2a38 0%, #121218 80%, #08080c 100%);
+    border: 1.5px solid rgba(253, 224, 71, 0.4);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.gift-orb-real-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transform: scale(1.02);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    mix-blend-mode: normal;
+}
+
+.gift-orb-fallback-emoji {
+    font-size: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ==========================================================================
+   SPECIALIZED IN-PLACE LIVE MOVEMENT ANIMATIONS (INSIDE GIFT TRAY)
+   ========================================================================== */
+
+/* ✈️ Jet Banking Float */
+.inplace-jet-banking {
+    animation: jetBankInPlace 2.8s infinite ease-in-out;
+}
+
+@keyframes jetBankInPlace {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-4px) rotate(8deg); }
+    50% { transform: translateY(-1px) rotate(0deg); }
+    75% { transform: translateY(-5px) rotate(-8deg); }
+}
+
+.inplace-jet-trail {
+    position: absolute;
+    bottom: -2px;
+    display: flex;
+    gap: 3px;
+    z-index: 2;
+}
+
+.trail-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: trailGlow 1.2s infinite ease-in-out;
+}
+.t-green { background: #16A34A; box-shadow: 0 0 6px #16A34A; }
+.t-yellow { background: #FACC15; box-shadow: 0 0 6px #FACC15; animation-delay: 0.2s; }
+.t-red { background: #DC2626; box-shadow: 0 0 6px #DC2626; animation-delay: 0.4s; }
+
+@keyframes trailGlow {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.3); }
+}
+
+/* 🏎️ Supercar Drift Oscillation */
+.inplace-supercar-drift {
+    animation: carDriftInPlace 1.8s infinite ease-in-out;
+}
+
+@keyframes carDriftInPlace {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(-3px) rotate(-5deg); }
+    50% { transform: translateX(2px) rotate(4deg); }
+    75% { transform: translateX(-1px) rotate(-2deg); }
+}
+
+.inplace-drift-smoke {
+    position: absolute;
+    bottom: -4px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    z-index: 2;
+}
+
+.smoke-puff {
+    width: 6px;
+    height: 6px;
+    background: rgba(220, 220, 230, 0.6);
+    border-radius: 50%;
+    animation: puffDrift 1s infinite ease-out;
+}
+.sp-2 { animation-delay: 0.4s; }
+
+@keyframes puffDrift {
+    0% { transform: translateY(0) scale(0.5); opacity: 0.8; }
+    100% { transform: translateY(-8px) scale(1.4); opacity: 0; }
+}
+
+/* 🦁 Lion Majestic Breathing */
+.inplace-lion-breathe {
+    animation: lionBreatheInPlace 2.4s infinite ease-in-out;
+}
+
+@keyframes lionBreatheInPlace {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.4)); }
+    50% { transform: scale(1.08) translateY(-2px); filter: drop-shadow(0 4px 16px rgba(245, 158, 11, 0.85)); }
+}
+
+/* ☕ Steam Rising Wisps (Coffee & Jebena) */
+.inplace-steam-waft {
+    animation: steamWaft 2.6s infinite ease-in-out;
+}
+
+@keyframes steamWaft {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+.inplace-steam-wisps {
+    position: absolute;
+    top: -6px;
+    display: flex;
+    gap: 4px;
+    z-index: 2;
+}
+
+.steam-line {
+    width: 2px;
+    height: 8px;
+    background: linear-gradient(to top, rgba(253, 224, 71, 0.7), transparent);
+    border-radius: 2px;
+    animation: steamRise 1.4s infinite ease-in-out;
+}
+.st-2 { animation-delay: 0.3s; height: 10px; }
+.st-3 { animation-delay: 0.6s; }
+
+@keyframes steamRise {
+    0% { transform: translateY(0) scaleY(0.6); opacity: 0.2; }
+    50% { transform: translateY(-6px) scaleY(1.2); opacity: 0.8; }
+    100% { transform: translateY(-12px) scaleY(1.4); opacity: 0; }
+}
+
+/* 🌼 Flower Gentle Sway */
+.inplace-flower-sway {
+    animation: flowerSway 3s infinite ease-in-out;
+}
+
+@keyframes flowerSway {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(5deg) scale(1.04); }
+    75% { transform: rotate(-5deg) scale(1.04); }
+}
+
+/* 📖 Sacred Rotating Halo */
+.inplace-sacred-float {
+    animation: sacredFloatInPlace 3.2s infinite ease-in-out;
+}
+
+@keyframes sacredFloatInPlace {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-4px) scale(1.06); }
+}
+
+.inplace-sacred-rays {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(250, 204, 21, 0.6);
+    animation: spinRays 8s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes spinRays {
+    100% { transform: rotate(360deg); }
+}
+
+/* 💎 Gem / Crown Shimmer */
+.inplace-gem-shimmer {
+    animation: gemShimmerInPlace 2s infinite ease-in-out;
+}
+
+@keyframes gemShimmerInPlace {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.08) rotate(3deg); }
+}
+
+.inplace-sparkle-star {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 6px;
+    height: 6px;
+    background: #FFFFFF;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #FDE047, 0 0 14px #FFFFFF;
+    animation: starBlink 1.5s infinite ease-in-out;
+    z-index: 2;
+}
+
+@keyframes starBlink {
+    0%, 100% { transform: scale(0.4); opacity: 0.2; }
+    50% { transform: scale(1.3); opacity: 1; }
+}
+
+/* 🛰️ Satellite Orbit */
+.inplace-satellite-orbit {
+    animation: satelliteOrbit 4s infinite linear;
+}
+
+@keyframes satelliteOrbit {
+    0% { transform: perspective(400px) rotateY(0deg); }
+    100% { transform: perspective(400px) rotateY(360deg); }
+}
+
+/* 🏇 Horse Gallop */
+.inplace-horse-gallop {
+    animation: horseGallop 1.2s infinite ease-in-out;
+}
+
+@keyframes horseGallop {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    30% { transform: translateY(-4px) rotate(4deg); }
+    70% { transform: translateY(-1px) rotate(-3deg); }
+}
+
+/* Cultural Pulse Default */
+.inplace-cultural-pulse {
+    animation: culturalPulse 2.4s infinite ease-in-out;
+}
+
+@keyframes culturalPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05) translateY(-2px); }
+}
+
 /* Glowing Neon Halo When Selected */
 .tiktok-gift-item.selected .tiktok-floating-3d {
     animation: tiktok-selected-halo-pulse 2s infinite ease-in-out;
 }
 
+.tiktok-gift-item.selected .gift-orb-lens {
+    border-color: #10B981;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.8), inset 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
 .tiktok-gift-item.selected .tiktok-floating-3d::after {
     content: '';
     position: absolute;
-    inset: -4px;
+    inset: -6px;
     border-radius: 50%;
     border: 2px solid #10B981;
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.8), inset 0 0 10px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 0 18px rgba(16, 185, 129, 0.9), inset 0 0 10px rgba(16, 185, 129, 0.5);
     animation: halo-pulse 1.8s infinite ease-in-out;
     pointer-events: none;
 }
@@ -149,6 +419,13 @@
     font-weight: 700;
     color: #9CA3AF;
     line-height: 1;
+}
+
+/* Hero Mode in Full-Screen Cinematic Showcase */
+.gift-hero-mode .gift-orb-lens {
+    border-width: 3px;
+    border-color: rgba(250, 204, 21, 0.8);
+    box-shadow: 0 0 50px rgba(245, 158, 11, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.4);
 }
 
 /* ==========================================================================
