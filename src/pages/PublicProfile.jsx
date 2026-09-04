@@ -44,6 +44,28 @@ const VerifiedBlueTick = ({ size = 22, title = "Verified Creator" }) => (
     </span>
 );
 
+// ── Ethiopian Cultural Virtual Gifts Catalog (10 ETB to 100,000 ETB) ──
+const CULTURAL_GIFTS = [
+    // Cultural & Heritage
+    { id: 'buna', nameEn: 'Buna Cup', nameAm: 'ሲኒ ቡና', emoji: '☕', etb: '10', category: 'cultural', badge: 'Popular', description: 'Fresh Ethiopian roast Buna cup' },
+    { id: 'adey_abeba', nameEn: 'Adey Abeba', nameAm: 'አደይ አበባ', emoji: '🌼', etb: '25', category: 'cultural', badge: 'Flower', description: 'New Year sunshine Adey bloom' },
+    { id: 'rose', nameEn: 'Highland Rose', nameAm: 'ጽጌረዳ', emoji: '🌹', etb: '50', category: 'cultural', description: 'Fragrant Highland Rose' },
+    { id: 'mesob', nameEn: 'Mesob Basket', nameAm: 'መሶብ', emoji: '🧺', etb: '100', category: 'cultural', badge: 'Heritage', description: 'Handcrafted colorful Mesob' },
+    { id: 'jebena', nameEn: 'Clay Jebena', nameAm: 'ጀበና', emoji: '🫖', etb: '150', category: 'cultural', description: 'Clay boiled traditional Jebena' },
+    { id: 'enjera', nameEn: 'Gursha Feast', nameAm: 'የጉርሻ ግብዣ', emoji: '🍲', etb: '200', category: 'cultural', description: 'Generous warm Gursha feast' },
+    { id: 'kemis', nameEn: 'Habesha Kemis', nameAm: 'የሐበሻ ቀሚስ', emoji: '👗', etb: '300', category: 'cultural', description: 'Woven Tibeb embroidered attire' },
+    { id: 'anbessa', nameEn: 'Lion of Judah', nameAm: 'አንበሳ', emoji: '🦁', etb: '500', category: 'cultural', badge: 'Courage', description: 'Majestic Ethiopian Highland Lion' },
+
+    // VIP & Luxury Tiers (1,000 ETB to 100,000 ETB)
+    { id: 'crown', nameEn: 'Negus Crown', nameAm: 'የንጉሥ ዘውድ', emoji: '👑', etb: '1000', category: 'vip', badge: 'VIP', description: 'Royal Emperor Golden Crown' },
+    { id: 'diamond', nameEn: 'Telebirr Gem', nameAm: 'ቴሌብር አልማዝ', emoji: '💎', etb: '2500', category: 'vip', description: 'Sparkling high-tier gemstone' },
+    { id: 'car', nameEn: 'Addis Supercar', nameAm: 'ስፖርት መኪና', emoji: '🏎️', etb: '5000', category: 'vip', description: 'High-speed luxury cruise car' },
+    { id: 'fasil', nameEn: 'Fasil Castle', nameAm: 'ፋሲል ግንብ', emoji: '🏰', etb: '10000', category: 'vip', badge: 'Grand', description: 'Legendary Royal Gondar Castle' },
+    { id: 'plane', nameEn: 'Ethiopian Jet', nameAm: 'ቦይንግ ጄት', emoji: '✈️', etb: '25000', category: 'vip', description: 'Flagship Dreamliner airliner' },
+    { id: 'cross', nameEn: 'Lalibela Cross', nameAm: 'የላሊበላ መስቀል', emoji: '✨', etb: '50000', category: 'vip', badge: 'Elite', description: 'Sacred Rock-Hewn Golden Cross' },
+    { id: 'national_honor', nameEn: 'National Honor', nameAm: 'ታላቅ ክብር', emoji: '🏆', etb: '100000', category: 'vip', badge: 'Legendary', description: 'Supreme Ethiopian Creator Honor' }
+];
+
 export default function PublicProfile() {
     const { api } = useAuth();
     const { username } = useParams();
@@ -51,7 +73,9 @@ export default function PublicProfile() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    // Tipping amount state
+    // Virtual Gift & Coin Tipping State
+    const [selectedGift, setSelectedGift] = useState(CULTURAL_GIFTS[3]); // Default Mesob (100 ETB)
+    const [giftCategory, setGiftCategory] = useState('all'); // 'all' | 'cultural' | 'vip' | 'custom'
     const [amount, setAmount] = useState('100');
     const [customAmount, setCustomAmount] = useState('');
     const [isCustom, setIsCustom] = useState(false);
@@ -70,17 +94,9 @@ export default function PublicProfile() {
 
     const quickMessages = [
         '☕ Gursha on me! Keep creating!',
-        '🚀 Keep pushing quality in Ethiopia!',
-        '🔥 Best content in the space!',
-        '❤️ Proud supporter since day one!'
-    ];
-
-    const presetAmounts = [
-        { count: 1, etb: '50', emoji: '☕', label: '50 ETB' },
-        { count: 2, etb: '100', emoji: '🥐', label: '100 ETB' },
-        { count: 5, etb: '250', emoji: '🚀', label: '250 ETB' },
-        { count: 10, etb: '500', emoji: '👑', label: '500 ETB' },
-        { count: 20, etb: '1000', emoji: '💎', label: '1,000 ETB' }
+        '🌼 Adey Abeba for the incredible work!',
+        '🦁 Proud Ethiopian supporter!',
+        '👑 Keep inspiring the community!'
     ];
 
     const showAlert = (message, type = 'success') => {
@@ -476,93 +492,199 @@ export default function PublicProfile() {
                 ) : (
                     /* INTERACTIVE TIPPING FORM */
                     <form onSubmit={handleTip}>
-                        {/* Preset Amount Grid */}
-                        <div style={{ marginBottom: '1.25rem' }}>
-                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                Select Tip Amount
-                            </label>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginBottom: '0.65rem' }}>
-                                {presetAmounts.map((p, idx) => {
-                                    const selected = !isCustom && amount === p.etb;
-                                    return (
-                                        <button
-                                            key={idx}
-                                            type="button"
-                                            onClick={() => {
-                                                setAmount(p.etb);
-                                                setIsCustom(false);
-                                            }}
-                                            style={{
-                                                padding: '0.75rem 0.5rem',
-                                                border: `1.5px solid ${selected ? 'var(--primary)' : 'var(--border-color)'}`,
-                                                borderRadius: '10px',
-                                                background: selected ? 'var(--primary-light)' : 'var(--bg-color)',
-                                                color: selected ? 'var(--primary)' : 'var(--text-main)',
-                                                fontWeight: 800,
-                                                fontSize: '0.9rem',
-                                                cursor: 'pointer',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                gap: '0.2rem',
-                                                transition: 'all 0.15s ease'
-                                            }}
-                                        >
-                                            <span style={{ fontSize: '1.1rem' }}>{p.emoji}</span>
-                                            <span>{p.label}</span>
-                                        </button>
-                                    );
-                                })}
-
-                                <button
-                                    type="button"
-                                    onClick={() => setIsCustom(true)}
-                                    style={{
-                                        padding: '0.75rem 0.5rem',
-                                        border: `1.5px solid ${isCustom ? 'var(--primary)' : 'var(--border-color)'}`,
-                                        borderRadius: '10px',
-                                        background: isCustom ? 'var(--primary-light)' : 'var(--bg-color)',
-                                        color: isCustom ? 'var(--primary)' : 'var(--text-main)',
-                                        fontWeight: 800,
-                                        fontSize: '0.9rem',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '0.2rem',
-                                        transition: 'all 0.15s ease'
-                                    }}
-                                >
-                                    <span>✍️</span>
-                                    <span>Custom</span>
-                                </button>
+                        {/* Ethiopian Cultural Virtual Gift & Coin Showcase */}
+                        <div style={{ marginBottom: '1.5rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                                <label style={{ fontSize: '0.8125rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    <span>🎁</span> Choose Gift / Coins (ስጦታ ይምረጡ)
+                                </label>
+                                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary)' }}>
+                                    10 ETB – 100,000 ETB
+                                </span>
                             </div>
 
-                            {/* Custom Amount Field */}
-                            {isCustom && (
-                                <div style={{ position: 'relative', marginTop: '0.5rem' }}>
-                                    <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 800, color: 'var(--text-muted)' }}>ETB</span>
-                                    <input
-                                        type="number"
-                                        min="10"
-                                        max="50000"
-                                        placeholder="Enter custom ETB amount (min 10)"
-                                        value={customAmount}
-                                        onChange={(e) => setCustomAmount(e.target.value)}
-                                        style={{
-                                            width: '100%',
-                                            padding: '0.75rem 1rem 0.75rem 3.5rem',
-                                            border: '1.5px solid var(--primary)',
-                                            borderRadius: '8px',
-                                            background: 'var(--bg-color)',
-                                            color: 'var(--text-main)',
-                                            fontSize: '0.95rem',
-                                            fontWeight: 700,
-                                            boxSizing: 'border-box'
+                            {/* Gift Category Filter Tabs */}
+                            <div className="gift-tag-category" style={{ display: 'flex', gap: '0.35rem', overflowX: 'auto', paddingBottom: '6px', marginBottom: '0.75rem' }}>
+                                {[
+                                    { key: 'all', label: '🔥 All Gifts (ሁሉም)' },
+                                    { key: 'cultural', label: '🇪🇹 Cultural (ባህላዊ)' },
+                                    { key: 'vip', label: '👑 VIP / Luxury (ልዩ)' },
+                                    { key: 'custom', label: '✍️ Custom (ብጁ)' }
+                                ].map(tab => (
+                                    <button
+                                        key={tab.key}
+                                        type="button"
+                                        onClick={() => {
+                                            setGiftCategory(tab.key);
+                                            if (tab.key === 'custom') {
+                                                setIsCustom(true);
+                                            } else {
+                                                setIsCustom(false);
+                                            }
                                         }}
-                                        required
-                                    />
+                                        style={{
+                                            padding: '0.35rem 0.65rem',
+                                            borderRadius: '8px',
+                                            border: '1px solid ' + (giftCategory === tab.key ? 'var(--primary)' : 'var(--border-color)'),
+                                            background: giftCategory === tab.key ? 'var(--primary-light)' : 'var(--bg-color)',
+                                            color: giftCategory === tab.key ? 'var(--primary)' : 'var(--text-muted)',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 700,
+                                            whiteSpace: 'nowrap',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Cultural Gifts Grid */}
+                            {!isCustom ? (
+                                <div style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(3, 1fr)',
+                                    gap: '0.5rem',
+                                    maxHeight: '290px',
+                                    overflowY: 'auto',
+                                    padding: '3px',
+                                    scrollbarWidth: 'thin'
+                                }}>
+                                    {CULTURAL_GIFTS.filter(g => giftCategory === 'all' || g.category === giftCategory).map((gift) => {
+                                        const isSelected = selectedGift?.id === gift.id && !isCustom;
+                                        return (
+                                            <div
+                                                key={gift.id}
+                                                className={`gift-card-item ${isSelected ? 'selected' : ''}`}
+                                                onClick={() => {
+                                                    setSelectedGift(gift);
+                                                    setAmount(gift.etb);
+                                                    setIsCustom(false);
+                                                }}
+                                                style={{
+                                                    padding: '0.65rem 0.4rem',
+                                                    border: `1.5px solid ${isSelected ? 'var(--primary)' : 'var(--border-color)'}`,
+                                                    borderRadius: '12px',
+                                                    background: isSelected ? 'var(--primary-light)' : 'var(--bg-color)',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    textAlign: 'center',
+                                                    minHeight: '82px',
+                                                    position: 'relative'
+                                                }}
+                                            >
+                                                {gift.badge && (
+                                                    <span style={{
+                                                        position: 'absolute',
+                                                        top: '3px',
+                                                        right: '3px',
+                                                        fontSize: '8px',
+                                                        fontWeight: 800,
+                                                        background: gift.badge === 'VIP' || gift.badge === 'Legendary' ? '#F59E0B' : 'var(--primary)',
+                                                        color: '#FFFFFF',
+                                                        padding: '1px 4px',
+                                                        borderRadius: '4px',
+                                                        lineHeight: 1
+                                                    }}>
+                                                        {gift.badge}
+                                                    </span>
+                                                )}
+
+                                                <span className="gift-icon-animated" style={{ fontSize: '1.45rem', marginBottom: '2px' }}>
+                                                    {gift.emoji}
+                                                </span>
+
+                                                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: isSelected ? 'var(--primary)' : 'var(--text-main)', lineHeight: 1.15 }}>
+                                                    {gift.nameAm}
+                                                </span>
+
+                                                <span style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '3px' }}>
+                                                    {gift.nameEn}
+                                                </span>
+
+                                                <span style={{
+                                                    fontSize: '0.72rem',
+                                                    fontWeight: 800,
+                                                    color: isSelected ? 'var(--primary)' : '#10B981',
+                                                    background: 'rgba(16, 185, 129, 0.1)',
+                                                    padding: '1px 6px',
+                                                    borderRadius: '6px',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '2px'
+                                                }}>
+                                                    🪙 {parseInt(gift.etb).toLocaleString()} ETB
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : null}
+
+                            {/* Custom Amount Input Box */}
+                            {isCustom && (
+                                <div style={{ marginTop: '0.5rem', background: 'var(--bg-color)', border: '1.5px solid var(--primary)', borderRadius: '12px', padding: '0.85rem' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+                                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-main)' }}>Custom Coin / Birr Amount</span>
+                                        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Min: 10 ETB • Max: 100,000 ETB</span>
+                                    </div>
+                                    <div style={{ position: 'relative' }}>
+                                        <span style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 800, color: 'var(--primary)' }}>🪙 ETB</span>
+                                        <input
+                                            type="number"
+                                            min="10"
+                                            max="100000"
+                                            placeholder="Enter coin value (10 - 100,000)"
+                                            value={customAmount}
+                                            onChange={(e) => setCustomAmount(e.target.value)}
+                                            style={{
+                                                width: '100%',
+                                                padding: '0.75rem 1rem 0.75rem 4.5rem',
+                                                border: '1px solid var(--border-color)',
+                                                borderRadius: '8px',
+                                                background: 'var(--card-bg)',
+                                                color: 'var(--text-main)',
+                                                fontSize: '0.95rem',
+                                                fontWeight: 800,
+                                                boxSizing: 'border-box'
+                                            }}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Selected Gift Preview Card */}
+                            {!isCustom && selectedGift && (
+                                <div style={{
+                                    marginTop: '0.75rem',
+                                    background: 'var(--bg-color)',
+                                    border: '1px solid var(--border-color)',
+                                    borderRadius: '10px',
+                                    padding: '8px 12px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    fontSize: '0.8rem'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span style={{ fontSize: '1.4rem' }}>{selectedGift.emoji}</span>
+                                        <div>
+                                            <div style={{ fontWeight: 800, color: 'var(--text-main)' }}>
+                                                {selectedGift.nameAm} ({selectedGift.nameEn})
+                                            </div>
+                                            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                                                {selectedGift.description}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>
+                                        🪙 {parseInt(selectedGift.etb).toLocaleString()} ETB
+                                    </span>
                                 </div>
                             )}
                         </div>
@@ -760,8 +882,10 @@ export default function PublicProfile() {
                                 <RefreshCw size={20} style={{ animation: 'spin 1s linear infinite' }} />
                             ) : (
                                 <>
-                                    <Coffee size={20} />
-                                    <span>Send {isCustom ? (customAmount || '0') : amount} ETB Gursha</span>
+                                    <span style={{ fontSize: '1.25rem' }}>{isCustom ? '🪙' : (selectedGift?.emoji || '☕')}</span>
+                                    <span>
+                                        Send {isCustom ? `${customAmount || '0'} ETB Coins` : `${selectedGift?.nameEn || 'Gursha'} (${amount} ETB)`}
+                                    </span>
                                 </>
                             )}
                         </button>

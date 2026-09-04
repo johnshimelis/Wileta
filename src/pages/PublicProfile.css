@@ -9,3 +9,78 @@
     background: var(--bg-color);
     position: relative;
 }
+
+/* Ethiopian Cultural Gift Animations */
+@keyframes gift-float {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        transform: translateY(-5px) scale(1.06);
+    }
+}
+
+@keyframes gift-glow {
+    0%, 100% {
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.2), inset 0 0 10px rgba(16, 185, 129, 0.1);
+        border-color: #10B981;
+    }
+    50% {
+        box-shadow: 0 0 24px rgba(16, 185, 129, 0.45), inset 0 0 16px rgba(16, 185, 129, 0.2);
+        border-color: #34D399;
+    }
+}
+
+@keyframes gift-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes bounce-coin {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15) rotate(5deg);
+    }
+}
+
+.gift-card-item {
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.gift-card-item:hover {
+    transform: translateY(-3px) scale(1.02);
+    border-color: rgba(16, 185, 129, 0.5) !important;
+}
+
+.gift-card-item.selected {
+    animation: gift-glow 2.5s infinite ease-in-out;
+    background: linear-gradient(145deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.05) 100%) !important;
+    border-color: #10B981 !important;
+}
+
+.gift-icon-animated {
+    display: inline-block;
+    transition: transform 0.2s ease;
+    animation: gift-float 3s infinite ease-in-out;
+}
+
+.gift-card-item:hover .gift-icon-animated {
+    animation: gift-float 1.2s infinite ease-in-out;
+}
+
+.gift-tag-category {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.gift-tag-category::-webkit-scrollbar {
+    display: none;
+}
