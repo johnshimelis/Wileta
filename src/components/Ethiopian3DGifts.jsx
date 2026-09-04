@@ -1,70 +1,82 @@
 import React, { useState, useEffect } from 'react';
 
 // =========================================================================
-// 1. 24 EXPANDED ETHIOPIAN CULTURAL VIRTUAL GIFTS CATALOG (10:1 COIN RATIO)
+// 1. 26 EXPANDED ETHIOPIAN CULTURAL VIRTUAL GIFTS CATALOG (10:1 COIN RATIO)
 // =========================================================================
 
 export const ETHIOPIAN_GIFTS_CATALOG = [
     // 🌼 Cultural Heritage Tiers (10 ETB / 100 Coins to 3,000 ETB / 30,000 Coins)
-    { id: 'adey_abeba', nameEn: 'Adey Flower', nameAm: 'አደይ አበባ', emoji: '🌼', etb: '10', coins: 100, category: 'cultural', badge: 'Highland', animationType: 'flower', description: 'Fresh Ethiopian highland Adey bloom with golden petals' },
-    { id: 'rose', nameEn: 'Highland Rose', nameAm: 'ጽጌረዳ', emoji: '🌹', etb: '25', coins: 250, category: 'cultural', animationType: 'flower', description: 'Fragrant velvety Ethiopian highland red rose' },
-    { id: 'buna', nameEn: 'Sini Buna Cup', nameAm: 'ሲኒ ቡና', emoji: '☕', etb: '50', coins: 500, category: 'cultural', badge: 'Popular', animationType: 'steam', description: 'Freshly roasted dark coffee in gold-rim Sini with crema' },
-    { id: 'jebena', nameEn: 'Clay Jebena', nameAm: 'የሸክላ ጀበና', emoji: '🫖', etb: '100', coins: 1000, category: 'cultural', badge: 'Aroma', animationType: 'steam', description: 'Traditional smoked black-clay coffee brewing Jebena' },
-    { id: 'mesob', nameEn: 'Mesob Basket', nameAm: 'ባህላዊ መሶብ', emoji: '🧺', etb: '150', coins: 1500, category: 'cultural', badge: 'Heritage', animationType: 'cultural', description: 'Handcrafted Harari colorful woven dining basket' },
-    { id: 'enjera', nameEn: 'Gursha Feast', nameAm: 'የሀበሻ ማዕድ', emoji: '🍲', etb: '200', coins: 2000, category: 'cultural', badge: 'Delicious', animationType: 'cultural', description: 'Deluxe Beyaynetu platter feast with spicy Doro Wot' },
-    { id: 'bible', nameEn: 'Holy Bible', nameAm: 'መጽሐፍ ቅዱስ', emoji: '📖', etb: '250', coins: 2500, category: 'cultural', badge: 'Sacred', animationType: 'sacred', description: 'Embossed leatherbound Ethiopian Ge’ez Bible with Cross' },
-    { id: 'quran', nameEn: 'Holy Quran', nameAm: 'ቁርኣን', emoji: '📗', etb: '250', coins: 2500, category: 'cultural', badge: 'Sacred', animationType: 'sacred', description: 'Emerald gilded Holy Quran with celestial divine illumination' },
-    { id: 'kebero', nameEn: 'Kebero Drum', nameAm: 'ባህላዊ ከበሮ', emoji: '🪘', etb: '350', coins: 3500, category: 'cultural', badge: 'Rhythm', animationType: 'cultural', description: 'Double-headed festive Ethiopian church & celebration drum' },
-    { id: 'masenqo', nameEn: 'Masenqo Lute', nameAm: 'ማሲንቆ', emoji: '🎻', etb: '500', coins: 5000, category: 'cultural', badge: 'Music', animationType: 'cultural', description: 'Single-stringed diamond soundbox bowed acoustic lute' },
-    { id: 'krar', nameEn: 'Acoustic Krar', nameAm: 'ባህላዊ ክራር', emoji: '🎸', etb: '750', coins: 7500, category: 'cultural', badge: 'Melody', animationType: 'cultural', description: 'Five-stringed traditional Ethiopian acoustic bowl lyre' },
-    { id: 'kemis', nameEn: 'Habesha Kemis', nameAm: 'የሐበሻ ቀሚስ', emoji: '👗', etb: '1000', coins: 10000, category: 'cultural', badge: 'Fashion', animationType: 'cultural', description: 'Embroidered royal white cotton dress with gold Tilf' },
-    { id: 'shield', nameEn: 'Warrior Shield', nameAm: 'ጋሻና ጦር', emoji: '🛡️', etb: '1500', coins: 15000, category: 'cultural', badge: 'Valor', animationType: 'cultural', description: 'Embossed warrior leather shield and twin golden spears' },
-    { id: 'walia', nameEn: 'Walia Ibex', nameAm: 'ዋሊያ አይቤክስ', emoji: '🐐', etb: '2000', coins: 20000, category: 'cultural', badge: 'Wild', animationType: 'cultural', description: 'Majestic Semien Mountain Walia Ibex on rocky cliff' },
-    { id: 'horse', nameEn: 'Gadaa Horse', nameAm: 'የኦሮሞ ፈረስ', emoji: '🏇', etb: '3000', coins: 30000, category: 'cultural', badge: 'Warrior', animationType: 'cultural', description: 'Galloping Ethiopian steed with traditional battle saddle' },
+    { id: 'adey_abeba', nameEn: 'Adey Flower', nameAm: 'አደይ አበባ', emoji: '🌼', etb: '10', coins: 100, category: 'cultural', badge: 'Highland', animationType: 'flower', description: 'Fresh Ethiopian highland Adey bloom with unfurling golden petals' },
+    { id: 'rose', nameEn: 'Highland Rose', nameAm: 'ጽጌረዳ', emoji: '🌹', etb: '25', coins: 250, category: 'cultural', animationType: 'flower', description: 'Velvety Ethiopian highland red rose with dew drops' },
+    { id: 'buna', nameEn: 'Sini Buna Cup', nameAm: 'ሲኒ ቡና', emoji: '☕', etb: '50', coins: 500, category: 'cultural', badge: 'Popular', animationType: 'steam', description: 'Freshly brewed coffee in gold-trim Sini with rising aromatic steam' },
+    { id: 'jebena', nameEn: 'Clay Jebena', nameAm: 'የሸክላ ጀበና', emoji: '🫖', etb: '100', coins: 1000, category: 'cultural', badge: 'Pouring', animationType: 'pour', description: 'Authentic clay Jebena pouring fresh steaming coffee into a Sini' },
+    { id: 'mesob', nameEn: 'Mesob Basket', nameAm: 'ባህላዊ መሶብ', emoji: '🧺', etb: '150', coins: 1500, category: 'cultural', badge: 'Heritage', animationType: 'mesob', description: 'Harari woven Mesob basket with opening lid revealing hot Injera' },
+    { id: 'enjera', nameEn: 'Gursha Feast', nameAm: 'የሀበሻ ማዕድ', emoji: '🍲', etb: '200', coins: 2000, category: 'cultural', badge: 'Delicious', animationType: 'feast', description: 'Deluxe Beyaynetu feast with spicy Doro Wot and steaming Shiro' },
+    { id: 'bible', nameEn: 'Holy Bible', nameAm: 'መጽሐፍ ቅዱስ', emoji: '📖', etb: '250', coins: 2500, category: 'cultural', badge: 'Sacred', animationType: 'book', description: 'Leatherbound Ethiopian Ge’ez Bible opening with glowing sacred light' },
+    { id: 'quran', nameEn: 'Holy Quran', nameAm: 'ቁርኣን', emoji: '📗', etb: '250', coins: 2500, category: 'cultural', badge: 'Sacred', animationType: 'book', description: 'Emerald gilded Holy Quran opening with divine celestial rays' },
+    { id: 'kebero', nameEn: 'Kebero Drum', nameAm: 'ባህላዊ ከበሮ', emoji: '🪘', etb: '350', coins: 3500, category: 'cultural', badge: 'Rhythm', animationType: 'kebero', description: 'Festive Ethiopian church drum with animated rhythmic beats' },
+    { id: 'masenqo', nameEn: 'Masenqo Lute', nameAm: 'ማሲንቆ', emoji: '🎻', etb: '500', coins: 5000, category: 'cultural', badge: 'Music', animationType: 'masenqo', description: 'Single-stringed diamond soundbox lute with gliding bow & notes' },
+    { id: 'krar', nameEn: 'Acoustic Krar', nameAm: 'ባህላዊ ክራር', emoji: '🎸', etb: '750', coins: 7500, category: 'cultural', badge: 'Melody', animationType: 'krar', description: 'Five-stringed traditional Ethiopian lyre with vibrating acoustic strings' },
+    { id: 'kemis', nameEn: 'Habesha Kemis', nameAm: 'የሐበሻ ቀሚስ', emoji: '👗', etb: '1000', coins: 10000, category: 'cultural', badge: 'Fashion', animationType: 'kemis', description: 'Royal white cotton dress with gold embroidered Tilf shimmer' },
+    { id: 'shield', nameEn: 'Warrior Shield', nameAm: 'ጋሻና ጦር', emoji: '🛡️', etb: '1500', coins: 15000, category: 'cultural', badge: 'Valor', animationType: 'shield', description: 'Embossed warrior leather shield with clashing golden spears' },
+    { id: 'rekebot', nameEn: 'Rekebot Set', nameAm: 'ረከቦትና ዕጣን', emoji: '☕', etb: '2000', coins: 20000, category: 'cultural', badge: 'Ceremony', animationType: 'rekebot', description: 'Full Ethiopian coffee ceremony table with burning Itan incense smoke' },
+    { id: 'walia', nameEn: 'Walia Ibex', nameAm: 'ዋሊያ አይቤክስ', emoji: '🐐', etb: '2500', coins: 25000, category: 'cultural', badge: 'Wild', animationType: 'walia', description: 'Majestic Semien Mountain Walia Ibex standing in mountain mist' },
+    { id: 'horse', nameEn: 'Gadaa Horse', nameAm: 'የኦሮሞ ፈረስ', emoji: '🏇', etb: '3000', coins: 30000, category: 'cultural', badge: 'Warrior', animationType: 'horse', description: 'Galloping Ethiopian steed with traditional war saddle' },
 
     // 👑 VIP & Supreme Luxury Tiers (5,000 ETB / 50,000 Coins to 100,000 ETB / 1,000,000 Coins)
-    { id: 'anbessa', nameEn: 'Lion of Judah', nameAm: 'የይሁዳ አንበሳ', emoji: '🦁', etb: '5000', coins: 50000, category: 'vip', badge: 'King', animationType: 'lion', description: 'Photorealistic 3D Roaring Barbary Lion with Imperial Crown' },
-    { id: 'crown', nameEn: 'Negus Crown', nameAm: 'የንጉሥ ዘውድ', emoji: '👑', etb: '10000', coins: 100000, category: 'vip', badge: 'Imperial', animationType: 'gem', description: 'Imperial 24K solid gold crown with ruby & emerald gems' },
-    { id: 'diamond', nameEn: 'Telebirr Gem', nameAm: 'ቴሌብር አልማዝ', emoji: '💎', etb: '15000', coins: 150000, category: 'vip', badge: 'Precious', animationType: 'gem', description: 'Sparkling brilliant-cut diamond with prismatic reflections' },
-    { id: 'car', nameEn: 'Addis Supercar', nameAm: 'ስፖርት መኪና', emoji: '🏎️', etb: '25000', coins: 250000, category: 'vip', badge: 'Speed', animationType: 'car', description: 'Exotic red & gold hypercar drifting with tire smoke' },
-    { id: 'axum', nameEn: 'Axum Obelisk', nameAm: 'የአክሱም ሐውልት', emoji: '🏛️', etb: '35000', coins: 350000, category: 'vip', badge: 'Monument', animationType: 'sacred', description: 'Ancient monolithic granite Stelae of Axum with sunbeams' },
-    { id: 'lalibela', nameEn: 'Lalibela Church', nameAm: 'ላሊበላ ቤተ ጊዮርጊስ', emoji: '⛪', etb: '50000', coins: 500000, category: 'vip', badge: 'Heritage', animationType: 'sacred', description: 'Exact Monolithic Bet Giyorgis rock-carved cross church' },
-    { id: 'plane', nameEn: 'Ethiopian Jet', nameAm: 'ቦይንግ ጄት', emoji: '✈️', etb: '75000', coins: 750000, category: 'vip', badge: 'Aviation', animationType: 'plane', description: 'Flagship Boeing 787 Dreamliner with flag vapor trail' },
-    { id: 'satellite', nameEn: 'ETRSS-1 Satellite', nameAm: 'የኢትዮጵያ ሳተላይት', emoji: '🛰️', etb: '90000', coins: 900000, category: 'vip', badge: 'Space', animationType: 'satellite', description: '3D Ethiopian satellite orbiting Earth with solar flares' },
-    { id: 'national_honor', nameEn: 'National Honor', nameAm: 'ታላቅ ክብር', emoji: '🏆', etb: '100000', coins: 1000000, category: 'vip', badge: 'Legendary', animationType: 'gem', description: 'Supreme 24K Grand Ethiopian National Gold Trophy' }
+    { id: 'anbessa', nameEn: 'Lion of Judah', nameAm: 'የይሁዳ አንበሳ', emoji: '🦁', etb: '5000', coins: 50000, category: 'vip', badge: 'King', animationType: 'lion', description: 'Photorealistic 3D Roaring Lion with Imperial Crown & sound shockwaves' },
+    { id: 'crown', nameEn: 'Negus Crown', nameAm: 'የንጉሥ ዘውድ', emoji: '👑', etb: '10000', coins: 100000, category: 'vip', badge: 'Imperial', animationType: 'crown', description: 'Imperial 24K solid gold crown levitating with ruby & emerald sparkles' },
+    { id: 'diamond', nameEn: 'Telebirr Gem', nameAm: 'ቴሌብር አልማዝ', emoji: '💎', etb: '15000', coins: 150000, category: 'vip', badge: 'Precious', animationType: 'diamond', description: 'Brilliant-cut diamond with continuous 3D rotation and rainbow caustics' },
+    { id: 'car', nameEn: 'Addis Supercar', nameAm: 'ስፖርት መኪና', emoji: '🏎️', etb: '25000', coins: 250000, category: 'vip', badge: 'Speed', animationType: 'car', description: 'Exotic red & gold hypercar drifting with tire smoke and neon glow' },
+    { id: 'axum', nameEn: 'Axum Obelisk', nameAm: 'የአክሱም ሐውልት', emoji: '🏛️', etb: '35000', coins: 350000, category: 'vip', badge: 'Monument', animationType: 'axum', description: 'Monolithic granite Stelae of Axum with rotating 360° golden sunbeams' },
+    { id: 'gondar', nameEn: 'Gondar Castle', nameAm: 'ፋሲል ግቢ', emoji: '🏰', etb: '40000', coins: 400000, category: 'vip', badge: 'Castle', animationType: 'gondar', description: 'Ancient stone castle of Emperor Fasilides with waving banner' },
+    { id: 'lalibela', nameEn: 'Lalibela Church', nameAm: 'ላሊበላ ቤተ ጊዮርጊስ', emoji: '⛪', etb: '50000', coins: 500000, category: 'vip', badge: 'Heritage', animationType: 'lalibela', description: 'Monolithic Bet Giyorgis rock church with sunset clouds & holy light' },
+    { id: 'erta_ale', nameEn: 'Erta Ale Volcano', nameAm: 'ኤርታሌ እሳተ ጎመራ', emoji: '🌋', etb: '60000', coins: 600000, category: 'vip', badge: 'Volcano', animationType: 'volcano', description: 'Bubbling molten lava lake of Danakil with glowing fire embers' },
+    { id: 'plane', nameEn: 'Ethiopian Jet', nameAm: 'ቦይንግ ጄት', emoji: '✈️', etb: '75000', coins: 750000, category: 'vip', badge: 'Aviation', animationType: 'plane', description: 'Boeing 787 Dreamliner flying through clouds with tricolor smoke trails' },
+    { id: 'satellite', nameEn: 'ETRSS-1 Satellite', nameAm: 'የኢትዮጵያ ሳተላይት', emoji: '🛰️', etb: '90000', coins: 900000, category: 'vip', badge: 'Space', animationType: 'satellite', description: 'High-tech satellite in Earth orbit with pulsing radio signals' },
+    { id: 'national_honor', nameEn: 'National Honor', nameAm: 'ታላቅ ክብር', emoji: '🏆', etb: '100000', coins: 1000000, category: 'vip', badge: 'Legendary', animationType: 'honor', description: 'Supreme 24K Grand Ethiopian Gold Trophy with fireworks & confetti' }
 ];
 
 // =========================================================================
-// 2. REALISTIC 3D GRAPHICAL GIFT VISUAL COMPONENT WITH IN-PLACE MOVEMENT
+// 2. REALISTIC 3D GRAPHICAL GIFT VISUAL WITH ACTIVE MOTION GRAPHICS
 // =========================================================================
 
 export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) => {
     const s = size;
     const [imgError, setImgError] = useState(false);
 
-    // Get asset image URL
     const imgSrc = `/gifts/${id}.jpg`;
 
-    // Specialized in-place movement class based on gift id
+    // Specialized motion class
     const getMovementClass = () => {
         if (!animated) return '';
         switch (id) {
-            case 'plane': return 'inplace-jet-banking';
+            case 'plane': return 'inplace-jet-flying';
             case 'car': return 'inplace-supercar-drift';
-            case 'anbessa': return 'inplace-lion-breathe';
+            case 'anbessa': return 'inplace-lion-roaring';
+            case 'jebena': return 'inplace-jebena-pouring';
             case 'buna':
-            case 'jebena': return 'inplace-steam-waft';
-            case 'adey_abeba':
-            case 'rose': return 'inplace-flower-sway';
+            case 'rekebot': return 'inplace-buna-steam';
             case 'bible':
-            case 'quran':
-            case 'lalibela':
-            case 'axum': return 'inplace-sacred-float';
-            case 'diamond':
-            case 'crown':
-            case 'national_honor': return 'inplace-gem-shimmer';
+            case 'quran': return 'inplace-book-opening';
+            case 'adey_abeba':
+            case 'rose': return 'inplace-flower-blooming';
+            case 'mesob': return 'inplace-mesob-opening';
+            case 'enjera': return 'inplace-feast-steam';
+            case 'kebero': return 'inplace-kebero-beating';
+            case 'masenqo': return 'inplace-masenqo-bowing';
+            case 'krar': return 'inplace-krar-strumming';
+            case 'shield': return 'inplace-shield-clash';
+            case 'walia': return 'inplace-walia-cliff';
+            case 'horse': return 'inplace-horse-galloping';
+            case 'diamond': return 'inplace-gem-spinning';
+            case 'crown': return 'inplace-crown-levitation';
+            case 'axum': return 'inplace-axum-sunbeams';
+            case 'gondar': return 'inplace-gondar-banner';
+            case 'lalibela': return 'inplace-lalibela-clouds';
+            case 'erta_ale': return 'inplace-erta-lava';
             case 'satellite': return 'inplace-satellite-orbit';
-            case 'horse': return 'inplace-horse-gallop';
+            case 'national_honor': return 'inplace-trophy-celebration';
             default: return 'inplace-cultural-pulse';
         }
     };
@@ -82,7 +94,7 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                 perspective: '800px'
             }}
         >
-            {/* Ambient Radial Glow Halo */}
+            {/* Ambient Radial Glow Aura */}
             <div className="gift-orb-glow-aura" />
 
             {/* Specular Holographic Lens */}
@@ -96,7 +108,6 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                         loading="lazy"
                     />
                 ) : (
-                    // Graceful fallback emoji icon
                     <div className="gift-orb-fallback-emoji">
                         {id === 'adey_abeba' ? '🌼' :
                          id === 'rose' ? '🌹' :
@@ -106,11 +117,22 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                          id === 'enjera' ? '🍲' :
                          id === 'bible' ? '📖' :
                          id === 'quran' ? '📗' :
+                         id === 'kebero' ? '🪘' :
+                         id === 'masenqo' ? '🎻' :
+                         id === 'krar' ? '🎸' :
+                         id === 'kemis' ? '👗' :
+                         id === 'shield' ? '🛡️' :
+                         id === 'rekebot' ? '☕' :
+                         id === 'walia' ? '🐐' :
+                         id === 'horse' ? '🏇' :
                          id === 'anbessa' ? '🦁' :
                          id === 'crown' ? '👑' :
                          id === 'diamond' ? '💎' :
                          id === 'car' ? '🏎️' :
+                         id === 'axum' ? '🏛️' :
+                         id === 'gondar' ? '🏰' :
                          id === 'lalibela' ? '⛪' :
+                         id === 'erta_ale' ? '🌋' :
                          id === 'plane' ? '✈️' :
                          id === 'satellite' ? '🛰️' :
                          id === 'national_honor' ? '🏆' : '🎁'}
@@ -118,46 +140,174 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                 )}
             </div>
 
-            {/* Dynamic In-Place Particle Embellishments */}
+            {/* DYNAMIC IN-PLACE MOTION GRAPHICS OVERLAYS */}
             {animated && (
-                <>
-                    {/* Jet Trail Particles */}
-                    {id === 'plane' && (
-                        <div className="inplace-jet-trail">
-                            <span className="trail-dot t-green"></span>
-                            <span className="trail-dot t-yellow"></span>
-                            <span className="trail-dot t-red"></span>
+                <div className="gift-motion-graphics-overlay">
+
+                    {/* 📖 BIBLE & 📗 QURAN: Animated Opening Book Cover & Golden Turning Pages */}
+                    {(id === 'bible' || id === 'quran') && (
+                        <div className="motion-book-wrapper">
+                            <div className="book-sacred-rays" />
+                            <div className="book-page-turning page-1" />
+                            <div className="book-page-turning page-2" />
+                            <span className="book-floating-glyph">✨</span>
                         </div>
                     )}
 
-                    {/* Supercar Smoke Particles */}
+                    {/* 🫖 CLAY JEBENA: Animated Pouring Coffee Stream & Steaming Cup */}
+                    {id === 'jebena' && (
+                        <div className="motion-jebena-wrapper">
+                            <div className="pouring-coffee-stream" />
+                            <div className="mini-sini-cup">
+                                <span className="sini-ripple" />
+                            </div>
+                            <div className="jebena-steam-cloud">
+                                <span className="steam-particle st-1" />
+                                <span className="steam-particle st-2" />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ☕ SINI BUNA & REKEBOT: Steaming Aroma & Popping Beans */}
+                    {(id === 'buna' || id === 'rekebot') && (
+                        <div className="motion-buna-wrapper">
+                            <div className="buna-steam-curls">
+                                <span className="curl curl-1" />
+                                <span className="curl curl-2" />
+                                <span className="curl curl-3" />
+                            </div>
+                            <span className="floating-bean fb-1">☕</span>
+                        </div>
+                    )}
+
+                    {/* 🏎️ ADDIS SUPERCAR: Drift Tire Smoke & Glowing Neon Underlight */}
                     {id === 'car' && (
-                        <div className="inplace-drift-smoke">
-                            <span className="smoke-puff sp-1"></span>
-                            <span className="smoke-puff sp-2"></span>
-                            <span className="smoke-neon-underglow"></span>
+                        <div className="motion-car-wrapper">
+                            <div className="drift-tire-smoke left-smoke" />
+                            <div className="drift-tire-smoke right-smoke" />
+                            <div className="car-neon-glow" />
+                            <div className="headlight-beam" />
                         </div>
                     )}
 
-                    {/* Rising Steam for Coffee & Jebena */}
-                    {(id === 'buna' || id === 'jebena') && (
-                        <div className="inplace-steam-wisps">
-                            <span className="steam-line st-1"></span>
-                            <span className="steam-line st-2"></span>
-                            <span className="steam-line st-3"></span>
+                    {/* ✈️ ETHIOPIAN BOEING JET: Flight Through Clouds with Tricolor Trails */}
+                    {id === 'plane' && (
+                        <div className="motion-jet-wrapper">
+                            <div className="jet-tricolor-exhaust">
+                                <span className="tricolor-trail t-green" />
+                                <span className="tricolor-trail t-yellow" />
+                                <span className="tricolor-trail t-red" />
+                            </div>
+                            <div className="flying-cloud-puff cp-1" />
+                            <div className="flying-cloud-puff cp-2" />
                         </div>
                     )}
 
-                    {/* Sacred Light Beams */}
-                    {(id === 'bible' || id === 'quran' || id === 'lalibela' || id === 'axum') && (
-                        <div className="inplace-sacred-rays" />
+                    {/* 🦁 LION OF JUDAH: Roaring Jaw, Golden Eyes & Shockwave Rings */}
+                    {id === 'anbessa' && (
+                        <div className="motion-lion-wrapper">
+                            <div className="lion-roar-shockwave ring-1" />
+                            <div className="lion-roar-shockwave ring-2" />
+                            <span className="lion-crown-glint">👑</span>
+                            <span className="lion-eye-flash" />
+                        </div>
                     )}
 
-                    {/* Gem Shimmer Sparkles */}
-                    {(id === 'diamond' || id === 'crown' || id === 'national_honor' || id === 'anbessa') && (
-                        <div className="inplace-sparkle-star" />
+                    {/* 🌼 ADEY FLOWER & 🌹 ROSE: Unfurling Petals & Pollen Sparks */}
+                    {(id === 'adey_abeba' || id === 'rose') && (
+                        <div className="motion-flower-wrapper">
+                            <span className="falling-petal fp-1">{id === 'rose' ? '🌹' : '🌼'}</span>
+                            <span className="falling-petal fp-2">✨</span>
+                            <div className="pollen-glow-ring" />
+                        </div>
                     )}
-                </>
+
+                    {/* 🧺 MESOB: Conical Lid Lifting Revealing Hot Steam Inside */}
+                    {id === 'mesob' && (
+                        <div className="motion-mesob-wrapper">
+                            <div className="mesob-lid-lift" />
+                            <div className="mesob-steam-puff" />
+                        </div>
+                    )}
+
+                    {/* 🍲 GURSHA FEAST: Steaming Doro Wot & Berbere Sparks */}
+                    {id === 'enjera' && (
+                        <div className="motion-feast-wrapper">
+                            <span className="berbere-sparkle bs-1">🌶️</span>
+                            <div className="feast-steam-wisp" />
+                        </div>
+                    )}
+
+                    {/* 🪘 KEBERO DRUM: Animated Drumstick Rhythm & Acoustic Soundwaves */}
+                    {id === 'kebero' && (
+                        <div className="motion-kebero-wrapper">
+                            <div className="acoustic-soundwave sw-1" />
+                            <div className="acoustic-soundwave sw-2" />
+                            <span className="music-rhythm-dot">🥁</span>
+                        </div>
+                    )}
+
+                    {/* 🎻 MASENQO & 🎸 KRAR: Bow Gliding & Floating Musical Notes */}
+                    {(id === 'masenqo' || id === 'krar') && (
+                        <div className="motion-music-wrapper">
+                            <span className="floating-note fn-1">♪</span>
+                            <span className="floating-note fn-2">♫</span>
+                            <span className="floating-note fn-3">♬</span>
+                        </div>
+                    )}
+
+                    {/* 🛡️ WARRIOR SHIELD: Clashing Golden Spears & Lens Flare */}
+                    {id === 'shield' && (
+                        <div className="motion-shield-wrapper">
+                            <div className="shield-clash-spark" />
+                            <span className="spear-glint">⚔️</span>
+                        </div>
+                    )}
+
+                    {/* 🐐 WALIA IBEX & 🏇 HORSE: Mountain Mist & Galloping Dust */}
+                    {(id === 'walia' || id === 'horse') && (
+                        <div className="motion-beast-wrapper">
+                            <div className="motion-dust-cloud dc-1" />
+                            <div className="motion-dust-cloud dc-2" />
+                        </div>
+                    )}
+
+                    {/* 💎 DIAMOND & 👑 CROWN: Multi-Faceted Rainbow Sparkles */}
+                    {(id === 'diamond' || id === 'crown' || id === 'national_honor') && (
+                        <div className="motion-gem-wrapper">
+                            <div className="gem-starburst-ray" />
+                            <span className="gem-sparkle-speck sp-1">✨</span>
+                            <span className="gem-sparkle-speck sp-2">🌟</span>
+                        </div>
+                    )}
+
+                    {/* 🏛️ AXUM & ⛪ LALIBELA & 🏰 GONDAR: Rotating Sunbeam Halo */}
+                    {(id === 'axum' || id === 'lalibela' || id === 'gondar') && (
+                        <div className="motion-heritage-wrapper">
+                            <div className="heritage-sunbeam-wheel" />
+                            <span className="heritage-divine-star">⭐</span>
+                        </div>
+                    )}
+
+                    {/* 🌋 ERTA ALE: Bubbling Molten Lava & Fire Embers */}
+                    {id === 'erta_ale' && (
+                        <div className="motion-volcano-wrapper">
+                            <span className="fire-ember fe-1" />
+                            <span className="fire-ember fe-2" />
+                            <div className="lava-heat-pulse" />
+                        </div>
+                    )}
+
+                    {/* 🛰️ SATELLITE: Orbital Signal Pulses & Solar Flares */}
+                    {id === 'satellite' && (
+                        <div className="motion-satellite-wrapper">
+                            <div className="radio-pulse-circle rc-1" />
+                            <div className="radio-pulse-circle rc-2" />
+                            <span className="satellite-solar-flare" />
+                        </div>
+                    )}
+
+                </div>
             )}
         </div>
     );
@@ -175,7 +325,6 @@ export const playAudioEffect = (type = 'chime') => {
         const now = ctx.currentTime;
 
         if (type === 'lion_roar') {
-            // Ferocious Lion Roar: Low Frequency Sawtooth Formant + Filtered White Noise Growl
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             const filter = ctx.createBiquadFilter();
@@ -202,7 +351,6 @@ export const playAudioEffect = (type = 'chime') => {
             osc.stop(now + 1.95);
 
         } else if (type === 'car_rev') {
-            // Supercar Accelerating Engine Rev & Tire Screech
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.type = 'sawtooth';
@@ -220,7 +368,6 @@ export const playAudioEffect = (type = 'chime') => {
             osc.stop(now + 1.45);
 
         } else if (type === 'jet_flyby') {
-            // Commercial Jet Doppler Flyby
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.type = 'triangle';
@@ -237,7 +384,6 @@ export const playAudioEffect = (type = 'chime') => {
             osc.stop(now + 1.65);
 
         } else if (type === 'sacred_chime') {
-            // Heavenly Angelic Chimes for Bible, Quran, Lalibela & Axum
             [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((freq, i) => {
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
@@ -255,7 +401,6 @@ export const playAudioEffect = (type = 'chime') => {
             });
 
         } else {
-            // Melodic Fanfare Chime (Default Celebration)
             const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
             notes.forEach((freq, idx) => {
                 const osc = ctx.createOscillator();
@@ -290,10 +435,9 @@ export const TikTokLiveGiftShowcase = ({
     onComboClick,
     onClose
 }) => {
-    const [animationPhase, setAnimationPhase] = useState('running'); // 'running' | 'roaring' | 'celebrating'
+    const [animationPhase, setAnimationPhase] = useState('running');
 
     useEffect(() => {
-        // Trigger specific sound effect based on gift type
         if (gift?.id === 'anbessa') {
             playAudioEffect('lion_roar');
             const timer = setTimeout(() => setAnimationPhase('roaring'), 900);
@@ -302,7 +446,7 @@ export const TikTokLiveGiftShowcase = ({
             playAudioEffect('car_rev');
         } else if (gift?.id === 'plane') {
             playAudioEffect('jet_flyby');
-        } else if (gift?.id === 'bible' || gift?.id === 'quran' || gift?.id === 'lalibela' || gift?.id === 'axum') {
+        } else if (gift?.id === 'bible' || gift?.id === 'quran' || gift?.id === 'lalibela' || gift?.id === 'axum' || gift?.id === 'gondar') {
             playAudioEffect('sacred_chime');
         } else {
             playAudioEffect('chime');
@@ -316,7 +460,7 @@ export const TikTokLiveGiftShowcase = ({
             {/* Top Streamer & Gifter Live Banner */}
             <div className="tiktok-live-badge-container" onClick={e => e.stopPropagation()}>
                 <div className="tiktok-live-avatar-pill">
-                    <span className="live-pulse-dot"></span>
+                    <span className="live-pulse-dot" />
                     <span style={{ color: '#FDE047', fontWeight: 800 }}>{supporterName}</span>
                     <span style={{ color: '#9CA3AF', fontSize: '0.8rem' }}>sent</span>
                     <span style={{ color: '#10B981', fontWeight: 800 }}>{gift.nameAm} ({gift.nameEn})</span>
@@ -331,16 +475,16 @@ export const TikTokLiveGiftShowcase = ({
                 {/* 🦁 LION OF JUDAH: Runs Across Screen -> Leaps -> Roars with Screen Shake */}
                 {gift.id === 'anbessa' && (
                     <div className={`lion-animation-wrapper ${animationPhase}`}>
-                        <div className="savanna-dust-storm"></div>
+                        <div className="savanna-dust-storm" />
                         <div className="lion-graphic-body">
                             <Gift3DIcon id="anbessa" size={240} isHero={true} />
                         </div>
 
                         {animationPhase === 'roaring' && (
                             <>
-                                <div className="roar-shockwave wave-1"></div>
-                                <div className="roar-shockwave wave-2"></div>
-                                <div className="roar-shockwave wave-3"></div>
+                                <div className="roar-shockwave wave-1" />
+                                <div className="roar-shockwave wave-2" />
+                                <div className="roar-shockwave wave-3" />
                                 <div className="roar-text-banner">🦁 ROAAARRR! የይሁዳ አንበሳ 👑</div>
                             </>
                         )}
@@ -350,11 +494,11 @@ export const TikTokLiveGiftShowcase = ({
                 {/* 🏎️ ADDIS SUPERCAR: High-Speed Burnout & Drift */}
                 {gift.id === 'car' && (
                     <div className="supercar-motion-wrapper">
-                        <div className="tire-burnout-smoke"></div>
+                        <div className="tire-burnout-smoke" />
                         <div className="supercar-graphic-body">
                             <Gift3DIcon id="car" size={240} isHero={true} />
                         </div>
-                        <div className="speed-lines"></div>
+                        <div className="speed-lines" />
                         <div className="roar-text-banner">🏎️ VROOOOM! አዲስ ሱፐርካር ⚡</div>
                     </div>
                 )}
@@ -362,11 +506,11 @@ export const TikTokLiveGiftShowcase = ({
                 {/* ✈️ ETHIOPIAN JET: Sky Flyby with Tricolor Vapor Trail */}
                 {gift.id === 'plane' && (
                     <div className="jet-flyby-wrapper">
-                        <div className="jet-tricolor-trail"></div>
+                        <div className="jet-tricolor-trail" />
                         <div className="jet-graphic-body">
                             <Gift3DIcon id="plane" size={260} isHero={true} />
                         </div>
-                        <div className="sonic-boom-ring"></div>
+                        <div className="sonic-boom-ring" />
                         <div className="roar-text-banner">✈️ ETHIOPIAN DREAMLINER 787! 🇪🇹</div>
                     </div>
                 )}
@@ -394,10 +538,10 @@ export const TikTokLiveGiftShowcase = ({
                     </div>
                 )}
 
-                {/* 📖 BIBLE / 📗 QURAN / ⛪ LALIBELA / 🏛️ AXUM: Divine Heavenly Beams */}
-                {(gift.id === 'bible' || gift.id === 'quran' || gift.id === 'lalibela' || gift.id === 'axum') && (
+                {/* 📖 BIBLE / 📗 QURAN / ⛪ LALIBELA / 🏛️ AXUM / 🏰 GONDAR: Divine Heavenly Beams */}
+                {(gift.id === 'bible' || gift.id === 'quran' || gift.id === 'lalibela' || gift.id === 'axum' || gift.id === 'gondar') && (
                     <div className="sacred-light-wrapper">
-                        <div className="heavenly-sunbeams"></div>
+                        <div className="heavenly-sunbeams" />
                         <div className="sacred-center-object">
                             <Gift3DIcon id={gift.id} size={230} isHero={true} />
                         </div>
@@ -405,10 +549,10 @@ export const TikTokLiveGiftShowcase = ({
                     </div>
                 )}
 
-                {/* 🧺 MESOB / ☕ BUNA / 🫖 JEBENA / 👑 CROWN / 💎 DIAMOND / 🏆 HONOR: Radiant Celebration */}
-                {(!['anbessa', 'car', 'plane', 'adey_abeba', 'rose', 'bible', 'quran', 'lalibela', 'axum'].includes(gift.id)) && (
+                {/* 🫖 JEBENA / ☕ BUNA / 🧺 MESOB / 👑 CROWN / 💎 DIAMOND / 🏆 HONOR: Radiant Celebration */}
+                {(!['anbessa', 'car', 'plane', 'adey_abeba', 'rose', 'bible', 'quran', 'lalibela', 'axum', 'gondar'].includes(gift.id)) && (
                     <div className="radiant-celebration-wrapper">
-                        <div className="golden-burst-particles"></div>
+                        <div className="golden-burst-particles" />
                         <div className="radiant-center-object">
                             <Gift3DIcon id={gift.id} size={220} isHero={true} />
                         </div>
