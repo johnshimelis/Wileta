@@ -14,7 +14,7 @@ import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
-import { Gift3DIcon, playGiftFanfareSound, TikTokCelebrationOverlay } from '../components/Ethiopian3DGifts';
+import { Gift3DIcon, playAudioEffect, TikTokLiveGiftShowcase } from '../components/Ethiopian3DGifts';
 import './PublicProfile.css';
 
 // Verified Blue Tick SVG Emblem
@@ -45,25 +45,28 @@ const VerifiedBlueTick = ({ size = 22, title = "Verified Creator" }) => (
     </span>
 );
 
-// ── Ethiopian Cultural Virtual Gifts Catalog (10 ETB to 100,000 ETB) ──
+// ── Ethiopian Cultural Virtual Gifts Catalog (10 ETB / 100 Coins to 100,000 ETB / 1,000,000 Coins) ──
+// Ratio: 10 Coins = 1 ETB
 const CULTURAL_GIFTS = [
     // Cultural & Heritage Tiers
-    { id: 'adey_abeba', nameEn: 'Adey Flower', nameAm: 'አደይ አበባ', emoji: '🌼', etb: '10', coins: 10, category: 'cultural', badge: 'Highland', description: 'Fresh Ethiopian highland Adey bloom' },
-    { id: 'rose', nameEn: 'Highland Rose', nameAm: 'ጽጌረዳ', emoji: '🌹', etb: '25', coins: 25, category: 'cultural', description: 'Fragrant Highland Rose' },
-    { id: 'buna', nameEn: 'Sini Buna Cup', nameAm: 'ሲኒ ቡና', emoji: '☕', etb: '50', coins: 50, category: 'cultural', badge: 'Popular', description: 'Fresh roasted Buna cup with steam' },
-    { id: 'mesob', nameEn: 'Mesob Basket', nameAm: 'መሶብ', emoji: '🧺', etb: '100', coins: 100, category: 'cultural', badge: 'Heritage', description: 'Handcrafted colorful Mesob' },
-    { id: 'bible', nameEn: 'Holy Bible', nameAm: 'መጽሐፍ ቅዱስ', emoji: '📖', etb: '150', coins: 150, category: 'cultural', badge: 'Sacred', description: 'Leatherbound Holy Ethiopian Bible' },
-    { id: 'quran', nameEn: 'Holy Quran', nameAm: 'ቁርኣን', emoji: '📗', etb: '150', coins: 150, category: 'cultural', badge: 'Sacred', description: 'Gilded Emerald Holy Quran' },
-    { id: 'jebena', nameEn: 'Clay Jebena', nameAm: 'ጀበና', emoji: '🫖', etb: '250', coins: 250, category: 'cultural', description: 'Clay boiled traditional Jebena' },
-    { id: 'anbessa', nameEn: 'Lion of Judah', nameAm: 'አንበሳ', emoji: '🦁', etb: '500', coins: 500, category: 'cultural', badge: 'Courage', description: 'Majestic Ethiopian Highland Lion' },
+    { id: 'adey_abeba', nameEn: 'Adey Flower', nameAm: 'አደይ አበባ', emoji: '🌼', etb: '10', coins: 100, category: 'cultural', badge: 'Highland', description: 'Fresh Ethiopian highland Adey bloom' },
+    { id: 'rose', nameEn: 'Highland Rose', nameAm: 'ጽጌረዳ', emoji: '🌹', etb: '25', coins: 250, category: 'cultural', description: 'Fragrant Highland Rose' },
+    { id: 'buna', nameEn: 'Sini Buna Cup', nameAm: 'ሲኒ ቡና', emoji: '☕', etb: '50', coins: 500, category: 'cultural', badge: 'Popular', description: 'Fresh roasted Buna cup with steam' },
+    { id: 'mesob', nameEn: 'Mesob Basket', nameAm: 'መሶብ', emoji: '🧺', etb: '100', coins: 1000, category: 'cultural', badge: 'Heritage', description: 'Handcrafted colorful Mesob' },
+    { id: 'bible', nameEn: 'Holy Bible', nameAm: 'መጽሐፍ ቅዱስ', emoji: '📖', etb: '150', coins: 1500, category: 'cultural', badge: 'Sacred', description: 'Leatherbound Holy Ethiopian Bible' },
+    { id: 'quran', nameEn: 'Holy Quran', nameAm: 'ቁርኣን', emoji: '📗', etb: '150', coins: 1500, category: 'cultural', badge: 'Sacred', description: 'Gilded Emerald Holy Quran' },
+    { id: 'jebena', nameEn: 'Clay Jebena', nameAm: 'ጀበና', emoji: '🫖', etb: '250', coins: 2500, category: 'cultural', description: 'Clay boiled traditional Jebena' },
+    { id: 'enjera', nameEn: 'Gursha Feast', nameAm: 'የጉርሻ ግብዣ', emoji: '🍲', etb: '350', coins: 3500, category: 'cultural', badge: 'Festive', description: 'Warm Beyaynetu platter feast' },
+    { id: 'kemis', nameEn: 'Habesha Kemis', nameAm: 'የሐበሻ ቀሚስ', emoji: '👗', etb: '500', coins: 5000, category: 'cultural', description: 'Handwoven Tibeb royal dress' },
+    { id: 'anbessa', nameEn: 'Lion of Judah', nameAm: 'አንበሳ', emoji: '🦁', etb: '1000', coins: 10000, category: 'cultural', badge: 'King', description: 'Majestic 3D Roaring Ethiopian Lion' },
 
-    // VIP & Luxury Tiers (1,000 ETB to 100,000 ETB)
-    { id: 'crown', nameEn: 'Negus Crown', nameAm: 'የንጉሥ ዘውድ', emoji: '👑', etb: '1000', coins: 1000, category: 'vip', badge: 'VIP', description: 'Royal Emperor Golden Crown' },
-    { id: 'diamond', nameEn: 'Telebirr Gem', nameAm: 'ቴሌብር አልማዝ', emoji: '💎', etb: '2500', coins: 2500, category: 'vip', description: 'Sparkling high-tier gemstone' },
-    { id: 'car', nameEn: 'Addis Supercar', nameAm: 'ስፖርት መኪና', emoji: '🏎️', etb: '5000', coins: 5000, category: 'vip', description: 'High-speed luxury cruise car' },
-    { id: 'lalibela', nameEn: 'Lalibela Church', nameAm: 'ላሊበላ ቤተ ጊዮርጊስ', emoji: '⛪', etb: '10000', coins: 10000, category: 'vip', badge: 'World Heritage', description: 'Exact Monolithic Bet Giyorgis Rock Church' },
-    { id: 'plane', nameEn: 'Ethiopian Jet', nameAm: 'ቦይንግ ጄት', emoji: '✈️', etb: '25000', coins: 25000, category: 'vip', description: 'Flagship Dreamliner airliner' },
-    { id: 'national_honor', nameEn: 'National Honor', nameAm: 'ታላቅ ክብር', emoji: '🏆', etb: '100000', coins: 100000, category: 'vip', badge: 'Legendary', description: 'Supreme Ethiopian Creator Honor' }
+    // VIP & Luxury Tiers (25,000 Coins to 1,000,000 Coins)
+    { id: 'crown', nameEn: 'Negus Crown', nameAm: 'የንጉሥ ዘውድ', emoji: '👑', etb: '2500', coins: 25000, category: 'vip', badge: 'VIP', description: 'Royal Emperor Golden Crown' },
+    { id: 'diamond', nameEn: 'Telebirr Gem', nameAm: 'ቴሌብር አልማዝ', emoji: '💎', etb: '5000', coins: 50000, category: 'vip', description: 'Sparkling brilliant-cut gemstone' },
+    { id: 'car', nameEn: 'Addis Supercar', nameAm: 'ስፖርት መኪና', emoji: '🏎️', etb: '10000', coins: 100000, category: 'vip', badge: 'Speed', description: 'High-speed luxury hypercar with drift' },
+    { id: 'lalibela', nameEn: 'Lalibela Church', nameAm: 'ላሊበላ ቤተ ጊዮርጊስ', emoji: '⛪', etb: '25000', coins: 250000, category: 'vip', badge: 'World Heritage', description: 'Exact Monolithic Bet Giyorgis Rock Church' },
+    { id: 'plane', nameEn: 'Ethiopian Jet', nameAm: 'ቦይንግ ጄት', emoji: '✈️', etb: '50000', coins: 500000, category: 'vip', description: 'Flagship Dreamliner 787 airliner' },
+    { id: 'national_honor', nameEn: 'National Honor', nameAm: 'ታላቅ ክብር', emoji: '🏆', etb: '100000', coins: 1000000, category: 'vip', badge: 'Legendary', description: 'Supreme 24K Ethiopian National Honor' }
 ];
 
 export default function PublicProfile() {
@@ -549,127 +552,79 @@ export default function PublicProfile() {
                                 ))}
                             </div>
 
-                            {/* Cultural Gifts 3D Animated Grid */}
+                            {/* TikTok Frameless Dark Glass Gift Drawer */}
                             {!isCustom ? (
-                                <div style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: 'repeat(3, 1fr)',
-                                    gap: '0.55rem',
-                                    maxHeight: '340px',
-                                    overflowY: 'auto',
-                                    padding: '4px',
-                                    scrollbarWidth: 'thin'
-                                }}>
-                                    {CULTURAL_GIFTS.filter(g => giftCategory === 'all' || g.category === giftCategory).map((gift) => {
-                                        const isSelected = selectedGift?.id === gift.id && !isCustom;
-                                        return (
-                                            <div
-                                                key={gift.id}
-                                                className={`tiktok-gift-card ${isSelected ? 'selected' : ''}`}
-                                                onClick={() => {
-                                                    setSelectedGift(gift);
-                                                    setAmount(gift.etb);
-                                                    setIsCustom(false);
-                                                }}
-                                                style={{
-                                                    padding: '0.65rem 0.35rem 0.55rem',
-                                                    border: `1.5px solid ${isSelected ? '#10B981' : 'var(--border-color)'}`,
-                                                    borderRadius: '14px',
-                                                    background: isSelected ? 'radial-gradient(circle at center, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.02) 70%)' : 'var(--bg-color)',
-                                                    cursor: 'pointer',
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    textAlign: 'center',
-                                                    minHeight: '110px',
-                                                    position: 'relative'
-                                                }}
-                                            >
-                                                {gift.badge && (
-                                                    <span style={{
-                                                        position: 'absolute',
-                                                        top: '4px',
-                                                        right: '4px',
-                                                        fontSize: '8px',
-                                                        fontWeight: 900,
-                                                        background: gift.badge === 'VIP' || gift.badge === 'Legendary' || gift.badge === 'World Heritage' ? '#F59E0B' : '#10B981',
-                                                        color: '#FFFFFF',
-                                                        padding: '1.5px 5px',
-                                                        borderRadius: '4px',
-                                                        lineHeight: 1,
-                                                        zIndex: 2,
-                                                        boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
-                                                    }}>
-                                                        {gift.badge}
-                                                    </span>
-                                                )}
+                                <div className="tiktok-gift-tray">
+                                    <div className="tiktok-gift-grid">
+                                        {CULTURAL_GIFTS.filter(g => giftCategory === 'all' || g.category === giftCategory).map((gift) => {
+                                            const isSelected = selectedGift?.id === gift.id && !isCustom;
+                                            return (
+                                                <button
+                                                    key={gift.id}
+                                                    type="button"
+                                                    className={`tiktok-gift-item ${isSelected ? 'selected' : ''}`}
+                                                    onClick={() => {
+                                                        setSelectedGift(gift);
+                                                        setAmount(gift.etb);
+                                                        setIsCustom(false);
+                                                    }}
+                                                >
+                                                    {gift.badge && (
+                                                        <span className="tiktok-mini-badge">
+                                                            {gift.badge}
+                                                        </span>
+                                                    )}
 
-                                                {/* Frameless 3D Floating & Rotating Gift Object */}
-                                                <div className="tiktok-gift-3d-object">
-                                                    <Gift3DIcon id={gift.id} size={46} />
-                                                </div>
+                                                    {/* Floating 3D Vector Graphic */}
+                                                    <div className="tiktok-floating-3d">
+                                                        <Gift3DIcon id={gift.id} size={46} />
+                                                    </div>
 
-                                                {/* Gift Names */}
-                                                <span style={{ fontSize: '0.78rem', fontWeight: 800, color: isSelected ? 'var(--primary)' : 'var(--text-main)', lineHeight: 1.15, marginTop: '2px' }}>
-                                                    {gift.nameAm}
-                                                </span>
-                                                <span style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '4px' }}>
-                                                    {gift.nameEn}
-                                                </span>
+                                                    {/* Gift Names */}
+                                                    <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.15, marginTop: '3px', textAlign: 'center' }}>
+                                                        {gift.nameAm}
+                                                    </span>
+                                                    <span style={{ fontSize: '0.62rem', fontWeight: 600, color: '#9CA3AF', marginBottom: '2px', textAlign: 'center' }}>
+                                                        {gift.nameEn}
+                                                    </span>
 
-                                                {/* Coin Display ABOVE the ETB Amount */}
-                                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px', marginTop: 'auto' }}>
-                                                    <span style={{
-                                                        fontSize: '0.75rem',
-                                                        fontWeight: 900,
-                                                        color: '#F59E0B',
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                        gap: '2px'
-                                                    }}>
-                                                        🪙 {parseInt(gift.coins || gift.etb).toLocaleString()} Coins
+                                                    {/* Coin Badge & Birr Price (10 Coins = 1 ETB) */}
+                                                    <span className="tiktok-coin-badge">
+                                                        🪙 {gift.coins.toLocaleString()}
                                                     </span>
-                                                    <span style={{
-                                                        fontSize: '0.68rem',
-                                                        fontWeight: 700,
-                                                        color: isSelected ? 'var(--primary)' : 'var(--text-muted)',
-                                                        background: isSelected ? 'rgba(16, 185, 129, 0.12)' : 'rgba(0,0,0,0.04)',
-                                                        padding: '1px 5px',
-                                                        borderRadius: '4px'
-                                                    }}>
-                                                        {parseInt(gift.etb).toLocaleString()} ETB
+                                                    <span className="tiktok-birr-label">
+                                                        {gift.etb} ETB
                                                     </span>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             ) : null}
 
                             {/* Custom Amount Input Box */}
                             {isCustom && (
-                                <div style={{ marginTop: '0.5rem', background: 'var(--bg-color)', border: '1.5px solid var(--primary)', borderRadius: '12px', padding: '0.85rem' }}>
+                                <div style={{ marginTop: '0.5rem', background: 'rgba(18, 18, 22, 0.95)', border: '1.5px solid var(--primary)', borderRadius: '14px', padding: '0.9rem', color: '#FFFFFF' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-main)' }}>Custom Coin / Birr Amount</span>
-                                        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Min: 10 ETB • Max: 100,000 ETB</span>
+                                        <span style={{ fontSize: '0.825rem', fontWeight: 800, color: '#FFFFFF' }}>Custom Coin / Birr Amount</span>
+                                        <span style={{ fontSize: '0.72rem', color: '#FDE047', fontWeight: 700 }}>1 ETB = 10 Coins 🪙</span>
                                     </div>
                                     <div style={{ position: 'relative' }}>
-                                        <span style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 800, color: 'var(--primary)' }}>🪙 ETB</span>
+                                        <span style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 900, color: '#FDE047' }}>🪙 ETB</span>
                                         <input
                                             type="number"
                                             min="10"
                                             max="100000"
-                                            placeholder="Enter coin value (10 - 100,000)"
+                                            placeholder="Enter ETB amount (10 - 100,000)"
                                             value={customAmount}
                                             onChange={(e) => setCustomAmount(e.target.value)}
                                             style={{
                                                 width: '100%',
                                                 padding: '0.75rem 1rem 0.75rem 4.5rem',
-                                                border: '1px solid var(--border-color)',
+                                                border: '1px solid rgba(255, 255, 255, 0.15)',
                                                 borderRadius: '8px',
-                                                background: 'var(--card-bg)',
-                                                color: 'var(--text-main)',
+                                                background: 'rgba(0, 0, 0, 0.4)',
+                                                color: '#FFFFFF',
                                                 fontSize: '0.95rem',
                                                 fontWeight: 800,
                                                 boxSizing: 'border-box'
@@ -677,31 +632,36 @@ export default function PublicProfile() {
                                             required
                                         />
                                     </div>
+                                    {customAmount && Number(customAmount) >= 10 && (
+                                        <div style={{ marginTop: '0.4rem', fontSize: '0.78rem', color: '#FDE047', fontWeight: 800 }}>
+                                            = 🪙 {(Number(customAmount) * 10).toLocaleString()} TikTok Coins
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
                             {/* Selected Gift Preview Card & Live 3D Animation Test Trigger */}
                             {!isCustom && selectedGift && (
                                 <div style={{
-                                    marginTop: '0.75rem',
+                                    marginTop: '0.5rem',
                                     background: 'var(--bg-color)',
-                                    border: '1.5px solid rgba(245, 158, 11, 0.3)',
-                                    borderRadius: '12px',
-                                    padding: '10px 12px',
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+                                    border: '1.5px solid rgba(245, 158, 11, 0.4)',
+                                    borderRadius: '14px',
+                                    padding: '10px 14px',
+                                    boxShadow: '0 4px 15px rgba(0,0,0,0.04)'
                                 }}>
                                     <div style={{
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
-                                        marginBottom: '6px'
+                                        marginBottom: '8px'
                                     }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                            <div style={{ width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                <Gift3DIcon id={selectedGift.id} size={38} />
+                                            <div style={{ width: '42px', height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <Gift3DIcon id={selectedGift.id} size={40} />
                                             </div>
                                             <div>
-                                                <div style={{ fontWeight: 800, color: 'var(--text-main)', fontSize: '0.875rem' }}>
+                                                <div style={{ fontWeight: 900, color: 'var(--text-main)', fontSize: '0.9rem' }}>
                                                     {selectedGift.nameAm} ({selectedGift.nameEn})
                                                 </div>
                                                 <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
@@ -710,11 +670,11 @@ export default function PublicProfile() {
                                             </div>
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
-                                            <div style={{ fontWeight: 900, color: '#F59E0B', fontSize: '0.85rem' }}>
-                                                🪙 {parseInt(selectedGift.coins || selectedGift.etb).toLocaleString()} Coins
+                                            <div style={{ fontWeight: 900, color: '#F59E0B', fontSize: '0.9rem' }}>
+                                                🪙 {selectedGift.coins.toLocaleString()} Coins
                                             </div>
-                                            <div style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '0.75rem' }}>
-                                                {parseInt(selectedGift.etb).toLocaleString()} ETB
+                                            <div style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '0.78rem' }}>
+                                                {selectedGift.etb} ETB
                                             </div>
                                         </div>
                                     </div>
@@ -723,29 +683,28 @@ export default function PublicProfile() {
                                     <button
                                         type="button"
                                         onClick={() => {
-                                            playGiftFanfareSound();
                                             setCelebrationGift(selectedGift);
                                             setComboCount(prev => prev + 1);
                                             setShowCelebrationModal(true);
                                         }}
                                         style={{
                                             width: '100%',
-                                            background: 'linear-gradient(90deg, rgba(245, 158, 11, 0.12), rgba(16, 185, 129, 0.12))',
-                                            border: '1px dashed #F59E0B',
-                                            borderRadius: '8px',
-                                            padding: '6px 10px',
+                                            background: 'linear-gradient(90deg, rgba(245, 158, 11, 0.15), rgba(16, 185, 129, 0.15))',
+                                            border: '1.5px dashed #F59E0B',
+                                            borderRadius: '10px',
+                                            padding: '8px 12px',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            gap: '6px',
+                                            gap: '8px',
                                             color: 'var(--text-main)',
-                                            fontSize: '0.78rem',
-                                            fontWeight: 800,
+                                            fontSize: '0.82rem',
+                                            fontWeight: 900,
                                             cursor: 'pointer',
                                             transition: 'all 0.2s ease'
                                         }}
                                     >
-                                        <span>✨</span> Tap to Preview TikTok 3D Live Gift Animation (የስጦታውን እይታ ይሞክሩ)
+                                        <span>✨</span> Tap to Preview TikTok Full-Screen 3D Animation (የቀጥታ ስርጭት እንቅስቃሴን ይሞክሩ)
                                     </button>
                                 </div>
                             )}
@@ -1058,16 +1017,16 @@ export default function PublicProfile() {
                 </div>
             )}
 
-            {/* TIKTOK LIVE GIFT CELEBRATION OVERLAY */}
+            {/* TIKTOK LIVE CINEMATIC GRAPHICAL MOTION SHOWCASE */}
             {showCelebrationModal && (
-                <TikTokCelebrationOverlay
+                <TikTokLiveGiftShowcase
                     gift={celebrationGift || selectedGift}
-                    supporterName={isAnonymous ? 'Anonymous Supporter' : (tipperName || 'Generous Supporter')}
+                    supporterName={isAnonymous ? 'Anonymous Fan' : (tipperName || 'Generous Fan')}
                     creatorName={creator?.name || creator?.username || 'Creator'}
                     amount={isCustom ? customAmount : (celebrationGift?.etb || amount)}
+                    coins={isCustom ? (Number(customAmount) * 10) : (celebrationGift?.coins || (Number(amount) * 10))}
                     comboCount={comboCount}
                     onComboClick={() => {
-                        playGiftFanfareSound();
                         setComboCount(prev => prev + 1);
                     }}
                     onClose={() => setShowCelebrationModal(false)}
