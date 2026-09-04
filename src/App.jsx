@@ -1,25 +1,27 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
 import PageTransition from './components/PageTransition';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Onboarding from './pages/Onboarding';
-import Dashboard from './pages/Dashboard';
-import PublicProfile from './pages/PublicProfile';
-import KYCVerification from './pages/KYCVerification';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
-import Overlay from './pages/Overlay';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import DataDeletion from './pages/DataDeletion';
-import ResetPassword from './pages/ResetPassword';
-import Support from './pages/Support';
-import Home from './pages/Home';
-import MaintenanceScreen from './components/MaintenanceScreen';
 import './index.css';
+
+// Ultra-fast Code Splitting with React.lazy
+const Home = lazy(() => import('./pages/Home'));
+const Login = lazy(() => import('./pages/Login'));
+const Signup = lazy(() => import('./pages/Signup'));
+const Onboarding = lazy(() => import('./pages/Onboarding'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const PublicProfile = lazy(() => import('./pages/PublicProfile'));
+const KYCVerification = lazy(() => import('./pages/KYCVerification'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Overlay = lazy(() => import('./pages/Overlay'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const DataDeletion = lazy(() => import('./pages/DataDeletion'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const Support = lazy(() => import('./pages/Support'));
+const MaintenanceScreen = lazy(() => import('./components/MaintenanceScreen'));
 
 const PageLoader = () => (
   <div style={{
@@ -32,12 +34,12 @@ const PageLoader = () => (
     gap: '1rem'
   }}>
     <div style={{
-      width: '40px',
-      height: '40px',
+      width: '36px',
+      height: '36px',
       border: '3px solid rgba(5, 150, 105, 0.2)',
       borderTopColor: '#059669',
       borderRadius: '50%',
-      animation: 'spin 0.8s linear infinite'
+      animation: 'spin 0.6s linear infinite'
     }} />
     <style>{`
       @keyframes spin {
@@ -77,85 +79,108 @@ const AnimatedRoutes = () => {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/login" element={
-          <PublicRoute>
-            <PageTransition><Login /></PageTransition>
-          </PublicRoute>
-        } />
-        <Route path="/signup" element={
-          <PublicRoute>
-            <PageTransition><Signup /></PageTransition>
-          </PublicRoute>
-        } />
-        <Route path="/reset-password/:token" element={
-          <PublicRoute>
-            <PageTransition><ResetPassword /></PageTransition>
-          </PublicRoute>
-        } />
-        <Route path="/onboarding" element={
-          <ProtectedRoute>
-            <PageTransition><Onboarding /></PageTransition>
-          </ProtectedRoute>
-        } />
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <PageTransition><Dashboard /></PageTransition>
-          </ProtectedRoute>
-        } />
-        <Route path="/kyc" element={
-          <ProtectedRoute>
-            <PageTransition><KYCVerification /></PageTransition>
-          </ProtectedRoute>
-        } />
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <PageTransition><Profile /></PageTransition>
-          </ProtectedRoute>
-        } />
-        <Route path="/settings" element={
-          <ProtectedRoute>
-            <PageTransition><Settings /></PageTransition>
-          </ProtectedRoute>
-        } />
-        {/* Public Creator & Tipping Pages */}
-        <Route path="/creator/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
-        <Route path="/c/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
-        <Route path="/tip/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
-        <Route path="/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
-        <Route path="/@:username" element={<PageTransition><PublicProfile /></PageTransition>} />
-        {/* OBS Stream Overlay */}
-        <Route path="/overlay/:creatorId" element={<PageTransition><Overlay /></PageTransition>} />
-        
-        {/* Support & Contact Pages */}
-        <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
-        <Route path="/contact" element={<PageTransition><Support /></PageTransition>} />
+    <Suspense fallback={<PageLoader />}>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/login" element={
+            <PublicRoute>
+              <PageTransition><Login /></PageTransition>
+            </PublicRoute>
+          } />
+          <Route path="/signup" element={
+            <PublicRoute>
+              <PageTransition><Signup /></PageTransition>
+            </PublicRoute>
+          } />
+          <Route path="/reset-password/:token" element={
+            <PublicRoute>
+              <PageTransition><ResetPassword /></PageTransition>
+            </PublicRoute>
+          } />
+          <Route path="/onboarding" element={
+            <ProtectedRoute>
+              <PageTransition><Onboarding /></PageTransition>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <PageTransition><Dashboard /></PageTransition>
+            </ProtectedRoute>
+          } />
+          <Route path="/kyc" element={
+            <ProtectedRoute>
+              <PageTransition><KYCVerification /></PageTransition>
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <PageTransition><Profile /></PageTransition>
+            </ProtectedRoute>
+          } />
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <PageTransition><Settings /></PageTransition>
+            </ProtectedRoute>
+          } />
+          {/* Public Creator & Tipping Pages */}
+          <Route path="/creator/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+          <Route path="/c/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+          <Route path="/tip/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+          <Route path="/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+          <Route path="/@:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+          
+          {/* OBS Stream Overlay */}
+          <Route path="/overlay/:creatorId" element={<PageTransition><Overlay /></PageTransition>} />
+          
+          {/* Support & Contact Pages */}
+          <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
+          <Route path="/contact" element={<PageTransition><Support /></PageTransition>} />
 
-        {/* Public Legal / Compliance Pages */}
-        <Route path="/privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
-        <Route path="/data-deletion" element={<PageTransition><DataDeletion /></PageTransition>} />
-        
-        {/* Homepage */}
-        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-        {/* Catch-all fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AnimatePresence>
+          {/* Maintenance Direct Routes & Aliases */}
+          <Route path="/maintenance" element={<MaintenanceRouteWrapper />} />
+          <Route path="/maintance" element={<MaintenanceRouteWrapper />} />
+
+          {/* Public Legal / Compliance Pages */}
+          <Route path="/privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+          <Route path="/data-deletion" element={<PageTransition><DataDeletion /></PageTransition>} />
+          
+          {/* Homepage */}
+          <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+          {/* Catch-all fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AnimatePresence>
+    </Suspense>
   );
 };
+
+function MaintenanceRouteWrapper() {
+  const { maintenanceInfo, checkSystemStatus } = useAuth();
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <MaintenanceScreen
+        message={maintenanceInfo?.message}
+        supportEmail={maintenanceInfo?.supportEmail || 'support@gurshapay.com'}
+        supportPhone={maintenanceInfo?.supportPhone || '+251967432143'}
+        onRefresh={checkSystemStatus}
+      />
+    </Suspense>
+  );
+}
 
 function AppContent() {
   const { maintenanceInfo, checkSystemStatus } = useAuth();
 
   if (maintenanceInfo?.isMaintenance) {
     return (
-      <MaintenanceScreen
-        message={maintenanceInfo.message}
-        supportEmail={maintenanceInfo.supportEmail}
-        supportPhone={maintenanceInfo.supportPhone}
-        onRefresh={checkSystemStatus}
-      />
+      <Suspense fallback={<PageLoader />}>
+        <MaintenanceScreen
+          message={maintenanceInfo.message}
+          supportEmail={maintenanceInfo.supportEmail || 'support@gurshapay.com'}
+          supportPhone={maintenanceInfo.supportPhone || '+251967432143'}
+          onRefresh={checkSystemStatus}
+        />
+      </Suspense>
     );
   }
 

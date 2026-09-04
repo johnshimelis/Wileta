@@ -17,6 +17,7 @@ const getApiBaseUrl = () => {
 // Axios instance with base URL & interceptors
 export const api = axios.create({
     baseURL: getApiBaseUrl(),
+    timeout: 10000
 });
 
 api.interceptors.request.use(config => {
@@ -28,13 +29,26 @@ api.interceptors.request.use(config => {
 });
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    // 1. Instant optimistic state initialization from cached storage (0ms delay)
+    const [user, setUser] = useState(() => {
+        try {
+            const cached = localStorage.getItem('gp_cached_user');
+            return cached ? JSON.parse(cached) : null;
+        } catch (_) {
+            return null;
+        }
+    });
+
+    const [loading, setLoading] = useState(() => {
+        // If there is no token, we are definitively not logged in -> 0ms initial loading!
+        return !!localStorage.getItem('token') && !localStorage.getItem('gp_cached_user');
+    });
+
     const [maintenanceInfo, setMaintenanceInfo] = useState({
         isMaintenance: false,
         message: '',
-        supportEmail: '',
-        supportPhone: ''
+        supportEmail: 'support@gurshapay.com',
+        supportPhone: '+251967432143'
     });
 
     const checkSystemStatus = useCallback(async () => {
@@ -44,8 +58,8 @@ export const AuthProvider = ({ children }) => {
                 setMaintenanceInfo({
                     isMaintenance: true,
                     message: res.data.message,
-                    supportEmail: res.data.supportEmail,
-                    supportPhone: res.data.supportPhone
+                    supportEmail: res.data.supportEmail || 'support@gurshapay.com',
+                    supportPhone: res.data.supportPhone || '+251967432143'
                 });
                 return true;
             } else {
@@ -66,8 +80,8 @@ export const AuthProvider = ({ children }) => {
                     setMaintenanceInfo({
                         isMaintenance: true,
                         message: error.response.data.message || error.response.data.error,
-                        supportEmail: error.response.data.supportEmail,
-                        supportPhone: error.response.data.supportPhone
+                        supportEmail: error.response.data.supportEmail || 'support@gurshapay.com',
+                        supportPhone: error.response.data.supportPhone || '+251967432143'
                     });
                 }
                 return Promise.reject(error);
@@ -77,28 +91,45 @@ export const AuthProvider = ({ children }) => {
         return () => api.interceptors.response.eject(interceptor);
     }, []);
 
+    // Fast non-blocking background revalidation
     useEffect(() => {
+        let isMounted = true;
         const initAuth = async () => {
-            await checkSystemStatus();
+            // Non-blocking system check
+            checkSystemStatus();
+
             const token = localStorage.getItem('token');
             if (token) {
                 try {
                     const res = await api.get('/auth/me');
-                    setUser(res.data);
+                    if (isMounted) {
+                        setUser(res.data);
+                        localStorage.setItem('gp_cached_user', JSON.stringify(res.data));
+                    }
                 } catch (error) {
-                    console.error("Token invalid or expired", error);
-                    localStorage.removeItem('token');
+                    if (error.response?.status === 401 && isMounted) {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('gp_cached_user');
+                        setUser(null);
+                    }
                 }
             }
-            setLoading(false);
+            if (isMounted) {
+                setLoading(false);
+            }
         };
+
         initAuth();
+        return () => { isMounted = false; };
     }, [checkSystemStatus]);
 
     const login = async (credentials) => {
         try {
             const res = await api.post('/auth/login', credentials);
             localStorage.setItem('token', res.data.token);
+            if (res.data.user) {
+                localStorage.setItem('gp_cached_user', JSON.stringify(res.data.user));
+            }
             setUser(res.data.user);
             return { success: true, user: res.data.user };
         } catch (error) {
@@ -109,6 +140,7 @@ export const AuthProvider = ({ children }) => {
     const onboard = async (name, username, telebirr_number) => {
         try {
             const res = await api.post('/auth/onboard', { name, username, telebirr_number });
+            localStorage.setItem('gp_cached_user', JSON.stringify(res.data));
             setUser(res.data);
             return { success: true };
         } catch (error) {
@@ -121,6 +153,7 @@ export const AuthProvider = ({ children }) => {
             await api.post('/auth/logout');
         } catch (e) {}
         localStorage.removeItem('token');
+        localStorage.removeItem('gp_cached_user');
         setUser(null);
     };
 
@@ -129,6 +162,7 @@ export const AuthProvider = ({ children }) => {
             await api.post('/auth/logout-all');
         } catch (e) {}
         localStorage.removeItem('token');
+        localStorage.removeItem('gp_cached_user');
         setUser(null);
     };
 
@@ -147,7 +181,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 };
