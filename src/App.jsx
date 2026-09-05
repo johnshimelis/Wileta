@@ -160,8 +160,8 @@ function MaintenanceRouteWrapper() {
     <Suspense fallback={<PageLoader />}>
       <MaintenanceScreen
         message={maintenanceInfo?.message}
-        supportEmail={maintenanceInfo?.supportEmail || 'support@gurshapay.com'}
-        supportPhone={maintenanceInfo?.supportPhone || '+251967432143'}
+        supportEmail={maintenanceInfo?.supportEmail || 'biranalabs@gmail.com'}
+        supportPhone={maintenanceInfo?.supportPhone || '+251 967 432 143'}
         onRefresh={checkSystemStatus}
       />
     </Suspense>
@@ -176,8 +176,8 @@ function AppContent() {
       <Suspense fallback={<PageLoader />}>
         <MaintenanceScreen
           message={maintenanceInfo.message}
-          supportEmail={maintenanceInfo.supportEmail || 'support@gurshapay.com'}
-          supportPhone={maintenanceInfo.supportPhone || '+251967432143'}
+          supportEmail={maintenanceInfo.supportEmail || 'biranalabs@gmail.com'}
+          supportPhone={maintenanceInfo.supportPhone || '+251 967 432 143'}
           onRefresh={checkSystemStatus}
         />
       </Suspense>
