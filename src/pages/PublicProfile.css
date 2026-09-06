@@ -1,1283 +1,1166 @@
-/* Public Profile Tipping Specific Styles */
+/* ==========================================================================
+   GURSHA PAY — AUTHENTIC ETHIOPIAN CREATOR PROFILE & GIFT SHOWCASE STYLES
+   ========================================================================== */
+
+/* Main Container Layout */
 .public-tipping-container {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 2rem 1rem;
+    justify-content: flex-start;
+    padding: 1.5rem 1rem 3rem;
     background: var(--bg-color);
     position: relative;
+    color: var(--text-main);
 }
 
 /* ==========================================================================
-   TIKTOK-STYLE FRAMELESS 3D GIFT DRAWER
+   1. ETHIOPIAN GIFT SHOWCASE CONTAINER & CATEGORY NAVIGATION
    ========================================================================== */
 
-.tiktok-gift-tray {
-    background: rgba(18, 18, 22, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    padding: 0.85rem 0.6rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-    margin-bottom: 0.75rem;
+.eth-gift-showcase-container {
+    background: var(--card-bg, rgba(24, 24, 28, 0.7));
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    border-radius: 16px;
+    padding: 1rem 0.85rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
-.tiktok-gift-grid {
+.eth-category-nav {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 0.85rem;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    -webkit-overflow-scrolling: touch;
+}
+
+.eth-category-nav::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+
+.eth-category-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 20px;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    background: var(--bg-color, rgba(255, 255, 255, 0.04));
+    color: var(--text-muted, #9CA3AF);
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+}
+
+.eth-category-chip:hover {
+    color: var(--text-main, #FFFFFF);
+    border-color: rgba(217, 119, 6, 0.4);
+    background: rgba(217, 119, 6, 0.06);
+}
+
+.eth-category-chip.active {
+    background: rgba(217, 119, 6, 0.14);
+    border-color: #D97706;
+    color: #F59E0B;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15);
+}
+
+/* ==========================================================================
+   2. REFINED GIFT GRID & TACTILE GIFT CARDS
+   ========================================================================== */
+
+.eth-gift-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.4rem 0.25rem;
-    max-height: 290px;
+    gap: 0.5rem;
+    max-height: 340px;
     overflow-y: auto;
     padding: 4px 2px;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    scrollbar-color: rgba(217, 119, 6, 0.3) transparent;
 }
 
-@media (max-width: 480px) {
-    .tiktok-gift-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 0.35rem 0.15rem;
+@media (min-width: 640px) {
+    .eth-gift-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.65rem;
+        max-height: 380px;
     }
 }
 
-/* Completely Frameless Floating Gift Item */
-.tiktok-gift-item {
-    background: transparent;
-    border: none;
-    outline: none;
-    padding: 0.35rem 0.15rem;
+@media (min-width: 768px) {
+    .eth-gift-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+/* Tactile Gift Card */
+.eth-gift-card {
+    background: var(--bg-color, rgba(18, 18, 22, 0.7));
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    border-radius: 12px;
+    padding: 0.6rem 0.35rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     cursor: pointer;
     position: relative;
     user-select: none;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    outline: none;
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.18s ease,
+                box-shadow 0.18s ease,
+                background-color 0.18s ease;
 }
 
-.tiktok-gift-item:hover {
-    transform: translateY(-4px) scale(1.06);
+.eth-gift-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(217, 119, 6, 0.45);
+    background: rgba(217, 119, 6, 0.04);
 }
 
-.tiktok-gift-item:active {
-    transform: scale(0.95);
+.eth-gift-card:active {
+    transform: scale(0.97);
 }
 
-/* Floating 3D Icon Container */
-.tiktok-floating-3d {
-    width: 48px;
-    height: 48px;
+.eth-gift-card.selected {
+    border-color: #D97706;
+    background: rgba(217, 119, 6, 0.1);
+    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.18), inset 0 0 0 1px #D97706;
+    transform: translateY(-2px);
+}
+
+.eth-gift-card-active-dot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #F59E0B;
+    box-shadow: 0 0 6px #F59E0B;
+}
+
+.eth-gift-card-labels {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.gift-card-name-am {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--text-main, #FFFFFF);
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.gift-card-name-en {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--text-muted, #9CA3AF);
+    line-height: 1.15;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    margin-top: 1px;
+}
+
+.gift-card-pricing {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+.gift-card-coins {
+    color: #F59E0B;
+}
+
+.gift-card-etb {
+    color: var(--text-muted, #9CA3AF);
+    font-size: 0.62rem;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   3. CLEAN ART BOX & REAL IMAGE PRESENTATION
+   ========================================================================== */
+
+.eth-gift-art-box {
     position: relative;
-    transform-style: preserve-3d;
-    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.tiktok-gift-item:hover .tiktok-floating-3d {
-    animation: tiktok-3d-sway 2s infinite ease-in-out;
-}
-
-/* 3D HOLOGRAPHIC ORB CONTAINER & REALISTIC IMAGE VISUALS */
-.gift-3d-orb-container {
-    position: relative;
-    border-radius: 50%;
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.gift-orb-glow-aura {
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, rgba(245, 158, 11, 0) 70%);
-    pointer-events: none;
-    z-index: 0;
-    animation: auraPulse 2.5s infinite ease-in-out;
-}
-
-@keyframes auraPulse {
-    0%, 100% { transform: scale(1); opacity: 0.6; }
-    50% { transform: scale(1.15); opacity: 0.95; }
-}
-
-.gift-orb-lens {
-    position: relative;
+.eth-gift-image-frame {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    border-radius: 10px;
     overflow: hidden;
-    background: radial-gradient(circle at 35% 30%, #2a2a38 0%, #121218 80%, #08080c 100%);
-    border: 1.5px solid rgba(253, 224, 71, 0.4);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     z-index: 1;
 }
 
-.gift-orb-real-image {
+.eth-gift-real-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50%;
-    transform: scale(1.02);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    mix-blend-mode: normal;
+    border-radius: 10px;
+    display: block;
+    transition: transform 0.25s ease;
 }
 
-.gift-orb-fallback-emoji {
-    font-size: 1.75rem;
+.eth-gift-card:hover .eth-gift-real-img {
+    transform: scale(1.04);
+}
+
+.eth-gift-fallback-emoji {
+    font-size: 1.6rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* ==========================================================================
-   SPECIALIZED IN-PLACE LIVE MOVEMENT ANIMATIONS (INSIDE GIFT TRAY)
-   ========================================================================== */
-
-/* ✈️ Jet Banking Float */
-.inplace-jet-banking {
-    animation: jetBankInPlace 2.8s infinite ease-in-out;
-}
-
-@keyframes jetBankInPlace {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    25% { transform: translateY(-4px) rotate(8deg); }
-    50% { transform: translateY(-1px) rotate(0deg); }
-    75% { transform: translateY(-5px) rotate(-8deg); }
-}
-
-.inplace-jet-trail {
-    position: absolute;
-    bottom: -2px;
-    display: flex;
-    gap: 3px;
-    z-index: 2;
-}
-
-.trail-dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    animation: trailGlow 1.2s infinite ease-in-out;
-}
-.t-green { background: #16A34A; box-shadow: 0 0 6px #16A34A; }
-.t-yellow { background: #FACC15; box-shadow: 0 0 6px #FACC15; animation-delay: 0.2s; }
-.t-red { background: #DC2626; box-shadow: 0 0 6px #DC2626; animation-delay: 0.4s; }
-
-@keyframes trailGlow {
-    0%, 100% { opacity: 0.4; transform: scale(0.8); }
-    50% { opacity: 1; transform: scale(1.3); }
-}
-
-/* 🏎️ Supercar Drift Oscillation */
-.inplace-supercar-drift {
-    animation: carDriftInPlace 1.8s infinite ease-in-out;
-}
-
-@keyframes carDriftInPlace {
-    0%, 100% { transform: translateX(0) rotate(0deg); }
-    25% { transform: translateX(-3px) rotate(-5deg); }
-    50% { transform: translateX(2px) rotate(4deg); }
-    75% { transform: translateX(-1px) rotate(-2deg); }
-}
-
-.inplace-drift-smoke {
-    position: absolute;
-    bottom: -4px;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    z-index: 2;
-}
-
-.smoke-puff {
-    width: 6px;
-    height: 6px;
-    background: rgba(220, 220, 230, 0.6);
-    border-radius: 50%;
-    animation: puffDrift 1s infinite ease-out;
-}
-.sp-2 { animation-delay: 0.4s; }
-
-@keyframes puffDrift {
-    0% { transform: translateY(0) scale(0.5); opacity: 0.8; }
-    100% { transform: translateY(-8px) scale(1.4); opacity: 0; }
-}
-
-/* 🦁 Lion Majestic Breathing */
-.inplace-lion-breathe {
-    animation: lionBreatheInPlace 2.4s infinite ease-in-out;
-}
-
-@keyframes lionBreatheInPlace {
-    0%, 100% { transform: scale(1); filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.4)); }
-    50% { transform: scale(1.08) translateY(-2px); filter: drop-shadow(0 4px 16px rgba(245, 158, 11, 0.85)); }
-}
-
-/* ☕ Steam Rising Wisps (Coffee & Jebena) */
-.inplace-steam-waft {
-    animation: steamWaft 2.6s infinite ease-in-out;
-}
-
-@keyframes steamWaft {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
-}
-
-.inplace-steam-wisps {
-    position: absolute;
-    top: -6px;
-    display: flex;
-    gap: 4px;
-    z-index: 2;
-}
-
-.steam-line {
-    width: 2px;
-    height: 8px;
-    background: linear-gradient(to top, rgba(253, 224, 71, 0.7), transparent);
-    border-radius: 2px;
-    animation: steamRise 1.4s infinite ease-in-out;
-}
-.st-2 { animation-delay: 0.3s; height: 10px; }
-.st-3 { animation-delay: 0.6s; }
-
-@keyframes steamRise {
-    0% { transform: translateY(0) scaleY(0.6); opacity: 0.2; }
-    50% { transform: translateY(-6px) scaleY(1.2); opacity: 0.8; }
-    100% { transform: translateY(-12px) scaleY(1.4); opacity: 0; }
-}
-
-/* 🌼 Flower Gentle Sway */
-.inplace-flower-sway {
-    animation: flowerSway 3s infinite ease-in-out;
-}
-
-@keyframes flowerSway {
-    0%, 100% { transform: rotate(0deg) scale(1); }
-    25% { transform: rotate(5deg) scale(1.04); }
-    75% { transform: rotate(-5deg) scale(1.04); }
-}
-
-/* 📖 Sacred Rotating Halo */
-.inplace-sacred-float {
-    animation: sacredFloatInPlace 3.2s infinite ease-in-out;
-}
-
-@keyframes sacredFloatInPlace {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-4px) scale(1.06); }
-}
-
-.inplace-sacred-rays {
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    border: 1.5px dashed rgba(250, 204, 21, 0.6);
-    animation: spinRays 8s linear infinite;
-    pointer-events: none;
-}
-
-@keyframes spinRays {
-    100% { transform: rotate(360deg); }
-}
-
-/* 💎 Gem / Crown Shimmer */
-.inplace-gem-shimmer {
-    animation: gemShimmerInPlace 2s infinite ease-in-out;
-}
-
-@keyframes gemShimmerInPlace {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.08) rotate(3deg); }
-}
-
-.inplace-sparkle-star {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 6px;
-    height: 6px;
-    background: #FFFFFF;
-    border-radius: 50%;
-    box-shadow: 0 0 8px #FDE047, 0 0 14px #FFFFFF;
-    animation: starBlink 1.5s infinite ease-in-out;
-    z-index: 2;
-}
-
-@keyframes starBlink {
-    0%, 100% { transform: scale(0.4); opacity: 0.2; }
-    50% { transform: scale(1.3); opacity: 1; }
-}
-
-/* 🛰️ Satellite Orbit */
-.inplace-satellite-orbit {
-    animation: satelliteOrbit 4s infinite linear;
-}
-
-@keyframes satelliteOrbit {
-    0% { transform: perspective(400px) rotateY(0deg); }
-    100% { transform: perspective(400px) rotateY(360deg); }
-}
-
-/* 🏇 Horse Gallop */
-.inplace-horse-gallop {
-    animation: horseGallop 1.2s infinite ease-in-out;
-}
-
-@keyframes horseGallop {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    30% { transform: translateY(-4px) rotate(4deg); }
-    70% { transform: translateY(-1px) rotate(-3deg); }
-}
-
-/* Cultural Pulse Default */
-.inplace-cultural-pulse {
-    animation: culturalPulse 2.4s infinite ease-in-out;
-}
-
-@keyframes culturalPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05) translateY(-2px); }
-}
-
-/* Glowing Neon Halo When Selected */
-.tiktok-gift-item.selected .tiktok-floating-3d {
-    animation: tiktok-selected-halo-pulse 2s infinite ease-in-out;
-}
-
-.tiktok-gift-item.selected .gift-orb-lens {
-    border-color: #10B981;
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.8), inset 0 0 10px rgba(16, 185, 129, 0.4);
-}
-
-.tiktok-gift-item.selected .tiktok-floating-3d::after {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    border: 2px solid #10B981;
-    box-shadow: 0 0 18px rgba(16, 185, 129, 0.9), inset 0 0 10px rgba(16, 185, 129, 0.5);
-    animation: halo-pulse 1.8s infinite ease-in-out;
-    pointer-events: none;
-}
-
-@keyframes halo-pulse {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.12); opacity: 1; }
-}
-
-@keyframes tiktok-3d-sway {
-    0%, 100% { transform: perspective(500px) rotateY(0deg) rotateX(0deg) translateY(0); }
-    25% { transform: perspective(500px) rotateY(18deg) rotateX(-6deg) translateY(-4px); }
-    50% { transform: perspective(500px) rotateY(0deg) rotateX(0deg) translateY(-6px); }
-    75% { transform: perspective(500px) rotateY(-18deg) rotateX(6deg) translateY(-4px); }
-}
-
-@keyframes tiktok-selected-halo-pulse {
-    0%, 100% { transform: scale(1.08); filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.8)); }
-    50% { transform: scale(1.16) translateY(-3px); filter: drop-shadow(0 0 20px rgba(16, 185, 129, 1)); }
-}
-
-/* Badge Pill */
-.tiktok-mini-badge {
-    position: absolute;
-    top: -2px;
-    right: 2px;
-    font-size: 7.5px;
-    font-weight: 900;
-    color: #FFFFFF;
-    background: linear-gradient(135deg, #EF4444, #F59E0B);
-    padding: 1px 4px;
-    border-radius: 4px;
-    line-height: 1;
-    z-index: 3;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-/* Coin Display Pill */
-.tiktok-coin-badge {
-    font-size: 0.72rem;
-    font-weight: 900;
-    color: #FDE047;
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    margin-top: 2px;
-    line-height: 1.1;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-.tiktok-birr-label {
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: #9CA3AF;
-    line-height: 1;
-}
-
-/* Hero Mode in Full-Screen Cinematic Showcase */
-.gift-hero-mode .gift-orb-lens {
-    border-width: 3px;
-    border-color: rgba(250, 204, 21, 0.8);
-    box-shadow: 0 0 50px rgba(245, 158, 11, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.4);
-}
-
-/* ==========================================================================
-   ACTIVE MOTION GRAPHICS OVERLAYS & ANIMATION KEYFRAMES
-   ========================================================================== */
-
-.gift-motion-graphics-overlay {
+.eth-motion-layer {
     position: absolute;
     inset: 0;
     pointer-events: none;
+    z-index: 2;
     overflow: visible;
-    z-index: 4;
 }
 
-/* 📖 BIBLE & 📗 QURAN MOTION */
-.motion-book-wrapper {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.book-sacred-rays {
-    position: absolute;
-    inset: -8px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(250, 204, 21, 0.45) 0%, transparent 70%);
-    animation: sacredBookGlow 2s infinite alternate ease-in-out;
-}
-.book-page-turning {
-    position: absolute;
-    width: 38%;
-    height: 50%;
-    background: rgba(254, 240, 138, 0.65);
-    border-radius: 2px;
-    transform-origin: left center;
-    animation: flipBookPages 1.4s infinite ease-in-out;
-}
-.book-page-turning.page-2 {
-    animation-delay: 0.4s;
-    background: rgba(253, 224, 71, 0.4);
-}
-.book-floating-glyph {
-    position: absolute;
-    top: -8px;
-    right: -4px;
-    font-size: 13px;
-    animation: floatGlyph 1.8s infinite ease-in-out;
-}
-@keyframes sacredBookGlow {
-    0% { transform: scale(0.9); opacity: 0.4; }
-    100% { transform: scale(1.25); opacity: 0.95; }
-}
-@keyframes flipBookPages {
-    0% { transform: perspective(300px) rotateY(0deg); opacity: 0.8; }
-    50% { transform: perspective(300px) rotateY(-90deg); opacity: 1; }
-    100% { transform: perspective(300px) rotateY(-180deg); opacity: 0; }
-}
-@keyframes floatGlyph {
-    0%, 100% { transform: translateY(0) scale(0.9); }
-    50% { transform: translateY(-6px) scale(1.2); }
+/* ==========================================================================
+   4. OBJECT-SPECIFIC ANIMATION KEYFRAMES (ALIVE, NATURAL & RESTRAINED)
+   ========================================================================== */
+
+/* 🫖 JEBENA POURING ANIMATION */
+.eth-anim-jebena {
+    transform-origin: 30% 70%;
+    animation: jebenaTiltPour 3.6s infinite ease-in-out;
 }
 
-/* 🫖 CLAY JEBENA POURING COFFEE STREAM */
-.motion-jebena-wrapper {
+@keyframes jebenaTiltPour {
+    0%, 100% { transform: rotate(0deg); }
+    30% { transform: rotate(-10deg) translateY(-2px); }
+    55% { transform: rotate(-10deg) translateY(-2px); }
+    75% { transform: rotate(0deg); }
+}
+
+.obj-fx-jebena {
     position: absolute;
     inset: 0;
 }
-.pouring-coffee-stream {
+
+.jebena-pour-stream-svg {
     position: absolute;
-    right: 22%;
-    bottom: 8%;
-    width: 3.5px;
-    height: 22px;
-    background: linear-gradient(to bottom, #D97706, #78350F, #3E2723);
-    border-radius: 3px;
-    box-shadow: 0 0 6px rgba(217, 119, 6, 0.8);
-    animation: pourStream 1.1s infinite ease-in-out;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
 }
+
+.coffee-pour-line {
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+    animation: coffeeStreamPour 3.6s infinite ease-in-out;
+}
+
+@keyframes coffeeStreamPour {
+    0%, 25% { stroke-dashoffset: 40; opacity: 0; }
+    32% { stroke-dashoffset: 0; opacity: 0.95; }
+    52% { stroke-dashoffset: 0; opacity: 0.95; }
+    60% { stroke-dashoffset: -40; opacity: 0; }
+    100% { stroke-dashoffset: -40; opacity: 0; }
+}
+
 .mini-sini-cup {
     position: absolute;
-    right: 14%;
-    bottom: 0px;
-    width: 15px;
-    height: 11px;
-    background: #FFF8E1;
-    border: 1px solid #D97706;
-    border-radius: 2px 2px 6px 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
-.sini-ripple {
-    width: 9px;
-    height: 5px;
-    border-radius: 50%;
-    background: #78350F;
-    animation: cupRipple 0.8s infinite ease-out;
-}
-.jebena-steam-cloud {
-    position: absolute;
-    top: -8px;
-    left: 28%;
-    display: flex;
-    gap: 3px;
-}
-.steam-particle {
-    width: 5px;
+    right: 8%;
+    bottom: 8%;
+    width: 12px;
     height: 8px;
-    background: rgba(254, 240, 138, 0.7);
+    border-radius: 0 0 6px 6px;
+    border: 1px solid rgba(245, 158, 11, 0.7);
+    background: rgba(255, 255, 255, 0.9);
+    opacity: 0;
+    animation: siniAppear 3.6s infinite ease-in-out;
+}
+
+@keyframes siniAppear {
+    0%, 25% { opacity: 0; transform: scale(0.6); }
+    32%, 60% { opacity: 1; transform: scale(1); }
+    70%, 100% { opacity: 0; transform: scale(0.6); }
+}
+
+.sini-surface-ripple {
+    position: absolute;
+    inset: 0;
     border-radius: 50%;
-    filter: blur(1.5px);
-    animation: steamRise 1.4s infinite ease-out;
-}
-.steam-particle.st-2 { animation-delay: 0.4s; }
-@keyframes pourStream {
-    0% { transform: scaleY(0.6); opacity: 0.7; }
-    50% { transform: scaleY(1.1); opacity: 1; }
-    100% { transform: scaleY(0.6); opacity: 0.7; }
-}
-@keyframes cupRipple {
-    0% { transform: scale(0.6); opacity: 0.9; }
-    100% { transform: scale(1.3); opacity: 0.2; }
+    background: #3D2314;
+    animation: coffeeRipple 1s infinite ease-out;
 }
 
-/* ☕ SINI BUNA STEAM & BEANS */
-.motion-buna-wrapper {
-    position: absolute;
-    inset: 0;
+@keyframes coffeeRipple {
+    0% { transform: scale(0.6); opacity: 0.8; }
+    100% { transform: scale(1.2); opacity: 0; }
 }
-.buna-steam-curls {
+
+.obj-steam-wisp {
     position: absolute;
-    top: -10px;
-    left: 32%;
-    display: flex;
-    gap: 4px;
-}
-.buna-steam-curls .curl {
-    width: 2.5px;
+    top: 15%;
+    right: 35%;
+    width: 6px;
     height: 12px;
-    background: linear-gradient(to top, rgba(253, 224, 71, 0.8), transparent);
-    border-radius: 3px;
-    animation: steamCurlRise 1.5s infinite ease-out;
-}
-.buna-steam-curls .curl-2 { animation-delay: 0.3s; height: 15px; }
-.buna-steam-curls .curl-3 { animation-delay: 0.6s; }
-.floating-bean {
-    position: absolute;
-    font-size: 12px;
-    top: -6px;
-    right: 2px;
-    animation: beanBob 2.2s infinite ease-in-out;
-}
-@keyframes steamCurlRise {
-    0% { transform: translateY(0) scaleY(0.6); opacity: 0.2; }
-    50% { transform: translateY(-8px) scaleY(1.2); opacity: 0.9; }
-    100% { transform: translateY(-16px) scaleY(1.4); opacity: 0; }
-}
-@keyframes beanBob {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-5px) rotate(15deg); }
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 80%);
+    animation: steamWispFloat 2.4s infinite ease-out;
 }
 
-/* 🏎️ SUPERCAR DRIFT SMOKE & NEON */
-.motion-car-wrapper {
+@keyframes steamWispFloat {
+    0% { transform: translateY(0) scale(0.6); opacity: 0; }
+    30% { opacity: 0.7; }
+    100% { transform: translateY(-16px) scale(1.4); opacity: 0; }
+}
+
+/* ☕ BUNA & REKEBOT STEAM */
+.eth-anim-buna,
+.eth-anim-rekebot {
+    animation: bunaGentleBreathe 4s infinite ease-in-out;
+}
+
+@keyframes bunaGentleBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+.obj-fx-steam {
     position: absolute;
     inset: 0;
 }
-.drift-tire-smoke {
+
+.delicate-steam-puff {
     position: absolute;
-    bottom: -2px;
-    width: 14px;
+    width: 6px;
     height: 14px;
-    background: rgba(220, 220, 235, 0.7);
     border-radius: 50%;
-    filter: blur(2px);
-    animation: tireSmokeExpand 1s infinite ease-out;
-}
-.drift-tire-smoke.left-smoke { left: 4px; }
-.drift-tire-smoke.right-smoke { right: 4px; animation-delay: 0.35s; }
-.car-neon-glow {
-    position: absolute;
-    bottom: -3px;
-    left: 15%;
-    right: 15%;
-    height: 5px;
-    background: #06B6D4;
-    box-shadow: 0 0 12px #06B6D4, 0 0 20px #3B82F6;
-    border-radius: 4px;
-    animation: neonPulse 0.7s infinite alternate;
-}
-.headlight-beam {
-    position: absolute;
-    left: 4px;
-    top: 40%;
-    width: 14px;
-    height: 8px;
-    background: radial-gradient(circle, rgba(254, 240, 138, 0.8) 0%, transparent 70%);
-    animation: headlightBeam 1.2s infinite alternate;
-}
-@keyframes tireSmokeExpand {
-    0% { transform: translateY(0) scale(0.5); opacity: 0.9; }
-    100% { transform: translateY(-12px) scale(1.6); opacity: 0; }
-}
-@keyframes neonPulse {
-    0% { opacity: 0.5; box-shadow: 0 0 6px #06B6D4; }
-    100% { opacity: 1; box-shadow: 0 0 16px #06B6D4, 0 0 24px #3B82F6; }
-}
-@keyframes headlightBeam {
-    0% { opacity: 0.6; transform: scaleX(0.8); }
-    100% { opacity: 1; transform: scaleX(1.3); }
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, transparent 75%);
+    animation: delicateSteamRise 2.8s infinite ease-out;
 }
 
-/* ✈️ JET FLIGHT & TRICOLOR CONTRAILS */
-.motion-jet-wrapper {
-    position: absolute;
-    inset: 0;
-}
-.jet-tricolor-exhaust {
-    position: absolute;
-    bottom: 2px;
-    left: 12%;
-    display: flex;
-    flex-direction: column;
-    gap: 2.5px;
-}
-.tricolor-trail {
-    height: 3px;
-    border-radius: 2px;
-    animation: contrailBlast 1.3s infinite ease-out;
-}
-.tricolor-trail.t-green { background: #16A34A; box-shadow: 0 0 8px #16A34A; width: 22px; }
-.tricolor-trail.t-yellow { background: #FACC15; box-shadow: 0 0 8px #FACC15; width: 26px; animation-delay: 0.15s; }
-.tricolor-trail.t-red { background: #DC2626; box-shadow: 0 0 8px #DC2626; width: 22px; animation-delay: 0.3s; }
-.flying-cloud-puff {
-    position: absolute;
-    bottom: 0;
-    width: 20px;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 10px;
-    filter: blur(2px);
-    animation: cloudDrift 2.2s infinite linear;
-}
-.flying-cloud-puff.cp-2 { animation-delay: 1.1s; bottom: 6px; }
-@keyframes contrailBlast {
-    0% { transform: translateX(0) scaleX(0.6); opacity: 0.9; }
-    100% { transform: translateX(-16px) scaleX(1.4); opacity: 0; }
-}
-@keyframes cloudDrift {
-    0% { transform: translateX(40px); opacity: 0.7; }
-    100% { transform: translateX(-40px); opacity: 0; }
-}
+.wisp-1 { left: 42%; top: 20%; animation-delay: 0s; }
+.wisp-2 { left: 54%; top: 16%; animation-delay: 1.2s; }
 
-/* 🦁 LION OF JUDAH ROARING & SHOCKWAVES */
-.motion-lion-wrapper {
+.censer-incense-smoke {
     position: absolute;
-    inset: 0;
-}
-.lion-roar-shockwave {
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    border: 2px solid #F59E0B;
-    animation: roarShockRing 1.6s infinite ease-out;
-}
-.lion-roar-shockwave.ring-2 {
-    animation-delay: 0.5s;
-    border-color: #EF4444;
-}
-.lion-eye-flash {
-    position: absolute;
-    top: 38%;
-    left: 40%;
-    width: 14px;
-    height: 5px;
-    background: #FDE047;
-    box-shadow: 0 0 10px #FDE047, 0 0 18px #FFFFFF;
-    border-radius: 50%;
-    animation: eyeGlint 1.2s infinite;
-}
-.lion-crown-glint {
-    position: absolute;
-    top: -8px;
-    left: 36%;
-    font-size: 15px;
-    animation: crownShine 2s infinite ease-in-out;
-}
-@keyframes roarShockRing {
-    0% { transform: scale(0.7); opacity: 0.9; }
-    100% { transform: scale(1.45); opacity: 0; }
-}
-@keyframes eyeGlint {
-    0%, 100% { opacity: 0.3; transform: scale(0.8); }
-    50% { opacity: 1; transform: scale(1.4); }
-}
-@keyframes crownShine {
-    0%, 100% { transform: rotate(0deg) scale(0.9); }
-    50% { transform: rotate(8deg) scale(1.15); filter: drop-shadow(0 0 8px #FDE047); }
-}
-
-/* 🌼 FLOWER BLOOMING & PETALS */
-.motion-flower-wrapper {
-    position: absolute;
-    inset: 0;
-}
-.falling-petal {
-    position: absolute;
-    font-size: 13px;
-    animation: petalFloatDown 2.2s infinite ease-in-out;
-}
-.falling-petal.fp-1 { top: -6px; left: 8px; }
-.falling-petal.fp-2 { top: -8px; right: 8px; animation-delay: 0.8s; font-size: 11px; }
-.pollen-glow-ring {
-    position: absolute;
-    inset: 3px;
-    border-radius: 50%;
-    border: 1.5px dotted rgba(253, 224, 71, 0.7);
-    animation: pollenRotate 5s infinite linear;
-}
-@keyframes petalFloatDown {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
-    100% { transform: translateY(24px) rotate(180deg); opacity: 0; }
-}
-@keyframes pollenRotate {
-    100% { transform: rotate(360deg); }
-}
-
-/* 🧺 MESOB LID LIFTING & FEAST STEAM */
-.motion-mesob-wrapper,
-.motion-feast-wrapper {
-    position: absolute;
-    inset: 0;
-}
-.mesob-lid-lift {
-    position: absolute;
-    top: -6px;
-    left: 32%;
-    right: 32%;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(245, 158, 11, 0.6);
-    box-shadow: 0 0 10px #F59E0B;
-    animation: lidBounce 2s infinite ease-in-out;
-}
-.mesob-steam-puff {
-    position: absolute;
-    top: -4px;
-    left: 44%;
+    right: 20%;
+    top: 25%;
     width: 8px;
-    height: 12px;
-    background: rgba(255, 255, 255, 0.7);
+    height: 20px;
     border-radius: 50%;
-    filter: blur(2px);
-    animation: steamRise 1.4s infinite;
-}
-.berbere-sparkle {
-    position: absolute;
-    font-size: 13px;
-    top: -6px;
-    right: 2px;
-    animation: berbereJump 1.6s infinite ease-in-out;
-}
-@keyframes lidBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-@keyframes berbereJump {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-6px) rotate(20deg); }
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, transparent 80%);
+    animation: incenseSmokeCurl 3.2s infinite ease-out;
 }
 
-/* 🪘 KEBERO & MUSIC NOTES */
-.motion-kebero-wrapper,
-.motion-music-wrapper {
-    position: absolute;
-    inset: 0;
-}
-.acoustic-soundwave {
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 2px solid #10B981;
-    animation: soundWaveExpand 1.1s infinite ease-out;
-}
-.acoustic-soundwave.sw-2 {
-    animation-delay: 0.45s;
-    border-color: #F59E0B;
-}
-.music-rhythm-dot {
-    position: absolute;
-    top: -6px;
-    right: 0px;
-    font-size: 14px;
-    animation: rhythmBeat 0.9s infinite ease-in-out;
-}
-.floating-note {
-    position: absolute;
-    font-size: 14px;
-    color: #FDE047;
-    text-shadow: 0 0 6px #F59E0B;
-    animation: noteDance 1.8s infinite ease-out;
-}
-.floating-note.fn-1 { top: -6px; left: 6px; animation-delay: 0s; }
-.floating-note.fn-2 { top: -10px; right: 8px; animation-delay: 0.5s; font-size: 16px; }
-.floating-note.fn-3 { top: -4px; left: 42%; animation-delay: 1s; }
-@keyframes soundWaveExpand {
-    0% { transform: scale(0.7); opacity: 0.9; }
-    100% { transform: scale(1.4); opacity: 0; }
-}
-@keyframes rhythmBeat {
-    0%, 100% { transform: scale(0.9); }
-    50% { transform: scale(1.3); }
-}
-@keyframes noteDance {
-    0% { transform: translateY(0) scale(0.7); opacity: 0.8; }
-    50% { transform: translateY(-10px) scale(1.2); opacity: 1; }
-    100% { transform: translateY(-20px) scale(0.8); opacity: 0; }
+@keyframes delicateSteamRise {
+    0% { transform: translateY(0) scaleX(0.7); opacity: 0; }
+    25% { opacity: 0.6; }
+    100% { transform: translateY(-18px) scaleX(1.3) translateX(3px); opacity: 0; }
 }
 
-/* 🛡️ SHIELD CLASH & BEAST DUST */
-.motion-shield-wrapper,
-.motion-beast-wrapper {
-    position: absolute;
-    inset: 0;
-}
-.shield-clash-spark {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, transparent 60%);
-    animation: sparkFlash 1.6s infinite;
-}
-.spear-glint {
-    position: absolute;
-    top: -8px;
-    right: -4px;
-    font-size: 14px;
-    animation: spearGlint 1.6s infinite ease-in-out;
-}
-.motion-dust-cloud {
-    position: absolute;
-    bottom: -3px;
-    width: 14px;
-    height: 10px;
-    background: rgba(210, 190, 160, 0.6);
-    border-radius: 50%;
-    filter: blur(2px);
-    animation: dustPuff 1.3s infinite ease-out;
-}
-.motion-dust-cloud.dc-2 { right: 4px; animation-delay: 0.5s; }
-@keyframes sparkFlash {
-    0%, 100% { opacity: 0; transform: scale(0.6); }
-    50% { opacity: 0.8; transform: scale(1.1); }
-}
-@keyframes spearGlint {
-    0%, 100% { transform: rotate(0deg) scale(0.9); }
-    50% { transform: rotate(15deg) scale(1.25); filter: drop-shadow(0 0 8px #FFF); }
-}
-@keyframes dustPuff {
-    0% { transform: translateY(0) scale(0.5); opacity: 0.8; }
-    100% { transform: translateY(-10px) scale(1.6); opacity: 0; }
+@keyframes incenseSmokeCurl {
+    0% { transform: translateY(0) scale(0.6); opacity: 0; }
+    30% { opacity: 0.5; }
+    100% { transform: translateY(-24px) scale(1.5) translateX(-4px); opacity: 0; }
 }
 
-/* 💎 GEM SPARKLE & 🏛️ HERITAGE SUNBEAMS */
-.motion-gem-wrapper,
-.motion-heritage-wrapper {
-    position: absolute;
-    inset: 0;
+/* 🪘 KEBERO DRUM RHYTHMIC TAP */
+.eth-anim-kebero {
+    animation: keberoSkinResonance 2s infinite cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
-.gem-starburst-ray {
+
+@keyframes keberoSkinResonance {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.03, 0.98); }
+    25% { transform: scale(0.99, 1.01); }
+    35% { transform: scale(1); }
+}
+
+.kebero-drumstick-tap {
+    position: absolute;
+    top: 10%;
+    right: 25%;
+    width: 3px;
+    height: 18px;
+    background: linear-gradient(to bottom, #8B5A2B, #5C3A1E);
+    border-radius: 2px;
+    transform-origin: top right;
+    animation: drumstickStrike 2s infinite ease-in;
+}
+
+@keyframes drumstickStrike {
+    0%, 10%, 30%, 100% { transform: rotate(-25deg) translateY(-3px); opacity: 0.7; }
+    15% { transform: rotate(5deg) translateY(2px); opacity: 1; }
+}
+
+.kebero-acoustic-ring {
+    position: absolute;
+    top: 18%;
+    left: 25%;
+    width: 50%;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(245, 158, 11, 0.5);
+    opacity: 0;
+    animation: acousticWave 2s infinite ease-out;
+}
+
+@keyframes acousticWave {
+    0%, 10% { transform: scale(0.7); opacity: 0; }
+    15% { opacity: 0.8; transform: scale(0.8); }
+    50% { opacity: 0; transform: scale(1.4); }
+    100% { opacity: 0; }
+}
+
+/* 🎻 MASENQO BOW DRAWING */
+.eth-anim-masenqo {
+    animation: masenqoSoundboxSway 3s infinite ease-in-out;
+}
+
+@keyframes masenqoSoundboxSway {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(1.5deg); }
+}
+
+.masenqo-gliding-bow {
+    position: absolute;
+    top: 48%;
+    left: -10%;
+    width: 120%;
+    height: 2.5px;
+    background: linear-gradient(90deg, transparent, #C28E5C 20%, #D4A373 80%, transparent);
+    border-radius: 2px;
+    animation: bowGlidingStroke 2.6s infinite ease-in-out;
+}
+
+@keyframes bowGlidingStroke {
+    0%, 100% { transform: translateX(-8px) rotate(-12deg); opacity: 0.8; }
+    50% { transform: translateX(8px) rotate(-14deg); opacity: 0.95; }
+}
+
+/* 🎸 KRAR STRINGS VIBRATION */
+.obj-fx-krar {
+    position: absolute;
+    top: 15%;
+    left: 30%;
+    width: 40%;
+    height: 60%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.krar-string-wave {
+    width: 1px;
+    height: 100%;
+    background: rgba(254, 240, 138, 0.7);
+    animation: krarVibrate 0.8s infinite ease-in-out;
+}
+
+.str-1 { animation-delay: 0s; }
+.str-2 { animation-delay: 0.15s; }
+.str-3 { animation-delay: 0.3s; }
+.str-4 { animation-delay: 0.45s; }
+.str-5 { animation-delay: 0.6s; }
+
+@keyframes krarVibrate {
+    0%, 100% { transform: scaleX(1); opacity: 0.5; }
+    50% { transform: scaleX(2.5); opacity: 0.95; }
+}
+
+/* 📖 BIBLE & 📗 QURAN SACRED LIGHT */
+.eth-anim-book {
+    animation: bookGentleOpen 4s infinite ease-in-out;
+}
+
+@keyframes bookGentleOpen {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.025) translateY(-1px); }
+}
+
+.book-sacred-glow {
     position: absolute;
     inset: -6px;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, transparent 0deg, rgba(6, 182, 212, 0.4) 60deg, transparent 120deg, rgba(250, 204, 21, 0.4) 180deg, transparent 240deg, rgba(239, 68, 68, 0.4) 300deg, transparent 360deg);
-    animation: gemRefract 3s infinite linear;
-}
-.gem-sparkle-speck {
-    position: absolute;
-    font-size: 12px;
-    animation: starBlink 1.4s infinite ease-in-out;
-}
-.gem-sparkle-speck.sp-1 { top: -6px; right: 2px; }
-.gem-sparkle-speck.sp-2 { bottom: -2px; left: 4px; animation-delay: 0.7s; font-size: 14px; }
-.heritage-sunbeam-wheel {
-    position: absolute;
-    inset: -8px;
-    border-radius: 50%;
-    border: 2px dashed rgba(250, 204, 21, 0.7);
-    animation: sunbeamSpin 7s infinite linear;
-}
-.heritage-divine-star {
-    position: absolute;
-    top: -8px;
-    right: -2px;
-    font-size: 14px;
-    animation: divineGlow 2s infinite ease-in-out;
-}
-@keyframes gemRefract {
-    100% { transform: rotate(360deg); }
-}
-@keyframes sunbeamSpin {
-    100% { transform: rotate(360deg); }
-}
-@keyframes divineGlow {
-    0%, 100% { transform: scale(0.9); opacity: 0.7; }
-    50% { transform: scale(1.3); opacity: 1; filter: drop-shadow(0 0 10px #FDE047); }
+    border-radius: 12px;
+    pointer-events: none;
+    animation: sacredGlowPulse 3s infinite alternate ease-in-out;
 }
 
-/* 🌋 VOLCANO & 🛰️ SATELLITE */
-.motion-volcano-wrapper,
-.motion-satellite-wrapper {
-    position: absolute;
-    inset: 0;
+.book-sacred-glow.gold {
+    background: radial-gradient(circle at 60% 50%, rgba(245, 158, 11, 0.35) 0%, transparent 70%);
 }
-.fire-ember {
+
+.book-sacred-glow.emerald {
+    background: radial-gradient(circle at 60% 50%, rgba(16, 185, 129, 0.35) 0%, transparent 70%);
+}
+
+@keyframes sacredGlowPulse {
+    0% { opacity: 0.4; }
+    100% { opacity: 0.85; }
+}
+
+/* 🌼 FLOWER & 🌹 ROSE GENTLE BREEZE SWAY */
+.eth-anim-flower {
+    transform-origin: bottom center;
+    animation: flowerBreezeSway 3.8s infinite ease-in-out;
+}
+
+@keyframes flowerBreezeSway {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    33% { transform: rotate(2.5deg) scale(1.015); }
+    66% { transform: rotate(-2deg) scale(1.01); }
+}
+
+.dew-shimmer-point {
     position: absolute;
     width: 4px;
     height: 4px;
-    background: #EF4444;
-    box-shadow: 0 0 8px #F97316;
     border-radius: 50%;
-    animation: emberAscend 1.4s infinite ease-out;
+    background: #FFFFFF;
+    box-shadow: 0 0 6px #FFFFFF;
+    animation: dewSparkle 3s infinite ease-in-out;
 }
-.fire-ember.fe-1 { bottom: 6px; left: 35%; }
-.fire-ember.fe-2 { bottom: 8px; right: 35%; animation-delay: 0.6s; background: #FACC15; }
-.radio-pulse-circle {
+
+.d1 { top: 30%; left: 35%; animation-delay: 0.5s; }
+.d2 { top: 45%; right: 32%; animation-delay: 2s; }
+
+@keyframes dewSparkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.6); }
+    50% { opacity: 0.95; transform: scale(1.2); }
+}
+
+/* 🛡️ WARRIOR SHIELD FILIGREE GLEAM */
+.shield-filigree-gleam {
     position: absolute;
-    inset: -6px;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.4) 50%, transparent 65%);
+    background-size: 200% 200%;
+    border-radius: 12px;
+    animation: shieldGleamSweep 4.5s infinite ease-in-out;
+}
+
+@keyframes shieldGleamSweep {
+    0%, 60% { background-position: -120% -120%; opacity: 0; }
+    70% { opacity: 0.8; }
+    85%, 100% { background-position: 120% 120%; opacity: 0; }
+}
+
+/* 🦁 LION OF JUDAH MAJESTIC BREATH */
+.eth-anim-lion {
+    animation: lionNobleBreathe 4.2s infinite ease-in-out;
+}
+
+@keyframes lionNobleBreathe {
+    0%, 100% { transform: scale(1); }
+    45% { transform: scale(1.03) translateY(-1px); }
+    70% { transform: scale(1.015); }
+}
+
+/* 🐐 WALIA IBEX LOOKOUT */
+.eth-anim-walia {
+    animation: waliaLookoutBreathe 4s infinite ease-in-out;
+}
+
+@keyframes waliaLookoutBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02) translateY(-1.5px); }
+}
+
+/* 🏇 GADAA HORSE NOBLE NOD */
+.eth-anim-horse {
+    transform-origin: 40% 60%;
+    animation: horseNobleNod 3.8s infinite ease-in-out;
+}
+
+@keyframes horseNobleNod {
+    0%, 100% { transform: rotate(0deg); }
+    40% { transform: rotate(2deg) translateY(-1px); }
+    60% { transform: rotate(-1deg); }
+}
+
+/* ✈️ ETHIOPIAN AIRLINES JET FLIGHT */
+.eth-anim-plane {
+    animation: planeSmoothGlide 3.4s infinite ease-in-out;
+}
+
+@keyframes planeSmoothGlide {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    35% { transform: translateY(-3px) rotate(2deg); }
+    70% { transform: translateY(1px) rotate(-1.5deg); }
+}
+
+.plane-vapor-trail {
+    position: absolute;
+    bottom: 25%;
+    width: 25px;
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.6), transparent);
+    animation: vaporDisperse 1.8s infinite ease-out;
+}
+
+.trail-left { right: 55%; }
+.trail-right { right: 25%; animation-delay: 0.3s; }
+
+@keyframes vaporDisperse {
+    0% { transform: translateX(0) scaleX(0.7); opacity: 0.7; }
+    100% { transform: translateX(-12px) scaleX(1.4); opacity: 0; }
+}
+
+/* 🏎️ SUPERCAR SLEEK DRIFT */
+.eth-anim-car {
+    animation: supercarSmoothDrift 2.8s infinite ease-in-out;
+}
+
+@keyframes supercarSmoothDrift {
+    0%, 100% { transform: translateX(0); }
+    30% { transform: translateX(-2px) rotate(-1.5deg); }
+    70% { transform: translateX(2px) rotate(1deg); }
+}
+
+/* 🛰️ ETRSS-1 SATELLITE ORBITAL SWAY */
+.eth-anim-satellite {
+    animation: satelliteOrbitalPitch 4.8s infinite ease-in-out;
+}
+
+@keyframes satelliteOrbitalPitch {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    35% { transform: rotate(3deg) translateY(-2px); }
+    70% { transform: rotate(-2.5deg) translateY(1px); }
+}
+
+.antenna-signal-ring {
+    position: absolute;
+    top: 20%;
+    left: 48%;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    border: 1.5px solid #38BDF8;
-    animation: radioWave 1.8s infinite ease-out;
+    border: 1px solid rgba(59, 130, 246, 0.6);
+    opacity: 0;
+    animation: antennaPulse 2.6s infinite ease-out;
 }
-.radio-pulse-circle.rc-2 { animation-delay: 0.8s; border-color: #818CF8; }
-@keyframes emberAscend {
-    0% { transform: translateY(0) scale(1); opacity: 0.9; }
-    100% { transform: translateY(-20px) scale(0.3); opacity: 0; }
+
+.ring-2 { animation-delay: 1.3s; }
+
+@keyframes antennaPulse {
+    0% { transform: scale(0.5); opacity: 0.8; }
+    100% { transform: scale(2.2); opacity: 0; }
 }
-@keyframes radioWave {
-    0% { transform: scale(0.8); opacity: 0.9; }
-    100% { transform: scale(1.5); opacity: 0; }
+
+/* 🏛️ MONUMENTS SUNBEAM SWEEP */
+.sunbeam-soft-sweep {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(253, 224, 71, 0.25) 50%, transparent 60%);
+    background-size: 200% 200%;
+    animation: sunbeamTraverse 6s infinite ease-in-out;
+}
+
+@keyframes sunbeamTraverse {
+    0% { background-position: -100% -100%; }
+    100% { background-position: 100% 100%; }
+}
+
+/* 🏰 GONDAR CASTLE LANTERN */
+.castle-lantern-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 45% 45%, rgba(245, 158, 11, 0.2) 0%, transparent 60%);
+    animation: lanternFlicker 3s infinite ease-in-out;
+}
+
+@keyframes lanternFlicker {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.9; }
+}
+
+/* 🧺 MESOB LID LIFT */
+.eth-anim-mesob {
+    animation: mesobBreathe 3.6s infinite ease-in-out;
+}
+
+@keyframes mesobBreathe {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+}
+
+/* 👗 KEMIS TEXTILE BREEZE */
+.eth-anim-kemis {
+    animation: kemisFabricBreeze 3.8s infinite ease-in-out;
+}
+
+@keyframes kemisFabricBreeze {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(1deg) skewX(1deg); }
+}
+
+/* 💎 DIAMOND PRISM */
+.prism-light-sweep {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.5) 50%, transparent 70%);
+    background-size: 200% 200%;
+    animation: diamondPrismSweep 3.5s infinite ease-in-out;
+}
+
+@keyframes diamondPrismSweep {
+    0% { background-position: -100% -100%; }
+    100% { background-position: 100% 100%; }
+}
+
+/* 👑 REGAL LUSTER */
+.eth-anim-regal {
+    animation: regalAmbientFloat 3.5s infinite ease-in-out;
+}
+
+@keyframes regalAmbientFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2.5px); }
+}
+
+.regal-gold-highlight {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 40%, rgba(254, 240, 138, 0.4) 50%, transparent 60%);
+    background-size: 200% 200%;
+    animation: goldShimmer 4s infinite ease-in-out;
+}
+
+@keyframes goldShimmer {
+    0%, 50% { background-position: -100% -100%; opacity: 0; }
+    65% { opacity: 0.8; }
+    80%, 100% { background-position: 100% 100%; opacity: 0; }
 }
 
 /* ==========================================================================
-   FULL-SCREEN TIKTOK CINEMATIC LIVE MOTION SHOWCASE
+   5. SELECTED GIFT INTERACTIVE PREVIEW CARD
    ========================================================================== */
 
-.tiktok-cinematic-backdrop {
+.eth-selected-preview-card {
+    background: var(--bg-color, #121216);
+    border: 1.5px solid rgba(217, 119, 6, 0.4);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-top: 0.75rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.preview-main-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.preview-gift-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.preview-art-wrapper {
+    flex-shrink: 0;
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-gift-titles {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.preview-title-am {
+    font-size: 0.95rem;
+    font-weight: 900;
+    color: var(--text-main, #FFFFFF);
+    line-height: 1.25;
+}
+
+.preview-title-en {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted, #9CA3AF);
+    margin-top: 1px;
+}
+
+.preview-description {
+    font-size: 0.74rem;
+    color: var(--text-muted, #9CA3AF);
+    margin-top: 3px;
+    line-height: 1.3;
+}
+
+.preview-gift-pricing {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.preview-coins {
+    font-size: 0.95rem;
+    font-weight: 900;
+    color: #F59E0B;
+}
+
+.preview-etb {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--primary, #059669);
+    margin-top: 2px;
+}
+
+/* Quick Multiplier Chips */
+.preview-multiplier-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+}
+
+.multiplier-chips-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mult-chip {
+    padding: 0.3rem 0.65rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+    background: var(--bg-color, transparent);
+    color: var(--text-main, #FFFFFF);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.mult-chip:hover {
+    border-color: #D97706;
+    color: #F59E0B;
+}
+
+.mult-chip.active {
+    background: #D97706;
+    border-color: #D97706;
+    color: #FFFFFF;
+}
+
+.preview-test-anim-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.3rem 0.75rem;
+    border-radius: 8px;
+    border: 1px dashed rgba(217, 119, 6, 0.6);
+    background: rgba(217, 119, 6, 0.06);
+    color: #F59E0B;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.preview-test-anim-btn:hover {
+    background: rgba(217, 119, 6, 0.12);
+    border-color: #D97706;
+}
+
+/* ==========================================================================
+   6. CUSTOM AMOUNT INPUT BOX
+   ========================================================================== */
+
+.eth-custom-amount-box {
+    margin-top: 0.5rem;
+    background: var(--bg-color, #121216);
+    border: 1.5px solid #D97706;
+    border-radius: 14px;
+    padding: 1rem;
+}
+
+.custom-box-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.custom-box-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text-main, #FFFFFF);
+}
+
+.custom-box-rate {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #F59E0B;
+}
+
+.custom-input-wrapper {
+    position: relative;
+}
+
+.custom-input-prefix {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 800;
+    color: #F59E0B;
+    font-size: 0.85rem;
+    pointer-events: none;
+}
+
+.custom-amount-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 4.5rem;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-main, #FFFFFF);
+    font-size: 0.95rem;
+    font-weight: 800;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.custom-amount-input:focus {
+    border-color: #D97706;
+}
+
+.custom-coin-conversion {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #F59E0B;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   7. CELEBRATION SHOWCASE MODAL
+   ========================================================================== */
+
+.eth-celebration-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.88);
-    backdrop-filter: blur(12px);
+    background: rgba(8, 8, 12, 0.9);
+    backdrop-filter: blur(10px);
     z-index: 999999;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem 1rem;
-    overflow: hidden;
-    animation: cinematicFadeIn 0.3s ease forwards;
+    padding: 2rem 1rem;
+    animation: celebrationFadeIn 0.25s ease forwards;
 }
 
-@keyframes cinematicFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes celebrationFadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
 }
 
-/* Top Live Avatar Banner */
-.tiktok-live-badge-container {
-    margin-top: 1rem;
+.eth-celebration-banner {
+    margin-top: 0.5rem;
     z-index: 10;
 }
 
-.tiktok-live-avatar-pill {
-    background: rgba(24, 24, 28, 0.85);
-    border: 1.5px solid rgba(245, 158, 11, 0.5);
+.eth-supporter-pill {
+    background: rgba(24, 24, 28, 0.9);
+    border: 1.5px solid rgba(217, 119, 6, 0.5);
     padding: 8px 18px;
     border-radius: 30px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     font-size: 0.88rem;
-    box-shadow: 0 0 25px rgba(245, 158, 11, 0.3), 0 4px 15px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-.live-pulse-dot {
+.eth-pill-pulse {
     width: 8px;
     height: 8px;
-    background: #EF4444;
+    background: #10B981;
     border-radius: 50%;
-    box-shadow: 0 0 8px #EF4444;
-    animation: livePulse 1s infinite;
+    box-shadow: 0 0 8px #10B981;
+    animation: pillPulse 1.5s infinite;
 }
 
-@keyframes livePulse {
+@keyframes pillPulse {
     0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(1.4); }
+    50% { opacity: 0.5; transform: scale(0.85); }
 }
 
-/* Motion Stage */
-.tiktok-motion-stage {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-    height: 380px;
+.supporter-name {
+    color: #F59E0B;
+    font-weight: 800;
+}
+
+.action-label {
+    color: #9CA3AF;
+    font-size: 0.8rem;
+}
+
+.gift-title {
+    color: #10B981;
+    font-weight: 800;
+}
+
+.creator-tag {
+    color: #FFFFFF;
+    font-weight: 800;
+}
+
+.eth-celebration-stage {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: visible;
+    text-align: center;
+    z-index: 10;
+    margin: auto 0;
 }
 
-/* 🦁 LION OF JUDAH RUNNING & ROARING GRAPHICAL MOTION */
-.lion-animation-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.eth-celebration-hero-art {
+    margin-bottom: 1.25rem;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.6));
 }
 
-.lion-animation-wrapper.running .lion-graphic-body {
-    animation: lionRunAcross 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+.eth-celebration-info {
+    max-width: 400px;
 }
 
-.lion-animation-wrapper.roaring .lion-graphic-body {
-    transform: scale(1.4);
-    animation: lionRoarShake 0.4s infinite ease-in-out;
-}
-
-@keyframes lionRunAcross {
-    0% {
-        transform: translateX(-140%) scale(0.6) rotate(-8deg);
-        opacity: 0;
-    }
-    50% {
-        transform: translateX(10%) scale(1.2) rotate(4deg);
-        opacity: 1;
-    }
-    100% {
-        transform: translateX(0) scale(1.4) rotate(0deg);
-        opacity: 1;
-    }
-}
-
-@keyframes lionRoarShake {
-    0%, 100% { transform: scale(1.4) translate(0, 0); }
-    20% { transform: scale(1.45) translate(-4px, 3px); }
-    40% { transform: scale(1.38) translate(4px, -3px); }
-    60% { transform: scale(1.46) translate(-3px, -2px); }
-    80% { transform: scale(1.42) translate(3px, 2px); }
-}
-
-/* Roar Shockwaves */
-.roar-shockwave {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 160px;
-    height: 160px;
-    margin: -80px 0 0 -80px;
-    border: 3px solid #F59E0B;
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-.roar-shockwave.wave-1 { animation: roarRipple 1.4s infinite ease-out; }
-.roar-shockwave.wave-2 { animation: roarRipple 1.4s infinite 0.35s ease-out; border-color: #EF4444; }
-.roar-shockwave.wave-3 { animation: roarRipple 1.4s infinite 0.7s ease-out; border-color: #10B981; }
-
-@keyframes roarRipple {
-    0% { transform: scale(0.6); opacity: 1; }
-    100% { transform: scale(3.2); opacity: 0; }
-}
-
-.roar-text-banner {
-    position: absolute;
-    bottom: 10px;
-    font-size: 1.4rem;
+.hero-name-am {
+    font-size: 1.75rem;
     font-weight: 900;
-    color: #FDE047;
-    text-shadow: 0 0 20px rgba(245, 158, 11, 0.8), 0 2px 4px rgba(0, 0, 0, 0.8);
-    background: rgba(0, 0, 0, 0.7);
-    padding: 6px 20px;
-    border-radius: 20px;
-    border: 1px solid #F59E0B;
-    animation: popBanner 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    color: #FFFFFF;
+    margin: 0 0 0.25rem 0;
 }
 
-@keyframes popBanner {
-    0% { transform: scale(0.5) translateY(20px); opacity: 0; }
-    100% { transform: scale(1) translateY(0); opacity: 1; }
+.hero-name-en {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #F59E0B;
+    margin: 0 0 0.5rem 0;
 }
 
-/* 🏎️ SUPERCAR DRIFT MOTION */
-.supercar-motion-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.hero-desc {
+    font-size: 0.88rem;
+    color: #9CA3AF;
+    margin: 0;
+    line-height: 1.4;
 }
 
-.supercar-graphic-body {
-    animation: supercarDrift 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes supercarDrift {
-    0% { transform: translateX(150%) scale(0.7) rotate(15deg); opacity: 0; }
-    60% { transform: translateX(-10%) scale(1.3) rotate(-8deg); opacity: 1; }
-    100% { transform: translateX(0) scale(1.35) rotate(0deg); opacity: 1; }
-}
-
-/* ✈️ JET SKY FLYBY MOTION */
-.jet-flyby-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.jet-graphic-body {
-    animation: jetFlyby 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes jetFlyby {
-    0% { transform: translate(-140%, 120%) scale(0.5) rotate(-35deg); opacity: 0; }
-    50% { transform: translate(0, 0) scale(1.4) rotate(-15deg); opacity: 1; }
-    100% { transform: translate(140%, -120%) scale(1.6) rotate(-5deg); opacity: 0; }
-}
-
-/* 🌼 FLOWER BLOOM & PETAL RAIN */
-.flower-bloom-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.flower-center-burst {
-    animation: flowerBurst 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes flowerBurst {
-    0% { transform: scale(0.3) rotate(-180deg); opacity: 0; }
-    70% { transform: scale(1.4) rotate(20deg); opacity: 1; }
-    100% { transform: scale(1.25) rotate(0deg); opacity: 1; }
-}
-
-.floating-petal {
-    position: absolute;
-    top: -20px;
-    font-size: 1.5rem;
-    animation: petalFall linear infinite;
-    pointer-events: none;
-    z-index: 5;
-}
-
-@keyframes petalFall {
-    0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0.9; }
-    100% { transform: translateY(420px) rotate(360deg) scale(1.2); opacity: 0; }
-}
-
-/* 📖 SACRED LIGHT BEAMS */
-.sacred-light-wrapper,
-.radiant-celebration-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.sacred-center-object,
-.radiant-center-object {
-    animation: sacredFloat 3s infinite ease-in-out;
-}
-
-@keyframes sacredFloat {
-    0%, 100% { transform: scale(1.2) translateY(0); }
-    50% { transform: scale(1.3) translateY(-12px); }
-}
-
-/* Bottom TikTok Combo Bar */
-.tiktok-combo-bottom-bar {
+.eth-celebration-bottom-bar {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
     z-index: 10;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
-.gift-value-pill {
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(245, 158, 11, 0.4);
+.eth-value-indicator {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(217, 119, 6, 0.4);
     padding: 6px 16px;
     border-radius: 20px;
-    color: #FDE047;
-    font-weight: 800;
-    font-size: 1rem;
     display: flex;
     align-items: center;
     gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 800;
 }
 
-.tiktok-combo-button {
-    background: linear-gradient(135deg, #EF4444 0%, #F59E0B 50%, #10B981 100%);
+.eth-value-indicator .coins {
+    color: #F59E0B;
+}
+
+.eth-value-indicator .etb {
+    color: #9CA3AF;
+    font-size: 0.8rem;
+}
+
+.eth-combo-btn {
+    background: linear-gradient(135deg, #D97706 0%, #059669 100%);
     border: none;
-    border-radius: 30px;
-    padding: 12px 32px;
+    border-radius: 24px;
+    padding: 10px 28px;
     color: #FFFFFF;
-    font-weight: 900;
-    font-size: 1.25rem;
+    font-weight: 800;
+    font-size: 1.1rem;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     cursor: pointer;
-    box-shadow: 0 0 35px rgba(245, 158, 11, 0.7), 0 6px 20px rgba(0, 0, 0, 0.5);
-    animation: tiktok-combo-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    transform-origin: center;
+    box-shadow: 0 4px 20px rgba(217, 119, 6, 0.35);
+    transition: transform 0.1s ease;
 }
 
-.tap-plus-one {
-    font-size: 0.75rem;
-    background: rgba(0, 0, 0, 0.35);
-    padding: 2px 8px;
-    border-radius: 12px;
+.eth-combo-btn:active {
+    transform: scale(0.95);
 }
 
-.tiktok-dismiss-btn {
+.eth-celebration-close-btn {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #D1D5DB;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #9CA3AF;
     padding: 6px 20px;
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
+    transition: color 0.15s ease;
 }
 
-.gift-tag-category {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+.eth-celebration-close-btn:hover {
+    color: #FFFFFF;
+    border-color: rgba(255, 255, 255, 0.4);
 }
-.gift-tag-category::-webkit-scrollbar {
-    display: none;
-}
-
