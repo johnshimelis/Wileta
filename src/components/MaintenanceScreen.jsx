@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
-import { RefreshCw, Mail, Phone } from 'lucide-react';
+import { 
+    RefreshCw, Mail, Phone, Gamepad2, ShieldCheck, 
+    Sparkles, CheckCircle2, AlertCircle 
+} from 'lucide-react';
+import axios from 'axios';
 import Logo from './Logo';
+import MaintenanceGames from './MaintenanceGames';
 
 export default function MaintenanceScreen({
     message,
@@ -8,407 +13,434 @@ export default function MaintenanceScreen({
     supportPhone = '+251 967 432 143',
     onRefresh
 }) {
-    const [checking, setChecking] = useState(false);
+    const [checkingStatus, setCheckingStatus] = useState(false);
+    const [statusToast, setStatusToast] = useState(null);
+    const [arcadeOpen, setArcadeOpen] = useState(false);
 
-    const handleTryAgain = async () => {
-        setChecking(true);
+    const handleCheckStatus = async () => {
+        setCheckingStatus(true);
+        setStatusToast(null);
+
         try {
-            if (typeof onRefresh === 'function') {
-                await onRefresh();
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            const res = await axios.get(`${apiUrl}/system/status`, { timeout: 6000 });
+            
+            if (res.data?.maintenance === false || res.data?.status === 'online') {
+                setStatusToast({
+                    type: 'success',
+                    message: '🎉 Platform is back online! Redirecting you now...'
+                });
+                setTimeout(() => {
+                    if (typeof onRefresh === 'function') {
+                        onRefresh();
+                    } else {
+                        window.location.reload();
+                    }
+                }, 1200);
             } else {
-                window.location.reload();
+                setStatusToast({
+                    type: 'info',
+                    message: 'System upgrade in progress. Balances & payouts are 100% secure.'
+                });
             }
         } catch (_) {
-            window.location.reload();
+            setStatusToast({
+                type: 'info',
+                message: 'Platform optimization in progress. Our team is finalizing the update.'
+            });
         } finally {
-            setTimeout(() => setChecking(false), 800);
+            setTimeout(() => setCheckingStatus(false), 600);
+            setTimeout(() => setStatusToast(null), 6000);
         }
     };
 
-    // Normalized clean phone for tel: link
     const cleanPhone = (supportPhone || '').replace(/\s+/g, '');
 
     return (
-        <main className="maintenance-container" role="main" aria-label="Maintenance Page">
-            {/* Ambient Subtle Background Highlight */}
-            <div className="maintenance-bg-accent" aria-hidden="true" />
+        <main className="gp-maint-wrapper" role="main" aria-label="GurshaPay Maintenance Hub">
+            {/* Ambient Background Aura */}
+            <div className="gp-maint-glow" aria-hidden="true" />
 
-            <div className="maintenance-content">
-                {/* Top Brand Logo */}
-                <header className="maintenance-header">
-                    <Logo size="small" />
+            <div className="gp-maint-container">
+                {/* Brand Header */}
+                <header className="gp-maint-header">
+                    <Logo size="medium" />
                 </header>
 
-                {/* Central Maintenance Card / Body */}
-                <section className="maintenance-body">
-                    {/* Minimalist Visual Symbol */}
-                    <div className="maintenance-symbol" aria-hidden="true">
-                        <svg 
-                            width="28" 
-                            height="28" 
-                            viewBox="0 0 24 24" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            strokeWidth="1.75" 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round"
-                        >
-                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-                        </svg>
+                {/* Hero Card */}
+                <section className="gp-maint-hero-card">
+                    <div className="gp-maint-badge">
+                        <span className="gp-maint-pulse-dot" />
+                        <span className="gp-maint-badge-text">Scheduled Platform Maintenance</span>
                     </div>
 
-                    {/* Main Headings & Copy */}
-                    <h1 className="maintenance-heading">
-                        We'll Be Back Soon
+                    <h1 className="gp-maint-title">
+                        Upgrading GurshaPay for You
                     </h1>
 
-                    <p className="maintenance-description">
-                        {message || "GurshaPay is temporarily unavailable while we make a few improvements. We're working to get everything back up and running shortly."}
+                    <p className="gp-maint-subtitle">
+                        {message || "We are currently conducting scheduled infrastructure upgrades and security enhancements. All creator balances, transactions, and withdrawal records remain completely safe and encrypted."}
                     </p>
 
-                    {/* Understated Status Indicator */}
-                    <div className="maintenance-status-badge" role="status">
-                        <span className="status-dot" aria-hidden="true" />
-                        <span>Maintenance in progress</span>
+                    {/* Key Reassurances */}
+                    <div className="gp-maint-highlights">
+                        <div className="gp-maint-highlight-item">
+                            <ShieldCheck size={16} className="gp-icon-green" />
+                            <span>Creator Funds & Wallets 100% Safe</span>
+                        </div>
+                        <div className="gp-maint-highlight-item">
+                            <Sparkles size={16} className="gp-icon-amber" />
+                            <span>Enhanced 3D Gifting & Instant CBE Payouts</span>
+                        </div>
                     </div>
 
-                    {/* Primary CTA Button */}
-                    <div className="maintenance-action">
+                    {/* CTA Actions */}
+                    <div className="gp-maint-actions">
                         <button
                             type="button"
-                            onClick={handleTryAgain}
-                            disabled={checking}
-                            className="maintenance-btn"
-                            aria-label="Try refreshing the page"
+                            onClick={handleCheckStatus}
+                            disabled={checkingStatus}
+                            className="gp-maint-btn-primary"
+                            aria-label="Check if platform is back online"
                         >
-                            <RefreshCw 
-                                size={16} 
-                                className={`btn-icon ${checking ? 'icon-spinning' : ''}`} 
-                                aria-hidden="true" 
-                            />
-                            <span>{checking ? 'Checking...' : 'Try Again'}</span>
+                            <RefreshCw size={16} className={`gp-btn-icon ${checkingStatus ? 'gp-spin' : ''}`} />
+                            <span>{checkingStatus ? 'Checking Live Status...' : 'Check System Status'}</span>
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => setArcadeOpen(!arcadeOpen)}
+                            className={`gp-maint-btn-secondary ${arcadeOpen ? 'active' : ''}`}
+                            aria-label="Toggle Waiting Games"
+                        >
+                            <Gamepad2 size={16} />
+                            <span>{arcadeOpen ? 'Hide Waiting Games' : '🎮 Play While You Wait'}</span>
                         </button>
                     </div>
+
+                    {/* Toast Alert */}
+                    {statusToast && (
+                        <div className={`gp-maint-toast gp-toast-${statusToast.type}`}>
+                            {statusToast.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+                            <span>{statusToast.message}</span>
+                        </div>
+                    )}
                 </section>
 
-                {/* Bottom Support Contact & Footer */}
-                <footer className="maintenance-footer">
-                    <div className="maintenance-support">
-                        <span className="support-title">Need help?</span>
-                        <div className="support-links">
-                            <a 
-                                href={`tel:${cleanPhone}`} 
-                                className="support-link"
-                                aria-label={`Call support at ${supportPhone}`}
-                            >
-                                <Phone size={14} className="support-icon" aria-hidden="true" />
+                {/* Interactive Waiting Games Drawer */}
+                {arcadeOpen && (
+                    <section style={{ width: '100%' }}>
+                        <MaintenanceGames />
+                    </section>
+                )}
+
+                {/* Footer Support */}
+                <footer className="gp-maint-footer">
+                    <div className="gp-support-container">
+                        <span className="gp-support-label">Need direct support from our engineering desk?</span>
+                        <div className="gp-support-links">
+                            <a href={`tel:${cleanPhone}`} className="gp-support-chip" aria-label={`Call ${supportPhone}`}>
+                                <Phone size={14} />
                                 <span>{supportPhone}</span>
                             </a>
-                            <span className="support-divider" aria-hidden="true">·</span>
-                            <a 
-                                href={`mailto:${supportEmail}`} 
-                                className="support-link"
-                                aria-label={`Email support at ${supportEmail}`}
-                            >
-                                <Mail size={14} className="support-icon" aria-hidden="true" />
+                            <a href={`mailto:${supportEmail}`} className="gp-support-chip" aria-label={`Email ${supportEmail}`}>
+                                <Mail size={14} />
                                 <span>{supportEmail}</span>
                             </a>
                         </div>
                     </div>
-
-                    <p className="maintenance-copyright">
-                        &copy; 2026 GurshaPay. All rights reserved.
+                    <p className="gp-copyright">
+                        &copy; 2026 GurshaPay Fintech Ltd. • Addis Ababa, Ethiopia • Powered by Birana Labs
                     </p>
                 </footer>
             </div>
 
             <style>{`
-                .maintenance-container {
+                .gp-maint-wrapper {
                     min-height: 100vh;
                     width: 100%;
                     display: flex;
-                    align-items: center;
                     justify-content: center;
-                    background-color: var(--bg-color, #FAFAFA);
-                    color: var(--text-main, #09090B);
+                    align-items: center;
+                    background: #0D1117;
+                    color: #F0F6FC;
+                    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    padding: 2.5rem 1.25rem;
+                    box-sizing: border-box;
                     position: relative;
                     overflow-x: hidden;
-                    padding: 2.5rem 1.5rem;
-                    box-sizing: border-box;
-                    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 }
 
-                .maintenance-bg-accent {
+                .gp-maint-glow {
                     position: absolute;
-                    top: 50%;
+                    top: -15%;
                     left: 50%;
-                    transform: translate(-50%, -50%);
-                    width: 600px;
-                    height: 600px;
-                    background: radial-gradient(circle, var(--primary-light, rgba(4, 120, 87, 0.06)) 0%, transparent 70%);
-                    border-radius: 50%;
+                    transform: translateX(-50%);
+                    width: 650px;
+                    height: 450px;
+                    background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.05) 50%, transparent 80%);
                     pointer-events: none;
                     z-index: 0;
                 }
 
-                .maintenance-content {
-                    position: relative;
+                .gp-maint-container {
+                    width: 100%;
+                    max-width: 760px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
                     z-index: 1;
-                    width: 100%;
-                    max-width: 520px;
+                    gap: 1.75rem;
+                }
+
+                .gp-maint-header {
                     display: flex;
-                    flex-direction: column;
-                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 0.25rem;
+                }
+
+                .gp-maint-hero-card {
+                    width: 100%;
+                    background: rgba(22, 27, 34, 0.85);
+                    border: 1px solid rgba(48, 54, 61, 0.85);
+                    backdrop-filter: blur(16px);
+                    border-radius: 20px;
+                    padding: 2.5rem 2rem;
+                    box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.65);
                     text-align: center;
-                    animation: maintenanceFadeUp 0.4s ease-out forwards;
-                }
-
-                @keyframes maintenanceFadeUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(12px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
-                /* Header */
-                .maintenance-header {
-                    margin-bottom: 2.5rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                /* Center Body */
-                .maintenance-body {
-                    width: 100%;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
+                    box-sizing: border-box;
                 }
 
-                .maintenance-symbol {
-                    width: 56px;
-                    height: 56px;
-                    border-radius: 16px;
-                    background: var(--card-bg, #FFFFFF);
-                    border: 1px solid var(--border-color, #E4E4E7);
-                    color: var(--primary, #047857);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin-bottom: 1.75rem;
-                    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05));
-                }
-
-                .maintenance-heading {
-                    font-size: 1.875rem;
-                    font-weight: 800;
-                    letter-spacing: -0.025em;
-                    color: var(--text-main, #09090B);
-                    margin: 0 0 0.875rem 0;
-                    line-height: 1.25;
-                }
-
-                .maintenance-description {
-                    font-size: 1rem;
-                    color: var(--text-secondary, #52525B);
-                    line-height: 1.6;
-                    margin: 0 0 1.5rem 0;
-                    max-width: 440px;
-                }
-
-                /* Status Badge */
-                .maintenance-status-badge {
+                .gp-maint-badge {
                     display: inline-flex;
                     align-items: center;
                     gap: 8px;
+                    background: rgba(16, 185, 129, 0.12);
+                    border: 1px solid rgba(16, 185, 129, 0.35);
                     padding: 6px 14px;
-                    border-radius: var(--radius-full, 9999px);
-                    background: var(--card-bg, #FFFFFF);
-                    border: 1px solid var(--border-color, #E4E4E7);
-                    font-size: 0.8125rem;
-                    font-weight: 600;
-                    color: var(--text-secondary, #52525B);
-                    margin-bottom: 2rem;
-                    box-shadow: var(--shadow-xs, 0 1px 2px rgba(0, 0, 0, 0.04));
+                    border-radius: 999px;
+                    margin-bottom: 1.25rem;
                 }
 
-                .status-dot {
-                    width: 7px;
-                    height: 7px;
+                .gp-maint-pulse-dot {
+                    width: 8px;
+                    height: 8px;
                     border-radius: 50%;
-                    background: #F59E0B;
-                    flex-shrink: 0;
+                    background: #10B981;
+                    box-shadow: 0 0 10px #10B981;
+                    animation: gpPulse 1.8s infinite ease-in-out;
                 }
 
-                /* Primary Button */
-                .maintenance-action {
-                    width: 100%;
+                @keyframes gpPulse {
+                    0% { transform: scale(0.9); opacity: 0.8; }
+                    50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 14px #10B981; }
+                    100% { transform: scale(0.9); opacity: 0.8; }
+                }
+
+                .gp-maint-badge-text {
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    color: #10B981;
+                    letter-spacing: 0.03em;
+                    text-transform: uppercase;
+                }
+
+                .gp-maint-title {
+                    font-size: 2.2rem;
+                    font-weight: 800;
+                    letter-spacing: -0.03em;
+                    color: #FFFFFF;
+                    margin: 0 0 0.85rem 0;
+                    line-height: 1.2;
+                }
+
+                .gp-maint-subtitle {
+                    font-size: 0.95rem;
+                    line-height: 1.6;
+                    color: #8B949E;
+                    max-width: 580px;
+                    margin: 0 0 1.75rem 0;
+                }
+
+                .gp-maint-highlights {
                     display: flex;
+                    flex-wrap: wrap;
                     justify-content: center;
-                    margin-bottom: 3.5rem;
+                    gap: 12px;
+                    margin-bottom: 2rem;
                 }
 
-                .maintenance-btn {
+                .gp-maint-highlight-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    background: rgba(33, 38, 45, 0.7);
+                    border: 1px solid rgba(48, 54, 61, 0.6);
+                    padding: 8px 14px;
+                    border-radius: 10px;
+                    font-size: 0.82rem;
+                    font-weight: 600;
+                    color: #C9D1D9;
+                }
+
+                .gp-icon-green { color: #10B981; }
+                .gp-icon-amber { color: #F59E0B; }
+
+                .gp-maint-actions {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 12px;
+                    justify-content: center;
+                    width: 100%;
+                }
+
+                .gp-maint-btn-primary {
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
                     gap: 8px;
-                    min-width: 150px;
-                    padding: 0.75rem 1.75rem;
-                    background-color: var(--primary, #047857);
-                    color: #FFFFFF;
-                    font-size: 0.9375rem;
-                    font-weight: 700;
+                    background: #10B981;
+                    color: #042416;
                     border: none;
-                    border-radius: var(--radius-md, 8px);
+                    padding: 11px 22px;
+                    border-radius: 12px;
+                    font-size: 0.9rem;
+                    font-weight: 700;
                     cursor: pointer;
-                    transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
-                    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.08));
+                    transition: all 0.2s ease;
+                    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
                 }
 
-                .maintenance-btn:hover:not(:disabled) {
-                    background-color: var(--primary-hover, #065F46);
-                    box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+                .gp-maint-btn-primary:hover:not(:disabled) {
+                    background: #059669;
+                    color: #FFFFFF;
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
                 }
 
-                .maintenance-btn:active:not(:disabled) {
-                    background-color: var(--primary-active, #064E3B);
-                    transform: translateY(1px);
+                .gp-maint-btn-secondary {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    background: rgba(33, 38, 45, 0.85);
+                    color: #F0F6FC;
+                    border: 1px solid rgba(48, 54, 61, 0.9);
+                    padding: 11px 20px;
+                    border-radius: 12px;
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
                 }
 
-                .maintenance-btn:disabled {
-                    opacity: 0.7;
-                    cursor: not-allowed;
+                .gp-maint-btn-secondary:hover, .gp-maint-btn-secondary.active {
+                    background: rgba(48, 54, 61, 0.9);
+                    border-color: rgba(16, 185, 129, 0.5);
+                    color: #10B981;
                 }
 
-                .btn-icon {
-                    flex-shrink: 0;
+                .gp-spin {
+                    animation: gpSpin 1s linear infinite;
                 }
 
-                .icon-spinning {
-                    animation: maintenanceSpin 0.7s linear infinite;
-                }
-
-                @keyframes maintenanceSpin {
+                @keyframes gpSpin {
+                    from { transform: rotate(0deg); }
                     to { transform: rotate(360deg); }
                 }
 
-                /* Footer & Support */
-                .maintenance-footer {
+                .gp-maint-toast {
+                    margin-top: 1.25rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 10px 18px;
+                    border-radius: 10px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    animation: gpFadeUp 0.3s ease-out;
+                }
+
+                .gp-toast-success {
+                    background: rgba(16, 185, 129, 0.15);
+                    border: 1px solid #10B981;
+                    color: #34D399;
+                }
+
+                .gp-toast-info {
+                    background: rgba(59, 130, 246, 0.12);
+                    border: 1px solid rgba(59, 130, 246, 0.4);
+                    color: #93C5FD;
+                }
+
+                @keyframes gpFadeUp {
+                    from { opacity: 0; transform: translateY(8px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+
+                .gp-maint-footer {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 1rem;
+                    text-align: center;
                     width: 100%;
-                    padding-top: 2rem;
-                    border-top: 1px solid var(--border-color, #E4E4E7);
+                }
+
+                .gp-support-container {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    gap: 1.25rem;
+                    gap: 8px;
                 }
 
-                .maintenance-support {
+                .gp-support-label {
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: #8B949E;
+                }
+
+                .gp-support-links {
                     display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 0.5rem;
-                }
-
-                .support-title {
-                    font-size: 0.8125rem;
-                    font-weight: 700;
-                    color: var(--text-muted, #71717A);
-                    text-transform: uppercase;
-                    letter-spacing: 0.05em;
-                }
-
-                .support-links {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
                     flex-wrap: wrap;
-                    gap: 0.75rem;
+                    gap: 12px;
+                    justify-content: center;
                 }
 
-                .support-link {
+                .gp-support-chip {
                     display: inline-flex;
                     align-items: center;
                     gap: 6px;
-                    color: var(--text-secondary, #52525B);
+                    background: rgba(33, 38, 45, 0.7);
+                    border: 1px solid rgba(48, 54, 61, 0.6);
+                    color: #C9D1D9;
                     text-decoration: none;
-                    font-size: 0.875rem;
+                    font-size: 0.8rem;
                     font-weight: 600;
-                    transition: color 0.15s ease;
+                    padding: 6px 12px;
+                    border-radius: 8px;
+                    transition: all 0.15s ease;
                 }
 
-                .support-link:hover {
-                    color: var(--primary, #047857);
-                    text-decoration: underline;
+                .gp-support-chip:hover {
+                    color: #10B981;
+                    border-color: #10B981;
                 }
 
-                .support-icon {
-                    color: var(--text-muted, #71717A);
-                    flex-shrink: 0;
-                }
-
-                .support-link:hover .support-icon {
-                    color: var(--primary, #047857);
-                }
-
-                .support-divider {
-                    color: var(--text-muted, #71717A);
-                    font-weight: bold;
-                    user-select: none;
-                }
-
-                .maintenance-copyright {
-                    font-size: 0.8125rem;
-                    color: var(--text-muted, #71717A);
+                .gp-copyright {
+                    font-size: 0.75rem;
+                    color: #6E7681;
                     margin: 0;
                 }
 
-                /* Mobile Adjustments */
                 @media (max-width: 640px) {
-                    .maintenance-container {
-                        padding: 2rem 1.25rem;
-                    }
-
-                    .maintenance-header {
-                        margin-bottom: 2rem;
-                    }
-
-                    .maintenance-heading {
-                        font-size: 1.5rem;
-                    }
-
-                    .maintenance-description {
-                        font-size: 0.9375rem;
-                        margin-bottom: 1.25rem;
-                    }
-
-                    .maintenance-status-badge {
-                        margin-bottom: 1.75rem;
-                    }
-
-                    .maintenance-action {
-                        margin-bottom: 2.5rem;
-                    }
-
-                    .maintenance-btn {
-                        width: 100%;
-                        max-width: 280px;
-                    }
-
-                    .support-links {
-                        flex-direction: column;
-                        gap: 0.5rem;
-                    }
-
-                    .support-divider {
-                        display: none;
-                    }
+                    .gp-maint-title { font-size: 1.7rem; }
+                    .gp-maint-hero-card { padding: 1.75rem 1.25rem; }
+                    .gp-maint-actions { flex-direction: column; }
+                    .gp-maint-btn-primary, .gp-maint-btn-secondary { width: 100%; }
                 }
             `}</style>
         </main>
