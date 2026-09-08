@@ -65,7 +65,12 @@ export const GIFT_CATEGORIES = [
 export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) => {
     const s = size;
     const [imgError, setImgError] = useState(false);
-    const imgSrc = `/gifts/${id}.jpg`;
+    const [imgSrc, setImgSrc] = useState(`/gifts/${id}.png`);
+
+    useEffect(() => {
+        setImgSrc(`/gifts/${id}.png`);
+        setImgError(false);
+    }, [id]);
 
     // Object-specific motion class
     const getMovementClass = () => {
@@ -121,7 +126,13 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                         src={imgSrc} 
                         alt={id}
                         className="eth-gift-real-img"
-                        onError={() => setImgError(true)}
+                        onError={() => {
+                            if (imgSrc.endsWith('.png')) {
+                                setImgSrc(`/gifts/${id}.jpg`);
+                            } else {
+                                setImgError(true);
+                            }
+                        }}
                         loading="lazy"
                     />
                 ) : (

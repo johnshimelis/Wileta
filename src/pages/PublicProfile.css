@@ -103,12 +103,12 @@
     }
 }
 
-/* Tactile Gift Card */
+/* Tactile 3D Gift Card */
 .eth-gift-card {
-    background: var(--bg-color, rgba(18, 18, 22, 0.7));
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
-    border-radius: 12px;
-    padding: 0.6rem 0.35rem;
+    background: var(--card-bg, #FFFFFF);
+    border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+    border-radius: 14px;
+    padding: 0.65rem 0.35rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -117,27 +117,36 @@
     position: relative;
     user-select: none;
     outline: none;
-    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.18s ease,
-                box-shadow 0.18s ease,
-                background-color 0.18s ease;
+    perspective: 800px;
+    transform-style: preserve-3d;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.2s ease,
+                box-shadow 0.22s ease,
+                background-color 0.2s ease;
+}
+
+[data-theme='dark'] .eth-gift-card {
+    background: rgba(24, 24, 27, 0.75);
+    border-color: rgba(255, 255, 255, 0.08);
 }
 
 .eth-gift-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(217, 119, 6, 0.45);
-    background: rgba(217, 119, 6, 0.04);
+    transform: translateY(-4px) scale(1.03);
+    border-color: rgba(217, 119, 6, 0.55);
+    background: rgba(217, 119, 6, 0.05);
+    box-shadow: 0 10px 22px -4px rgba(217, 119, 6, 0.18), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
 }
 
 .eth-gift-card:active {
-    transform: scale(0.97);
+    transform: translateY(-1px) scale(0.97);
 }
 
 .eth-gift-card.selected {
     border-color: #D97706;
-    background: rgba(217, 119, 6, 0.1);
-    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.18), inset 0 0 0 1px #D97706;
-    transform: translateY(-2px);
+    background: linear-gradient(180deg, rgba(217, 119, 6, 0.12) 0%, rgba(217, 119, 6, 0.03) 100%);
+    box-shadow: 0 0 0 1.5px #D97706, 0 8px 20px rgba(217, 119, 6, 0.22);
+    transform: translateY(-3px) scale(1.02);
 }
 
 .eth-gift-card-active-dot {
@@ -215,14 +224,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    perspective: 800px;
 }
 
 .eth-gift-image-frame {
     width: 100%;
     height: 100%;
-    border-radius: 10px;
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.25);
+    overflow: visible;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -233,14 +242,36 @@
 .eth-gift-real-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
+    object-fit: contain;
     display: block;
-    transition: transform 0.25s ease;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.14));
+    animation: giftLevitate3D 3.5s ease-in-out infinite alternate;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+}
+
+@keyframes giftLevitate3D {
+    0% {
+        transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.12));
+    }
+    50% {
+        transform: translateY(-4px) rotateX(4deg) rotateY(-3deg) scale(1.03);
+        filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.22));
+    }
+    100% {
+        transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.12));
+    }
 }
 
 .eth-gift-card:hover .eth-gift-real-img {
-    transform: scale(1.04);
+    transform: translateY(-6px) scale(1.15) rotateZ(3deg);
+    filter: drop-shadow(0 12px 20px rgba(245, 158, 11, 0.38));
+}
+
+.eth-gift-card.selected .eth-gift-real-img {
+    transform: translateY(-5px) scale(1.12);
+    filter: drop-shadow(0 10px 18px rgba(217, 119, 6, 0.45));
 }
 
 .eth-gift-fallback-emoji {
@@ -776,8 +807,8 @@
    ========================================================================== */
 
 .eth-selected-preview-card {
-    background: var(--bg-color, #121216);
-    border: 1.5px solid rgba(217, 119, 6, 0.4);
+    background: var(--card-bg, #FFFFFF);
+    border: 1.5px solid rgba(217, 119, 6, 0.45);
     border-radius: 14px;
     padding: 12px 16px;
     margin-top: 0.75rem;
@@ -785,6 +816,11 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+[data-theme='dark'] .eth-selected-preview-card {
+    background: rgba(24, 24, 27, 0.85);
+    border-color: rgba(217, 119, 6, 0.5);
 }
 
 .preview-main-row {

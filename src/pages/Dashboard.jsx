@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -463,10 +463,29 @@ export default function Dashboard() {
     const navigate = useNavigate();
     const { t } = useLanguage();
 
-    const [metrics, setMetrics] = useState({ total_earned: 0, pending_balance: 0 });
+    const [metrics, setMetrics] = useState(() => {
+        try {
+            const cached = localStorage.getItem('gp_cached_metrics');
+            if (cached) return JSON.parse(cached);
+        } catch (_) {}
+        const cachedUser = (() => {
+            try {
+                const u = localStorage.getItem('gp_cached_user');
+                return u ? JSON.parse(u) : null;
+            } catch (_) { return null; }
+        })();
+        const initialBal = user?.walletBalance ?? user?.wallet_balance ?? cachedUser?.walletBalance ?? cachedUser?.wallet_balance ?? 0;
+        return {
+            total_earned: initialBal,
+            pending_balance: 0,
+            walletBalance: initialBal,
+            availableBalance: initialBal
+        };
+    });
     const [transactions, setTransactions] = useState([]);
     const [leaderboard, setLeaderboard] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(() => !localStorage.getItem('gp_cached_metrics'));
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const [copied, setCopied] = useState(false);
     const [obsCopied, setObsCopied] = useState(false);
@@ -510,18 +529,32 @@ export default function Dashboard() {
         }
     }, [user]);
 
-    useEffect(() => {
-        fetchDashboardData();
-    }, []);
-
-    const fetchDashboardData = async () => {
+    const fetchMetrics = useCallback(async () => {
         try {
-            const [metricsRes, txRes, leaderboardRes] = await Promise.all([
-                api.get('/dashboard/metrics'),
-                api.get('/dashboard/transactions'),
+            const res = await api.get('/dashboard/metrics');
+            if (res.data) {
+                setMetrics(res.data);
+                localStorage.setItem('gp_cached_metrics', JSON.stringify(res.data));
+            }
+        } catch (err) {
+            console.warn('[Dashboard] Metrics fetch error (using cached):', err.message);
+        }
+    }, [api]);
+
+    const fetchDashboardData = useCallback(async (silent = false) => {
+        if (!silent) setIsLoading(true);
+        setIsRefreshing(true);
+        try {
+            await fetchMetrics();
+
+            const [txRes, leaderboardRes] = await Promise.all([
+                api.get('/dashboard/transactions').catch(err => {
+                    console.warn('[Dashboard] Tx fetch error:', err.message);
+                    return { data: [] };
+                }),
                 api.get('/dashboard/leaderboard').catch(() => ({ data: [] }))
             ]);
-            setMetrics(metricsRes.data);
+
             const txList = Array.isArray(txRes.data) 
                 ? txRes.data 
                 : (txRes.data?.transactions || []);
@@ -532,9 +565,42 @@ export default function Dashboard() {
             setLeaderboard(lbList);
         } catch (error) {
             console.error("Error fetching dashboard data", error);
+        } finally {
+            setIsLoading(false);
+            setIsRefreshing(false);
         }
-        setIsLoading(false);
-    };
+    }, [api, fetchMetrics]);
+
+    useEffect(() => {
+        fetchDashboardData(true);
+
+        // Mobile lifecycle: Auto-refresh balance when returning to tab/app without requiring reload
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                fetchMetrics();
+            }
+        };
+
+        const handleFocus = () => {
+            fetchMetrics();
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('focus', handleFocus);
+
+        // Background polling for mobile/desktop every 25 seconds
+        const pollInterval = setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                fetchMetrics();
+            }
+        }, 25000);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('focus', handleFocus);
+            clearInterval(pollInterval);
+        };
+    }, [fetchDashboardData, fetchMetrics]);
 
     const handleRequestPassword = (bankAccount) => {
         setPendingWithdrawBank(bankAccount);
@@ -875,6 +941,26 @@ export default function Dashboard() {
                                         Withdrawable Balance
                                     </span>
                                     <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }}></span>
+                                    <button
+                                        type="button"
+                                        title="Refresh balance"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            fetchMetrics();
+                                        }}
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            padding: '2px 4px',
+                                            cursor: 'pointer',
+                                            color: 'var(--text-muted)',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            opacity: 0.7
+                                        }}
+                                    >
+                                        <RefreshCw size={12} style={{ animation: isRefreshing ? 'spin 1s linear infinite' : 'none' }} />
+                                    </button>
                                 </div>
                                 <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <Wallet size={16} />

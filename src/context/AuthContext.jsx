@@ -17,7 +17,7 @@ const getApiBaseUrl = () => {
 // Axios instance with base URL & interceptors
 export const api = axios.create({
     baseURL: getApiBaseUrl(),
-    timeout: 10000
+    timeout: 20000
 });
 
 api.interceptors.request.use(config => {
@@ -148,6 +148,26 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const signup = async (userData) => {
+        try {
+            const payload = {
+                ...userData,
+                confirmPassword: userData.confirmPassword || userData.password
+            };
+            const res = await api.post('/auth/signup', payload);
+            if (res.data.token) {
+                localStorage.setItem('token', res.data.token);
+            }
+            if (res.data.user) {
+                localStorage.setItem('gp_cached_user', JSON.stringify(res.data.user));
+                setUser(res.data.user);
+            }
+            return { success: true, user: res.data.user, token: res.data.token };
+        } catch (error) {
+            return { success: false, error: error.response?.data?.error || 'Registration failed' };
+        }
+    };
+
     const logout = async () => {
         try {
             await api.post('/auth/logout');
@@ -170,6 +190,7 @@ export const AuthProvider = ({ children }) => {
         user,
         setUser,
         loading,
+        signup,
         login,
         logout,
         logoutAll,

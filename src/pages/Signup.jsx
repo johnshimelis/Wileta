@@ -54,7 +54,7 @@ export default function Signup() {
             return;
         }
 
-        const res = await signup({ name, email, password });
+        const res = await signup({ name, email, password, confirmPassword: password });
         if (res.success) {
             navigate('/onboarding');
         } else {
