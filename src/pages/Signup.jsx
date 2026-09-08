@@ -1,24 +1,153 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-    Mail, Lock, User, AlertCircle, CheckCircle, ShieldCheck,
-    Sparkles, Zap, DollarSign, TrendingUp, Users
+    Mail, Lock, User, Phone, KeyRound, Eye, EyeOff,
+    AlertCircle, CheckCircle2, ShieldCheck, Sparkles,
+    Zap, DollarSign, TrendingUp, Users
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
-import Button from '../components/ui/Button';
 
 export default function Signup() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [otp, setOtp] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const [otpSent, setOtpSent] = useState(false);
+    const [sendingOtp, setSendingOtp] = useState(false);
+    const [otpCooldown, setOtpCooldown] = useState(0);
+
     const [error, setError] = useState('');
+    const [successMsg, setSuccessMsg] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Interactive Demo Tipping Simulation on Signup Right Panel
+    const { signup, requestSignupOtp } = useAuth();
+    const { t } = useLanguage();
+    const navigate = useNavigate();
+
+    // 60-Second Cooldown Timer for OTP resend
+    useEffect(() => {
+        let interval;
+        if (otpCooldown > 0) {
+            interval = setInterval(() => {
+                setOtpCooldown(prev => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [otpCooldown]);
+
+    // Format phone to standard Ethiopian 10-digit (09... or 07...)
+    const cleanPhoneDigits = (raw) => {
+        let digits = (raw || '').replace(/[^0-9]/g, '');
+        if (digits.startsWith('251') && digits.length === 12) digits = '0' + digits.substring(3);
+        else if (digits.length === 9 && (digits.startsWith('9') || digits.startsWith('7'))) digits = '0' + digits;
+        return digits;
+    };
+
+    // Request Phone Verification Code
+    const handleSendOtp = async () => {
+        setError('');
+        setSuccessMsg('');
+
+        const cleaned = cleanPhoneDigits(phone);
+        if (cleaned.length !== 10 || (!cleaned.startsWith('09') && !cleaned.startsWith('07'))) {
+            setError('Please enter a valid Ethiopian mobile phone (e.g. 0912345678 or 0712345678).');
+            return;
+        }
+
+        setSendingOtp(true);
+        try {
+            const res = await requestSignupOtp(cleaned);
+            if (res.success) {
+                setOtpSent(true);
+                setOtpCooldown(60);
+                if (res.devOtp) {
+                    setSuccessMsg(`Code sent via SMS! (Test Code: ${res.devOtp})`);
+                    setOtp(res.devOtp); // Auto-fill in test/dev mode
+                } else {
+                    setSuccessMsg('6-digit verification code sent to your mobile phone via SMS.');
+                }
+            } else {
+                setError(res.error || 'Failed to send verification code.');
+            }
+        } catch (err) {
+            setError('Failed to reach SMS verification gateway.');
+        } finally {
+            setSendingOtp(false);
+        }
+    };
+
+    // Submit Final Verified Registration
+    const handleSignup = async (e) => {
+        e.preventDefault();
+        setError('');
+        setSuccessMsg('');
+
+        if (!name.trim()) {
+            setError('Please enter your full name.');
+            return;
+        }
+
+        if (!email.trim()) {
+            setError('Please enter your email address.');
+            return;
+        }
+
+        const cleanedPhone = cleanPhoneDigits(phone);
+        if (cleanedPhone.length !== 10) {
+            setError('Please enter a valid Ethiopian mobile number (09... or 07...).');
+            return;
+        }
+
+        if (!otp.trim()) {
+            setError('Please request and enter your 6-digit phone verification code.');
+            return;
+        }
+
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match. Please re-enter your password.');
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const res = await signup({
+                name: name.trim(),
+                email: email.trim().toLowerCase(),
+                phone: cleanedPhone,
+                password,
+                confirmPassword,
+                otp: otp.trim()
+            });
+
+            if (res && res.success) {
+                navigate('/onboarding');
+            } else {
+                setError(res?.error || 'Registration failed. Please check your credentials.');
+            }
+        } catch (err) {
+            setError(err?.response?.data?.error || 'Network error during signup. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Interactive Demo Tipping Simulation on Right Panel
     const demoSupporters = [
         { name: 'Natnael Tadesse', role: 'Tech YouTuber Supporter', amount: '250', time: '10s ago', note: 'Loved your latest video! Gursha on me ☕' },
         { name: 'Bethlehem Assefa', role: 'Live Podcast Listener', amount: '500', time: '1m ago', note: 'Keep inspiring our community with great stories ❤️' },
@@ -31,36 +160,6 @@ export default function Signup() {
     const triggerTestAlert = () => {
         setSimulatedAlert(true);
         setTimeout(() => setSimulatedAlert(false), 3500);
-    };
-
-    const { signup } = useAuth();
-    const { t } = useLanguage();
-    const navigate = useNavigate();
-
-    const handleSignup = async (e) => {
-        e.preventDefault();
-        setError('');
-        setLoading(true);
-
-        if (!name || !email || !password) {
-            setError('All fields are required');
-            setLoading(false);
-            return;
-        }
-
-        if (password.length < 6) {
-            setError('Password must be at least 6 characters');
-            setLoading(false);
-            return;
-        }
-
-        const res = await signup({ name, email, password, confirmPassword: password });
-        if (res.success) {
-            navigate('/onboarding');
-        } else {
-            setError(res.error || 'Registration failed');
-        }
-        setLoading(false);
     };
 
     return (
@@ -80,7 +179,7 @@ export default function Signup() {
                 {/* Top Controls Bar */}
                 <div style={{
                     width: '100%',
-                    maxWidth: '440px',
+                    maxWidth: '460px',
                     display: 'flex',
                     justifyContent: 'flex-end',
                     alignItems: 'center',
@@ -91,10 +190,10 @@ export default function Signup() {
                     <ThemeToggle />
                 </div>
 
-                {/* Modal Card with Logo INSIDE */}
+                {/* Modal Card with Logo */}
                 <div style={{
                     width: '100%',
-                    maxWidth: '440px',
+                    maxWidth: '460px',
                     margin: 'auto 0',
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
@@ -103,7 +202,6 @@ export default function Signup() {
                     boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)',
                     boxSizing: 'border-box'
                 }}>
-                    {/* Centered Bigger Brand Logo INSIDE the Modal with Tight Gap */}
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.85rem' }}>
                         <Logo size="large" />
                     </div>
@@ -117,17 +215,55 @@ export default function Signup() {
                         </p>
                     </div>
 
+                    {/* Alerts */}
                     {error && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--danger-light)', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: '8px', padding: '0.65rem 0.85rem', fontSize: '0.825rem', fontWeight: 600, marginBottom: '1.25rem' }}>
-                            <AlertCircle size={16} /> {error}
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            background: 'rgba(239, 68, 68, 0.1)',
+                            border: '1px solid #EF4444',
+                            color: '#EF4444',
+                            borderRadius: '8px',
+                            padding: '0.65rem 0.85rem',
+                            fontSize: '0.825rem',
+                            fontWeight: 600,
+                            marginBottom: '1rem'
+                        }}>
+                            <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                            <span>{error}</span>
+                        </div>
+                    )}
+
+                    {successMsg && (
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            background: 'rgba(16, 185, 129, 0.1)',
+                            border: '1px solid #10B981',
+                            color: '#10B981',
+                            borderRadius: '8px',
+                            padding: '0.65rem 0.85rem',
+                            fontSize: '0.825rem',
+                            fontWeight: 600,
+                            marginBottom: '1rem'
+                        }}>
+                            <CheckCircle2 size={16} style={{ flexShrink: 0 }} />
+                            <span>{successMsg}</span>
                         </div>
                     )}
 
                     <form onSubmit={handleSignup}>
-                        <div className="form-group">
-                            <label className="form-label">{t('fullName')}</label>
-                            <div className="input-group">
-                                <User size={18} />
+                        {/* Full Name */}
+                        <div className="form-group" style={{ marginBottom: '1rem' }}>
+                            <label className="form-label" style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                                {t('fullName')}
+                            </label>
+                            <div className="input-group" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                <span style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)' }}>
+                                    <User size={18} />
+                                </span>
                                 <input
                                     type="text"
                                     className="form-input"
@@ -135,14 +271,31 @@ export default function Signup() {
                                     value={name}
                                     onChange={e => setName(e.target.value)}
                                     required
+                                    style={{
+                                        width: '100%',
+                                        height: '44px',
+                                        paddingLeft: '38px',
+                                        paddingRight: '12px',
+                                        borderRadius: '8px',
+                                        border: '1px solid var(--border-color)',
+                                        background: 'var(--input-bg, transparent)',
+                                        color: 'var(--text-main)',
+                                        fontSize: '0.9rem',
+                                        boxSizing: 'border-box'
+                                    }}
                                 />
                             </div>
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label">{t('emailAddress')}</label>
-                            <div className="input-group">
-                                <Mail size={18} />
+                        {/* Email Address */}
+                        <div className="form-group" style={{ marginBottom: '1rem' }}>
+                            <label className="form-label" style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                                {t('emailAddress')}
+                            </label>
+                            <div className="input-group" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                <span style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)' }}>
+                                    <Mail size={18} />
+                                </span>
                                 <input
                                     type="email"
                                     className="form-input"
@@ -150,28 +303,224 @@ export default function Signup() {
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
                                     required
+                                    style={{
+                                        width: '100%',
+                                        height: '44px',
+                                        paddingLeft: '38px',
+                                        paddingRight: '12px',
+                                        borderRadius: '8px',
+                                        border: '1px solid var(--border-color)',
+                                        background: 'var(--input-bg, transparent)',
+                                        color: 'var(--text-main)',
+                                        fontSize: '0.9rem',
+                                        boxSizing: 'border-box'
+                                    }}
                                 />
                             </div>
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label">{t('password')}</label>
-                            <div className="input-group">
-                                <Lock size={18} />
+                        {/* Mobile Phone Number + Send OTP */}
+                        <div className="form-group" style={{ marginBottom: '1rem' }}>
+                            <label className="form-label" style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                                Ethiopian Mobile Phone (SMS Verified)
+                            </label>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                                <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+                                    <span style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)' }}>
+                                        <Phone size={18} />
+                                    </span>
+                                    <input
+                                        type="tel"
+                                        className="form-input"
+                                        placeholder="0912345678"
+                                        value={phone}
+                                        onChange={e => setPhone(e.target.value)}
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            height: '44px',
+                                            paddingLeft: '38px',
+                                            paddingRight: '12px',
+                                            borderRadius: '8px',
+                                            border: '1px solid var(--border-color)',
+                                            background: 'var(--input-bg, transparent)',
+                                            color: 'var(--text-main)',
+                                            fontSize: '0.9rem',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={handleSendOtp}
+                                    disabled={sendingOtp || otpCooldown > 0}
+                                    style={{
+                                        padding: '0 14px',
+                                        height: '44px',
+                                        background: otpCooldown > 0 ? 'var(--border-color)' : 'var(--primary)',
+                                        color: otpCooldown > 0 ? 'var(--text-muted)' : '#FFFFFF',
+                                        border: 'none',
+                                        borderRadius: '8px',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 700,
+                                        cursor: (sendingOtp || otpCooldown > 0) ? 'not-allowed' : 'pointer',
+                                        whiteSpace: 'nowrap',
+                                        transition: 'all 0.15s ease'
+                                    }}
+                                >
+                                    {sendingOtp ? 'Sending...' : otpCooldown > 0 ? `Wait ${otpCooldown}s` : (otpSent ? 'Resend' : 'Verify Phone')}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* 6-Digit Phone OTP Code Field */}
+                        <div className="form-group" style={{ marginBottom: '1rem' }}>
+                            <label className="form-label" style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                                SMS Verification Code
+                            </label>
+                            <div className="input-group" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                <span style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)' }}>
+                                    <KeyRound size={18} />
+                                </span>
                                 <input
-                                    type="password"
+                                    type="text"
+                                    className="form-input"
+                                    placeholder="Enter 6-digit code"
+                                    maxLength={6}
+                                    value={otp}
+                                    onChange={e => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                                    required
+                                    style={{
+                                        width: '100%',
+                                        height: '44px',
+                                        paddingLeft: '38px',
+                                        paddingRight: '12px',
+                                        borderRadius: '8px',
+                                        border: '1px solid var(--border-color)',
+                                        background: 'var(--input-bg, transparent)',
+                                        color: 'var(--text-main)',
+                                        fontSize: '0.95rem',
+                                        letterSpacing: '0.1em',
+                                        fontWeight: 700,
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Password with Show/Hide Toggle */}
+                        <div className="form-group" style={{ marginBottom: '1rem' }}>
+                            <label className="form-label" style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                                {t('password')}
+                            </label>
+                            <div className="input-group" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                <span style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)' }}>
+                                    <Lock size={18} />
+                                </span>
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
                                     className="form-input"
                                     placeholder="At least 6 characters"
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
                                     required
+                                    style={{
+                                        width: '100%',
+                                        height: '44px',
+                                        paddingLeft: '38px',
+                                        paddingRight: '40px',
+                                        borderRadius: '8px',
+                                        border: '1px solid var(--border-color)',
+                                        background: 'var(--input-bg, transparent)',
+                                        color: 'var(--text-main)',
+                                        fontSize: '0.9rem',
+                                        boxSizing: 'border-box'
+                                    }}
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    style={{
+                                        position: 'absolute',
+                                        right: '10px',
+                                        background: 'transparent',
+                                        border: 'none',
+                                        color: 'var(--text-muted)',
+                                        cursor: 'pointer',
+                                        padding: '4px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
                             </div>
                         </div>
 
+                        {/* Confirm Password with Show/Hide Toggle */}
+                        <div className="form-group" style={{ marginBottom: '1.25rem' }}>
+                            <label className="form-label" style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                                Confirm Password
+                            </label>
+                            <div className="input-group" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                <span style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)' }}>
+                                    <Lock size={18} />
+                                </span>
+                                <input
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    className="form-input"
+                                    placeholder="Re-enter your password"
+                                    value={confirmPassword}
+                                    onChange={e => setConfirmPassword(e.target.value)}
+                                    required
+                                    style={{
+                                        width: '100%',
+                                        height: '44px',
+                                        paddingLeft: '38px',
+                                        paddingRight: '40px',
+                                        borderRadius: '8px',
+                                        border: confirmPassword && confirmPassword !== password 
+                                            ? '1px solid #EF4444' 
+                                            : '1px solid var(--border-color)',
+                                        background: 'var(--input-bg, transparent)',
+                                        color: 'var(--text-main)',
+                                        fontSize: '0.9rem',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    style={{
+                                        position: 'absolute',
+                                        right: '10px',
+                                        background: 'transparent',
+                                        border: 'none',
+                                        color: 'var(--text-muted)',
+                                        cursor: 'pointer',
+                                        padding: '4px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                    aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                                >
+                                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
+                            </div>
+                            {confirmPassword && confirmPassword !== password && (
+                                <span style={{ fontSize: '0.75rem', color: '#EF4444', marginTop: '4px', display: 'block' }}>
+                                    Passwords do not match
+                                </span>
+                            )}
+                        </div>
+
+                        {/* Submit Button */}
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || (confirmPassword && confirmPassword !== password)}
                             style={{
                                 width: '100%',
                                 height: '46px',
@@ -181,12 +530,12 @@ export default function Signup() {
                                 borderRadius: '8px',
                                 fontWeight: 700,
                                 fontSize: '0.95rem',
-                                cursor: 'pointer',
+                                cursor: loading ? 'not-allowed' : 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 gap: '0.5rem',
-                                marginTop: '0.75rem',
+                                marginTop: '0.5rem',
                                 boxShadow: '0 2px 8px rgba(5, 150, 105, 0.25)',
                                 transition: 'all 0.15s ease'
                             }}
@@ -195,7 +544,7 @@ export default function Signup() {
                             onMouseDown={e => e.currentTarget.style.transform = 'scale(0.985)'}
                             onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
                         >
-                            {loading ? <span className="spinner"></span> : t('signUpLink')}
+                            {loading ? <span className="spinner"></span> : 'Create Verified Account'}
                         </button>
                     </form>
 
@@ -366,7 +715,7 @@ export default function Signup() {
 
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: '#A7F3D0' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                                <CheckCircle size={14} color="#34D399" />
+                                <CheckCircle2 size={14} color="#34D399" />
                                 <span>Verified Telebirr PIN Push Settlement</span>
                             </div>
                             <button
@@ -407,19 +756,19 @@ export default function Signup() {
                     {/* Feature Cards Checklist */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', paddingTop: '0.85rem', borderTop: '1px solid rgba(255,255,255,0.18)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={14} color="#34D399" />
+                            <CheckCircle2 size={14} color="#34D399" />
                             <span>100% Free Registration</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={14} color="#34D399" />
+                            <CheckCircle2 size={14} color="#34D399" />
                             <span>Custom Handle Link</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={14} color="#34D399" />
+                            <CheckCircle2 size={14} color="#34D399" />
                             <span>Telebirr & Multi-Bank</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={14} color="#34D399" />
+                            <CheckCircle2 size={14} color="#34D399" />
                             <span>National ID KYC</span>
                         </div>
                     </div>

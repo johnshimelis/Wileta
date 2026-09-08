@@ -148,6 +148,15 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const requestSignupOtp = async (phone) => {
+        try {
+            const res = await api.post('/auth/request-signup-otp', { phone });
+            return { success: true, message: res.data?.message, devOtp: res.data?.devOtp };
+        } catch (error) {
+            return { success: false, error: error.response?.data?.error || 'Failed to send verification code' };
+        }
+    };
+
     const signup = async (userData) => {
         try {
             const payload = {
@@ -191,6 +200,7 @@ export const AuthProvider = ({ children }) => {
         setUser,
         loading,
         signup,
+        requestSignupOtp,
         login,
         logout,
         logoutAll,
