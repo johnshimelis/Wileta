@@ -58,7 +58,7 @@ export default function MaintenanceScreen({
             <div className="gp-maint-container">
                 {/* Brand Header */}
                 <header className="gp-maint-header">
-                    <Logo size="medium" />
+                    <Logo size="medium" forceWhite={true} />
                 </header>
 
                 {/* Main Card */}
@@ -163,6 +163,14 @@ export default function MaintenanceScreen({
                 .gp-maint-header {
                     display: flex;
                     justify-content: center;
+                }
+
+                .gp-maint-header .logo-brand span {
+                    color: #FFFFFF !important;
+                }
+
+                .gp-maint-header .logo-brand span span {
+                    color: #10B981 !important;
                 }
 
                 .gp-maint-card {

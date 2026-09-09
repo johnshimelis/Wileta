@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth, api } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import {
     Mail, Lock, User, Phone, KeyRound, Eye, EyeOff,
@@ -30,9 +30,43 @@ export default function Signup() {
     const [successMsg, setSuccessMsg] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { signup, requestSignupOtp } = useAuth();
+    const authContext = useAuth() || {};
+    const { setUser } = authContext;
     const { t } = useLanguage();
     const navigate = useNavigate();
+
+    // Bulletproof OTP request with direct API fallback
+    const executeRequestOtp = async (cleanedPhone) => {
+        if (typeof authContext.requestSignupOtp === 'function') {
+            return await authContext.requestSignupOtp(cleanedPhone);
+        }
+        try {
+            const res = await api.post('/auth/request-signup-otp', { phone: cleanedPhone });
+            return { success: true, message: res.data?.message, devOtp: res.data?.devOtp };
+        } catch (err) {
+            return { success: false, error: err.response?.data?.error || 'Failed to send verification code' };
+        }
+    };
+
+    // Bulletproof Signup execution with direct API fallback
+    const executeSignup = async (payload) => {
+        if (typeof authContext.signup === 'function') {
+            return await authContext.signup(payload);
+        }
+        try {
+            const res = await api.post('/auth/signup', payload);
+            if (res.data?.token) {
+                localStorage.setItem('token', res.data.token);
+            }
+            if (res.data?.user) {
+                localStorage.setItem('gp_cached_user', JSON.stringify(res.data.user));
+                if (typeof setUser === 'function') setUser(res.data.user);
+            }
+            return { success: true, user: res.data?.user, token: res.data?.token };
+        } catch (err) {
+            return { success: false, error: err.response?.data?.error || 'Registration failed' };
+        }
+    };
 
     // 60-Second Cooldown Timer for OTP resend
     useEffect(() => {
@@ -66,7 +100,7 @@ export default function Signup() {
 
         setSendingOtp(true);
         try {
-            const res = await requestSignupOtp(cleaned);
+            const res = await executeRequestOtp(cleaned);
             if (res.success) {
                 setOtpSent(true);
                 setOtpCooldown(60);
@@ -126,7 +160,7 @@ export default function Signup() {
         setLoading(true);
 
         try {
-            const res = await signup({
+            const res = await executeSignup({
                 name: name.trim(),
                 email: email.trim().toLowerCase(),
                 phone: cleanedPhone,
