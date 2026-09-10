@@ -58,15 +58,18 @@ export default function MaintenanceScreen({
             <div className="gp-maint-container">
                 {/* Brand Header */}
                 <header className="gp-maint-header">
-                    <Logo size="medium" forceWhite={true} />
+                    <Logo size="large" forceWhite={true} />
                 </header>
 
-                {/* Main Card */}
-                <section className="gp-maint-card">
-                    {/* Status Pill */}
-                    <div className="gp-status-pill">
-                        <span className="gp-status-dot" />
-                        <span>System Maintenance</span>
+                {/* Main Content Area - Clean, natural flow without awkward boxed cards */}
+                <section className="gp-maint-content">
+                    {/* Calm, authentic status indicator */}
+                    <div className="gp-status-indicator">
+                        <span className="gp-status-pulse">
+                            <span className="gp-status-pulse-ring" />
+                            <span className="gp-status-pulse-core" />
+                        </span>
+                        <span>Scheduled Platform Maintenance</span>
                     </div>
 
                     <h1 className="gp-maint-title">
@@ -74,7 +77,7 @@ export default function MaintenanceScreen({
                     </h1>
 
                     <p className="gp-maint-subtitle">
-                        {message || "GurshaPay is currently undergoing scheduled infrastructure updates to improve performance and reliability. All creator balances, transactions, and scheduled payouts remain fully secure."}
+                        {message || "GurshaPay is currently undergoing scheduled platform upgrades to improve stability and payment speed. All creator balances, virtual gifts, and scheduled payouts remain fully secure."}
                     </p>
 
                     {/* Actions */}
@@ -87,7 +90,7 @@ export default function MaintenanceScreen({
                             aria-label="Check system status"
                         >
                             <RefreshCw size={15} className={`gp-btn-icon ${checkingStatus ? 'gp-spin' : ''}`} />
-                            <span>{checkingStatus ? 'Checking...' : 'Check Status'}</span>
+                            <span>{checkingStatus ? 'Checking Status...' : 'Check Status'}</span>
                         </button>
 
                         <button
@@ -96,12 +99,12 @@ export default function MaintenanceScreen({
                             className={`gp-btn-secondary ${arcadeOpen ? 'active' : ''}`}
                             aria-label="Toggle Waiting Games"
                         >
-                            <Gamepad2 size={16} />
-                            <span>{arcadeOpen ? 'Hide Mini-Games' : 'Play Addis Hopper'}</span>
+                            <Gamepad2 size={15} />
+                            <span>{arcadeOpen ? 'Close Waiting Games' : 'Play Addis Hopper While Waiting'}</span>
                         </button>
                     </div>
 
-                    {/* Status Message */}
+                    {/* Status Feedback */}
                     {statusToast && (
                         <div className={`gp-status-msg gp-status-${statusToast.type}`}>
                             {statusToast.type === 'success' ? <CheckCircle2 size={15} /> : <AlertCircle size={15} />}
@@ -112,15 +115,15 @@ export default function MaintenanceScreen({
 
                 {/* Interactive Waiting Games Drawer */}
                 {arcadeOpen && (
-                    <section style={{ width: '100%' }}>
+                    <section className="gp-maint-games-section">
                         <MaintenanceGames />
                     </section>
                 )}
 
-                {/* Clean Footer Support */}
+                {/* Clean, authentic Footer */}
                 <footer className="gp-maint-footer">
                     <div className="gp-support-links">
-                        <span className="gp-support-text">Need urgent assistance?</span>
+                        <span className="gp-support-text">Engineering & Direct Support:</span>
                         <a href={`mailto:${supportEmail}`} className="gp-support-link">
                             <Mail size={13} />
                             <span>{supportEmail}</span>
@@ -145,9 +148,9 @@ export default function MaintenanceScreen({
                     justify-content: center;
                     align-items: center;
                     background: #090D16;
-                    color: #F1F5F9;
+                    color: #F8FAFC;
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-                    padding: 2.5rem 1.25rem;
+                    padding: 3rem 1.5rem;
                     box-sizing: border-box;
                 }
 
@@ -157,7 +160,7 @@ export default function MaintenanceScreen({
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    gap: 1.5rem;
+                    gap: 2rem;
                 }
 
                 .gp-maint-header {
@@ -173,63 +176,83 @@ export default function MaintenanceScreen({
                     color: #10B981 !important;
                 }
 
-                .gp-maint-card {
+                .gp-maint-header .brand-logo-img {
+                    filter: brightness(0) invert(1) !important;
+                }
+
+                .gp-maint-content {
                     width: 100%;
-                    background: #111827;
-                    border: 1px solid rgba(255, 255, 255, 0.08);
-                    border-radius: 16px;
-                    padding: 2.5rem 2rem;
-                    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
                     text-align: center;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    box-sizing: border-box;
+                    padding: 0 0.5rem;
                 }
 
-                .gp-status-pill {
+                .gp-status-indicator {
                     display: inline-flex;
                     align-items: center;
-                    gap: 7px;
-                    background: rgba(245, 158, 11, 0.1);
-                    border: 1px solid rgba(245, 158, 11, 0.25);
-                    padding: 4px 12px;
-                    border-radius: 999px;
-                    font-size: 0.775rem;
+                    gap: 8px;
+                    font-size: 0.8125rem;
                     font-weight: 600;
                     color: #FBBF24;
-                    margin-bottom: 1.1rem;
-                    letter-spacing: 0.01em;
+                    margin-bottom: 1.25rem;
+                    letter-spacing: 0.02em;
                 }
 
-                .gp-status-dot {
-                    width: 6px;
-                    height: 6px;
+                .gp-status-pulse {
+                    position: relative;
+                    width: 8px;
+                    height: 8px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .gp-status-pulse-ring {
+                    position: absolute;
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    background: rgba(245, 158, 11, 0.35);
+                    animation: statusPulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+                }
+
+                .gp-status-pulse-core {
+                    width: 8px;
+                    height: 8px;
                     border-radius: 50%;
                     background: #F59E0B;
                 }
 
+                @keyframes statusPulse {
+                    0% { transform: scale(0.6); opacity: 0.8; }
+                    50% { transform: scale(1.4); opacity: 0; }
+                    100% { transform: scale(0.6); opacity: 0; }
+                }
+
                 .gp-maint-title {
-                    font-size: 1.75rem;
-                    font-weight: 700;
+                    font-size: 2.15rem;
+                    font-weight: 800;
                     color: #FFFFFF;
-                    margin: 0 0 0.65rem 0;
-                    letter-spacing: -0.025em;
+                    margin: 0 0 0.85rem 0;
+                    letter-spacing: -0.03em;
+                    line-height: 1.2;
                 }
 
                 .gp-maint-subtitle {
-                    font-size: 0.925rem;
+                    font-size: 0.975rem;
                     color: #94A3B8;
-                    line-height: 1.6;
+                    line-height: 1.65;
                     max-width: 480px;
-                    margin: 0 0 1.75rem 0;
+                    margin: 0 0 2rem 0;
                 }
 
                 .gp-maint-actions {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 0.75rem;
+                    gap: 0.85rem;
                     flex-wrap: wrap;
                     width: 100%;
                 }
@@ -238,12 +261,12 @@ export default function MaintenanceScreen({
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 7px;
+                    gap: 8px;
                     background: #059669;
                     color: #FFFFFF;
                     font-size: 0.875rem;
                     font-weight: 600;
-                    padding: 0 1.25rem;
+                    padding: 0 1.35rem;
                     height: 42px;
                     border-radius: 8px;
                     border: none;
@@ -268,7 +291,7 @@ export default function MaintenanceScreen({
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 7px;
+                    gap: 8px;
                     background: rgba(255, 255, 255, 0.05);
                     color: #E2E8F0;
                     font-size: 0.875rem;
@@ -276,20 +299,20 @@ export default function MaintenanceScreen({
                     padding: 0 1.25rem;
                     height: 42px;
                     border-radius: 8px;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.12);
                     cursor: pointer;
                     transition: all 0.15s ease;
                 }
 
                 .gp-btn-secondary:hover {
                     background: rgba(255, 255, 255, 0.09);
-                    border-color: rgba(255, 255, 255, 0.18);
+                    border-color: rgba(255, 255, 255, 0.22);
                     color: #FFFFFF;
                 }
 
                 .gp-btn-secondary.active {
                     background: rgba(5, 150, 105, 0.15);
-                    border-color: rgba(16, 185, 129, 0.35);
+                    border-color: rgba(16, 185, 129, 0.4);
                     color: #34D399;
                 }
 
@@ -309,7 +332,7 @@ export default function MaintenanceScreen({
                     padding: 8px 14px;
                     border-radius: 8px;
                     font-size: 0.825rem;
-                    margin-top: 1.25rem;
+                    margin-top: 1.5rem;
                     max-width: 90%;
                     line-height: 1.4;
                 }
@@ -326,12 +349,26 @@ export default function MaintenanceScreen({
                     color: #CBD5E1;
                 }
 
+                .gp-maint-games-section {
+                    width: 100%;
+                    animation: fadeIn 0.25s ease-out;
+                }
+
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(6px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+
                 .gp-maint-footer {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    gap: 0.5rem;
+                    gap: 0.6rem;
                     text-align: center;
+                    margin-top: 1rem;
+                    padding-top: 1.5rem;
+                    border-top: 1px solid rgba(255, 255, 255, 0.07);
+                    width: 100%;
                 }
 
                 .gp-support-links {
@@ -340,7 +377,7 @@ export default function MaintenanceScreen({
                     gap: 0.5rem;
                     flex-wrap: wrap;
                     justify-content: center;
-                    font-size: 0.8rem;
+                    font-size: 0.825rem;
                     color: #64748B;
                 }
 
@@ -351,7 +388,7 @@ export default function MaintenanceScreen({
                 .gp-support-link {
                     display: inline-flex;
                     align-items: center;
-                    gap: 4px;
+                    gap: 5px;
                     color: #CBD5E1;
                     text-decoration: none;
                     transition: color 0.15s ease;
@@ -367,17 +404,14 @@ export default function MaintenanceScreen({
                 }
 
                 .gp-copyright {
-                    font-size: 0.75rem;
+                    font-size: 0.775rem;
                     color: #475569;
                     margin: 0;
                 }
 
                 @media (max-width: 480px) {
-                    .gp-maint-card {
-                        padding: 2rem 1.25rem;
-                    }
                     .gp-maint-title {
-                        font-size: 1.4rem;
+                        font-size: 1.7rem;
                     }
                     .gp-maint-actions {
                         flex-direction: column;

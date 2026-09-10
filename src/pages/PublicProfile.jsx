@@ -532,14 +532,14 @@ export default function PublicProfile() {
                                             >
                                                 {isSelected && <span className="eth-gift-card-active-dot" />}
 
-                                                <div style={{ width: 50, height: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                    <Gift3DIcon id={gift.id} size={46} animated={isSelected} />
+                                                <div className="eth-gift-icon-container">
+                                                    <Gift3DIcon id={gift.id} size={54} animated={true} />
                                                 </div>
 
                                                 <div className="eth-gift-card-labels">
                                                     <span className="gift-card-name-am">{gift.nameAm}</span>
                                                     <span className="gift-card-name-en">{gift.nameEn}</span>
-                                                    <div className="gift-card-pricing">
+                                                    <div className={`gift-card-pricing ${isSelected ? 'pricing-selected' : ''}`}>
                                                         <span className="gift-card-coins">🪙 {gift.coins.toLocaleString()}</span>
                                                         <span className="gift-card-etb">{gift.etb} ETB</span>
                                                     </div>

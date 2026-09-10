@@ -32,7 +32,9 @@ export default function Logo({ size = 'medium', className = '', showText = true,
                 style={{ 
                     height: '100%', 
                     width: 'auto', 
-                    objectFit: 'contain'
+                    objectFit: 'contain',
+                    filter: forceWhite ? 'brightness(0) invert(1)' : undefined,
+                    transition: 'filter 0.2s ease'
                 }} 
                 onError={(e) => {
                     e.currentTarget.src = '/gp-logo-transparent.png';

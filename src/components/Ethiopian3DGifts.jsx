@@ -228,11 +228,17 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                         </div>
                     )}
 
-                    {/* 📖 BIBLE & 📗 QURAN: Leather Cover Gently Opening with Golden Sacred Glow */}
+                    {/* 📖 BIBLE & 📗 QURAN: Leather Cover Gently Opening with 3D Flipping Pages & Sacred Glow */}
                     {(id === 'bible' || id === 'quran') && (
                         <div className="obj-fx-book">
                             <div className={`book-sacred-glow ${id === 'quran' ? 'emerald' : 'gold'}`} />
-                            <div className="book-page-flutter" />
+                            <div className="book-3d-flipper">
+                                <div className="book-page-leaf leaf-left" />
+                                <div className="book-page-turning page-turn-1" />
+                                <div className="book-page-turning page-turn-2" />
+                                <div className="book-page-turning page-turn-3" />
+                                <div className="book-page-leaf leaf-right" />
+                            </div>
                         </div>
                     )}
 
@@ -268,19 +274,25 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                         </div>
                     )}
 
-                    {/* ✈️ ETHIOPIAN JET: Smooth Altitude Flight & Subtle Vapor Contrail */}
+                    {/* ✈️ ETHIOPIAN JET: Smooth Altitude Flight & Subtle Vapor Contrails */}
                     {id === 'plane' && (
                         <div className="obj-fx-plane">
                             <div className="plane-vapor-trail trail-left" />
                             <div className="plane-vapor-trail trail-right" />
+                            <div className="plane-wind-streak streak-1" />
+                            <div className="plane-wind-streak streak-2" />
                         </div>
                     )}
 
-                    {/* 🏎️ ADDIS SUPERCAR: Sleek Forward Motion with Subtle Tire Smoke */}
+                    {/* 🏎️ ADDIS SUPERCAR: Drift Motion with Dynamic Tire Smoke Plumes & Skidmarks */}
                     {id === 'car' && (
                         <div className="obj-fx-car">
-                            <div className="car-tire-smoke left" />
-                            <div className="car-tire-smoke right" />
+                            <div className="car-tire-smoke left puff-1" />
+                            <div className="car-tire-smoke left puff-2" />
+                            <div className="car-tire-smoke right puff-1" />
+                            <div className="car-tire-smoke right puff-2" />
+                            <div className="car-drift-skidmark left" />
+                            <div className="car-drift-skidmark right" />
                         </div>
                     )}
 

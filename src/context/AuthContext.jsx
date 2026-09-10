@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
     const [maintenanceInfo, setMaintenanceInfo] = useState({
         isMaintenance: false,
         message: '',
-        supportEmail: 'support@gurshapay.com',
+        supportEmail: 'biranalabs@gmail.com',
         supportPhone: '+251967432143'
     });
 
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
                 setMaintenanceInfo({
                     isMaintenance: true,
                     message: res.data.message,
-                    supportEmail: res.data.supportEmail || 'support@gurshapay.com',
+                    supportEmail: res.data.supportEmail || 'biranalabs@gmail.com',
                     supportPhone: res.data.supportPhone || '+251967432143'
                 });
                 return true;
@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }) => {
                     setMaintenanceInfo({
                         isMaintenance: true,
                         message: error.response.data.message || error.response.data.error,
-                        supportEmail: error.response.data.supportEmail || 'support@gurshapay.com',
+                        supportEmail: error.response.data.supportEmail || 'biranalabs@gmail.com',
                         supportPhone: error.response.data.supportPhone || '+251967432143'
                     });
                 }

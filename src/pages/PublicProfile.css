@@ -20,12 +20,13 @@
    ========================================================================== */
 
 .eth-gift-showcase-container {
-    background: var(--card-bg, rgba(24, 24, 28, 0.7));
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    background: #FFFFFF !important;
+    border: 1px solid #E5E7EB !important;
     border-radius: 16px;
-    padding: 1rem 0.85rem;
+    padding: 1.15rem 1rem;
     margin-bottom: 1.25rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    color: #111827 !important;
 }
 
 .eth-category-nav {
@@ -47,11 +48,11 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.45rem 0.75rem;
+    padding: 0.42rem 0.75rem;
     border-radius: 20px;
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
-    background: var(--bg-color, rgba(255, 255, 255, 0.04));
-    color: var(--text-muted, #9CA3AF);
+    border: 1px solid #E5E7EB;
+    background: #F9FAFB;
+    color: #4B5563;
     font-size: 0.78rem;
     font-weight: 600;
     white-space: nowrap;
@@ -61,21 +62,21 @@
 }
 
 .eth-category-chip:hover {
-    color: var(--text-main, #FFFFFF);
-    border-color: rgba(217, 119, 6, 0.4);
-    background: rgba(217, 119, 6, 0.06);
+    color: #111827;
+    border-color: #D1D5DB;
+    background: #F3F4F6;
 }
 
 .eth-category-chip.active {
-    background: rgba(217, 119, 6, 0.14);
-    border-color: #D97706;
-    color: #F59E0B;
+    background: #FEF3C7 !important;
+    border-color: #F59E0B !important;
+    color: #B45309 !important;
     font-weight: 700;
-    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
 }
 
 /* ==========================================================================
-   2. REFINED GIFT GRID & TACTILE GIFT CARDS
+   2. FLAT WHITE SCREEN GIFT GRID & FREE-FLOATING 3D GIFTS (NO CARDS)
    ========================================================================== */
 
 .eth-gift-grid {
@@ -103,12 +104,12 @@
     }
 }
 
-/* Tactile 3D Gift Card */
+/* Free-Floating 3D Gift Item - Directly on Flat White Screen (No Card Box) */
 .eth-gift-card {
-    background: var(--card-bg, #FFFFFF);
-    border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
-    border-radius: 14px;
-    padding: 0.65rem 0.35rem;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 12px;
+    padding: 0.55rem 0.2rem 0.65rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -119,23 +120,21 @@
     outline: none;
     perspective: 800px;
     transform-style: preserve-3d;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
-    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.2s ease,
-                box-shadow 0.22s ease,
-                background-color 0.2s ease;
+    box-shadow: none !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-theme='dark'] .eth-gift-card {
-    background: rgba(24, 24, 27, 0.75);
-    border-color: rgba(255, 255, 255, 0.08);
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .eth-gift-card:hover {
-    transform: translateY(-4px) scale(1.03);
-    border-color: rgba(217, 119, 6, 0.55);
-    background: rgba(217, 119, 6, 0.05);
-    box-shadow: 0 10px 22px -4px rgba(217, 119, 6, 0.18), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    transform: translateY(-4px);
+    background: rgba(0, 0, 0, 0.02) !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .eth-gift-card:active {
@@ -143,21 +142,54 @@
 }
 
 .eth-gift-card.selected {
-    border-color: #D97706;
-    background: linear-gradient(180deg, rgba(217, 119, 6, 0.12) 0%, rgba(217, 119, 6, 0.03) 100%);
-    box-shadow: 0 0 0 1.5px #D97706, 0 8px 20px rgba(217, 119, 6, 0.22);
-    transform: translateY(-3px) scale(1.02);
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: translateY(-4px);
+}
+
+.eth-gift-icon-container {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.eth-gift-card:hover .eth-gift-icon-container {
+    transform: scale(1.08);
+}
+
+.eth-gift-card.selected .eth-gift-icon-container {
+    transform: scale(1.12);
+}
+
+/* Subtle amber ground spotlight beneath the 3D gift when selected */
+.eth-gift-card.selected .eth-gift-icon-container::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(245, 158, 11, 0.3) 0%, transparent 75%);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .eth-gift-card-active-dot {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 2px;
+    right: 6px;
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: #F59E0B;
-    box-shadow: 0 0 6px #F59E0B;
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.8);
 }
 
 .eth-gift-card-labels {
@@ -165,13 +197,13 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-top: 5px;
+    margin-top: 6px;
 }
 
 .gift-card-name-am {
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     font-weight: 800;
-    color: var(--text-main, #FFFFFF);
+    color: #111827 !important;
     line-height: 1.2;
     text-align: center;
     white-space: nowrap;
@@ -181,9 +213,9 @@
 }
 
 .gift-card-name-en {
-    font-size: 0.65rem;
+    font-size: 0.67rem;
     font-weight: 500;
-    color: var(--text-muted, #9CA3AF);
+    color: #6B7280 !important;
     line-height: 1.15;
     text-align: center;
     white-space: nowrap;
@@ -199,18 +231,33 @@
     justify-content: center;
     gap: 4px;
     margin-top: 4px;
+    padding: 2px 7px;
+    border-radius: 12px;
     font-size: 0.68rem;
     font-weight: 700;
+    transition: all 0.18s ease;
 }
 
 .gift-card-coins {
-    color: #F59E0B;
+    color: #D97706;
 }
 
 .gift-card-etb {
-    color: var(--text-muted, #9CA3AF);
+    color: #6B7280;
     font-size: 0.62rem;
     font-weight: 600;
+}
+
+.gift-card-pricing.pricing-selected,
+.eth-gift-card.selected .gift-card-pricing {
+    background: #FEF3C7;
+    border: 1px solid #FCD34D;
+    color: #92400E;
+    box-shadow: 0 1px 4px rgba(245, 158, 11, 0.15);
+}
+
+.eth-gift-card.selected .gift-card-pricing .gift-card-etb {
+    color: #92400E;
 }
 
 /* ==========================================================================
@@ -537,14 +584,20 @@
     50% { transform: scaleX(2.5); opacity: 0.95; }
 }
 
-/* 📖 BIBLE & 📗 QURAN SACRED LIGHT */
+/* 📖 BIBLE & 📗 QURAN 3D LEATHER PERSPECTIVE & PAGE OPENING */
 .eth-anim-book {
-    animation: bookGentleOpen 4s infinite ease-in-out;
+    perspective: 800px;
+    transform-style: preserve-3d;
+    animation: book3DPerspective 3.8s infinite ease-in-out;
 }
 
-@keyframes bookGentleOpen {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.025) translateY(-1px); }
+@keyframes book3DPerspective {
+    0%, 100% {
+        transform: translateY(0) rotateX(10deg) rotateY(-8deg);
+    }
+    50% {
+        transform: translateY(-3px) rotateX(14deg) rotateY(6deg) scale(1.03);
+    }
 }
 
 .book-sacred-glow {
@@ -564,8 +617,66 @@
 }
 
 @keyframes sacredGlowPulse {
-    0% { opacity: 0.4; }
-    100% { opacity: 0.85; }
+    0% { opacity: 0.35; }
+    100% { opacity: 0.8; }
+}
+
+.book-3d-flipper {
+    position: absolute;
+    top: 22%;
+    left: 48%;
+    width: 32%;
+    height: 52%;
+    perspective: 400px;
+    transform-style: preserve-3d;
+    pointer-events: none;
+}
+
+.book-page-turning {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #FDFBF7 0%, #FAF5EA 70%, #EFE5D0 100%);
+    border: 0.5px solid rgba(160, 120, 70, 0.35);
+    border-radius: 1px 3px 3px 1px;
+    transform-origin: left center;
+    box-shadow: -1px 2px 4px rgba(0, 0, 0, 0.12);
+    backface-visibility: visible;
+}
+
+.page-turn-1 {
+    animation: flipBookPage3D 3.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.page-turn-2 {
+    animation: flipBookPage3D 3.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    animation-delay: 0.6s;
+}
+
+.page-turn-3 {
+    animation: flipBookPage3D 3.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    animation-delay: 1.2s;
+}
+
+@keyframes flipBookPage3D {
+    0% {
+        transform: rotateY(0deg);
+        opacity: 0;
+    }
+    6% {
+        opacity: 0.95;
+    }
+    45% {
+        transform: rotateY(-135deg) skewY(-3deg);
+        opacity: 0.95;
+        background: linear-gradient(to left, #FDFBF7 0%, #EFE5D0 100%);
+    }
+    62%, 100% {
+        transform: rotateY(-175deg);
+        opacity: 0;
+    }
 }
 
 /* 🌼 FLOWER & 🌹 ROSE GENTLE BREEZE SWAY */
@@ -647,44 +758,193 @@
     60% { transform: rotate(-1deg); }
 }
 
-/* ✈️ ETHIOPIAN AIRLINES JET FLIGHT */
+/* ✈️ ETHIOPIAN AIRLINES JET HIGH ALTITUDE 3D FLIGHT */
 .eth-anim-plane {
-    animation: planeSmoothGlide 3.4s infinite ease-in-out;
+    perspective: 800px;
+    transform-style: preserve-3d;
+    animation: planeHighAltitudeFlight 4.2s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
-@keyframes planeSmoothGlide {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    35% { transform: translateY(-3px) rotate(2deg); }
-    70% { transform: translateY(1px) rotate(-1.5deg); }
+@keyframes planeHighAltitudeFlight {
+    0% {
+        transform: translateY(0) translateX(0) rotateZ(0deg) rotateY(-5deg) rotateX(4deg);
+    }
+    25% {
+        transform: translateY(-5px) translateX(3px) rotateZ(4deg) rotateY(8deg) rotateX(7deg) scale(1.04);
+    }
+    50% {
+        transform: translateY(-1px) translateX(1px) rotateZ(-2deg) rotateY(0deg) rotateX(2deg);
+    }
+    75% {
+        transform: translateY(-6px) translateX(-3px) rotateZ(-6deg) rotateY(-9deg) rotateX(6deg) scale(1.02);
+    }
+    100% {
+        transform: translateY(0) translateX(0) rotateZ(0deg) rotateY(-5deg) rotateX(4deg);
+    }
 }
 
 .plane-vapor-trail {
     position: absolute;
-    bottom: 25%;
-    width: 25px;
+    bottom: 28%;
     height: 3px;
     border-radius: 2px;
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.6), transparent);
-    animation: vaporDisperse 1.8s infinite ease-out;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.9), rgba(210, 230, 255, 0.5) 60%, transparent 100%);
+    filter: blur(0.4px);
+    animation: vaporDisperseFast 1.5s infinite ease-out;
 }
 
-.trail-left { right: 55%; }
-.trail-right { right: 25%; animation-delay: 0.3s; }
-
-@keyframes vaporDisperse {
-    0% { transform: translateX(0) scaleX(0.7); opacity: 0.7; }
-    100% { transform: translateX(-12px) scaleX(1.4); opacity: 0; }
+.trail-left {
+    right: 58%;
+    width: 28px;
 }
 
-/* 🏎️ SUPERCAR SLEEK DRIFT */
+.trail-right {
+    right: 28%;
+    width: 24px;
+    animation-delay: 0.25s;
+}
+
+@keyframes vaporDisperseFast {
+    0% {
+        transform: translateX(0) scaleX(0.5);
+        opacity: 0.9;
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateX(-16px) scaleX(1.6);
+        opacity: 0;
+    }
+}
+
+.plane-wind-streak {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.7), transparent);
+    animation: planeStreakRush 1.2s infinite linear;
+}
+
+.streak-1 {
+    top: 30%;
+    right: 15%;
+    width: 20px;
+    animation-delay: 0.1s;
+}
+
+.streak-2 {
+    top: 65%;
+    right: 20%;
+    width: 26px;
+    animation-delay: 0.7s;
+}
+
+@keyframes planeStreakRush {
+    0% { transform: translateX(10px); opacity: 0; }
+    30% { opacity: 0.8; }
+    100% { transform: translateX(-30px); opacity: 0; }
+}
+
+/* 🏎️ ADDIS SUPERCAR REAL DRIFT WITH TIRE SMOKE & SKIDMARKS */
 .eth-anim-car {
-    animation: supercarSmoothDrift 2.8s infinite ease-in-out;
+    perspective: 800px;
+    transform-style: preserve-3d;
+    transform-origin: 50% 65%;
+    animation: supercarRealDrift 3.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
-@keyframes supercarSmoothDrift {
-    0%, 100% { transform: translateX(0); }
-    30% { transform: translateX(-2px) rotate(-1.5deg); }
-    70% { transform: translateX(2px) rotate(1deg); }
+@keyframes supercarRealDrift {
+    0% {
+        transform: translateX(0) translateY(0) rotateZ(0deg) rotateY(0deg) scale(1);
+    }
+    20% {
+        /* Turn-in towards right */
+        transform: translateX(4px) translateY(-2px) rotateZ(3deg) rotateY(-6deg) scale(1.02);
+    }
+    35% {
+        /* Sudden drift slide to the left with opposite lock and body roll */
+        transform: translateX(-6px) translateY(1px) rotateZ(-12deg) rotateY(14deg) skewX(-4deg) scale(1.04);
+    }
+    58% {
+        /* Holding wide drift angle */
+        transform: translateX(-8px) translateY(-1px) rotateZ(-10deg) rotateY(11deg) skewX(-3deg) scale(1.03);
+    }
+    75% {
+        /* Snap oversteer / counter-steer recovery */
+        transform: translateX(3px) translateY(-1px) rotateZ(4deg) rotateY(-4deg) skewX(2deg) scale(1.01);
+    }
+    100% {
+        transform: translateX(0) translateY(0) rotateZ(0deg) rotateY(0deg) scale(1);
+    }
+}
+
+.car-tire-smoke {
+    position: absolute;
+    bottom: 14%;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(190, 190, 190, 0.75) 0%, rgba(160, 160, 160, 0.3) 60%, transparent 85%);
+    pointer-events: none;
+    filter: blur(0.8px);
+    animation: tireSmokeDrift 1.7s infinite ease-out;
+}
+
+.car-tire-smoke.left {
+    left: 20%;
+}
+
+.car-tire-smoke.right {
+    right: 22%;
+}
+
+.car-tire-smoke.puff-2 {
+    animation-delay: 0.45s;
+}
+
+@keyframes tireSmokeDrift {
+    0%, 25% {
+        transform: scale(0.3) translateY(0) translateX(0);
+        opacity: 0;
+    }
+    35% {
+        opacity: 0.8;
+    }
+    70% {
+        transform: scale(1.8) translateY(-9px) translateX(14px);
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(2.4) translateY(-16px) translateX(22px);
+        opacity: 0;
+    }
+}
+
+.car-drift-skidmark {
+    position: absolute;
+    bottom: 12%;
+    width: 18px;
+    height: 2.5px;
+    background: rgba(50, 50, 50, 0.22);
+    border-radius: 2px;
+    transform-origin: center;
+    animation: skidmarkFade 3.4s infinite ease-in-out;
+}
+
+.car-drift-skidmark.left {
+    left: 18%;
+    transform: rotate(-16deg);
+}
+
+.car-drift-skidmark.right {
+    right: 22%;
+    transform: rotate(-16deg);
+}
+
+@keyframes skidmarkFade {
+    0%, 30% { opacity: 0; transform: scaleX(0.2) rotate(-16deg); }
+    36%, 60% { opacity: 0.55; transform: scaleX(1) rotate(-16deg); }
+    78%, 100% { opacity: 0; transform: scaleX(1) rotate(-16deg); }
 }
 
 /* 🛰️ ETRSS-1 SATELLITE ORBITAL SWAY */
@@ -807,20 +1067,20 @@
    ========================================================================== */
 
 .eth-selected-preview-card {
-    background: var(--card-bg, #FFFFFF);
-    border: 1.5px solid rgba(217, 119, 6, 0.45);
+    background: #F9FAFB !important;
+    border: 1px solid #E5E7EB !important;
     border-radius: 14px;
     padding: 12px 16px;
-    margin-top: 0.75rem;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    margin-top: 0.85rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
 [data-theme='dark'] .eth-selected-preview-card {
-    background: rgba(24, 24, 27, 0.85);
-    border-color: rgba(217, 119, 6, 0.5);
+    background: #F9FAFB !important;
+    border-color: #E5E7EB !important;
 }
 
 .preview-main-row {
@@ -855,20 +1115,20 @@
 .preview-title-am {
     font-size: 0.95rem;
     font-weight: 900;
-    color: var(--text-main, #FFFFFF);
+    color: #111827 !important;
     line-height: 1.25;
 }
 
 .preview-title-en {
     font-size: 0.78rem;
     font-weight: 600;
-    color: var(--text-muted, #9CA3AF);
+    color: #6B7280 !important;
     margin-top: 1px;
 }
 
 .preview-description {
     font-size: 0.74rem;
-    color: var(--text-muted, #9CA3AF);
+    color: #6B7280 !important;
     margin-top: 3px;
     line-height: 1.3;
 }
@@ -881,13 +1141,13 @@
 .preview-coins {
     font-size: 0.95rem;
     font-weight: 900;
-    color: #F59E0B;
+    color: #D97706;
 }
 
 .preview-etb {
     font-size: 0.82rem;
     font-weight: 700;
-    color: var(--primary, #059669);
+    color: #059669;
     margin-top: 2px;
 }
 
@@ -898,7 +1158,7 @@
     justify-content: space-between;
     gap: 6px;
     padding-top: 8px;
-    border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    border-top: 1px solid #E5E7EB;
 }
 
 .multiplier-chips-group {
@@ -910,9 +1170,9 @@
 .mult-chip {
     padding: 0.3rem 0.65rem;
     border-radius: 8px;
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
-    background: var(--bg-color, transparent);
-    color: var(--text-main, #FFFFFF);
+    border: 1px solid #E5E7EB;
+    background: #FFFFFF;
+    color: #374151;
     font-size: 0.75rem;
     font-weight: 700;
     cursor: pointer;
@@ -921,13 +1181,13 @@
 
 .mult-chip:hover {
     border-color: #D97706;
-    color: #F59E0B;
+    color: #D97706;
 }
 
 .mult-chip.active {
-    background: #D97706;
-    border-color: #D97706;
-    color: #FFFFFF;
+    background: #D97706 !important;
+    border-color: #D97706 !important;
+    color: #FFFFFF !important;
 }
 
 .preview-test-anim-btn {
@@ -936,9 +1196,9 @@
     gap: 5px;
     padding: 0.3rem 0.75rem;
     border-radius: 8px;
-    border: 1px dashed rgba(217, 119, 6, 0.6);
-    background: rgba(217, 119, 6, 0.06);
-    color: #F59E0B;
+    border: 1px solid #FCD34D;
+    background: #FEF3C7;
+    color: #92400E;
     font-size: 0.75rem;
     font-weight: 700;
     cursor: pointer;
@@ -946,8 +1206,8 @@
 }
 
 .preview-test-anim-btn:hover {
-    background: rgba(217, 119, 6, 0.12);
-    border-color: #D97706;
+    background: #FDE68A;
+    border-color: #F59E0B;
 }
 
 /* ==========================================================================
@@ -956,8 +1216,8 @@
 
 .eth-custom-amount-box {
     margin-top: 0.5rem;
-    background: var(--bg-color, #121216);
-    border: 1.5px solid #D97706;
+    background: #F9FAFB !important;
+    border: 1.5px solid #F59E0B !important;
     border-radius: 14px;
     padding: 1rem;
 }
@@ -972,13 +1232,13 @@
 .custom-box-title {
     font-size: 0.85rem;
     font-weight: 800;
-    color: var(--text-main, #FFFFFF);
+    color: #111827 !important;
 }
 
 .custom-box-rate {
     font-size: 0.75rem;
     font-weight: 700;
-    color: #F59E0B;
+    color: #D97706;
 }
 
 .custom-input-wrapper {
@@ -991,7 +1251,7 @@
     top: 50%;
     transform: translateY(-50%);
     font-weight: 800;
-    color: #F59E0B;
+    color: #D97706;
     font-size: 0.85rem;
     pointer-events: none;
 }
@@ -999,10 +1259,10 @@
 .custom-amount-input {
     width: 100%;
     padding: 0.75rem 1rem 0.75rem 4.5rem;
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+    border: 1px solid #D1D5DB !important;
     border-radius: 8px;
-    background: rgba(0, 0, 0, 0.3);
-    color: var(--text-main, #FFFFFF);
+    background: #FFFFFF !important;
+    color: #111827 !important;
     font-size: 0.95rem;
     font-weight: 800;
     box-sizing: border-box;
