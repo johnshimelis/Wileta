@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import NotificationDrawer from '../components/NotificationDrawer';
+import DirectChatDrawer from '../components/DirectChatDrawer';
 import {
     ShieldCheck, Smartphone, CheckCircle, ArrowRight,
     Copy, Check, RefreshCw, Menu, X, ExternalLink, QrCode, Lock, AlertTriangle
@@ -66,6 +67,7 @@ export default function KYCVerification() {
             <div className="mobile-header">
                 <Logo size="small" />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <DirectChatDrawer />
                     <NotificationDrawer />
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -92,6 +94,7 @@ export default function KYCVerification() {
                     </div>
 
                     <div className="desktop-only" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                        <DirectChatDrawer />
                         <NotificationDrawer />
                         <Button variant="outline" size="sm" onClick={() => navigate('/dashboard')}>
                             Back to Dashboard

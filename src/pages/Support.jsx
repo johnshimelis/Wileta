@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
 import NotificationDrawer from '../components/NotificationDrawer';
+import DirectChatDrawer from '../components/DirectChatDrawer';
 import {
     LifeBuoy, Mail, Send, MessageSquare, CheckCircle,
     AlertCircle, HelpCircle, ChevronDown, ChevronUp, Copy, Check,
@@ -565,6 +566,7 @@ export default function Support() {
             <div className="mobile-header">
                 <Logo size="small" />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <DirectChatDrawer />
                     <NotificationDrawer />
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -590,7 +592,8 @@ export default function Support() {
                         </p>
                     </div>
 
-                    <div className="desktop-only">
+                    <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <DirectChatDrawer />
                         <NotificationDrawer />
                     </div>
                 </div>

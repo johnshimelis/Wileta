@@ -4,6 +4,7 @@ import { User, Mail, Phone, Calendar, ShieldCheck, ExternalLink, Edit3, Menu, X 
 import { Link, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import NotificationDrawer from '../components/NotificationDrawer';
+import DirectChatDrawer from '../components/DirectChatDrawer';
 import { useLanguage } from '../context/LanguageContext';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
@@ -51,6 +52,7 @@ export default function Profile() {
             <div className="mobile-header">
                 <Logo size="small" />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <DirectChatDrawer />
                     <NotificationDrawer />
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -71,6 +73,7 @@ export default function Profile() {
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('profileSubtitle')}</p>
                     </div>
                     <div className="desktop-only" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <DirectChatDrawer />
                         <NotificationDrawer />
                         <Link to="/settings">
                             <Button variant="primary" size="sm" icon={Edit3}>

@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import TopAlert from '../components/TopAlert';
 import NotificationDrawer from '../components/NotificationDrawer';
+import DirectChatDrawer from '../components/DirectChatDrawer';
 import { useNotification } from '../context/NotificationContext';
 import Sidebar from '../components/Sidebar';
 import { useLanguage } from '../context/LanguageContext';
@@ -750,6 +751,7 @@ export default function Dashboard() {
             <div className="mobile-header">
                 <Logo size="small" />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <DirectChatDrawer />
                     <NotificationDrawer />
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -782,6 +784,7 @@ export default function Dashboard() {
                     </div>
 
                     <div className="desktop-only" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                        <DirectChatDrawer />
                         <NotificationDrawer />
                         <a href={tipUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                             <Button variant="outline" size="sm" icon={ExternalLink} iconPosition="right">
