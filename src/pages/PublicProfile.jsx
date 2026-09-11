@@ -533,7 +533,7 @@ export default function PublicProfile() {
                                                 {isSelected && <span className="eth-gift-card-active-dot" />}
 
                                                 <div className="eth-gift-icon-container">
-                                                    <Gift3DIcon id={gift.id} size={54} animated={true} />
+                                                    <Gift3DIcon id={gift.id} size={64} animated={true} />
                                                 </div>
 
                                                 <div className="eth-gift-card-labels">

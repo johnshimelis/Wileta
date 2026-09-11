@@ -76,31 +76,34 @@
 }
 
 /* ==========================================================================
-   2. FLAT WHITE SCREEN GIFT GRID & FREE-FLOATING 3D GIFTS (NO CARDS)
+   2. FLAT WHITE SCREEN GIFT GRID & FREE-FLOATING 3D GIFTS (STRICTLY 3 COLUMNS)
    ========================================================================== */
 
 .eth-gift-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
-    max-height: 340px;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.85rem 0.65rem !important;
+    max-height: 440px;
     overflow-y: auto;
-    padding: 4px 2px;
+    overflow-x: hidden;
+    padding: 16px 6px 16px !important;
     scrollbar-width: thin;
     scrollbar-color: rgba(217, 119, 6, 0.3) transparent;
 }
 
 @media (min-width: 640px) {
     .eth-gift-grid {
-        grid-template-columns: repeat(5, 1fr);
-        gap: 0.65rem;
-        max-height: 380px;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1rem 0.85rem !important;
+        max-height: 480px;
+        padding: 18px 8px 18px !important;
     }
 }
 
 @media (min-width: 768px) {
     .eth-gift-grid {
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1.1rem 0.95rem !important;
     }
 }
 
@@ -108,12 +111,13 @@
 .eth-gift-card {
     background: transparent !important;
     border: none !important;
-    border-radius: 12px;
-    padding: 0.55rem 0.2rem 0.65rem;
+    border-radius: 14px;
+    padding: 0.65rem 0.3rem 0.75rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 0.45rem;
     cursor: pointer;
     position: relative;
     user-select: none;
@@ -122,6 +126,7 @@
     transform-style: preserve-3d;
     box-shadow: none !important;
     transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    min-height: 140px;
 }
 
 [data-theme='dark'] .eth-gift-card {
@@ -149,13 +154,14 @@
 }
 
 .eth-gift-icon-container {
-    width: 58px;
-    height: 58px;
+    width: 68px;
+    height: 68px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: visible;
 }
 
 .eth-gift-card:hover .eth-gift-icon-container {
@@ -173,7 +179,7 @@
     bottom: -3px;
     left: 50%;
     transform: translateX(-50%);
-    width: 44px;
+    width: 48px;
     height: 10px;
     border-radius: 50%;
     background: radial-gradient(ellipse, rgba(245, 158, 11, 0.3) 0%, transparent 75%);
@@ -621,61 +627,63 @@
     100% { opacity: 0.8; }
 }
 
-.book-3d-flipper {
-    position: absolute;
-    top: 22%;
-    left: 48%;
-    width: 32%;
-    height: 52%;
-    perspective: 400px;
+/* 📖 BIBLE & 📗 QURAN: AUTHENTIC 3D PAGE-OPENING & PERSPECTIVE SPREAD */
+.eth-anim-book {
+    perspective: 800px;
     transform-style: preserve-3d;
-    pointer-events: none;
 }
 
-.book-page-turning {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to right, #FDFBF7 0%, #FAF5EA 70%, #EFE5D0 100%);
-    border: 0.5px solid rgba(160, 120, 70, 0.35);
-    border-radius: 1px 3px 3px 1px;
+.eth-anim-book .eth-gift-real-img,
+.eth-book-real-img {
     transform-origin: left center;
-    box-shadow: -1px 2px 4px rgba(0, 0, 0, 0.12);
-    backface-visibility: visible;
+    animation: sacredBookOpenSpread 3.8s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    will-change: transform, filter;
 }
 
-.page-turn-1 {
-    animation: flipBookPage3D 3.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+[data-gift-id="bible"] .eth-gift-real-img {
+    animation: sacredBibleOpenSpread 3.8s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
 }
 
-.page-turn-2 {
-    animation: flipBookPage3D 3.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-    animation-delay: 0.6s;
+[data-gift-id="quran"] .eth-gift-real-img {
+    animation: sacredQuranOpenSpread 3.8s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
 }
 
-.page-turn-3 {
-    animation: flipBookPage3D 3.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-    animation-delay: 1.2s;
-}
-
-@keyframes flipBookPage3D {
+@keyframes sacredBibleOpenSpread {
     0% {
-        transform: rotateY(0deg);
-        opacity: 0;
+        transform: perspective(600px) rotateY(0deg) rotateX(0deg) scale(1);
+        filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.18)) brightness(1);
     }
-    6% {
-        opacity: 0.95;
+    35% {
+        transform: perspective(600px) rotateY(-10deg) rotateX(2deg) scale(1.04);
+        filter: drop-shadow(0 8px 18px rgba(245, 158, 11, 0.35)) brightness(1.08);
     }
-    45% {
-        transform: rotateY(-135deg) skewY(-3deg);
-        opacity: 0.95;
-        background: linear-gradient(to left, #FDFBF7 0%, #EFE5D0 100%);
+    70% {
+        transform: perspective(600px) rotateY(-16deg) rotateX(3deg) scale(1.07);
+        filter: drop-shadow(0 12px 24px rgba(245, 158, 11, 0.5)) brightness(1.14);
     }
-    62%, 100% {
-        transform: rotateY(-175deg);
-        opacity: 0;
+    100% {
+        transform: perspective(600px) rotateY(-18deg) rotateX(4deg) scale(1.09);
+        filter: drop-shadow(0 14px 28px rgba(245, 158, 11, 0.6)) brightness(1.18);
+    }
+}
+
+@keyframes sacredQuranOpenSpread {
+    0% {
+        transform: perspective(600px) rotateY(0deg) rotateX(0deg) scale(1);
+        filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.18)) brightness(1);
+    }
+    35% {
+        transform: perspective(600px) rotateY(-10deg) rotateX(2deg) scale(1.04);
+        filter: drop-shadow(0 8px 18px rgba(16, 185, 129, 0.35)) brightness(1.08);
+    }
+    70% {
+        transform: perspective(600px) rotateY(-16deg) rotateX(3deg) scale(1.07);
+        filter: drop-shadow(0 12px 24px rgba(16, 185, 129, 0.5)) brightness(1.14);
+    }
+    100% {
+        transform: perspective(600px) rotateY(-18deg) rotateX(4deg) scale(1.09);
+        filter: drop-shadow(0 14px 28px rgba(16, 185, 129, 0.6)) brightness(1.18);
     }
 }
 

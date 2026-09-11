@@ -110,6 +110,7 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
     return (
         <div 
             className={`eth-gift-art-box ${getMovementClass()} ${isHero ? 'eth-gift-hero' : ''}`}
+            data-gift-id={id}
             style={{ 
                 width: s, 
                 height: s, 
@@ -119,13 +120,18 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                 justifyContent: 'center'
             }}
         >
+            {/* Sacred Ambient Light Aura Behind Books */}
+            {(id === 'bible' || id === 'quran') && (
+                <div className={`book-sacred-glow ${id === 'quran' ? 'emerald' : 'gold'}`} />
+            )}
+
             {/* Visual Frame */}
             <div className="eth-gift-image-frame">
                 {!imgError ? (
                     <img 
                         src={imgSrc} 
                         alt={id}
-                        className="eth-gift-real-img"
+                        className={`eth-gift-real-img ${id === 'bible' || id === 'quran' ? 'eth-book-real-img' : ''}`}
                         onError={() => {
                             if (imgSrc.endsWith('.png')) {
                                 setImgSrc(`/gifts/${id}.jpg`);
@@ -167,174 +173,6 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                     </div>
                 )}
             </div>
-
-            {/* PURPOSEFUL OBJECT-SPECIFIC ANIMATION OVERLAYS */}
-            {animated && (
-                <div className="eth-motion-layer">
-
-                    {/* 🫖 JEBENA: Gentle Tilt, Coffee Stream Pouring into a Sini Cup & Soft Steam */}
-                    {id === 'jebena' && (
-                        <div className="obj-fx-jebena">
-                            <svg className="jebena-pour-stream-svg" viewBox="0 0 100 100">
-                                <path 
-                                    className="coffee-pour-line" 
-                                    d="M 68 45 Q 75 65 78 82" 
-                                    fill="none" 
-                                    stroke="#3D2314" 
-                                    strokeWidth="3.5" 
-                                    strokeLinecap="round"
-                                />
-                            </svg>
-                            <div className="mini-sini-cup">
-                                <span className="sini-surface-ripple" />
-                            </div>
-                            <div className="obj-steam-wisp steam-spout" />
-                        </div>
-                    )}
-
-                    {/* ☕ BUNA & REKEBOT: Delicate Organic Rising Steam Wisps */}
-                    {(id === 'buna' || id === 'rekebot') && (
-                        <div className="obj-fx-steam">
-                            <div className="delicate-steam-puff wisp-1" />
-                            <div className="delicate-steam-puff wisp-2" />
-                            {id === 'rekebot' && <div className="censer-incense-smoke" />}
-                        </div>
-                    )}
-
-                    {/* 🪘 KEBERO: Rhythmic Subtle Percussion Tap & Acoustic Wave */}
-                    {id === 'kebero' && (
-                        <div className="obj-fx-kebero">
-                            <div className="kebero-drumstick-tap" />
-                            <div className="kebero-acoustic-ring" />
-                        </div>
-                    )}
-
-                    {/* 🎻 MASENQO: Curved Bow Drawing Across the String */}
-                    {id === 'masenqo' && (
-                        <div className="obj-fx-masenqo">
-                            <div className="masenqo-gliding-bow" />
-                            <span className="acoustic-vibration-line" />
-                        </div>
-                    )}
-
-                    {/* 🎸 KRAR: 5 Lyre Strings Wave Vibration */}
-                    {id === 'krar' && (
-                        <div className="obj-fx-krar">
-                            <span className="krar-string-wave str-1" />
-                            <span className="krar-string-wave str-2" />
-                            <span className="krar-string-wave str-3" />
-                            <span className="krar-string-wave str-4" />
-                            <span className="krar-string-wave str-5" />
-                        </div>
-                    )}
-
-                    {/* 📖 BIBLE & 📗 QURAN: Leather Cover Gently Opening with 3D Flipping Pages & Sacred Glow */}
-                    {(id === 'bible' || id === 'quran') && (
-                        <div className="obj-fx-book">
-                            <div className={`book-sacred-glow ${id === 'quran' ? 'emerald' : 'gold'}`} />
-                            <div className="book-3d-flipper">
-                                <div className="book-page-leaf leaf-left" />
-                                <div className="book-page-turning page-turn-1" />
-                                <div className="book-page-turning page-turn-2" />
-                                <div className="book-page-turning page-turn-3" />
-                                <div className="book-page-leaf leaf-right" />
-                            </div>
-                        </div>
-                    )}
-
-                    {/* 🌼 ADEY FLOWER & 🌹 HIGHLAND ROSE: Natural Gentle Floral Sway & Dew Shimmer */}
-                    {(id === 'adey_abeba' || id === 'rose') && (
-                        <div className="obj-fx-flower">
-                            <span className="dew-shimmer-point d1" />
-                            <span className="dew-shimmer-point d2" />
-                        </div>
-                    )}
-
-                    {/* 🛡️ WARRIOR SHIELD: Noble Leather & Filigree Gleam Across Crossed Spears */}
-                    {id === 'shield' && (
-                        <div className="obj-fx-shield">
-                            <div className="shield-filigree-gleam" />
-                            <span className="spear-tip-sparkle left" />
-                            <span className="spear-tip-sparkle right" />
-                        </div>
-                    )}
-
-                    {/* 🧺 MESOB: Conical Lid Lifting Revealing Warm Injera Inside */}
-                    {id === 'mesob' && (
-                        <div className="obj-fx-mesob">
-                            <div className="mesob-steam-rise" />
-                        </div>
-                    )}
-
-                    {/* 🍲 ENJERA / FEAST: Warm Delicious Steam Wisps from Wot and Shiro */}
-                    {id === 'enjera' && (
-                        <div className="obj-fx-feast">
-                            <div className="feast-steam-curl curl-left" />
-                            <div className="feast-steam-curl curl-right" />
-                        </div>
-                    )}
-
-                    {/* ✈️ ETHIOPIAN JET: Smooth Altitude Flight & Subtle Vapor Contrails */}
-                    {id === 'plane' && (
-                        <div className="obj-fx-plane">
-                            <div className="plane-vapor-trail trail-left" />
-                            <div className="plane-vapor-trail trail-right" />
-                            <div className="plane-wind-streak streak-1" />
-                            <div className="plane-wind-streak streak-2" />
-                        </div>
-                    )}
-
-                    {/* 🏎️ ADDIS SUPERCAR: Drift Motion with Dynamic Tire Smoke Plumes & Skidmarks */}
-                    {id === 'car' && (
-                        <div className="obj-fx-car">
-                            <div className="car-tire-smoke left puff-1" />
-                            <div className="car-tire-smoke left puff-2" />
-                            <div className="car-tire-smoke right puff-1" />
-                            <div className="car-tire-smoke right puff-2" />
-                            <div className="car-drift-skidmark left" />
-                            <div className="car-drift-skidmark right" />
-                        </div>
-                    )}
-
-                    {/* 🛰️ SATELLITE: Orbital Sway, Solar Panel Glint & Antenna Ping Wave */}
-                    {id === 'satellite' && (
-                        <div className="obj-fx-satellite">
-                            <div className="solar-panel-glint" />
-                            <div className="antenna-signal-ring ring-1" />
-                            <div className="antenna-signal-ring ring-2" />
-                        </div>
-                    )}
-
-                    {/* 🏛️ AXUM & ⛪ LALIBELA: Ambient Sunbeam Traverse Across Stone Carvings */}
-                    {(id === 'axum' || id === 'lalibela') && (
-                        <div className="obj-fx-monument">
-                            <div className="sunbeam-soft-sweep" />
-                        </div>
-                    )}
-
-                    {/* 🏰 GONDAR: Twilight Castle Warm Lantern Glow */}
-                    {id === 'gondar' && (
-                        <div className="obj-fx-gondar">
-                            <div className="castle-lantern-glow" />
-                        </div>
-                    )}
-
-                    {/* 👑 CROWN & 🏅 NATIONAL HONOR: Regal Metallic Luster */}
-                    {(id === 'crown' || id === 'national_honor') && (
-                        <div className="obj-fx-regal">
-                            <div className="regal-gold-highlight" />
-                        </div>
-                    )}
-
-                    {/* 💎 DIAMOND: Prismatic Caustic Sparkles */}
-                    {id === 'diamond' && (
-                        <div className="obj-fx-diamond">
-                            <div className="prism-light-sweep" />
-                        </div>
-                    )}
-
-                </div>
-            )}
         </div>
     );
 };
