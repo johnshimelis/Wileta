@@ -319,41 +319,60 @@ export const TikTokLiveGiftShowcase = ({
 
     return (
         <div className="eth-celebration-backdrop" onClick={onClose}>
-            {/* Top Supporter Banner */}
+            {/* Ambient Animated Sparkle Particles */}
+            <div className="eth-celebration-particles" pointer-events="none">
+                <span className="p-star p1">✦</span>
+                <span className="p-star p2">✧</span>
+                <span className="p-star p3">✦</span>
+                <span className="p-star p4">✧</span>
+                <span className="p-star p5">✦</span>
+                <span className="p-star p6">✧</span>
+            </div>
+
+            {/* Top Supporter Live Banner */}
             <div className="eth-celebration-banner" onClick={e => e.stopPropagation()}>
-                <div className="eth-supporter-pill">
-                    <span className="eth-pill-pulse" />
-                    <span className="supporter-name">{supporterName}</span>
-                    <span className="action-label">sent</span>
-                    <span className="gift-title">{gift.nameAm} ({gift.nameEn})</span>
-                    <span className="action-label">to</span>
-                    <span className="creator-tag">@{creatorName}</span>
+                <div className="eth-celebration-supporter-card">
+                    <div className="supporter-avatar-circle">
+                        {supporterName ? supporterName.charAt(0).toUpperCase() : 'G'}
+                    </div>
+                    <div className="supporter-details-col">
+                        <div className="supporter-headline">
+                            <span className="supporter-name-bold">{supporterName}</span>
+                            <span className="action-tag">sent a Gursha</span>
+                        </div>
+                        <div className="supporter-target">
+                            to <strong className="creator-highlight">@{creatorName}</strong>
+                        </div>
+                    </div>
+                    <div className="supporter-gift-badge">
+                        <span>{gift.emoji || '🎁'}</span>
+                    </div>
                 </div>
             </div>
 
             {/* Central Celebration Hero Stage */}
             <div className="eth-celebration-stage" onClick={e => e.stopPropagation()}>
                 <div className="eth-celebration-hero-art">
-                    <Gift3DIcon id={gift.id} size={220} isHero={true} animated={true} />
+                    <div className="hero-art-spotlight" />
+                    <Gift3DIcon id={gift.id} size={230} isHero={true} animated={true} />
                 </div>
 
                 <div className="eth-celebration-info">
-                    <h3 className="hero-name-am">{gift.nameAm}</h3>
-                    <p className="hero-name-en">{gift.nameEn}</p>
-                    <p className="hero-desc">{gift.description}</p>
+                    <h1 className="hero-name-geez">{gift.nameAm}</h1>
+                    <div className="hero-name-en-tag">{gift.nameEn}</div>
+                    <div className="hero-value-pill">
+                        <span className="hero-etb-val">{Number(amount).toLocaleString()} ETB</span>
+                        <span className="hero-divider">&bull;</span>
+                        <span className="hero-coin-val">🪙 {Number(coins).toLocaleString()} Coins</span>
+                    </div>
                 </div>
             </div>
 
             {/* Bottom Actions Bar */}
             <div className="eth-celebration-bottom-bar" onClick={e => e.stopPropagation()}>
-                <div className="eth-value-indicator">
-                    <span className="coins">🪙 {Number(coins).toLocaleString()} Coins</span>
-                    <span className="etb">({Number(amount).toLocaleString()} ETB)</span>
-                </div>
-
                 {onComboClick && (
                     <button
-                        className="eth-combo-btn"
+                        className="eth-celebration-love-btn"
                         onClick={(e) => {
                             e.stopPropagation();
                             onComboClick();
@@ -363,13 +382,14 @@ export const TikTokLiveGiftShowcase = ({
                             else playAudioEffect('chime');
                         }}
                     >
-                        <span>✨</span>
-                        <span>x{comboCount} Gursha!</span>
+                        <span className="love-icon">❤️</span>
+                        <span className="love-text">Send Love</span>
+                        <span className="combo-count-badge">x{comboCount}</span>
                     </button>
                 )}
 
-                <button className="eth-celebration-close-btn" onClick={onClose}>
-                    Close &times;
+                <button className="eth-celebration-dismiss-btn" onClick={onClose}>
+                    Done
                 </button>
             </div>
         </div>

@@ -311,52 +311,82 @@ export default function PublicProfile() {
                 boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)',
                 boxSizing: 'border-box'
             }}>
-                {/* SUCCESS STATE CELEBRATION (COMPACT, SLEEK, ZERO SCROLLING) */}
+                {/* SUCCESS STATE CELEBRATION (ELEGANT, BALANCED HEIGHT) */}
                 {tippingState === 'success' ? (
-                    <div style={{ textAlign: 'center', padding: '0.25rem 0' }}>
-                        {/* Compact Creator Identification Chip */}
-                        <div className="compact-creator-chip">
+                    <div style={{ textAlign: 'center', padding: '0.35rem 0' }}>
+                        {/* Prominent Creator Bar */}
+                        <div className="status-card-header">
                             {creator.profilePicUrl ? (
                                 <img
                                     src={creator.profilePicUrl}
                                     alt={creator.name}
-                                    className="compact-creator-avatar"
+                                    className="status-card-avatar"
                                 />
                             ) : (
-                                <div className="compact-creator-avatar-fallback">
+                                <div className="status-card-avatar-fallback">
                                     {creator.name ? creator.name.charAt(0).toUpperCase() : 'G'}
                                 </div>
                             )}
-                            <div className="compact-creator-info">
-                                <div className="compact-creator-name">
-                                    {creator.name} {creator.isVerified && <VerifiedBlueTick size={14} />}
+                            <div className="status-card-creator-info">
+                                <div className="status-card-creator-name">
+                                    {creator.name} {creator.isVerified && <VerifiedBlueTick size={16} />}
                                 </div>
-                                <span className="compact-creator-handle">@{creator.username}</span>
+                                <span className="status-card-creator-handle">@{creator.username}</span>
                             </div>
                         </div>
 
+                        {/* Celebration Ring */}
                         <div style={{
-                            width: '48px',
-                            height: '48px',
+                            width: '54px',
+                            height: '54px',
                             borderRadius: '50%',
-                            background: 'rgba(16, 185, 129, 0.12)',
-                            color: '#10B981',
+                            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.25) 100%)',
+                            color: '#059669',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             margin: '0 auto 0.65rem',
-                            border: '2px solid #10B981'
+                            border: '2.5px solid #10B981',
+                            boxShadow: '0 0 20px rgba(16, 185, 129, 0.25)'
                         }}>
-                            <Check size={26} strokeWidth={3} />
+                            <Check size={28} strokeWidth={3} />
                         </div>
 
-                        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '0 0 0.2rem 0' }}>
-                            Tip sent successfully ❤️
+                        <h2 style={{ fontSize: '1.3rem', fontWeight: 900, color: 'var(--text-main)', margin: '0 0 0.2rem 0' }}>
+                            Tip Sent Successfully! ❤️
                         </h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', margin: '0 0 0.75rem 0' }}>
-                            You sent <strong style={{ color: 'var(--text-main)', fontSize: '0.95rem' }}>{isCustom ? customAmount : amount} ETB</strong> to <strong>{creator.name}</strong>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', margin: '0 0 0.85rem 0' }}>
+                            Thank you for supporting <strong>{creator.name}</strong>
                         </p>
 
+                        {/* Dedicated Tip Item Card */}
+                        <div className="tip-order-summary-box">
+                            <div className="tip-order-gift-left">
+                                <div className="tip-order-gift-icon">
+                                    {!isCustom && selectedGift ? (
+                                        <Gift3DIcon id={selectedGift.id} size={42} animated={true} />
+                                    ) : (
+                                        <span style={{ fontSize: '1.8rem' }}>🪙</span>
+                                    )}
+                                </div>
+                                <div className="tip-order-gift-details">
+                                    <span className="tip-order-gift-name">
+                                        {!isCustom && selectedGift ? `${selectedGift.nameAm} (${selectedGift.nameEn})` : 'Custom ETB Coins'}
+                                    </span>
+                                    <span className="tip-order-gift-sub">
+                                        From {isAnonymous ? 'Anonymous Supporter' : (tipperName || 'Generous Supporter')}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="tip-order-amount-col">
+                                <div className="tip-order-amount-etb">{isCustom ? customAmount : amount} ETB</div>
+                                <div className="tip-order-coins-sub">
+                                    🪙 {isCustom ? Number(customAmount) * 10 : (selectedGift ? Number(selectedGift.coins * (Number(amount) / Number(selectedGift.etb || 1))) : 100)} Coins
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Compact Digital Receipt Details */}
                         <div className="compact-receipt-card">
                             <div className="compact-receipt-row">
                                 <span style={{ color: 'var(--text-muted)' }}>Status</span>
@@ -367,14 +397,14 @@ export default function PublicProfile() {
                                 <span style={{ fontWeight: 700, fontFamily: 'monospace', color: 'var(--text-main)', fontSize: '0.78rem' }}>{txRef || 'GP-TIP'}</span>
                             </div>
                             <div className="compact-receipt-row">
-                                <span style={{ color: 'var(--text-muted)' }}>Payment Rail</span>
+                                <span style={{ color: 'var(--text-muted)' }}>Payment Method</span>
                                 <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>{paymentMethod === 'telebirr' ? 'Telebirr USSD' : 'Chapa Gateway'}</span>
                             </div>
                         </div>
 
                         <Button
                             variant="primary"
-                            style={{ width: '100%', marginBottom: '0.4rem', fontWeight: 800, height: '42px' }}
+                            style={{ width: '100%', marginBottom: '0.55rem', fontWeight: 800, height: '44px', fontSize: '0.95rem' }}
                             onClick={() => {
                                 setTippingState('idle');
                                 setShoutOutMessage('');
@@ -422,58 +452,92 @@ export default function PublicProfile() {
                         </div>
                     </div>
                 ) : tippingState === 'pin_prompt' ? (
-                    /* PIN PROMPT STATE (COMPACT, CLEAN, ZERO SCROLLING) */
-                    <div style={{ textAlign: 'center', padding: '0.25rem 0' }}>
-                        {/* Compact Creator Identification Chip */}
-                        <div className="compact-creator-chip">
+                    /* PIN PROMPT STATE (ELEGANT, BALANCED HEIGHT & TELEBIRR USSD FLOW) */
+                    <div style={{ textAlign: 'center', padding: '0.35rem 0' }}>
+                        {/* Prominent Creator Bar */}
+                        <div className="status-card-header">
                             {creator.profilePicUrl ? (
                                 <img
                                     src={creator.profilePicUrl}
                                     alt={creator.name}
-                                    className="compact-creator-avatar"
+                                    className="status-card-avatar"
                                 />
                             ) : (
-                                <div className="compact-creator-avatar-fallback">
+                                <div className="status-card-avatar-fallback">
                                     {creator.name ? creator.name.charAt(0).toUpperCase() : 'G'}
                                 </div>
                             )}
-                            <div className="compact-creator-info">
-                                <div className="compact-creator-name">
-                                    {creator.name} {creator.isVerified && <VerifiedBlueTick size={14} />}
+                            <div className="status-card-creator-info">
+                                <div className="status-card-creator-name">
+                                    {creator.name} {creator.isVerified && <VerifiedBlueTick size={16} />}
                                 </div>
-                                <span className="compact-creator-handle">@{creator.username}</span>
+                                <span className="status-card-creator-handle">@{creator.username}</span>
                             </div>
                         </div>
 
-                        <div style={{
-                            width: '46px',
-                            height: '46px',
-                            borderRadius: '50%',
-                            background: 'var(--primary-light)',
-                            color: 'var(--primary)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            margin: '0 auto 0.65rem'
-                        }}>
-                            <Smartphone size={24} />
+                        {/* Tip Item Summary Box */}
+                        <div className="tip-order-summary-box">
+                            <div className="tip-order-gift-left">
+                                <div className="tip-order-gift-icon">
+                                    {!isCustom && selectedGift ? (
+                                        <Gift3DIcon id={selectedGift.id} size={42} animated={true} />
+                                    ) : (
+                                        <span style={{ fontSize: '1.8rem' }}>🪙</span>
+                                    )}
+                                </div>
+                                <div className="tip-order-gift-details">
+                                    <span className="tip-order-gift-name">
+                                        {!isCustom && selectedGift ? `${selectedGift.nameAm} (${selectedGift.nameEn})` : 'Custom ETB Coins'}
+                                    </span>
+                                    <span className="tip-order-gift-sub">
+                                        Support tip to @{creator.username}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="tip-order-amount-col">
+                                <div className="tip-order-amount-etb">{isCustom ? customAmount : amount} ETB</div>
+                                <div className="tip-order-coins-sub">
+                                    🪙 {isCustom ? Number(customAmount) * 10 : (selectedGift ? Number(selectedGift.coins * (Number(amount) / Number(selectedGift.etb || 1))) : 100)} Coins
+                                </div>
+                            </div>
                         </div>
 
-                        <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', margin: '0 0 0.35rem 0' }}>
-                            Check your mobile phone! 📱
-                        </h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.4, margin: '0 0 0.85rem 0' }}>
-                            Enter your PIN on <strong>+251 {tipperPhone}</strong> to confirm your tip of <strong>{isCustom ? customAmount : amount} ETB</strong>.
-                        </p>
+                        {/* Telebirr USSD Interactive Flow Card */}
+                        <div className="telebirr-flow-card">
+                            <div className="telebirr-flow-header">
+                                <div className="telebirr-flow-title">
+                                    <span className="telebirr-radar-ring" />
+                                    <span>Telebirr USSD Authorization</span>
+                                </div>
+                                <div className="telebirr-phone-pill">
+                                    +251 {tipperPhone}
+                                </div>
+                            </div>
 
-                        <div className="pin-pulse-pill">
-                            <RefreshCw size={14} className="spin-slow" />
-                            <span>Waiting for PIN confirmation...</span>
+                            {/* 3-Step Live Verification Tracker */}
+                            <div className="telebirr-step-tracker">
+                                <div className="telebirr-step-item">
+                                    <span className="telebirr-step-bullet completed">✓</span>
+                                    <span className="telebirr-step-text">USSD prompt dispatched to mobile</span>
+                                </div>
+                                <div className="telebirr-step-item">
+                                    <span className="telebirr-step-bullet active">2</span>
+                                    <span className="telebirr-step-text active">Enter your 4-digit Telebirr PIN on your phone</span>
+                                </div>
+                                <div className="telebirr-step-item">
+                                    <span className="telebirr-step-bullet pending">3</span>
+                                    <span className="telebirr-step-text pending">Instant confirmation & digital receipt</span>
+                                </div>
+                            </div>
+
+                            <p className="telebirr-flow-note">
+                                💡 A Telebirr prompt has appeared on your phone screen. Please approve the tip of <strong>{isCustom ? customAmount : amount} ETB</strong>. If screen timed out, check your Telebirr app.
+                            </p>
                         </div>
 
                         <Button
                             variant="outline"
-                            style={{ width: '100%', height: '42px', fontWeight: 700 }}
+                            style={{ width: '100%', height: '44px', fontWeight: 700, fontSize: '0.9rem' }}
                             onClick={() => setTippingState('idle')}
                         >
                             Cancel / Modify Tip
