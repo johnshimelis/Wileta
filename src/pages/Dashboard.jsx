@@ -203,11 +203,12 @@ const WithdrawModal = ({
                                 <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-main)' }}>Telebirr Wallet</div>
                                 <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
                                     {(() => {
-                                        const raw = (user?.telebirr_number || user?.phone || '').toString();
+                                        const raw = (user?.telebirr_number || user?.telebirrAccount?.phoneNumber || '').toString();
+                                        if (!raw) return 'No Telebirr number configured';
                                         if (raw.startsWith('+251')) return raw;
                                         if (raw.startsWith('0') && raw.length === 10) return `+251 ${raw.substring(1)}`;
                                         if (raw.length === 9) return `+251 ${raw}`;
-                                        return raw || 'No phone configured';
+                                        return raw;
                                     })()}
                                 </div>
                             </div>
@@ -612,6 +613,17 @@ export default function Dashboard() {
     const handleWithdraw = async (bankAccount, password) => {
         setIsWithdrawing(true);
         try {
+            if (user?.payoutLocked || user?.accountStatus === 'suspended') {
+                setShowPasswordModal(false);
+                setShowWithdrawModal(false);
+                const msg = user?.payoutLockReason
+                    ? `Withdrawals are locked for your account: ${user.payoutLockReason}. Please contact support at https://gurshapay.com/support.`
+                    : "Withdrawals are locked on your account. Please contact support at https://gurshapay.com/support.";
+                setAlert({ message: msg, type: "error" });
+                setIsWithdrawing(false);
+                return;
+            }
+
             const availableBal = Number(metrics.availableBalance || metrics.walletBalance || metrics.wallet_balance || metrics.pending_balance || 0);
             const withdrawAmount = withdrawType === 'all' ? availableBal : Number(customAmount);
 
@@ -649,7 +661,10 @@ export default function Dashboard() {
             fetchDashboardData();
         } catch (error) {
             console.error("Withdrawal error:", error);
-            setAlert({ message: error.response?.data?.error || error.message || "Withdrawal failed", type: "error" });
+            setShowPasswordModal(false);
+            const errData = error.response?.data;
+            const errMsg = errData?.error || error.message || "Withdrawal failed";
+            setAlert({ message: errMsg, type: "error" });
         }
         setIsWithdrawing(false);
     };
@@ -986,6 +1001,15 @@ export default function Dashboard() {
                                 iconPosition="right"
                                 disabled={Number(metrics?.availableBalance ?? metrics?.walletBalance ?? metrics?.wallet_balance ?? 0) <= 0}
                                 onClick={() => {
+                                    if (user?.payoutLocked || user?.accountStatus === 'suspended') {
+                                        setAlert({
+                                            message: user?.payoutLockReason
+                                                ? `Withdrawals are locked: ${user.payoutLockReason}. Please contact support at https://gurshapay.com/support.`
+                                                : "Withdrawals are locked on your account. Please contact support at https://gurshapay.com/support.",
+                                            type: "error"
+                                        });
+                                        return;
+                                    }
                                     if (!isVerified) {
                                         setShowForcedKYCModal(true);
                                     } else {
@@ -996,9 +1020,37 @@ export default function Dashboard() {
                                 {t('withdrawFunds')}
                             </Button>
                             <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
-                                {isVerified ? '⚡ Instant payout' : '🔒 KYC required'}
+                                {user?.payoutLocked ? '🔒 Payouts locked' : isVerified ? '⚡ Instant payout' : '🔒 KYC required'}
                             </span>
                         </div>
+
+                        {user?.payoutLocked && (
+                            <div style={{
+                                marginTop: '10px',
+                                fontSize: '11.5px',
+                                color: '#EF4444',
+                                background: 'rgba(239, 68, 68, 0.08)',
+                                border: '1px solid rgba(239, 68, 68, 0.2)',
+                                borderRadius: '8px',
+                                padding: '6px 10px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px'
+                            }}>
+                                <Lock size={12} color="#EF4444" style={{ flexShrink: 0 }} />
+                                <span>
+                                    Withdrawals locked{user?.payoutLockReason ? `: ${user.payoutLockReason}` : ''}.{' '}
+                                    <a 
+                                        href="https://gurshapay.com/support" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer" 
+                                        style={{ color: '#EF4444', fontWeight: 700, textDecoration: 'underline' }}
+                                    >
+                                        Contact support
+                                    </a>
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Card 2: PENDING BALANCE (24H LIQUIDITY LOCK) */}
@@ -1152,7 +1204,7 @@ export default function Dashboard() {
 
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.75rem', borderTop: '1px solid var(--border-color)', fontSize: '0.725rem' }}>
                             <span style={{ color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                {user?.payoutMethod === 'bank' ? (bankAccounts[0]?.accountNumber || 'Configured') : (user?.telebirr_number || user?.phone || 'Configured')}
+                                {user?.payoutMethod === 'bank' ? (bankAccounts[0]?.accountNumber || 'Configured') : (user?.telebirr_number || user?.telebirrAccount?.phoneNumber || 'Not Configured')}
                             </span>
                             <Badge variant="primary" size="sm">Active Rail</Badge>
                         </div>
@@ -1565,7 +1617,7 @@ export default function Dashboard() {
                                 </div>
                                 <p style={{ margin: 0, color: 'var(--text-secondary)' }}>
                                     {t('telebirrWithdrawNotice')}{' '}
-                                    <strong style={{ color: 'var(--primary)' }}>{user?.telebirr_number || user?.phone}</strong>
+                                    <strong style={{ color: 'var(--primary)' }}>{user?.telebirr_number || user?.telebirrAccount?.phoneNumber || 'Not Configured'}</strong>
                                 </p>
                             </div>
                         ) : (
