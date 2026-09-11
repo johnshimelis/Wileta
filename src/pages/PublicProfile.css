@@ -1091,6 +1091,236 @@
     border-color: #E5E7EB !important;
 }
 
+/* ==========================================================================
+   5. SLEEK SELECTED GIFT COMPACT STRIP (TIGHT & INTERACTIVE)
+   ========================================================================== */
+
+.selected-gift-compact-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 0.85rem;
+    margin-top: 0.75rem;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+[data-theme='dark'] .selected-gift-compact-strip {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.selected-gift-info-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.selected-gift-mini-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.selected-gift-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.selected-gift-name {
+    font-size: 0.825rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.selected-gift-cost {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #D97706;
+}
+
+.multiplier-quick-group {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-shrink: 0;
+}
+
+.multiplier-quick-btn {
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    color: #4B5563;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+[data-theme='dark'] .multiplier-quick-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #E5E7EB;
+}
+
+.multiplier-quick-btn.active {
+    background: #FEF3C7;
+    border-color: #F59E0B;
+    color: #B45309;
+}
+
+[data-theme='dark'] .multiplier-quick-btn.active {
+    background: rgba(245, 158, 11, 0.2);
+    border-color: #F59E0B;
+    color: #FCD34D;
+}
+
+/* ==========================================================================
+   6. COMPACT STATUS VIEWS (SUCCESS & PIN PROMPT)
+   ========================================================================== */
+
+.compact-creator-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.compact-creator-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+    flex-shrink: 0;
+}
+
+.compact-creator-avatar-fallback {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    border: 2px solid var(--primary);
+    flex-shrink: 0;
+}
+
+.compact-creator-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.25;
+}
+
+.compact-creator-name {
+    font-size: 0.925rem;
+    font-weight: 800;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.compact-creator-handle {
+    font-size: 0.775rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.compact-share-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 0.75rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.compact-share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    color: var(--text-main);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.compact-share-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.compact-receipt-card {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    text-align: left;
+    font-size: 0.825rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.compact-receipt-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pin-pulse-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    background: rgba(5, 150, 105, 0.1);
+    color: #059669;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 1.15rem;
+}
+
+.spin-slow {
+    animation: spinSlow 2s linear infinite;
+}
+
+@keyframes spinSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 .preview-main-row {
     display: flex;
     align-items: center;

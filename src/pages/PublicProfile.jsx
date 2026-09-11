@@ -311,141 +311,70 @@ export default function PublicProfile() {
                 boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)',
                 boxSizing: 'border-box'
             }}>
-                {/* Creator Header Profile */}
-                <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-                    <div style={{ position: 'relative', width: '84px', height: '84px', margin: '0 auto 1rem' }}>
-                        {creator.profilePicUrl ? (
-                            <img
-                                src={creator.profilePicUrl}
-                                alt={creator.name}
-                                style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--primary)' }}
-                            />
-                        ) : (
-                            <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', fontWeight: 800, border: '3px solid var(--primary)' }}>
-                                {creator.name ? creator.name.charAt(0).toUpperCase() : 'G'}
-                            </div>
-                        )}
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', marginBottom: '0.25rem' }}>
-                        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
-                            {creator.name}
-                        </h1>
-                        {creator.isVerified && <VerifiedBlueTick size={20} />}
-                    </div>
-
-                    <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--primary)' }}>
-                        @{creator.username}
-                    </span>
-
-                    {creator.bio && (
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.5, marginTop: '0.75rem', marginBottom: 0 }}>
-                            {creator.bio}
-                        </p>
-                    )}
-
-                    {/* Social Media Links */}
-                    {creator.socialLinks && creator.socialLinks.length > 0 && (
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '0.85rem', flexWrap: 'wrap' }}>
-                            {creator.socialLinks.map((s, idx) => (
-                                <a
-                                    key={idx}
-                                    href={s.username.startsWith('http') ? s.username : `https://${s.platform}.com/${s.username.replace('@', '')}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '0.3rem',
-                                        fontSize: '0.75rem',
-                                        fontWeight: 600,
-                                        color: 'var(--text-muted)',
-                                        background: 'var(--bg-color)',
-                                        padding: '0.3rem 0.6rem',
-                                        borderRadius: '6px',
-                                        border: '1px solid var(--border-color)',
-                                        textDecoration: 'none'
-                                    }}
-                                >
-                                    <span>{s.platform}</span>
-                                    <ExternalLink size={11} />
-                                </a>
-                            ))}
-                        </div>
-                    )}
-                </div>
-                {/* Creator Active Goal Widget (Polished, Non-Intrusive) */}
-                {creator.goal && (
-                    <div style={{
-                        background: 'var(--bg-color)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '14px',
-                        padding: '1rem 1.25rem',
-                        marginBottom: '1.5rem',
-                        textAlign: 'left'
-                    }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                            <span style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                                <span>🎯</span> {creator.goal.title}
-                            </span>
-                            <span style={{ fontWeight: 800, fontSize: '0.8rem', color: '#059669', background: 'rgba(5, 150, 105, 0.1)', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
-                                {creator.goal.progressPercentage}%
-                            </span>
-                        </div>
-
-                        {creator.goal.description && (
-                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 0.65rem 0', lineHeight: 1.4 }}>
-                                {creator.goal.description}
-                            </p>
-                        )}
-
-                        {/* Progress Track */}
-                        <div style={{ width: '100%', height: '8px', background: 'var(--border-color)', borderRadius: '4px', overflow: 'hidden', marginBottom: '0.5rem' }}>
-                            <div style={{
-                                width: `${creator.goal.progressPercentage}%`,
-                                height: '100%',
-                                background: 'linear-gradient(90deg, #059669, #10B981)',
-                                borderRadius: '4px',
-                                transition: 'width 0.5s ease'
-                            }}></div>
-                        </div>
-
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)' }}>
-                            <span><strong>{(creator.goal.raisedAmount || 0).toLocaleString()} ETB</strong> raised</span>
-                            <span>Target: <strong>{creator.goal.targetAmount.toLocaleString()} ETB</strong></span>
-                        </div>
-                    </div>
-                )}
-
-                {/* SUCCESS STATE CELEBRATION */}
+                {/* SUCCESS STATE CELEBRATION (COMPACT, SLEEK, ZERO SCROLLING) */}
                 {tippingState === 'success' ? (
-                    <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
-                        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.12)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', border: '2px solid #10B981' }}>
-                            <Check size={32} strokeWidth={3} />
+                    <div style={{ textAlign: 'center', padding: '0.25rem 0' }}>
+                        {/* Compact Creator Identification Chip */}
+                        <div className="compact-creator-chip">
+                            {creator.profilePicUrl ? (
+                                <img
+                                    src={creator.profilePicUrl}
+                                    alt={creator.name}
+                                    className="compact-creator-avatar"
+                                />
+                            ) : (
+                                <div className="compact-creator-avatar-fallback">
+                                    {creator.name ? creator.name.charAt(0).toUpperCase() : 'G'}
+                                </div>
+                            )}
+                            <div className="compact-creator-info">
+                                <div className="compact-creator-name">
+                                    {creator.name} {creator.isVerified && <VerifiedBlueTick size={14} />}
+                                </div>
+                                <span className="compact-creator-handle">@{creator.username}</span>
+                            </div>
                         </div>
-                        <h2 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+
+                        <div style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '50%',
+                            background: 'rgba(16, 185, 129, 0.12)',
+                            color: '#10B981',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            margin: '0 auto 0.65rem',
+                            border: '2px solid #10B981'
+                        }}>
+                            <Check size={26} strokeWidth={3} />
+                        </div>
+
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '0 0 0.2rem 0' }}>
                             Tip sent successfully ❤️
                         </h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', marginBottom: '1.5rem' }}>
-                            You sent <strong>{isCustom ? customAmount : amount} ETB</strong> to <strong>{creator.name}</strong>.
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', margin: '0 0 0.75rem 0' }}>
+                            You sent <strong style={{ color: 'var(--text-main)', fontSize: '0.95rem' }}>{isCustom ? customAmount : amount} ETB</strong> to <strong>{creator.name}</strong>
                         </p>
-                        <div style={{ background: 'var(--bg-color)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1rem', marginBottom: '1.5rem', textAlign: 'left', fontSize: '0.85rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
+
+                        <div className="compact-receipt-card">
+                            <div className="compact-receipt-row">
                                 <span style={{ color: 'var(--text-muted)' }}>Status</span>
-                                <span style={{ fontWeight: 700, color: '#10B981' }}>COMPLETED ✓</span>
+                                <span style={{ fontWeight: 800, color: '#10B981' }}>COMPLETED ✓</span>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
+                            <div className="compact-receipt-row">
                                 <span style={{ color: 'var(--text-muted)' }}>Reference</span>
-                                <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>{txRef || 'GP-TIP'}</span>
+                                <span style={{ fontWeight: 700, fontFamily: 'monospace', color: 'var(--text-main)', fontSize: '0.78rem' }}>{txRef || 'GP-TIP'}</span>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <div className="compact-receipt-row">
                                 <span style={{ color: 'var(--text-muted)' }}>Payment Rail</span>
-                                <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>{paymentMethod === 'telebirr' ? 'Telebirr USSD' : 'Chapa Gateway'}</span>
+                                <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>{paymentMethod === 'telebirr' ? 'Telebirr USSD' : 'Chapa Gateway'}</span>
                             </div>
                         </div>
+
                         <Button
                             variant="primary"
-                            style={{ width: '100%', marginBottom: '0.75rem' }}
+                            style={{ width: '100%', marginBottom: '0.4rem', fontWeight: 800, height: '42px' }}
                             onClick={() => {
                                 setTippingState('idle');
                                 setShoutOutMessage('');
@@ -453,33 +382,214 @@ export default function PublicProfile() {
                         >
                             Send Another Gursha
                         </Button>
+
+                        {/* Integrated Compact Share Row */}
+                        <div className="compact-share-row">
+                            <button
+                                type="button"
+                                onClick={handleCopyLink}
+                                className="compact-share-btn"
+                                title="Copy Link"
+                            >
+                                {copiedShare ? <Check size={12} color="#10B981" /> : <Copy size={12} />} Link
+                            </button>
+                            <a
+                                href={`https://t.me/share/url?url=${shareUrl}&text=${shareText}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="compact-share-btn"
+                                style={{ color: '#0088CC' }}
+                            >
+                                Telegram
+                            </a>
+                            <a
+                                href={`https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="compact-share-btn"
+                                style={{ color: '#25D366' }}
+                            >
+                                WhatsApp
+                            </a>
+                            <a
+                                href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="compact-share-btn"
+                            >
+                                X
+                            </a>
+                        </div>
                     </div>
                 ) : tippingState === 'pin_prompt' ? (
-                    /* PIN PROMPT STATE */
-                    <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
-                        <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-                            <Smartphone size={28} />
+                    /* PIN PROMPT STATE (COMPACT, CLEAN, ZERO SCROLLING) */
+                    <div style={{ textAlign: 'center', padding: '0.25rem 0' }}>
+                        {/* Compact Creator Identification Chip */}
+                        <div className="compact-creator-chip">
+                            {creator.profilePicUrl ? (
+                                <img
+                                    src={creator.profilePicUrl}
+                                    alt={creator.name}
+                                    className="compact-creator-avatar"
+                                />
+                            ) : (
+                                <div className="compact-creator-avatar-fallback">
+                                    {creator.name ? creator.name.charAt(0).toUpperCase() : 'G'}
+                                </div>
+                            )}
+                            <div className="compact-creator-info">
+                                <div className="compact-creator-name">
+                                    {creator.name} {creator.isVerified && <VerifiedBlueTick size={14} />}
+                                </div>
+                                <span className="compact-creator-handle">@{creator.username}</span>
+                            </div>
                         </div>
-                        <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+
+                        <div style={{
+                            width: '46px',
+                            height: '46px',
+                            borderRadius: '50%',
+                            background: 'var(--primary-light)',
+                            color: 'var(--primary)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            margin: '0 auto 0.65rem'
+                        }}>
+                            <Smartphone size={24} />
+                        </div>
+
+                        <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', margin: '0 0 0.35rem 0' }}>
                             Check your mobile phone! 📱
                         </h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
-                            A Telebirr USSD PIN prompt has been sent to <strong>+251 {tipperPhone}</strong>. Please enter your PIN on your phone to complete your tip of <strong>{isCustom ? customAmount : amount} ETB</strong>.
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.4, margin: '0 0 0.85rem 0' }}>
+                            Enter your PIN on <strong>+251 {tipperPhone}</strong> to confirm your tip of <strong>{isCustom ? customAmount : amount} ETB</strong>.
                         </p>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--primary)', fontSize: '0.85rem', fontWeight: 700, marginBottom: '1.5rem' }}>
-                            <RefreshCw size={16} style={{ animation: 'spin 2s linear infinite' }} /> Waiting for PIN confirmation...
+
+                        <div className="pin-pulse-pill">
+                            <RefreshCw size={14} className="spin-slow" />
+                            <span>Waiting for PIN confirmation...</span>
                         </div>
+
                         <Button
                             variant="outline"
-                            style={{ width: '100%' }}
+                            style={{ width: '100%', height: '42px', fontWeight: 700 }}
                             onClick={() => setTippingState('idle')}
                         >
                             Cancel / Modify Tip
                         </Button>
                     </div>
                 ) : (
-                    /* INTERACTIVE TIPPING FORM */
-                    <form onSubmit={handleTip}>
+                    /* INTERACTIVE TIPPING FORM (IDLE / PROCESSING) */
+                    <>
+                        {/* Creator Header Profile (Tighter & Sleek) */}
+                        <div style={{ textAlign: 'center', marginBottom: '1.15rem' }}>
+                            <div style={{ position: 'relative', width: '72px', height: '72px', margin: '0 auto 0.65rem' }}>
+                                {creator.profilePicUrl ? (
+                                    <img
+                                        src={creator.profilePicUrl}
+                                        alt={creator.name}
+                                        style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--primary)' }}
+                                    />
+                                ) : (
+                                    <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', fontWeight: 800, border: '3px solid var(--primary)' }}>
+                                        {creator.name ? creator.name.charAt(0).toUpperCase() : 'G'}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', marginBottom: '0.15rem' }}>
+                                <h1 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
+                                    {creator.name}
+                                </h1>
+                                {creator.isVerified && <VerifiedBlueTick size={18} />}
+                            </div>
+
+                            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)' }}>
+                                @{creator.username}
+                            </span>
+
+                            {creator.bio && (
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.825rem', lineHeight: 1.4, marginTop: '0.5rem', marginBottom: 0 }}>
+                                    {creator.bio}
+                                </p>
+                            )}
+
+                            {/* Social Media Links */}
+                            {creator.socialLinks && creator.socialLinks.length > 0 && (
+                                <div style={{ display: 'flex', justifyContent: 'center', gap: '0.4rem', marginTop: '0.65rem', flexWrap: 'wrap' }}>
+                                    {creator.socialLinks.map((s, idx) => (
+                                        <a
+                                            key={idx}
+                                            href={s.username.startsWith('http') ? s.username : `https://${s.platform}.com/${s.username.replace('@', '')}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            style={{
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '0.25rem',
+                                                fontSize: '0.72rem',
+                                                fontWeight: 600,
+                                                color: 'var(--text-muted)',
+                                                background: 'var(--bg-color)',
+                                                padding: '0.25rem 0.55rem',
+                                                borderRadius: '6px',
+                                                border: '1px solid var(--border-color)',
+                                                textDecoration: 'none'
+                                            }}
+                                        >
+                                            <span>{s.platform}</span>
+                                            <ExternalLink size={10} />
+                                        </a>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Creator Active Goal Widget (Polished, Non-Intrusive) */}
+                        {creator.goal && (
+                            <div style={{
+                                background: 'var(--bg-color)',
+                                border: '1px solid var(--border-color)',
+                                borderRadius: '12px',
+                                padding: '0.75rem 1rem',
+                                marginBottom: '1.15rem',
+                                textAlign: 'left'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                                    <span style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                                        <span>🎯</span> {creator.goal.title}
+                                    </span>
+                                    <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#059669', background: 'rgba(5, 150, 105, 0.1)', padding: '0.15rem 0.45rem', borderRadius: '6px' }}>
+                                        {creator.goal.progressPercentage}%
+                                    </span>
+                                </div>
+
+                                {creator.goal.description && (
+                                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: '0 0 0.5rem 0', lineHeight: 1.35 }}>
+                                        {creator.goal.description}
+                                    </p>
+                                )}
+
+                                {/* Progress Track */}
+                                <div style={{ width: '100%', height: '6px', background: 'var(--border-color)', borderRadius: '3px', overflow: 'hidden', marginBottom: '0.4rem' }}>
+                                    <div style={{
+                                        width: `${creator.goal.progressPercentage}%`,
+                                        height: '100%',
+                                        background: 'linear-gradient(90deg, #059669, #10B981)',
+                                        borderRadius: '3px',
+                                        transition: 'width 0.5s ease'
+                                    }}></div>
+                                </div>
+
+                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)' }}>
+                                    <span><strong>{(creator.goal.raisedAmount || 0).toLocaleString()} ETB</strong> raised</span>
+                                    <span>Target: <strong>{creator.goal.targetAmount.toLocaleString()} ETB</strong></span>
+                                </div>
+                            </div>
+                        )}
+
+                        <form onSubmit={handleTip}>
                         {/* Ethiopian Cultural Virtual Gift & Coin Showcase */}
                         <div className="eth-gift-showcase-container">
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
@@ -578,63 +688,49 @@ export default function PublicProfile() {
                                 </div>
                             )}
 
-                            {/* Selected Gift Interactive Preview Card */}
+                            {/* Sleek Selected Gift Compact Strip (Clean, Tight, Interactive) */}
                             {!isCustom && selectedGift && (
-                                <div className="eth-selected-preview-card">
-                                    <div className="preview-main-row">
-                                        <div className="preview-gift-left">
-                                            <div className="preview-art-wrapper">
-                                                <Gift3DIcon id={selectedGift.id} size={58} animated={true} />
-                                            </div>
-                                            <div className="preview-gift-titles">
-                                                <div className="preview-title-am">
-                                                    {selectedGift.nameAm} <span style={{ fontWeight: 600, fontSize: '0.82rem', color: 'var(--text-muted)' }}>({selectedGift.nameEn})</span>
-                                                </div>
-                                                <div className="preview-description">
-                                                    {selectedGift.description} • {selectedGift.shortAm}
-                                                </div>
-                                            </div>
+                                <div className="selected-gift-compact-strip">
+                                    <div className="selected-gift-info-left">
+                                        <div className="selected-gift-mini-icon">
+                                            <Gift3DIcon id={selectedGift.id} size={36} animated={true} />
                                         </div>
-                                        <div className="preview-gift-pricing">
-                                            <div className="preview-coins">
-                                                🪙 {Number(selectedGift.coins * (Number(amount || selectedGift.etb) / Number(selectedGift.etb || 1))).toLocaleString()} Coins
+                                        <div className="selected-gift-text">
+                                            <div className="selected-gift-name">
+                                                {selectedGift.nameAm} <span style={{ opacity: 0.65, fontSize: '0.74rem' }}>({selectedGift.nameEn})</span>
                                             </div>
-                                            <div className="preview-etb">
-                                                {amount || selectedGift.etb} ETB
+                                            <div className="selected-gift-cost">
+                                                {amount || selectedGift.etb} ETB &bull; 🪙 {Number(selectedGift.coins * (Number(amount || selectedGift.etb) / Number(selectedGift.etb || 1))).toLocaleString()} Coins
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Quick Quantity Multiplier Bar */}
-                                    <div className="preview-multiplier-bar">
-                                        <div className="multiplier-chips-group">
-                                            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)' }}>Qty:</span>
-                                            {[1, 2, 5, 10].map(mult => {
-                                                const multAmount = String(Number(selectedGift.etb) * mult);
-                                                const isActive = amount === multAmount;
-                                                return (
-                                                    <button
-                                                        key={mult}
-                                                        type="button"
-                                                        className={`mult-chip ${isActive ? 'active' : ''}`}
-                                                        onClick={() => setAmount(multAmount)}
-                                                    >
-                                                        {mult}x
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-
+                                    <div className="multiplier-quick-group">
+                                        {[1, 2, 5, 10].map(mult => {
+                                            const multAmount = String(Number(selectedGift.etb) * mult);
+                                            const isActive = amount === multAmount;
+                                            return (
+                                                <button
+                                                    key={mult}
+                                                    type="button"
+                                                    className={`multiplier-quick-btn ${isActive ? 'active' : ''}`}
+                                                    onClick={() => setAmount(multAmount)}
+                                                >
+                                                    {mult}x
+                                                </button>
+                                            );
+                                        })}
                                         <button
                                             type="button"
-                                            className="preview-test-anim-btn"
+                                            className="multiplier-quick-btn"
+                                            title="Preview Celebration Animation"
                                             onClick={() => {
                                                 setCelebrationGift(selectedGift);
                                                 setComboCount(prev => prev + 1);
                                                 setShowCelebrationModal(true);
                                             }}
                                         >
-                                            <span>✨</span> Preview Animation
+                                            ✨
                                         </button>
                                     </div>
                                 </div>
@@ -847,63 +943,66 @@ export default function PublicProfile() {
                             <span>256-bit encrypted checkout &bull; Operated by Birana Labs</span>
                         </div>
                     </form>
+                    </>
                 )}
             </div>
 
-            {/* Social Share & QR Code Strip */}
-            <div style={{ width: '100%', maxWidth: '480px', marginTop: '1.25rem', padding: '0 0.25rem', boxSizing: 'border-box' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Share Page</span>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Support creator</span>
+            {/* Social Share & QR Code Strip (Only in Idle State to Avoid Screen Sprawl) */}
+            {tippingState === 'idle' && (
+                <div style={{ width: '100%', maxWidth: '480px', marginTop: '1.25rem', padding: '0 0.25rem', boxSizing: 'border-box' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Share Page</span>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Support creator</span>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr) auto', gap: '0.4rem', width: '100%' }}>
+                        <button
+                            onClick={handleCopyLink}
+                            title="Copy Link"
+                            style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: 'var(--text-main)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
+                        >
+                            {copiedShare ? <Check size={14} color="#10B981" /> : <Copy size={14} />} Link
+                        </button>
+
+                        <a
+                            href={`https://t.me/share/url?url=${shareUrl}&text=${shareText}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            title="Share on Telegram"
+                            style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: '#0088CC', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
+                        >
+                            Telegram
+                        </a>
+
+                        <a
+                            href={`https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            title="Share on WhatsApp"
+                            style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: '#25D366', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
+                        >
+                            WhatsApp
+                        </a>
+
+                        <a
+                            href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            title="Share on X"
+                            style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: 'var(--text-main)', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
+                        >
+                            X
+                        </a>
+
+                        <button
+                            onClick={handleNativeShare}
+                            title="More Sharing Options"
+                            style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.65rem', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}
+                        >
+                            <Share2 size={15} />
+                        </button>
+                    </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr) auto', gap: '0.4rem', width: '100%' }}>
-                    <button
-                        onClick={handleCopyLink}
-                        title="Copy Link"
-                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: 'var(--text-main)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
-                    >
-                        {copiedShare ? <Check size={14} color="#10B981" /> : <Copy size={14} />} Link
-                    </button>
-
-                    <a
-                        href={`https://t.me/share/url?url=${shareUrl}&text=${shareText}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        title="Share on Telegram"
-                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: '#0088CC', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
-                    >
-                        Telegram
-                    </a>
-
-                    <a
-                        href={`https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        title="Share on WhatsApp"
-                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: '#25D366', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
-                    >
-                        WhatsApp
-                    </a>
-
-                    <a
-                        href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        title="Share on X"
-                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.4rem', color: 'var(--text-main)', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.775rem', fontWeight: 700, transition: 'all 0.15s ease' }}
-                    >
-                        X
-                    </a>
-
-                    <button
-                        onClick={handleNativeShare}
-                        title="More Sharing Options"
-                        style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.55rem 0.65rem', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}
-                    >
-                        <Share2 size={15} />
-                    </button>
-                </div>
-            </div>
+            )}
 
             {/* QR CODE MODAL */}
             {showQrModal && (
