@@ -704,7 +704,11 @@ export default function PublicProfile() {
                                                     setIsCustom(false);
                                                 }}
                                             >
-                                                {isSelected && <span className="eth-gift-card-active-dot" />}
+                                                {isSelected && (
+                                                    <div className="eth-gift-selected-badge" title="Selected Gift">
+                                                        <Check size={11} strokeWidth={3.5} />
+                                                    </div>
+                                                )}
 
                                                 <div className="eth-gift-icon-container">
                                                     <Gift3DIcon id={gift.id} size={64} animated={true} />

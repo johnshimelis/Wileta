@@ -319,6 +319,11 @@ export const TikTokLiveGiftShowcase = ({
 
     return (
         <div className="eth-celebration-backdrop" onClick={onClose}>
+            {/* Top Right Close Button */}
+            <button className="eth-celebration-close-icon" onClick={onClose} title="Close">
+                ✕
+            </button>
+
             {/* Ambient Animated Sparkle Particles */}
             <div className="eth-celebration-particles" pointer-events="none">
                 <span className="p-star p1">✦</span>
@@ -354,7 +359,7 @@ export const TikTokLiveGiftShowcase = ({
             <div className="eth-celebration-stage" onClick={e => e.stopPropagation()}>
                 <div className="eth-celebration-hero-art">
                     <div className="hero-art-spotlight" />
-                    <Gift3DIcon id={gift.id} size={230} isHero={true} animated={true} />
+                    <Gift3DIcon id={gift.id} size={155} isHero={true} animated={true} />
                 </div>
 
                 <div className="eth-celebration-info">
