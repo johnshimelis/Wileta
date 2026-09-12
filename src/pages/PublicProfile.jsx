@@ -109,7 +109,19 @@ export default function PublicProfile() {
         setSelectedGift(gift);
         setAmount(gift.etb);
         setIsCustom(false);
-        try { playAudioEffect('chime'); } catch (e) {}
+        try {
+            if (gift.id === 'car') {
+                playAudioEffect('car_rev');
+            } else if (gift.id === 'anbessa') {
+                playAudioEffect('lion_roar');
+            } else if (gift.id === 'plane') {
+                playAudioEffect('jet_flyby');
+            } else if (['bible', 'quran', 'axum', 'lalibela', 'gondar', 'crown', 'national_honor'].includes(gift.id)) {
+                playAudioEffect('sacred_chime');
+            } else {
+                playAudioEffect('chime');
+            }
+        } catch (e) {}
     };
 
     const handleMultiplier = (mult) => {
@@ -354,6 +366,14 @@ export default function PublicProfile() {
                         </div>
 
                         <div className="tip-success-emblem-wrap">
+                            <div className="success-confetti-sparkles" aria-hidden="true">
+                                <span className="confetti c1">✦</span>
+                                <span className="confetti c2">●</span>
+                                <span className="confetti c3">▲</span>
+                                <span className="confetti c4">✦</span>
+                                <span className="confetti c5">●</span>
+                                <span className="confetti c6">✧</span>
+                            </div>
                             <div className="tip-success-emblem-ring">
                                 <Check size={26} strokeWidth={3} />
                             </div>
@@ -660,7 +680,7 @@ export default function PublicProfile() {
 
                                 {/* 3D Gift Grid */}
                                 {!isCustom && (
-                                    <div className="clean-gift-grid">
+                                    <div key={giftCategory} className="clean-gift-grid">
                                         {ETHIOPIAN_GIFTS_CATALOG
                                             .filter(g => giftCategory === 'all' || g.category === giftCategory)
                                             .map((gift) => {
@@ -679,7 +699,12 @@ export default function PublicProfile() {
                                                         )}
 
                                                         <div className="gift-icon-box">
-                                                            <Gift3DIcon id={gift.id} size={54} animated={false} />
+                                                            <Gift3DIcon 
+                                                                id={gift.id} 
+                                                                size={54} 
+                                                                animated={true} 
+                                                                isSelected={isSelected} 
+                                                            />
                                                         </div>
 
                                                         <div className="gift-text-wrap">
@@ -726,17 +751,23 @@ export default function PublicProfile() {
 
                                 {/* Selected Gift Multiplier Strip */}
                                 {!isCustom && selectedGift && (
-                                    <div className="clean-multiplier-strip">
+                                    <div key={selectedGift.id} className="clean-multiplier-strip">
                                         <div className="strip-gift-left">
                                             <div className="strip-mini-icon">
-                                                <Gift3DIcon id={selectedGift.id} size={34} animated={false} />
+                                                <Gift3DIcon id={selectedGift.id} size={34} animated={false} isSelected={false} />
                                             </div>
                                             <div className="strip-info">
                                                 <div className="strip-name">
                                                     {selectedGift.nameAm} <span className="strip-en">({selectedGift.nameEn})</span>
                                                 </div>
                                                 <div className="strip-cost">
-                                                    {amount || selectedGift.etb} ETB &bull; 🪙 {currentCoins.toLocaleString()} Coins
+                                                    <span key={amount} className="number-counter-pulse">
+                                                        {amount || selectedGift.etb} ETB
+                                                    </span>
+                                                    {' '}&bull;{' '}
+                                                    <span key={currentCoins} className="number-counter-pulse">
+                                                        🪙 {currentCoins.toLocaleString()} Coins
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -906,7 +937,7 @@ export default function PublicProfile() {
                                 ) : (
                                     <>
                                         <span className="clean-send-icon">{isCustom ? '🪙' : (selectedGift?.emoji || '☕')}</span>
-                                        <span>
+                                        <span key={`${isCustom ? customAmount : amount}-${selectedGift?.id}`} className="send-btn-amount-pulse">
                                             Send {isCustom ? `${customAmount || '0'} ETB` : `${selectedGift?.nameEn || 'Gursha'} (${amount} ETB)`}
                                         </span>
                                     </>

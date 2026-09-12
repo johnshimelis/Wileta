@@ -62,15 +62,19 @@ export const GIFT_CATEGORIES = [
 // 2. TACTILE ETHIOPIAN GIFT VISUAL COMPONENT WITH OBJECT-SPECIFIC ANIMATIONS
 // =========================================================================
 
-export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) => {
+export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false, isSelected = false }) => {
     const s = size;
-    const [imgError, setImgError] = useState(false);
-    const [imgSrc, setImgSrc] = useState(`/gifts/${id}.png`);
+    const [imgStep, setImgStep] = useState(0); // 0 = png, 1 = jpg, 2 = emoji
 
     useEffect(() => {
-        setImgSrc(`/gifts/${id}.png`);
-        setImgError(false);
+        setImgStep(0);
     }, [id]);
+
+    const handleImgError = () => {
+        setImgStep(prev => prev + 1);
+    };
+
+    const imgSrc = imgStep === 0 ? `/gifts/${id}.png` : `/gifts/${id}.jpg`;
 
     // Object-specific motion class
     const getMovementClass = () => {
@@ -109,7 +113,7 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
 
     return (
         <div 
-            className={`eth-gift-art-box ${getMovementClass()} ${isHero ? 'eth-gift-hero' : ''}`}
+            className={`eth-gift-art-box ${getMovementClass()} ${isSelected ? 'gift-is-selected' : ''} ${isHero ? 'eth-gift-hero' : ''}`}
             data-gift-id={id}
             style={{ 
                 width: `${s}px`, 
@@ -132,6 +136,53 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                 <div className={`book-sacred-glow ${id === 'quran' ? 'emerald' : 'gold'}`} />
             )}
 
+            {/* Object-Specific Interactive Particle Effects on Selection */}
+            {isSelected && id === 'car' && (
+                <div className="gift-fx-car-smoke" aria-hidden="true">
+                    <span className="smoke-puff p1" />
+                    <span className="smoke-puff p2" />
+                    <span className="smoke-puff p3" />
+                </div>
+            )}
+
+            {isSelected && ['buna', 'jebena', 'rekebot', 'enjera'].includes(id) && (
+                <div className="gift-fx-steam" aria-hidden="true">
+                    <svg className="steam-svg" viewBox="0 0 36 36" fill="none">
+                        <path d="M10 26C8 20 12 15 10 10C8 7 11 3 10 1" stroke="rgba(160,174,192,0.65)" strokeWidth="2" strokeLinecap="round" className="steam-path p1" />
+                        <path d="M18 28C16 21 20 16 18 11C16 7 19 4 18 1" stroke="rgba(160,174,192,0.75)" strokeWidth="2.2" strokeLinecap="round" className="steam-path p2" />
+                        <path d="M26 26C24 20 28 15 26 10C24 7 27 3 26 1" stroke="rgba(160,174,192,0.65)" strokeWidth="2" strokeLinecap="round" className="steam-path p3" />
+                    </svg>
+                </div>
+            )}
+
+            {isSelected && id === 'kebero' && (
+                <div className="gift-fx-kebero-wave" aria-hidden="true">
+                    <span className="sonic-ring ring1" />
+                    <span className="sonic-ring ring2" />
+                </div>
+            )}
+
+            {isSelected && ['diamond', 'crown', 'national_honor'].includes(id) && (
+                <div className="gift-fx-sparkle-stars" aria-hidden="true">
+                    <span className="sparkle-star s1">✦</span>
+                    <span className="sparkle-star s2">✧</span>
+                    <span className="sparkle-star s3">✦</span>
+                </div>
+            )}
+
+            {isSelected && ['axum', 'lalibela', 'gondar'].includes(id) && (
+                <div className="gift-fx-golden-sheen" aria-hidden="true">
+                    <div className="sheen-sweep-bar" />
+                </div>
+            )}
+
+            {isSelected && ['masenqo', 'krar'].includes(id) && (
+                <div className="gift-fx-string-waves" aria-hidden="true">
+                    <span className="vibe-line v1" />
+                    <span className="vibe-line v2" />
+                </div>
+            )}
+
             {/* Visual Frame */}
             <div 
                 className="eth-gift-image-frame"
@@ -145,7 +196,7 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                     background: 'transparent'
                 }}
             >
-                {!imgError ? (
+                {imgStep < 2 ? (
                     <img 
                         src={imgSrc} 
                         alt={id}
@@ -159,10 +210,8 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
                             aspectRatio: '1 / 1',
                             display: 'block'
                         }}
-                        onError={() => {
-                            setImgError(true);
-                        }}
-                        loading="lazy"
+                        onError={handleImgError}
+                        loading="eager"
                     />
                 ) : (
                     <div 
