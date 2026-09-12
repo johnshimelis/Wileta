@@ -367,15 +367,19 @@
     letter-spacing: -0.01em;
 }
 
-/* 3-Column Premium Fintech Gift Grid */
+/* 3-Column Flat Gift Grid (WHITE SURFACE -> 3 VISIBLE COLUMNS -> NO HORIZONTAL SCROLL) */
 .clean-gift-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px 8px;
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 3px 2px;
-    margin-bottom: 0.5rem;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px 4px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important; /* CRITICAL: Never scroll horizontally */
+    overflow-y: auto !important;
+    max-height: 380px !important;
+    padding: 3px 1px !important;
+    margin-bottom: 0.5rem !important;
     scrollbar-width: thin;
     scrollbar-color: #CBD5E1 transparent;
 }
@@ -401,80 +405,80 @@
     background: #94A3B8;
 }
 
-/* 7. Beautiful Modern Gift Cards */
+/* 7. Flat White Gift Cards - NO background on unselected gifts */
 .clean-gift-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 12px 6px 10px;
-    background: #FFFFFF;
-    border: 1.5px solid #E2E8F0;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
-                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
-                box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    outline: none;
-    text-align: center;
-    user-select: none;
-    min-height: 124px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-    box-sizing: border-box;
-    overflow: visible;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 6px 2px 4px !important;
+    background: transparent !important;
+    border: 1.5px solid transparent !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    outline: none !important;
+    text-align: center !important;
+    user-select: none !important;
+    min-height: 106px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* Hover: Tactile elevation & soft shadow */
+/* Hover: Subtle elevation hint */
 .clean-gift-card:hover {
-    background: #F8FAFC;
-    border-color: #047857;
-    transform: translateY(-2.5px);
-    box-shadow: 0 6px 16px -2px rgba(4, 120, 87, 0.14);
+    background: rgba(4, 120, 87, 0.025) !important;
+    border-color: rgba(4, 120, 87, 0.16) !important;
+    transform: translateY(-2px);
 }
 
 [data-theme='dark'] .clean-gift-card {
-    background: #1E293B;
-    border-color: #334155;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
 }
 
 [data-theme='dark'] .clean-gift-card:hover {
-    background: #243044;
-    border-color: #10B981;
-    box-shadow: 0 6px 16px -2px rgba(16, 185, 129, 0.22);
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
 }
 
 .clean-gift-card:hover .gift-icon-box {
-    transform: scale(1.06);
+    transform: scale(1.05);
 }
 
 .clean-gift-card:active {
     transform: scale(0.97);
 }
 
-/* Selected Gift Card: Emerald highlight & subtle mint gradient tint */
+/* Selected Gift Card: Crisp GurshaPay Green Outline on Flat White */
 .clean-gift-card.selected {
-    background: linear-gradient(180deg, #ECFDF5 0%, #FFFFFF 100%) !important;
-    border-color: #047857 !important;
-    border-width: 2px !important;
-    box-shadow: 0 0 0 1px #047857, 0 4px 16px rgba(4, 120, 87, 0.18) !important;
-    transform: translateY(-2px);
+    background: rgba(4, 120, 87, 0.035) !important;
+    border: 2px solid #047857 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 0 0 1px rgba(4, 120, 87, 0.12), 0 2px 8px rgba(4, 120, 87, 0.08) !important;
+    transform: translateY(-1.5px);
 }
 
 [data-theme='dark'] .clean-gift-card.selected {
-    background: linear-gradient(180deg, rgba(16, 185, 129, 0.14) 0%, #1E293B 100%) !important;
+    background: rgba(16, 185, 129, 0.08) !important;
     border-color: #10B981 !important;
-    box-shadow: 0 0 0 1px #10B981, 0 4px 18px rgba(16, 185, 129, 0.28) !important;
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2), 0 2px 8px rgba(16, 185, 129, 0.12) !important;
 }
 
 .gift-selected-tick {
     position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 18px;
-    height: 18px;
+    top: 3px;
+    right: 3px;
+    width: 17px;
+    height: 17px;
     border-radius: 50%;
     background: #047857;
     color: #FFFFFF;
@@ -482,7 +486,7 @@
     align-items: center;
     justify-content: center;
     z-index: 20;
-    box-shadow: 0 2px 6px rgba(4, 120, 87, 0.35);
+    box-shadow: 0 1px 4px rgba(4, 120, 87, 0.35);
     animation: tickPop 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -496,18 +500,18 @@
     to { transform: scale(1); opacity: 1; }
 }
 
-/* Gift Image Area */
+/* Gift Icon Area (Directly on flat surface) */
 .gift-icon-box {
-    width: 56px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 5px;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    background: transparent;
-    position: relative;
-    overflow: visible;
+    width: 46px !important;
+    height: 46px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 2px !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    background: transparent !important;
+    position: relative !important;
+    overflow: visible !important;
 }
 
 .clean-gift-card.selected .gift-icon-box {
@@ -519,14 +523,16 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-top: 2px;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .gift-name-primary {
-    font-size: 0.82rem;
+    font-size: 0.78rem !important;
     font-weight: 700;
     color: var(--text-main);
-    line-height: 1.25;
+    line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -542,10 +548,10 @@
 }
 
 .gift-name-secondary {
-    font-size: 0.68rem;
+    font-size: 0.65rem !important;
     font-weight: 500;
     color: var(--text-muted);
-    line-height: 1.15;
+    line-height: 1.1;
     margin-top: 1px;
     white-space: nowrap;
     overflow: hidden;
@@ -553,21 +559,21 @@
     max-width: 100%;
 }
 
-/* Price Badge Pill (NEVER wraps or line-breaks) */
+/* Price Badge Pill (NEVER wraps, fits neatly in 3 columns) */
 .gift-price-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    margin-top: 5px;
-    padding: 2px 7px;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    margin-top: 3px !important;
+    padding: 1.5px 5px !important;
     background: #F1F5F9;
     border-radius: 9999px;
     border: 1px solid #E2E8F0;
-    font-size: 0.72rem;
-    white-space: nowrap;
-    max-width: 100%;
-    box-sizing: border-box;
+    font-size: 0.68rem !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 [data-theme='dark'] .gift-price-badge {
@@ -588,7 +594,7 @@
 .price-etb {
     color: var(--text-main);
     font-weight: 700;
-    font-size: 0.72rem;
+    font-size: 0.68rem !important;
     white-space: nowrap;
 }
 
@@ -603,105 +609,196 @@
 
 .price-coins {
     color: #D97706;
-    font-size: 0.66rem;
+    font-size: 0.63rem !important;
     font-weight: 600;
     white-space: nowrap;
 }
 
-/* Selected Gift Multiplier Strip (Clean Rounded Fintech Card) */
+/* ==========================================================================
+   SELECTED GIFT MULTIPLIER STRIP (THE RED-CIRCLED COMPONENT: POLISHED CARD)
+   ========================================================================== */
 .clean-multiplier-strip {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 10px;
-    padding: 10px 14px;
+    padding: 12px 14px;
     margin: 0.75rem 0 0.95rem;
     background: #F8FAFC;
     border: 1px solid #E2E8F0;
-    border-radius: 13px;
+    border-radius: 14px;
     box-sizing: border-box;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    width: 100%;
+    animation: stripAppear 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes stripAppear {
+    from { opacity: 0; transform: translateY(-3px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 [data-theme='dark'] .clean-multiplier-strip {
     background: #1E293B;
     border-color: #334155;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
-.strip-gift-left {
+/* Top Row: Gift Visual Thumb + Titles + Price + Preview Button */
+.multiplier-strip-top {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 8px;
+    width: 100%;
+}
+
+.multiplier-strip-gift {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     min-width: 0;
     flex: 1 1 auto;
 }
 
-.strip-mini-icon {
-    width: 36px;
-    height: 36px;
+.multiplier-gift-thumb {
+    width: 44px;
+    height: 44px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #FFFFFF;
-    border-radius: 9px;
-    border: 1px solid #E2E8F0;
-    padding: 2px;
-    box-sizing: border-box;
+    position: relative;
+    background: transparent;
 }
 
-[data-theme='dark'] .strip-mini-icon {
-    background: #0F172A;
-    border-color: #334155;
-}
-
-.strip-info {
+.multiplier-gift-meta {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    gap: 2px;
 }
 
-.strip-name {
-    font-size: 0.84rem;
-    font-weight: 700;
-    color: var(--text-main);
+.multiplier-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.strip-en {
-    font-size: 0.7rem;
+.multiplier-name-am {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.multiplier-name-en {
+    font-size: 0.72rem;
     font-weight: 500;
     color: var(--text-muted);
 }
 
-.strip-cost {
-    font-size: 0.74rem;
+.multiplier-cost-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
     font-weight: 700;
-    color: #047857;
-    margin-top: 1px;
 }
 
-[data-theme='dark'] .strip-cost {
+.cost-etb-val {
+    color: #047857;
+    font-weight: 800;
+}
+
+[data-theme='dark'] .cost-etb-val {
     color: #10B981;
 }
 
-.strip-cost .number-counter-pulse {
-    display: inline-block;
+.cost-dot {
+    color: #CBD5E1;
+    font-size: 0.75rem;
 }
 
-.strip-multipliers-right {
-    display: flex;
+.cost-coins-val {
+    color: #D97706;
+    font-weight: 600;
+    font-size: 0.74rem;
+}
+
+/* Preview Celebration Button */
+.clean-preview-btn {
+    display: inline-flex;
     align-items: center;
     gap: 5px;
+    padding: 6px 14px;
+    height: 32px;
+    background: #FFFFFF;
+    border: 1.5px solid #047857;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #047857;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
     flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(4, 120, 87, 0.12);
+}
+
+.clean-preview-btn:hover {
+    background: #047857;
+    color: #FFFFFF;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(4, 120, 87, 0.28);
+}
+
+.clean-preview-btn:active {
+    transform: scale(0.95);
+}
+
+[data-theme='dark'] .clean-preview-btn {
+    background: #0F172A;
+    border-color: #10B981;
+    color: #10B981;
+}
+
+[data-theme='dark'] .clean-preview-btn:hover {
+    background: #10B981;
+    color: #0F172A;
+}
+
+/* Bottom Row: Multiplier Buttons */
+.multiplier-strip-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    padding-top: 8px;
+    border-top: 1px solid rgba(226, 232, 240, 0.7);
+}
+
+[data-theme='dark'] .multiplier-strip-bottom {
+    border-top-color: #334155;
+}
+
+.multiplier-pills-label {
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.multiplier-pills-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .clean-mult-btn {
-    padding: 5px 10px;
-    min-width: 32px;
+    padding: 4px 12px;
+    min-width: 36px;
     height: 28px;
     border-radius: 8px;
     font-size: 0.76rem;
@@ -714,6 +811,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .clean-mult-btn:hover {
@@ -743,52 +841,13 @@
     border-color: #047857 !important;
     color: #FFFFFF !important;
     font-weight: 700;
-    box-shadow: 0 2px 6px rgba(4, 120, 87, 0.28);
+    box-shadow: 0 2px 8px rgba(4, 120, 87, 0.3);
 }
 
 [data-theme='dark'] .clean-mult-btn.active {
     background: #10B981 !important;
     color: #0F172A !important;
     border-color: #10B981 !important;
-}
-
-.clean-preview-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 5px 12px;
-    height: 28px;
-    background: rgba(4, 120, 87, 0.08);
-    border: 1px solid #047857;
-    border-radius: 8px;
-    font-size: 0.76rem;
-    font-weight: 700;
-    color: #047857;
-    cursor: pointer;
-    transition: all 0.18s ease;
-    box-sizing: border-box;
-}
-
-.clean-preview-btn:hover {
-    background: #047857;
-    color: #FFFFFF;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(4, 120, 87, 0.25);
-}
-
-.clean-preview-btn:active {
-    transform: scale(0.95);
-}
-
-[data-theme='dark'] .clean-preview-btn {
-    background: rgba(16, 185, 129, 0.12);
-    border-color: #10B981;
-    color: #10B981;
-}
-
-[data-theme='dark'] .clean-preview-btn:hover {
-    background: #10B981;
-    color: #0F172A;
 }
 
 

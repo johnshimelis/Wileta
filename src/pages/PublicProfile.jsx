@@ -702,7 +702,7 @@ export default function PublicProfile() {
                                                         <div className="gift-icon-box">
                                                             <Gift3DIcon 
                                                                 id={gift.id} 
-                                                                size={54} 
+                                                                size={46} 
                                                                 animated={true} 
                                                                 isSelected={isSelected} 
                                                             />
@@ -750,44 +750,31 @@ export default function PublicProfile() {
                                     </div>
                                 )}
 
-                                {/* Selected Gift Multiplier Strip */}
+                                {/* Selected Gift Multiplier Strip (The Red-Circled Component) */}
                                 {!isCustom && selectedGift && (
                                     <div key={selectedGift.id} className="clean-multiplier-strip">
-                                        <div className="strip-gift-left">
-                                            <div className="strip-mini-icon">
-                                                <Gift3DIcon id={selectedGift.id} size={34} animated={false} isSelected={false} />
-                                            </div>
-                                            <div className="strip-info">
-                                                <div className="strip-name">
-                                                    {selectedGift.nameAm} <span className="strip-en">({selectedGift.nameEn})</span>
+                                        <div className="multiplier-strip-top">
+                                            <div className="multiplier-strip-gift">
+                                                <div className="multiplier-gift-thumb">
+                                                    <Gift3DIcon id={selectedGift.id} size={42} animated={true} isSelected={false} />
                                                 </div>
-                                                <div className="strip-cost">
-                                                    <span key={amount} className="number-counter-pulse">
-                                                        {amount || selectedGift.etb} ETB
-                                                    </span>
-                                                    {' '}&bull;{' '}
-                                                    <span key={currentCoins} className="number-counter-pulse">
-                                                        🪙 {currentCoins.toLocaleString()} Coins
-                                                    </span>
+                                                <div className="multiplier-gift-meta">
+                                                    <div className="multiplier-title-row">
+                                                        <span className="multiplier-name-am">{selectedGift.nameAm}</span>
+                                                        <span className="multiplier-name-en">({selectedGift.nameEn})</span>
+                                                    </div>
+                                                    <div className="multiplier-cost-row">
+                                                        <span key={amount} className="cost-etb-val">
+                                                            {amount || selectedGift.etb} ETB
+                                                        </span>
+                                                        <span className="cost-dot">•</span>
+                                                        <span key={currentCoins} className="cost-coins-val">
+                                                            🪙 {currentCoins.toLocaleString()} Coins
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="strip-multipliers-right">
-                                            {[1, 2, 5, 10].map(mult => {
-                                                const multAmount = String(Number(selectedGift.etb) * mult);
-                                                const isActive = amount === multAmount;
-                                                return (
-                                                    <button
-                                                        key={mult}
-                                                        type="button"
-                                                        className={`clean-mult-btn ${isActive ? 'active' : ''}`}
-                                                        onClick={() => handleMultiplier(mult)}
-                                                    >
-                                                        {mult}x
-                                                    </button>
-                                                );
-                                            })}
                                             <button
                                                 type="button"
                                                 className="clean-preview-btn"
@@ -801,6 +788,26 @@ export default function PublicProfile() {
                                                 <span>✨</span>
                                                 <span>Preview</span>
                                             </button>
+                                        </div>
+
+                                        <div className="multiplier-strip-bottom">
+                                            <span className="multiplier-pills-label">Multiplier:</span>
+                                            <div className="multiplier-pills-group">
+                                                {[1, 2, 5, 10].map(mult => {
+                                                    const multAmount = String(Number(selectedGift.etb) * mult);
+                                                    const isActive = amount === multAmount;
+                                                    return (
+                                                        <button
+                                                            key={mult}
+                                                            type="button"
+                                                            className={`clean-mult-btn ${isActive ? 'active' : ''}`}
+                                                            onClick={() => handleMultiplier(mult)}
+                                                        >
+                                                            {mult}x
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
