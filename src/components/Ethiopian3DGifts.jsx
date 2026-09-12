@@ -595,17 +595,44 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false, isS
                 <div className={`book-sacred-glow ${id === 'quran' ? 'emerald' : 'gold'}`} />
             )}
 
-            {/* Object-Specific Interactive Particle Effects on Selection */}
-            {isSelected && id === 'car' && (
-                <div className="gift-fx-car-smoke" aria-hidden="true">
+            {/* Addis Supercar: Tire Drift Smoke Puffs */}
+            {animated && id === 'car' && (
+                <div className={`gift-fx-car-smoke ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
                     <span className="smoke-puff p1" />
                     <span className="smoke-puff p2" />
                     <span className="smoke-puff p3" />
                 </div>
             )}
 
-            {isSelected && ['buna', 'jebena', 'rekebot', 'enjera'].includes(id) && (
-                <div className="gift-fx-steam" aria-hidden="true">
+            {/* Ethiopian Jet: High-Altitude Contrail Streams & Cloud Wisps */}
+            {animated && id === 'plane' && (
+                <div className={`gift-fx-plane-clouds ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="contrail-stream c1" />
+                    <span className="contrail-stream c2" />
+                    <span className="flight-cloud f1" />
+                </div>
+            )}
+
+            {/* Clay Jebena: Coffee Pouring Stream + Rising Steam */}
+            {animated && id === 'jebena' && (
+                <div className={`gift-fx-pour ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <svg className="pour-stream-svg" viewBox="0 0 32 38" fill="none">
+                        <path className="coffee-flow-path" d="M10 6 C 14 16, 17 24, 21 34" stroke="#451A03" strokeWidth="2.5" strokeLinecap="round" />
+                        <path className="coffee-flow-highlight" d="M10 6 C 14 16, 17 24, 21 34" stroke="#B45309" strokeWidth="1" strokeLinecap="round" />
+                    </svg>
+                    <span className="pour-drop d1" />
+                    <div className="gift-fx-steam in-jebena">
+                        <svg className="steam-svg" viewBox="0 0 36 36" fill="none">
+                            <path d="M12 24C10 18 14 14 12 8" stroke="rgba(160,174,192,0.7)" strokeWidth="2" strokeLinecap="round" className="steam-path p1" />
+                            <path d="M19 26C17 19 21 15 19 9" stroke="rgba(160,174,192,0.8)" strokeWidth="2.2" strokeLinecap="round" className="steam-path p2" />
+                        </svg>
+                    </div>
+                </div>
+            )}
+
+            {/* Sini Buna, Rekebot & Enjera: Continuous Aromatic Steam Wisps */}
+            {animated && ['buna', 'rekebot', 'enjera'].includes(id) && (
+                <div className={`gift-fx-steam ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
                     <svg className="steam-svg" viewBox="0 0 36 36" fill="none">
                         <path d="M10 26C8 20 12 15 10 10C8 7 11 3 10 1" stroke="rgba(160,174,192,0.65)" strokeWidth="2" strokeLinecap="round" className="steam-path p1" />
                         <path d="M18 28C16 21 20 16 18 11C16 7 19 4 18 1" stroke="rgba(160,174,192,0.75)" strokeWidth="2.2" strokeLinecap="round" className="steam-path p2" />
@@ -614,31 +641,63 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false, isS
                 </div>
             )}
 
-            {isSelected && id === 'kebero' && (
-                <div className="gift-fx-kebero-wave" aria-hidden="true">
+            {/* Adey Abeba & Highland Rose: Blooming Golden Pollen & Sparkles */}
+            {animated && ['adey_abeba', 'rose'].includes(id) && (
+                <div className={`gift-fx-bloom-pollen ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="pollen-dot p1" />
+                    <span className="pollen-dot p2" />
+                    <span className="pollen-dot p3" />
+                    <span className="pollen-sparkle s1">✧</span>
+                </div>
+            )}
+
+            {/* Kebero Drum: Rhythmic Radiating Sonic Acoustic Rings */}
+            {animated && id === 'kebero' && (
+                <div className={`gift-fx-kebero-wave ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
                     <span className="sonic-ring ring1" />
                     <span className="sonic-ring ring2" />
                 </div>
             )}
 
-            {isSelected && ['diamond', 'crown', 'national_honor'].includes(id) && (
-                <div className="gift-fx-sparkle-stars" aria-hidden="true">
+            {/* Masenqo & Krar: Harmonic Strings Vibration & Floating Notes */}
+            {animated && ['masenqo', 'krar'].includes(id) && (
+                <div className={`gift-fx-string-waves ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="vibe-line v1" />
+                    <span className="vibe-line v2" />
+                    <span className="music-note n1">♪</span>
+                </div>
+            )}
+
+            {/* Axum, Lalibela & Gondar: Sunlit Golden Sheen Beam Sweep */}
+            {animated && ['axum', 'lalibela', 'gondar'].includes(id) && (
+                <div className={`gift-fx-golden-sheen ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <div className="sheen-sweep-bar" />
+                </div>
+            )}
+
+            {/* Diamond, Crown & National Honor: Crystalline Star Sparkles */}
+            {animated && ['diamond', 'crown', 'national_honor'].includes(id) && (
+                <div className={`gift-fx-sparkle-stars ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
                     <span className="sparkle-star s1">✦</span>
                     <span className="sparkle-star s2">✧</span>
                     <span className="sparkle-star s3">✦</span>
                 </div>
             )}
 
-            {isSelected && ['axum', 'lalibela', 'gondar'].includes(id) && (
-                <div className="gift-fx-golden-sheen" aria-hidden="true">
-                    <div className="sheen-sweep-bar" />
+            {/* ETRSS-1 Satellite: Radar Telemetry Waves */}
+            {animated && id === 'satellite' && (
+                <div className={`gift-fx-satellite-signal ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="sat-ping p1" />
+                    <span className="sat-ping p2" />
                 </div>
             )}
 
-            {isSelected && ['masenqo', 'krar'].includes(id) && (
-                <div className="gift-fx-string-waves" aria-hidden="true">
-                    <span className="vibe-line v1" />
-                    <span className="vibe-line v2" />
+            {/* Erta Ale Volcano: Bubbling Magma Glow & Floating Embers */}
+            {animated && id === 'erta_ale' && (
+                <div className={`gift-fx-volcano-embers ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="ember-spark e1" />
+                    <span className="ember-spark e2" />
+                    <span className="ember-spark e3" />
                 </div>
             )}
 
