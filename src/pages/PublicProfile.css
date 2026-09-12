@@ -1855,8 +1855,9 @@
     text-align: center;
     z-index: 10;
     margin: auto 0;
-    max-height: 58vh;
+    max-height: 62vh;
     animation: stagePopIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    flex-shrink: 0;
 }
 
 @keyframes stagePopIn {
@@ -1866,20 +1867,43 @@
 
 .eth-celebration-hero-art {
     position: relative;
-    margin-bottom: clamp(0.35rem, 1vh, 0.75rem);
-    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.65));
+    margin-bottom: clamp(0.4rem, 1.2vh, 0.85rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 165px;
+    height: 165px;
+    filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.55));
+}
+
+.eth-celebration-hero-art::before {
+    content: '';
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.22) 0%, rgba(245, 158, 11, 0.05) 50%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: celebrationAuraPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes celebrationAuraPulse {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    100% { transform: scale(1.08); opacity: 1; }
 }
 
 .hero-art-spotlight {
     position: absolute;
-    bottom: -10px;
+    bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
-    width: 130px;
-    height: 25px;
+    width: 140px;
+    height: 24px;
     border-radius: 50%;
     background: radial-gradient(ellipse, rgba(245, 158, 11, 0.45) 0%, transparent 75%);
     pointer-events: none;
+    z-index: 1;
 }
 
 .eth-celebration-info {
@@ -2014,4 +2038,364 @@
     background: rgba(255, 255, 255, 0.16);
     color: #FFFFFF;
     border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ==========================================================================
+   8. POST-TIP SUCCESS RECEIPT SCREEN (PREMIUM FINTECH DIGITAL RECEIPT)
+   ========================================================================== */
+
+.tip-success-container {
+    text-align: center;
+    padding: 0.5rem 0.25rem;
+    max-width: 440px;
+    margin: 0 auto;
+    animation: successFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes successFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tip-success-emblem-wrap {
+    margin: 0 auto 0.75rem;
+    display: flex;
+    justify-content: center;
+}
+
+.tip-success-emblem-ring {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.25) 100%);
+    color: #059669;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2.5px solid #10B981;
+    box-shadow: 0 0 24px rgba(16, 185, 129, 0.28);
+    animation: emblemPulse 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes emblemPulse {
+    0% { transform: scale(1); box-shadow: 0 0 16px rgba(16, 185, 129, 0.2); }
+    100% { transform: scale(1.05); box-shadow: 0 0 28px rgba(16, 185, 129, 0.36); }
+}
+
+.tip-success-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: var(--text-main);
+    margin: 0 0 0.25rem 0;
+    letter-spacing: -0.01em;
+}
+
+.tip-success-subtitle {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    margin: 0 0 1.15rem 0;
+    line-height: 1.4;
+}
+
+/* Dedicated Tip Order Summary Card */
+.tip-order-summary-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-secondary, #F8FAFC);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    margin-bottom: 0.95rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+}
+
+[data-theme='dark'] .tip-order-summary-box {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.tip-order-gift-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    text-align: left;
+}
+
+.tip-order-gift-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    border-radius: 12px;
+    background: rgba(245, 158, 11, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.tip-order-coin-emoji {
+    font-size: 1.65rem;
+    user-select: none;
+}
+
+.tip-order-gift-details {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.tip-order-gift-name {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.tip-order-gift-sub {
+    font-size: 0.77rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tip-order-amount-col {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.tip-order-amount-etb {
+    font-size: 1.18rem;
+    font-weight: 900;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.tip-order-coins-sub {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #F59E0B;
+    margin-top: 2px;
+}
+
+/* Compact Digital Receipt Card */
+.compact-receipt-card {
+    background: var(--bg-secondary, #F8FAFC);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 10px 16px;
+    margin-bottom: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+[data-theme='dark'] .compact-receipt-card {
+    background: rgba(255, 255, 255, 0.035);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.compact-receipt-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    padding: 2px 0;
+}
+
+.receipt-label {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.receipt-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 2px 10px;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+}
+
+[data-theme='dark'] .receipt-status-pill {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10B981;
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.receipt-ref-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 2px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+[data-theme='dark'] .receipt-ref-badge {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.receipt-ref-badge:hover {
+    border-color: var(--primary);
+    background: rgba(16, 185, 129, 0.08);
+}
+
+.receipt-ref-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.01em;
+}
+
+.receipt-method-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    color: var(--text-main);
+    font-size: 0.82rem;
+}
+
+.receipt-method-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.receipt-method-dot.telebirr {
+    background: #0088CC;
+    box-shadow: 0 0 6px rgba(0, 136, 204, 0.6);
+}
+
+.receipt-method-dot.chapa {
+    background: #10B981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.receipt-date-val {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.tip-success-repeat-btn {
+    width: 100%;
+    margin-bottom: 0.95rem;
+    font-weight: 800;
+    height: 46px;
+    font-size: 0.96rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+    transition: all 0.2s ease;
+}
+
+.tip-success-repeat-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+}
+
+/* Compact Branded Share Row */
+.compact-share-section {
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 0.4rem;
+}
+
+.compact-share-title {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 0.65rem;
+}
+
+.compact-share-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.compact-share-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card, #FFFFFF);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme='dark'] .compact-share-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.share-pill-link:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(16, 185, 129, 0.08);
+    transform: translateY(-1px);
+}
+
+.share-pill-telegram {
+    color: #0088CC !important;
+    border-color: rgba(0, 136, 204, 0.25) !important;
+}
+
+.share-pill-telegram:hover {
+    background: rgba(0, 136, 204, 0.1) !important;
+    transform: translateY(-1px);
+}
+
+.share-pill-whatsapp {
+    color: #25D366 !important;
+    border-color: rgba(37, 211, 102, 0.25) !important;
+}
+
+.share-pill-whatsapp:hover {
+    background: rgba(37, 211, 102, 0.1) !important;
+    transform: translateY(-1px);
+}
+
+.share-pill-x:hover {
+    background: rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+}
+
+[data-theme='dark'] .share-pill-x:hover {
+    background: rgba(255, 255, 255, 0.1);
 }

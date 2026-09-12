@@ -112,12 +112,19 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
             className={`eth-gift-art-box ${getMovementClass()} ${isHero ? 'eth-gift-hero' : ''}`}
             data-gift-id={id}
             style={{ 
-                width: s, 
-                height: s, 
+                width: `${s}px`, 
+                height: `${s}px`,
+                minWidth: `${s}px`,
+                minHeight: `${s}px`,
+                maxWidth: `${s}px`,
+                maxHeight: `${s}px`,
+                aspectRatio: '1 / 1',
+                flexShrink: 0,
                 position: 'relative',
                 display: 'inline-flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                background: 'transparent'
             }}
         >
             {/* Sacred Ambient Light Aura Behind Books */}
@@ -126,23 +133,46 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false }) =
             )}
 
             {/* Visual Frame */}
-            <div className="eth-gift-image-frame">
+            <div 
+                className="eth-gift-image-frame"
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    aspectRatio: '1 / 1',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'transparent'
+                }}
+            >
                 {!imgError ? (
                     <img 
                         src={imgSrc} 
                         alt={id}
                         className={`eth-gift-real-img ${id === 'bible' || id === 'quran' ? 'eth-book-real-img' : ''}`}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                            aspectRatio: '1 / 1',
+                            display: 'block'
+                        }}
                         onError={() => {
-                            if (imgSrc.endsWith('.png')) {
-                                setImgSrc(`/gifts/${id}.jpg`);
-                            } else {
-                                setImgError(true);
-                            }
+                            setImgError(true);
                         }}
                         loading="lazy"
                     />
                 ) : (
-                    <div className="eth-gift-fallback-emoji">
+                    <div 
+                        className="eth-gift-fallback-emoji"
+                        style={{ 
+                            fontSize: `${Math.max(22, Math.round(s * 0.52))}px`,
+                            lineHeight: 1,
+                            userSelect: 'none'
+                        }}
+                    >
                         {id === 'adey_abeba' ? '🌼' :
                          id === 'rose' ? '🌹' :
                          id === 'buna' ? '☕' :

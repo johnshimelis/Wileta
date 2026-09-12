@@ -67,7 +67,17 @@ export default function PublicProfile() {
     const [txRef, setTxRef] = useState('');
     const [alert, setAlert] = useState(null);
     const [copiedShare, setCopiedShare] = useState(false);
+    const [copiedRef, setCopiedRef] = useState(false);
     const [showQrModal, setShowQrModal] = useState(false);
+
+    const handleCopyRef = () => {
+        if (!txRef) return;
+        if (typeof navigator !== 'undefined' && navigator.clipboard) {
+            navigator.clipboard.writeText(txRef);
+            setCopiedRef(true);
+            setTimeout(() => setCopiedRef(false), 2000);
+        }
+    };
 
     // TikTok-style Live Celebration State
     const [showCelebrationModal, setShowCelebrationModal] = useState(false);
@@ -336,26 +346,16 @@ export default function PublicProfile() {
                         </div>
 
                         {/* Celebration Ring */}
-                        <div style={{
-                            width: '54px',
-                            height: '54px',
-                            borderRadius: '50%',
-                            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.25) 100%)',
-                            color: '#059669',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            margin: '0 auto 0.65rem',
-                            border: '2.5px solid #10B981',
-                            boxShadow: '0 0 20px rgba(16, 185, 129, 0.25)'
-                        }}>
-                            <Check size={28} strokeWidth={3} />
+                        <div className="tip-success-emblem-wrap">
+                            <div className="tip-success-emblem-ring">
+                                <Check size={28} strokeWidth={3.2} />
+                            </div>
                         </div>
 
-                        <h2 style={{ fontSize: '1.3rem', fontWeight: 900, color: 'var(--text-main)', margin: '0 0 0.2rem 0' }}>
+                        <h2 className="tip-success-title">
                             Tip Sent Successfully! ❤️
                         </h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', margin: '0 0 0.85rem 0' }}>
+                        <p className="tip-success-subtitle">
                             Thank you for supporting <strong>{creator.name}</strong>
                         </p>
 
@@ -364,18 +364,18 @@ export default function PublicProfile() {
                             <div className="tip-order-gift-left">
                                 <div className="tip-order-gift-icon">
                                     {!isCustom && selectedGift ? (
-                                        <Gift3DIcon id={selectedGift.id} size={42} animated={true} />
+                                        <Gift3DIcon id={selectedGift.id} size={44} animated={false} />
                                     ) : (
-                                        <span style={{ fontSize: '1.8rem' }}>🪙</span>
+                                        <span className="tip-order-coin-emoji">🪙</span>
                                     )}
                                 </div>
                                 <div className="tip-order-gift-details">
-                                    <span className="tip-order-gift-name">
-                                        {!isCustom && selectedGift ? `${selectedGift.nameAm} (${selectedGift.nameEn})` : 'Custom ETB Coins'}
-                                    </span>
-                                    <span className="tip-order-gift-sub">
+                                    <div className="tip-order-gift-name">
+                                        {!isCustom && selectedGift ? `${selectedGift.nameAm} (${selectedGift.nameEn})` : 'Custom Gursha Coins'}
+                                    </div>
+                                    <div className="tip-order-gift-sub">
                                         From {isAnonymous ? 'Anonymous Supporter' : (tipperName || 'Generous Supporter')}
-                                    </span>
+                                    </div>
                                 </div>
                             </div>
                             <div className="tip-order-amount-col">
@@ -389,22 +389,42 @@ export default function PublicProfile() {
                         {/* Compact Digital Receipt Details */}
                         <div className="compact-receipt-card">
                             <div className="compact-receipt-row">
-                                <span style={{ color: 'var(--text-muted)' }}>Status</span>
-                                <span style={{ fontWeight: 800, color: '#10B981' }}>COMPLETED ✓</span>
+                                <span className="receipt-label">Status</span>
+                                <span className="receipt-status-pill">
+                                    <Check size={11} strokeWidth={3} /> COMPLETED
+                                </span>
                             </div>
                             <div className="compact-receipt-row">
-                                <span style={{ color: 'var(--text-muted)' }}>Reference</span>
-                                <span style={{ fontWeight: 700, fontFamily: 'monospace', color: 'var(--text-main)', fontSize: '0.78rem' }}>{txRef || 'GP-TIP'}</span>
+                                <span className="receipt-label">Reference</span>
+                                <div 
+                                    className="receipt-ref-badge" 
+                                    onClick={handleCopyRef} 
+                                    title="Click to copy reference"
+                                    role="button"
+                                    tabIndex={0}
+                                >
+                                    <span className="receipt-ref-mono">{txRef || 'GP-TIP'}</span>
+                                    {copiedRef ? <Check size={11} color="#10B981" /> : <Copy size={11} />}
+                                </div>
                             </div>
                             <div className="compact-receipt-row">
-                                <span style={{ color: 'var(--text-muted)' }}>Payment Method</span>
-                                <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>{paymentMethod === 'telebirr' ? 'Telebirr USSD' : 'Chapa Gateway'}</span>
+                                <span className="receipt-label">Payment Method</span>
+                                <span className="receipt-method-pill">
+                                    <span className={`receipt-method-dot ${paymentMethod === 'telebirr' ? 'telebirr' : 'chapa'}`} />
+                                    {paymentMethod === 'telebirr' ? 'Telebirr USSD' : 'Chapa Gateway'}
+                                </span>
+                            </div>
+                            <div className="compact-receipt-row">
+                                <span className="receipt-label">Date & Time</span>
+                                <span className="receipt-date-val">
+                                    {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                </span>
                             </div>
                         </div>
 
                         <Button
                             variant="primary"
-                            style={{ width: '100%', marginBottom: '0.55rem', fontWeight: 800, height: '44px', fontSize: '0.95rem' }}
+                            className="tip-success-repeat-btn"
                             onClick={() => {
                                 setTippingState('idle');
                                 setShoutOutMessage('');
@@ -413,42 +433,65 @@ export default function PublicProfile() {
                             Send Another Gursha
                         </Button>
 
-                        {/* Integrated Compact Share Row */}
-                        <div className="compact-share-row">
-                            <button
-                                type="button"
-                                onClick={handleCopyLink}
-                                className="compact-share-btn"
-                                title="Copy Link"
-                            >
-                                {copiedShare ? <Check size={12} color="#10B981" /> : <Copy size={12} />} Link
-                            </button>
-                            <a
-                                href={`https://t.me/share/url?url=${shareUrl}&text=${shareText}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="compact-share-btn"
-                                style={{ color: '#0088CC' }}
-                            >
-                                Telegram
-                            </a>
-                            <a
-                                href={`https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="compact-share-btn"
-                                style={{ color: '#25D366' }}
-                            >
-                                WhatsApp
-                            </a>
-                            <a
-                                href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="compact-share-btn"
-                            >
-                                X
-                            </a>
+                        {/* Integrated Compact Branded Share Row */}
+                        <div className="compact-share-section">
+                            <div className="compact-share-title">Share the love</div>
+                            <div className="compact-share-row">
+                                <button
+                                    type="button"
+                                    onClick={handleCopyLink}
+                                    className="compact-share-pill share-pill-link"
+                                    title="Copy Link"
+                                >
+                                    {copiedShare ? (
+                                        <>
+                                            <Check size={13} color="#10B981" strokeWidth={2.8} />
+                                            <span style={{ color: '#10B981', fontWeight: 700 }}>Copied!</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Copy size={13} />
+                                            <span>Copy Link</span>
+                                        </>
+                                    )}
+                                </button>
+                                <a
+                                    href={`https://t.me/share/url?url=${shareUrl}&text=${shareText}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="compact-share-pill share-pill-telegram"
+                                    title="Share on Telegram"
+                                >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                                    </svg>
+                                    <span>Telegram</span>
+                                </a>
+                                <a
+                                    href={`https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="compact-share-pill share-pill-whatsapp"
+                                    title="Share on WhatsApp"
+                                >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2ZM12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.59 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19.01L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67ZM8.83 7.35C8.65 7.35 8.35 7.42 8.1 7.69C7.86 7.96 7.17 8.6 7.17 9.91C7.17 11.23 8.13 12.5 8.27 12.68C8.4 12.87 10.16 15.58 12.87 16.75C15.12 17.72 15.58 17.52 16.07 17.48C16.57 17.43 17.67 16.82 17.9 16.18C18.13 15.53 18.13 14.98 18.06 14.86C17.99 14.75 17.81 14.68 17.54 14.55C17.27 14.41 15.95 13.76 15.7 13.67C15.46 13.58 15.28 13.53 15.1 13.8C14.93 14.07 14.43 14.68 14.27 14.86C14.12 15.04 13.97 15.07 13.7 14.93C13.43 14.8 12.56 14.51 11.53 13.59C10.72 12.87 10.18 11.98 10.02 11.71C9.86 11.44 10.01 11.29 10.14 11.16C10.26 11.04 10.41 10.84 10.55 10.68C10.68 10.53 10.73 10.41 10.82 10.23C10.91 10.05 10.87 9.89 10.8 9.76C10.73 9.62 10.19 8.29 9.96 7.74C9.74 7.21 9.51 7.28 9.34 7.27C9.18 7.27 8.99 7.35 8.83 7.35Z"/>
+                                    </svg>
+                                    <span>WhatsApp</span>
+                                </a>
+                                <a
+                                    href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="compact-share-pill share-pill-x"
+                                    title="Share on X"
+                                >
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                    </svg>
+                                    <span>Post</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 ) : tippingState === 'pin_prompt' ? (
