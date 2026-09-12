@@ -1,10 +1,11 @@
 /* ==========================================================================
-   GURSHA PAY — CREATOR TIPPING PAGE (FLAT, CLEAN, INTERACTIVE, HUMAN)
-   Modern fintech design, no AI templates, no card-in-card clutter,
-   pure flat white gift grid, restrained subtle micro-interactions.
+   GURSHA PAY — CREATOR TIPPING PAGE (PREMIUM FINTECH POLISH)
+   Preserves 100% of existing geometry, layout, structure, and positions.
+   Pure visual designer polish: typography, spacing, subtle micro-interactions,
+   and clean flat white gift surface.
    ========================================================================== */
 
-/* 1. Page Wrapper (Mobile-first, centered, natural spacing) */
+/* 1. Page Wrapper (Centered, mobile-first, natural fintech rhythm) */
 .tipping-page-wrapper {
     min-height: 100vh;
     background: var(--bg-color);
@@ -14,7 +15,9 @@
     align-items: center;
     padding: 1.25rem 1rem 3rem;
     box-sizing: border-box;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* 2. Top Navigation Bar */
@@ -47,12 +50,23 @@
     font-weight: 600;
     color: var(--text-main);
     cursor: pointer;
-    transition: border-color 0.15s ease, color 0.15s ease;
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
 }
 
 .tipping-nav-btn:hover {
     border-color: #047857;
     color: #047857;
+    background: #F8FAFC;
+}
+
+.tipping-nav-btn:active {
+    transform: scale(0.96);
+}
+
+[data-theme='dark'] .tipping-nav-btn:hover {
+    background: #1E293B;
+    border-color: #10B981;
+    color: #10B981;
 }
 
 /* 3. Main Single Card Container (The ONLY container card on the page) */
@@ -63,7 +77,7 @@
     border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 1.5rem 1.25rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 6px 16px -4px rgba(0, 0, 0, 0.02);
     box-sizing: border-box;
     transition: border-color 0.15s ease;
 }
@@ -86,7 +100,8 @@
     margin: 0 auto 0.6rem;
     position: relative;
     border-radius: 50%;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--card-bg);
+    box-shadow: 0 0 0 1.5px var(--border-color);
     overflow: hidden;
     background: var(--bg-color);
 }
@@ -112,6 +127,11 @@
     font-weight: 700;
 }
 
+[data-theme='dark'] .creator-avatar-placeholder {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10B981;
+}
+
 .creator-info-block {
     display: flex;
     flex-direction: column;
@@ -128,13 +148,14 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
 }
 
 .creator-handle-tag {
     font-size: 0.8rem;
     font-weight: 600;
     color: #047857;
+    letter-spacing: -0.01em;
 }
 
 [data-theme='dark'] .creator-handle-tag {
@@ -261,6 +282,7 @@
     font-size: 0.85rem;
     font-weight: 700;
     color: var(--text-main);
+    letter-spacing: -0.01em;
 }
 
 /* Category Navigation Tabs (Clean horizontal tabs, no pill everywhere) */
@@ -272,6 +294,7 @@
     padding-bottom: 0;
     margin-bottom: 0.75rem;
     scrollbar-width: none;
+    -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -282,8 +305,8 @@
 .clean-cat-tab {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 6px 10px;
+    gap: 5px;
+    padding: 6px 11px;
     background: transparent;
     border: none;
     border-bottom: 2px solid transparent;
@@ -305,7 +328,7 @@
 .clean-cat-tab.active {
     color: #047857 !important;
     border-bottom-color: #047857 !important;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 [data-theme='dark'] .clean-cat-tab.active {
@@ -331,7 +354,33 @@
     padding: 2px;
     margin-bottom: 0.5rem;
     scrollbar-width: thin;
-    scrollbar-color: rgba(4, 120, 87, 0.25) transparent;
+    scrollbar-color: #E2E8F0 transparent;
+}
+
+[data-theme='dark'] .clean-gift-grid {
+    scrollbar-color: #334155 transparent;
+}
+
+/* Modern sleek custom scrollbar for gift grid */
+.clean-gift-grid::-webkit-scrollbar {
+    width: 4px;
+}
+
+.clean-gift-grid::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.clean-gift-grid::-webkit-scrollbar-thumb {
+    background: #E2E8F0;
+    border-radius: 4px;
+}
+
+.clean-gift-grid::-webkit-scrollbar-thumb:hover {
+    background: #CBD5E1;
+}
+
+[data-theme='dark'] .clean-gift-grid::-webkit-scrollbar-thumb {
+    background: #334155;
 }
 
 /* NO BACKGROUND CARD ON UNSELECTED GIFTS. Direct flat surface. */
@@ -341,31 +390,33 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 8px 3px 6px;
+    padding: 8px 4px 6px;
     background: transparent;
     border: 1.5px solid transparent;
-    border-radius: 8px;
+    border-radius: 9px;
     cursor: pointer;
-    transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1), 
-                border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), 
-                background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     outline: none;
     text-align: center;
     user-select: none;
     min-height: 116px;
 }
 
-/* Hover: Slight image scale ~1.04, subtle background hint, cursor pointer */
+/* Hover: Slight image scale ~1.05, subtle background hint, cursor pointer */
 .clean-gift-card:hover {
-    background: rgba(0, 0, 0, 0.015);
+    background: rgba(4, 120, 87, 0.02);
+    border-color: rgba(4, 120, 87, 0.15);
 }
 
 [data-theme='dark'] .clean-gift-card:hover {
     background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(16, 185, 129, 0.2);
 }
 
 .clean-gift-card:hover .gift-icon-box {
-    transform: scale(1.05);
+    transform: scale(1.06);
 }
 
 /* Press/Tap: Small tactile scale feedback */
@@ -387,10 +438,10 @@
 
 .gift-selected-tick {
     position: absolute;
-    top: 3px;
-    right: 3px;
-    width: 16px;
-    height: 16px;
+    top: 5px;
+    right: 5px;
+    width: 17px;
+    height: 17px;
     border-radius: 50%;
     background: #047857;
     color: #FFFFFF;
@@ -398,7 +449,7 @@
     align-items: center;
     justify-content: center;
     z-index: 5;
-    animation: tickPop 0.18s ease forwards;
+    animation: tickPop 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 [data-theme='dark'] .gift-selected-tick {
@@ -418,12 +469,12 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 4px;
-    transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     background: transparent;
 }
 
 .clean-gift-card.selected .gift-icon-box {
-    transform: scale(1.03);
+    transform: scale(1.02);
 }
 
 .gift-text-wrap {
@@ -434,7 +485,7 @@
 }
 
 .gift-name-primary {
-    font-size: 0.79rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--text-main);
     line-height: 1.25;
@@ -454,7 +505,7 @@
 }
 
 .gift-name-secondary {
-    font-size: 0.67rem;
+    font-size: 0.6875rem;
     font-weight: 400;
     color: var(--text-muted);
     line-height: 1.15;
@@ -471,7 +522,7 @@
     justify-content: center;
     gap: 3px;
     margin-top: 3px;
-    font-size: 0.71rem;
+    font-size: 0.72rem;
 }
 
 .price-etb {
@@ -490,7 +541,7 @@
 
 .price-coins {
     color: #D97706;
-    font-size: 0.64rem;
+    font-size: 0.65rem;
     font-weight: 500;
 }
 
@@ -529,7 +580,7 @@
 }
 
 .strip-name {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--text-main);
     white-space: nowrap;
@@ -538,13 +589,13 @@
 }
 
 .strip-en {
-    font-size: 0.68rem;
+    font-size: 0.6875rem;
     font-weight: 400;
     color: var(--text-muted);
 }
 
 .strip-cost {
-    font-size: 0.71rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: #047857;
 }
@@ -562,6 +613,8 @@
 
 .clean-mult-btn {
     padding: 3px 8px;
+    min-width: 28px;
+    height: 26px;
     border-radius: 6px;
     font-size: 0.72rem;
     font-weight: 600;
@@ -569,16 +622,24 @@
     border: 1px solid var(--border-color);
     color: var(--text-main);
     cursor: pointer;
-    transition: all 0.12s ease;
+    transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .clean-mult-btn:hover {
     border-color: #047857;
     color: #047857;
+    background: #F8FAFC;
 }
 
 .clean-mult-btn:active {
-    transform: scale(0.96);
+    transform: scale(0.94);
+}
+
+[data-theme='dark'] .clean-mult-btn:hover {
+    background: #1E293B;
 }
 
 .clean-mult-btn.active {
@@ -586,6 +647,7 @@
     border-color: #047857 !important;
     color: #FFFFFF !important;
     font-weight: 700;
+    box-shadow: 0 1px 2px rgba(4, 120, 87, 0.25);
 }
 
 [data-theme='dark'] .clean-mult-btn.active {
@@ -626,7 +688,7 @@
 
 .custom-prefix {
     position: absolute;
-    left: 10px;
+    left: 12px;
     font-weight: 700;
     font-size: 0.8rem;
     color: var(--text-muted);
@@ -649,7 +711,7 @@
 
 .clean-custom-input:focus {
     border-color: #047857;
-    box-shadow: 0 0 0 2px rgba(4, 120, 87, 0.12);
+    box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.1);
 }
 
 .custom-conversion-text {
@@ -675,7 +737,7 @@
 }
 
 .clean-field-label {
-    font-size: 0.77rem;
+    font-size: 0.775rem;
     font-weight: 600;
     color: var(--text-muted);
     display: block;
@@ -690,7 +752,7 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: var(--text-main);
     cursor: pointer;
@@ -698,17 +760,20 @@
 
 .clean-anon-checkbox input {
     accent-color: #047857;
+    width: 14px;
+    height: 14px;
     cursor: pointer;
 }
 
 .clean-text-input {
     width: 100%;
-    padding: 8px 11px;
+    height: 40px;
+    padding: 8px 12px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background: var(--card-bg);
     color: var(--text-main);
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     box-sizing: border-box;
     outline: none;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -716,19 +781,19 @@
 
 .clean-text-input:focus {
     border-color: #047857;
-    box-shadow: 0 0 0 2px rgba(4, 120, 87, 0.12);
+    box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.1);
 }
 
 .clean-textarea-input {
     width: 100%;
-    padding: 8px 11px;
+    padding: 8px 12px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background: var(--card-bg);
     color: var(--text-main);
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     font-family: inherit;
-    line-height: 1.4;
+    line-height: 1.45;
     box-sizing: border-box;
     outline: none;
     resize: none;
@@ -737,7 +802,7 @@
 
 .clean-textarea-input:focus {
     border-color: #047857;
-    box-shadow: 0 0 0 2px rgba(4, 120, 87, 0.12);
+    box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.1);
 }
 
 .clean-char-counter {
@@ -747,27 +812,32 @@
 
 .clean-quick-messages {
     display: flex;
-    gap: 4px;
+    gap: 5px;
     flex-wrap: wrap;
-    margin-top: 5px;
+    margin-top: 6px;
 }
 
-/* Suggested message chips: light, optional, small green highlight when selected */
+/* Suggested message chips: light, optional, subtle green highlight when selected */
 .clean-msg-chip {
-    padding: 3px 8px;
+    padding: 4px 9px;
     border-radius: 6px;
     border: 1px solid var(--border-color);
-    background: transparent;
+    background: #F8FAFC;
     color: var(--text-muted);
     font-size: 0.72rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.12s ease;
+    transition: all 0.15s ease;
 }
 
 .clean-msg-chip:hover {
     border-color: #047857;
     color: #047857;
+    background: rgba(4, 120, 87, 0.03);
+}
+
+.clean-msg-chip:active {
+    transform: scale(0.96);
 }
 
 .clean-msg-chip.active {
@@ -775,6 +845,10 @@
     border-color: #047857 !important;
     color: #047857 !important;
     font-weight: 600;
+}
+
+[data-theme='dark'] .clean-msg-chip {
+    background: #1E293B;
 }
 
 [data-theme='dark'] .clean-msg-chip.active {
@@ -793,8 +867,8 @@
 .clean-payment-tile {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 10px;
+    gap: 9px;
+    padding: 9px 12px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background: var(--card-bg);
@@ -805,16 +879,22 @@
 }
 
 .clean-payment-tile:hover {
-    border-color: #94A3B8;
+    border-color: #CBD5E1;
+    background: #F8FAFC;
 }
 
 .clean-payment-tile:active {
-    transform: scale(0.99);
+    transform: scale(0.985);
 }
 
 .clean-payment-tile.active {
     border: 1.5px solid #047857 !important;
     background: rgba(4, 120, 87, 0.035) !important;
+}
+
+[data-theme='dark'] .clean-payment-tile:hover {
+    background: #1E293B;
+    border-color: #475569;
 }
 
 [data-theme='dark'] .clean-payment-tile.active {
@@ -823,9 +903,9 @@
 }
 
 .payment-tile-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -852,22 +932,23 @@
 }
 
 .tile-title {
-    font-size: 0.8rem;
+    font-size: 0.8125rem;
     font-weight: 700;
     color: var(--text-main);
 }
 
 .tile-sub {
-    font-size: 0.67rem;
+    font-size: 0.6875rem;
     color: var(--text-muted);
+    margin-top: 1px;
 }
 
 .payment-tile-check {
     position: absolute;
-    top: 4px;
-    right: 4px;
-    width: 14px;
-    height: 14px;
+    top: 6px;
+    right: 6px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: #047857;
     color: #FFFFFF;
@@ -889,22 +970,25 @@
 
 .clean-phone-prefix {
     position: absolute;
-    left: 10px;
-    font-weight: 700;
-    font-size: 0.84rem;
+    left: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
     color: var(--text-muted);
     pointer-events: none;
+    letter-spacing: -0.01em;
 }
 
 .clean-phone-input {
     width: 100%;
-    padding: 8px 12px 8px 76px;
+    height: 42px;
+    padding: 8px 12px 8px 78px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background: var(--card-bg);
     color: var(--text-main);
-    font-size: 0.925rem;
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
     box-sizing: border-box;
     outline: none;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -912,7 +996,7 @@
 
 .clean-phone-input:focus {
     border-color: #047857;
-    box-shadow: 0 0 0 2px rgba(4, 120, 87, 0.12);
+    box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.1);
 }
 
 /* Main Send Tip CTA Button (Solid, Prominent, Clear & Tactile) */
@@ -923,20 +1007,21 @@
     color: #FFFFFF;
     border: none;
     border-radius: 8px;
-    font-size: 0.925rem;
+    font-size: 0.9375rem;
     font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+    transition: background 0.15s cubic-bezier(0.16, 1, 0.3, 1), transform 0.1s ease, box-shadow 0.15s ease;
     margin-top: 0.5rem;
+    letter-spacing: -0.01em;
 }
 
 .clean-send-btn:hover {
     background: #065F46;
-    box-shadow: 0 2px 6px rgba(4, 120, 87, 0.2);
+    box-shadow: 0 3px 10px rgba(4, 120, 87, 0.22);
 }
 
 .clean-send-btn:active {
@@ -968,14 +1053,14 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
-    font-size: 0.71rem;
+    font-size: 0.72rem;
     color: var(--text-muted);
     margin-top: 0.75rem;
 }
 
 /* ==========================================================================
    7. SHARE PAGE STRIP (BELOW MAIN CARD)
-   ========================================================================== */
+   ========================================================================= */
 
 .clean-share-bar {
     width: 100%;
@@ -990,7 +1075,7 @@
 }
 
 .clean-share-label {
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     font-weight: 600;
 }
@@ -1008,16 +1093,27 @@
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.12s ease;
+    transition: all 0.15s ease;
 }
 
 .clean-share-link-btn:hover {
     border-color: #047857;
     color: #047857;
+    background: #F8FAFC;
+}
+
+.clean-share-link-btn:active {
+    transform: scale(0.95);
 }
 
 .clean-share-link-btn.icon-only {
     padding: 5px;
+}
+
+[data-theme='dark'] .clean-share-link-btn:hover {
+    background: #1E293B;
+    border-color: #10B981;
+    color: #10B981;
 }
 
 /* ==========================================================================

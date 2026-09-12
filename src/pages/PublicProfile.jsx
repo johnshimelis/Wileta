@@ -679,7 +679,7 @@ export default function PublicProfile() {
                                                         )}
 
                                                         <div className="gift-icon-box">
-                                                            <Gift3DIcon id={gift.id} size={54} animated={true} />
+                                                            <Gift3DIcon id={gift.id} size={54} animated={false} />
                                                         </div>
 
                                                         <div className="gift-text-wrap">
