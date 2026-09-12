@@ -17,7 +17,7 @@ import Badge from '../components/ui/Badge';
 import TopAlert from '../components/TopAlert';
 
 export default function Settings() {
-    const { user, setUser, api } = useAuth();
+    const { user, setUser, api, requestTelebirrOtp, verifyTelebirrOtp } = useAuth();
     const { t } = useLanguage();
     const [name, setName] = useState(user?.name || '');
     const [username, setUsername] = useState(user?.username || '');
@@ -44,14 +44,55 @@ export default function Settings() {
     const [passwordLoading, setPasswordLoading] = useState(false);
     const [resendCooldown, setResendCooldown] = useState(0);
 
+    // Telebirr Wallet & Verification state
+    const isTelebirrVerified = Boolean(
+        (user?.telebirrAccount?.status === 'VERIFIED' || user?.phoneVerified) &&
+        (user?.telebirr_number || user?.telebirrAccount?.phoneNumber || user?.phone)
+    );
+
+    const getCleanPhone = (phoneStr) => {
+        let clean = (phoneStr || '').toString().replace(/[^0-9]/g, '');
+        if (clean.startsWith('251')) clean = clean.substring(3);
+        else if (clean.startsWith('0')) clean = clean.substring(1);
+        return clean.slice(0, 9);
+    };
+
+    const currentTelebirrNumber = getCleanPhone(user?.telebirr_number || user?.telebirrAccount?.phoneNumber || user?.phone);
+
+    const [isEditingTelebirr, setIsEditingTelebirr] = useState(!isTelebirrVerified);
+    const [tbPhoneInput, setTbPhoneInput] = useState(currentTelebirrNumber);
+    const [tbOtp, setTbOtp] = useState('');
+    const [tbOtpSent, setTbOtpSent] = useState(false);
+    const [tbSendingOtp, setTbSendingOtp] = useState(false);
+    const [tbVerifying, setTbVerifying] = useState(false);
+    const [tbCooldown, setTbCooldown] = useState(0);
+    const [tbDevOtp, setTbDevOtp] = useState('');
+    const [tbError, setTbError] = useState('');
+
     useEffect(() => {
         if (user) {
             setName(user.name || '');
             setUsername(user.username || '');
+            const clean = getCleanPhone(user?.telebirr_number || user?.telebirrAccount?.phoneNumber || user?.phone);
+            setTbPhoneInput(clean);
+            if (!isTelebirrVerified) {
+                setIsEditingTelebirr(true);
+            }
             if (user.email) setOtpChannel('email');
             else if (user.phone) setOtpChannel('sms');
         }
-    }, [user]);
+    }, [user, isTelebirrVerified]);
+
+    // Telebirr Resend countdown timer
+    useEffect(() => {
+        let timer;
+        if (tbCooldown > 0) {
+            timer = setInterval(() => {
+                setTbCooldown(prev => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [tbCooldown]);
 
     // Resend countdown timer
     useEffect(() => {
@@ -63,6 +104,54 @@ export default function Settings() {
         }
         return () => clearInterval(timer);
     }, [resendCooldown]);
+
+    const handleSendTelebirrOtp = async () => {
+        setTbError('');
+        const cleanDigits = tbPhoneInput.replace(/[^0-9]/g, '');
+        if (cleanDigits.length !== 9 || (!cleanDigits.startsWith('9') && !cleanDigits.startsWith('7'))) {
+            setTbError('Please enter a valid Ethiopian Telebirr number (e.g. 911000000 or 711000000).');
+            return;
+        }
+
+        setTbSendingOtp(true);
+        const res = await requestTelebirrOtp(`0${cleanDigits}`);
+        setTbSendingOtp(false);
+
+        if (res.success) {
+            setTbOtpSent(true);
+            setTbCooldown(60);
+            showAlert(res.message || 'Verification code sent via SMS!', 'success');
+            if (res.devOtp) setTbDevOtp(res.devOtp);
+        } else {
+            setTbError(res.error || 'Failed to send verification code.');
+        }
+    };
+
+    const handleVerifyTelebirr = async () => {
+        setTbError('');
+        const cleanDigits = tbPhoneInput.replace(/[^0-9]/g, '');
+        if (cleanDigits.length !== 9) {
+            setTbError('Invalid phone number.');
+            return;
+        }
+        if (!tbOtp || tbOtp.trim().length !== 6) {
+            setTbError('Please enter the complete 6-digit verification code.');
+            return;
+        }
+
+        setTbVerifying(true);
+        const res = await verifyTelebirrOtp(`0${cleanDigits}`, tbOtp.trim());
+        setTbVerifying(false);
+
+        if (res.success) {
+            showAlert('Telebirr phone number verified successfully!', 'success');
+            setIsEditingTelebirr(false);
+            setTbOtpSent(false);
+            setTbOtp('');
+        } else {
+            setTbError(res.error || 'Invalid verification code. Please try again.');
+        }
+    };
 
     const showAlert = (message, type = 'success') => {
         setAlert({ message, type });
@@ -315,6 +404,278 @@ export default function Settings() {
 
                     {/* Right Column: Preferences & Security */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        {/* Telebirr Payout Destination & Verification Card */}
+                        <Card style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                                    <div style={{
+                                        width: '36px',
+                                        height: '36px',
+                                        borderRadius: '10px',
+                                        background: isTelebirrVerified ? 'rgba(5, 150, 105, 0.12)' : 'rgba(245, 158, 11, 0.12)',
+                                        color: isTelebirrVerified ? '#059669' : '#D97706',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Smartphone size={18} />
+                                    </div>
+                                    <div>
+                                        <h3 style={{ fontSize: '1.05rem', fontWeight: 800, margin: 0 }}>
+                                            {t('telebirrPayoutTitle') || 'Telebirr Payout Destination'}
+                                        </h3>
+                                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                            Direct wallet for creator payouts
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <Badge variant={isTelebirrVerified ? 'success' : 'warning'}>
+                                    {isTelebirrVerified ? (
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                                            <ShieldCheck size={12} /> {t('telebirrWalletVerified') || 'VERIFIED'}
+                                        </span>
+                                    ) : (
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                                            <AlertCircle size={12} /> {t('telebirrWalletNotVerified') || 'NOT VERIFIED'}
+                                        </span>
+                                    )}
+                                </Badge>
+                            </div>
+
+                            {/* Display Verified Telebirr State */}
+                            {isTelebirrVerified && !isEditingTelebirr ? (
+                                <div style={{
+                                    background: 'var(--bg-app)',
+                                    border: '1px solid var(--border-color)',
+                                    borderRadius: '12px',
+                                    padding: '1rem',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '0.75rem'
+                                }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                        <div>
+                                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                                Linked Telebirr Wallet
+                                            </div>
+                                            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }} className="mono-num">
+                                                <span>🇪🇹</span>
+                                                <span>+251 {currentTelebirrNumber.replace(/(\d{2})(\d{3})(\d{4})/, '$1 $2 $3')}</span>
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsEditingTelebirr(true);
+                                                setTbPhoneInput(currentTelebirrNumber);
+                                                setTbOtpSent(false);
+                                                setTbOtp('');
+                                                setTbError('');
+                                            }}
+                                            style={{
+                                                background: 'transparent',
+                                                border: '1px solid var(--border-color)',
+                                                borderRadius: '6px',
+                                                padding: '0.35rem 0.65rem',
+                                                fontSize: '0.78rem',
+                                                fontWeight: 600,
+                                                color: 'var(--text-main)',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.15s ease'
+                                            }}
+                                            onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
+                                            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+                                        >
+                                            {t('changeTelebirr') || 'Change Number'}
+                                        </button>
+                                    </div>
+
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#059669', fontWeight: 600, background: 'rgba(16, 185, 129, 0.08)', padding: '0.5rem 0.75rem', borderRadius: '8px' }}>
+                                        <Check size={15} style={{ flexShrink: 0 }} />
+                                        <span>{t('telebirrVerifiedNotice') || 'Your Telebirr wallet is verified and active for instant payouts.'}</span>
+                                    </div>
+
+                                    {(user?.telebirrAccount?.accountHolderName || user?.name) && (
+                                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                            Account Holder: <strong>{user?.telebirrAccount?.accountHolderName || user?.name}</strong>
+                                            {user?.telebirrAccount?.verifiedAt && (
+                                                <span> • Verified on {new Date(user.telebirrAccount.verifiedAt).toLocaleDateString()}</span>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                /* Verification Form State (When not verified or editing) */
+                                <div style={{
+                                    background: 'var(--bg-app)',
+                                    border: '1px solid var(--border-color)',
+                                    borderRadius: '12px',
+                                    padding: '1.15rem',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '0.85rem'
+                                }}>
+                                    <p style={{ fontSize: '0.83rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.4 }}>
+                                        {t('telebirrUnverifiedNotice') || 'Verify your Ethiopian Telebirr number via SMS OTP to receive tips directly to your wallet.'}
+                                    </p>
+
+                                    {tbError && (
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--danger-light)', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: '8px', padding: '0.5rem 0.75rem', fontSize: '0.8rem', fontWeight: 600 }}>
+                                            <AlertCircle size={15} style={{ flexShrink: 0 }} />
+                                            <span>{tbError}</span>
+                                        </div>
+                                    )}
+
+                                    <div>
+                                        <label className="form-label" style={{ fontSize: '0.8rem', marginBottom: '0.35rem' }}>
+                                            Telebirr Mobile Number
+                                        </label>
+                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                            <div className="input-group" style={{ flex: 1 }}>
+                                                <span style={{ position: 'absolute', left: '0.85rem', fontWeight: 800, color: 'var(--text-muted)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                                    <span>🇪🇹</span> +251
+                                                </span>
+                                                <input
+                                                    type="tel"
+                                                    className="form-input"
+                                                    placeholder="911000000"
+                                                    value={tbPhoneInput}
+                                                    onChange={(e) => {
+                                                        let val = e.target.value.replace(/[^0-9]/g, '');
+                                                        if (val.startsWith('0')) val = val.substring(1);
+                                                        setTbPhoneInput(val.slice(0, 9));
+                                                        if (tbOtpSent) setTbOtpSent(false);
+                                                    }}
+                                                    maxLength={9}
+                                                    style={{ paddingLeft: '5.5rem' }}
+                                                />
+                                            </div>
+
+                                            <button
+                                                type="button"
+                                                onClick={handleSendTelebirrOtp}
+                                                disabled={tbSendingOtp || tbCooldown > 0 || tbPhoneInput.length !== 9}
+                                                style={{
+                                                    padding: '0 1rem',
+                                                    height: '42px',
+                                                    background: tbCooldown > 0 || tbPhoneInput.length !== 9 ? 'var(--border-color)' : 'var(--primary)',
+                                                    color: tbCooldown === 0 && tbPhoneInput.length === 9 ? '#FFFFFF' : 'var(--text-muted)',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    fontWeight: 700,
+                                                    fontSize: '0.825rem',
+                                                    cursor: tbCooldown > 0 || tbPhoneInput.length !== 9 ? 'not-allowed' : 'pointer',
+                                                    whiteSpace: 'nowrap',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '0.35rem',
+                                                    transition: 'all 0.15s ease',
+                                                    flexShrink: 0
+                                                }}
+                                            >
+                                                {tbSendingOtp ? (
+                                                    <span className="spinner"></span>
+                                                ) : tbCooldown > 0 ? (
+                                                    `${t('resendIn') || 'Resend in'} ${tbCooldown}s`
+                                                ) : tbOtpSent ? (
+                                                    t('resendOtp') || 'Resend Code'
+                                                ) : (
+                                                    t('sendOtp') || 'Send OTP'
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* OTP Input and Verify Button */}
+                                    {tbOtpSent && (
+                                        <div style={{ animation: 'fadeIn 0.2s ease-in', display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.25rem' }}>
+                                            <label className="form-label" style={{ fontSize: '0.8rem', marginBottom: '0.2rem' }}>
+                                                {t('otpCodeLabel') || 'Verification Code (OTP)'}
+                                            </label>
+                                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                <div className="input-group" style={{ flex: 1 }}>
+                                                    <span style={{ position: 'absolute', left: '0.85rem', color: 'var(--text-muted)' }}>
+                                                        <Smartphone size={16} />
+                                                    </span>
+                                                    <input
+                                                        type="text"
+                                                        className="form-input"
+                                                        placeholder={t('otpPlaceholder') || "Enter 6-digit code"}
+                                                        value={tbOtp}
+                                                        onChange={(e) => setTbOtp(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
+                                                        maxLength={6}
+                                                        style={{
+                                                            paddingLeft: '2.5rem',
+                                                            letterSpacing: tbOtp ? '4px' : 'normal',
+                                                            fontWeight: 700,
+                                                            fontSize: '0.95rem'
+                                                        }}
+                                                        autoFocus
+                                                    />
+                                                </div>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={handleVerifyTelebirr}
+                                                    disabled={tbVerifying || tbOtp.length !== 6}
+                                                    style={{
+                                                        padding: '0 1.2rem',
+                                                        height: '42px',
+                                                        background: tbOtp.length === 6 ? 'var(--primary)' : 'var(--border-color)',
+                                                        color: tbOtp.length === 6 ? '#FFFFFF' : 'var(--text-muted)',
+                                                        border: 'none',
+                                                        borderRadius: '8px',
+                                                        fontWeight: 700,
+                                                        fontSize: '0.85rem',
+                                                        cursor: tbOtp.length === 6 && !tbVerifying ? 'pointer' : 'not-allowed',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.4rem',
+                                                        boxShadow: tbOtp.length === 6 ? '0 2px 8px rgba(5, 150, 105, 0.25)' : 'none',
+                                                        transition: 'all 0.15s ease',
+                                                        flexShrink: 0
+                                                    }}
+                                                >
+                                                    {tbVerifying ? <span className="spinner"></span> : <><Check size={16} /> {t('verifyTelebirrButton') || 'Verify Telebirr'}</>}
+                                                </button>
+                                            </div>
+
+                                            {tbDevOtp && (
+                                                <div style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600 }}>
+                                                    ℹ️ Test Verification Code: {tbDevOtp}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {isTelebirrVerified && (
+                                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.25rem' }}>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setIsEditingTelebirr(false);
+                                                    setTbOtpSent(false);
+                                                    setTbOtp('');
+                                                    setTbError('');
+                                                }}
+                                                style={{
+                                                    background: 'transparent',
+                                                    border: 'none',
+                                                    color: 'var(--text-muted)',
+                                                    fontSize: '0.8rem',
+                                                    cursor: 'pointer',
+                                                    textDecoration: 'underline'
+                                                }}
+                                            >
+                                                {t('cancelChange') || 'Cancel'}
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </Card>
+
                         {/* Notifications Card */}
                         <Card style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>{t('notificationsTitle')}</h3>

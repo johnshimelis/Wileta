@@ -171,6 +171,14 @@ const translations = {
         telebirrVerifiedBadge: "Telebirr Verified",
         telebirrOtpSentNotice: "Verification code sent to your phone via SMS",
         verifyTelebirrFirst: "Please verify your Telebirr number before completing setup.",
+        telebirrPayoutTitle: "Telebirr Payout Destination",
+        telebirrWalletVerified: "Telebirr Wallet Verified",
+        telebirrWalletNotVerified: "Telebirr Not Verified",
+        telebirrVerifiedNotice: "Your Telebirr wallet is verified and active for instant payouts.",
+        telebirrUnverifiedNotice: "Verify your Ethiopian Telebirr number via SMS OTP to receive tips directly to your wallet.",
+        changeTelebirr: "Change Number",
+        cancelChange: "Cancel",
+        verifyTelebirrButton: "Verify Telebirr",
 
         // Added Keys
         lastTip: "Last tip",
@@ -412,6 +420,14 @@ const translations = {
         telebirrVerifiedBadge: "ቴሌብር ተረጋግጧል",
         telebirrOtpSentNotice: "የማረጋገጫ ኮድ በኤስኤምኤስ (SMS) ወደ ስልክዎ ተልኳል",
         verifyTelebirrFirst: "እባክዎ ከመጨረስዎ በፊት የቴሌብር ቁጥርዎን በኮድ ያረጋግጡ።",
+        telebirrPayoutTitle: "የቴሌብር ክፍያ መቀበያ",
+        telebirrWalletVerified: "የቴሌብር አካውንት ተረጋግጧል",
+        telebirrWalletNotVerified: "ቴሌብር አልተረጋገጠም",
+        telebirrVerifiedNotice: "የቴሌብር አካውንትዎ ለፈጣን ክፍያዎች የተረጋገጠ እና ንቁ ነው።",
+        telebirrUnverifiedNotice: "ጉርሻዎችን በቀጥታ ወደ አካውንትዎ ለመቀበል የቴሌብር ቁጥርዎን በኤስኤምኤስ (SMS) ያረጋግጡ።",
+        changeTelebirr: "ቁጥር ቀይር",
+        cancelChange: "ተመለስ",
+        verifyTelebirrButton: "ቴሌብርን አረጋግጥ",
 
         // Added Keys
         lastTip: "የመጨረሻ ጉርሻ",
