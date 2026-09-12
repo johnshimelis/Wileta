@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth, api } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-    Mail, Lock, User, Phone, KeyRound, Eye, EyeOff,
+    Mail, Lock, User, Eye, EyeOff,
     AlertCircle, CheckCircle2, ShieldCheck, Sparkles,
     Zap, DollarSign, TrendingUp, Users
 } from 'lucide-react';
@@ -14,17 +14,11 @@ import Logo from '../components/Logo';
 export default function Signup() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [otp, setOtp] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-    const [otpSent, setOtpSent] = useState(false);
-    const [sendingOtp, setSendingOtp] = useState(false);
-    const [otpCooldown, setOtpCooldown] = useState(0);
 
     const [error, setError] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
@@ -34,19 +28,6 @@ export default function Signup() {
     const { setUser } = authContext;
     const { t } = useLanguage();
     const navigate = useNavigate();
-
-    // Bulletproof OTP request with direct API fallback
-    const executeRequestOtp = async (cleanedPhone) => {
-        if (typeof authContext.requestSignupOtp === 'function') {
-            return await authContext.requestSignupOtp(cleanedPhone);
-        }
-        try {
-            const res = await api.post('/auth/request-signup-otp', { phone: cleanedPhone });
-            return { success: true, message: res.data?.message, devOtp: res.data?.devOtp };
-        } catch (err) {
-            return { success: false, error: err.response?.data?.error || 'Failed to send verification code' };
-        }
-    };
 
     // Bulletproof Signup execution with direct API fallback
     const executeSignup = async (payload) => {
@@ -68,59 +49,7 @@ export default function Signup() {
         }
     };
 
-    // 60-Second Cooldown Timer for OTP resend
-    useEffect(() => {
-        let interval;
-        if (otpCooldown > 0) {
-            interval = setInterval(() => {
-                setOtpCooldown(prev => prev - 1);
-            }, 1000);
-        }
-        return () => clearInterval(interval);
-    }, [otpCooldown]);
-
-    // Format phone to standard Ethiopian 10-digit (09... or 07...)
-    const cleanPhoneDigits = (raw) => {
-        let digits = (raw || '').replace(/[^0-9]/g, '');
-        if (digits.startsWith('251') && digits.length === 12) digits = '0' + digits.substring(3);
-        else if (digits.length === 9 && (digits.startsWith('9') || digits.startsWith('7'))) digits = '0' + digits;
-        return digits;
-    };
-
-    // Request Phone Verification Code
-    const handleSendOtp = async () => {
-        setError('');
-        setSuccessMsg('');
-
-        const cleaned = cleanPhoneDigits(phone);
-        if (cleaned.length !== 10 || (!cleaned.startsWith('09') && !cleaned.startsWith('07'))) {
-            setError('Please enter a valid Ethiopian mobile phone (e.g. 0912345678 or 0712345678).');
-            return;
-        }
-
-        setSendingOtp(true);
-        try {
-            const res = await executeRequestOtp(cleaned);
-            if (res.success) {
-                setOtpSent(true);
-                setOtpCooldown(60);
-                if (res.devOtp) {
-                    setSuccessMsg(`Code sent via SMS! (Test Code: ${res.devOtp})`);
-                    setOtp(res.devOtp); // Auto-fill in test/dev mode
-                } else {
-                    setSuccessMsg('6-digit verification code sent to your mobile phone via SMS.');
-                }
-            } else {
-                setError(res.error || 'Failed to send verification code.');
-            }
-        } catch (err) {
-            setError('Failed to reach SMS verification gateway.');
-        } finally {
-            setSendingOtp(false);
-        }
-    };
-
-    // Submit Final Verified Registration
+    // Submit Registration (Step 1)
     const handleSignup = async (e) => {
         e.preventDefault();
         setError('');
@@ -133,17 +62,6 @@ export default function Signup() {
 
         if (!email.trim()) {
             setError('Please enter your email address.');
-            return;
-        }
-
-        const cleanedPhone = cleanPhoneDigits(phone);
-        if (cleanedPhone.length !== 10) {
-            setError('Please enter a valid Ethiopian mobile number (09... or 07...).');
-            return;
-        }
-
-        if (!otp.trim()) {
-            setError('Please request and enter your 6-digit phone verification code.');
             return;
         }
 
@@ -163,10 +81,8 @@ export default function Signup() {
             const res = await executeSignup({
                 name: name.trim(),
                 email: email.trim().toLowerCase(),
-                phone: cleanedPhone,
                 password,
-                confirmPassword,
-                otp: otp.trim()
+                confirmPassword
             });
 
             if (res && res.success) {
@@ -347,95 +263,6 @@ export default function Signup() {
                                         background: 'var(--input-bg, transparent)',
                                         color: 'var(--text-main)',
                                         fontSize: '0.9rem',
-                                        boxSizing: 'border-box'
-                                    }}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Mobile Phone Number + Send OTP */}
-                        <div className="form-group" style={{ marginBottom: '1rem' }}>
-                            <label className="form-label" style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
-                                Ethiopian Mobile Phone (SMS Verified)
-                            </label>
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                                <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
-                                    <span style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)' }}>
-                                        <Phone size={18} />
-                                    </span>
-                                    <input
-                                        type="tel"
-                                        className="form-input"
-                                        placeholder="0912345678"
-                                        value={phone}
-                                        onChange={e => setPhone(e.target.value)}
-                                        required
-                                        style={{
-                                            width: '100%',
-                                            height: '44px',
-                                            paddingLeft: '38px',
-                                            paddingRight: '12px',
-                                            borderRadius: '8px',
-                                            border: '1px solid var(--border-color)',
-                                            background: 'var(--input-bg, transparent)',
-                                            color: 'var(--text-main)',
-                                            fontSize: '0.9rem',
-                                            boxSizing: 'border-box'
-                                        }}
-                                    />
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={handleSendOtp}
-                                    disabled={sendingOtp || otpCooldown > 0}
-                                    style={{
-                                        padding: '0 14px',
-                                        height: '44px',
-                                        background: otpCooldown > 0 ? 'var(--border-color)' : 'var(--primary)',
-                                        color: otpCooldown > 0 ? 'var(--text-muted)' : '#FFFFFF',
-                                        border: 'none',
-                                        borderRadius: '8px',
-                                        fontSize: '0.8rem',
-                                        fontWeight: 700,
-                                        cursor: (sendingOtp || otpCooldown > 0) ? 'not-allowed' : 'pointer',
-                                        whiteSpace: 'nowrap',
-                                        transition: 'all 0.15s ease'
-                                    }}
-                                >
-                                    {sendingOtp ? 'Sending...' : otpCooldown > 0 ? `Wait ${otpCooldown}s` : (otpSent ? 'Resend' : 'Verify Phone')}
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* 6-Digit Phone OTP Code Field */}
-                        <div className="form-group" style={{ marginBottom: '1rem' }}>
-                            <label className="form-label" style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
-                                SMS Verification Code
-                            </label>
-                            <div className="input-group" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                                <span style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)' }}>
-                                    <KeyRound size={18} />
-                                </span>
-                                <input
-                                    type="text"
-                                    className="form-input"
-                                    placeholder="Enter 6-digit code"
-                                    maxLength={6}
-                                    value={otp}
-                                    onChange={e => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
-                                    required
-                                    style={{
-                                        width: '100%',
-                                        height: '44px',
-                                        paddingLeft: '38px',
-                                        paddingRight: '12px',
-                                        borderRadius: '8px',
-                                        border: '1px solid var(--border-color)',
-                                        background: 'var(--input-bg, transparent)',
-                                        color: 'var(--text-main)',
-                                        fontSize: '0.95rem',
-                                        letterSpacing: '0.1em',
-                                        fontWeight: 700,
                                         boxSizing: 'border-box'
                                     }}
                                 />
@@ -649,16 +476,16 @@ export default function Signup() {
                 </div>
             </div>
 
-            {/* Right Column: Centered Rich Interactive Showcase (Desktop Only) */}
+            {/* Right Column: Rich Interactive Showcase (Desktop Only) */}
             <div className="desktop-only" style={{
                 flex: 1.15,
                 background: 'linear-gradient(145deg, #064E3B 0%, #047857 50%, #059669 100%)',
                 color: '#FFFFFF',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
+                justifyContent: 'flex-start',
                 alignItems: 'center',
-                padding: '3rem 2.5rem',
+                padding: '2.5rem 2.5rem',
                 position: 'relative',
                 overflow: 'hidden'
             }}>

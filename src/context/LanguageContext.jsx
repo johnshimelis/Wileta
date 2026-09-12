@@ -158,6 +158,7 @@ const translations = {
         bioLabel: "Bio / Description",
         bioPlaceholder: "Tell your fans about yourself...",
         finishSetup: "Finish Setup",
+        completeSetup: "Complete Setup",
         finishing: "Finishing...",
 
         // Added Keys
@@ -387,6 +388,7 @@ const translations = {
         bioLabel: "ስለ እኔ / ማብራሪያ",
         bioPlaceholder: "ስለራስዎ ለአድናቂዎችዎ ይንገሩ...",
         finishSetup: "ምዝገባውን ጨርስ",
+        completeSetup: "ምዝገባውን ጨርስ",
         finishing: "በማጠናቀቅ ላይ...",
 
         // Added Keys

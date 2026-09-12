@@ -137,9 +137,17 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const onboard = async (name, username, telebirr_number) => {
+    const onboard = async (arg1, arg2, arg3) => {
         try {
-            const res = await api.post('/auth/onboard', { name, username, telebirr_number });
+            let payload = {};
+            if (typeof arg1 === 'object' && arg1 !== null) {
+                payload = arg1;
+            } else if (arg3 !== undefined) {
+                payload = { name: arg1, username: arg2, telebirr_number: arg3 };
+            } else {
+                payload = { username: arg1, telebirr_number: arg2 };
+            }
+            const res = await api.post('/auth/onboard', payload);
             localStorage.setItem('gp_cached_user', JSON.stringify(res.data));
             setUser(res.data);
             return { success: true };

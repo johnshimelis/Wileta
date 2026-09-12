@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { UserPlus, AlertCircle, Sparkles, Smartphone, Check, ArrowRight, User } from 'lucide-react';
+import { AlertCircle, Sparkles, Smartphone, Check, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
@@ -9,7 +9,6 @@ import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
 
 export default function Onboarding() {
-    const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [telebirrInfo, setTelebirrInfo] = useState('');
     const [error, setError] = useState('');
@@ -22,9 +21,21 @@ export default function Onboarding() {
     const handleOnboard = async (e) => {
         e.preventDefault();
         setError('');
+
+        if (!username.trim()) {
+            setError('Please choose your username handle.');
+            return;
+        }
+
+        const cleanDigits = telebirrInfo.replace(/[^0-9]/g, '');
+        if (cleanDigits.length !== 9 || (!cleanDigits.startsWith('9') && !cleanDigits.startsWith('7'))) {
+            setError('Please enter a valid Ethiopian Telebirr number (e.g. 911000000 or 711000000).');
+            return;
+        }
+
         setLoading(true);
 
-        const res = await onboard(name, username, telebirrInfo);
+        const res = await onboard(username.trim().toLowerCase(), `0${cleanDigits}`);
 
         if (res.success) {
             navigate('/dashboard');
@@ -75,22 +86,7 @@ export default function Onboarding() {
                 )}
 
                 <form onSubmit={handleOnboard}>
-                    <div className="form-group" style={{ marginBottom: '1rem' }}>
-                        <label className="form-label">{t('fullName')}</label>
-                        <div className="input-group">
-                            <User size={18} />
-                            <input
-                                type="text"
-                                className="form-input"
-                                placeholder={t('fullNamePlaceholder') || 'e.g. Hana Tadesse'}
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-group" style={{ marginBottom: '1rem' }}>
+                    <div className="form-group" style={{ marginBottom: '1.15rem' }}>
                         <label className="form-label">{t('chooseUsernameLabel')}</label>
                         <div className="input-group">
                             <span style={{ position: 'absolute', left: '0.85rem', fontWeight: 800, color: 'var(--primary)', fontSize: '0.9rem' }}>@</span>
@@ -157,7 +153,7 @@ export default function Onboarding() {
                         onMouseDown={e => e.currentTarget.style.transform = 'scale(0.985)'}
                         onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
                     >
-                        {loading ? <span className="spinner"></span> : t('completeSetup')}
+                        {loading ? <span className="spinner"></span> : (t('completeSetup') || 'Complete Setup')}
                     </button>
                 </form>
             </div>
