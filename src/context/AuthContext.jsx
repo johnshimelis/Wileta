@@ -156,6 +156,35 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const requestTelebirrOtp = async (phone) => {
+        try {
+            const res = await api.post('/auth/request-telebirr-otp', { phone });
+            return { success: true, message: res.data?.message, devOtp: res.data?.devOtp };
+        } catch (error) {
+            return { success: false, error: error.response?.data?.error || 'Failed to send verification code' };
+        }
+    };
+
+    const verifyTelebirrOtp = async (phone, otp) => {
+        try {
+            const res = await api.post('/auth/verify-telebirr-otp', { phone, otp });
+            if (res.data?.telebirr_number && user) {
+                const updated = {
+                    ...user,
+                    phone: res.data.telebirr_number,
+                    phoneVerified: true,
+                    telebirr_number: res.data.telebirr_number,
+                    telebirrAccount: { ...(user.telebirrAccount || {}), phoneNumber: res.data.telebirr_number, status: 'VERIFIED' }
+                };
+                setUser(updated);
+                localStorage.setItem('gp_cached_user', JSON.stringify(updated));
+            }
+            return { success: true, message: res.data?.message || 'Telebirr verified successfully' };
+        } catch (error) {
+            return { success: false, error: error.response?.data?.error || 'Invalid or expired verification code' };
+        }
+    };
+
     const requestSignupOtp = async (phone) => {
         try {
             const res = await api.post('/auth/request-signup-otp', { phone });
@@ -209,6 +238,8 @@ export const AuthProvider = ({ children }) => {
         loading,
         signup,
         requestSignupOtp,
+        requestTelebirrOtp,
+        verifyTelebirrOtp,
         login,
         logout,
         logoutAll,
