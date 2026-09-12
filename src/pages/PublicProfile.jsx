@@ -93,12 +93,13 @@ export default function PublicProfile() {
 
     const { t } = useLanguage();
 
-    const quickMessages = [
-        '☕ Gursha on me!',
-        '🌼 Great work!',
-        '🦁 Proud supporter!',
-        '👑 Keep inspiring!'
+    const defaultQuickMessages = [
+        '☕ Gursha on me! Keep creating!',
+        '🌼 Great work! Proud supporter!',
+        '🦁 Big respect for your talent!',
+        '👑 Keep inspiring Ethiopia!'
     ];
+    const activeQuickMessages = (!isCustom && selectedGift?.quickMessages) ? selectedGift.quickMessages : defaultQuickMessages;
 
     const showAlert = (message, type = 'success') => {
         setAlert({ message, type });
@@ -789,15 +790,16 @@ export default function PublicProfile() {
                                             })}
                                             <button
                                                 type="button"
-                                                className="clean-mult-btn preview"
-                                                title="Preview Fanfare"
+                                                className="clean-preview-btn"
+                                                title="Preview Live Celebration"
                                                 onClick={() => {
                                                     setCelebrationGift(selectedGift);
-                                                    setComboCount(prev => prev + 1);
+                                                    setComboCount(1);
                                                     setShowCelebrationModal(true);
                                                 }}
                                             >
-                                                ✨
+                                                <span>✨</span>
+                                                <span>Preview</span>
                                             </button>
                                         </div>
                                     </div>
@@ -843,7 +845,7 @@ export default function PublicProfile() {
                                     className="clean-textarea-input"
                                 />
                                 <div className="clean-quick-messages">
-                                    {quickMessages.map((msg, i) => (
+                                    {activeQuickMessages.map((msg, i) => (
                                         <button
                                             key={i}
                                             type="button"
