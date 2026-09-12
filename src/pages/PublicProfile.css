@@ -1,9 +1,10 @@
 /* ==========================================================================
-   GURSHA PAY — CLEAN, HUMAN & PROFESSIONAL CREATOR TIPPING PAGE
-   Simple fintech design, zero AI-generated aesthetic, subtle branding.
+   GURSHA PAY — CREATOR TIPPING PAGE (FLAT, CLEAN, INTERACTIVE, HUMAN)
+   Modern fintech design, no AI templates, no card-in-card clutter,
+   pure flat white gift grid, restrained subtle micro-interactions.
    ========================================================================== */
 
-/* 1. Page Wrapper (Mobile-first, centered, clean natural spacing) */
+/* 1. Page Wrapper (Mobile-first, centered, natural spacing) */
 .tipping-page-wrapper {
     min-height: 100vh;
     background: var(--bg-color);
@@ -23,8 +24,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
-    padding: 0 4px;
+    margin-bottom: 0.85rem;
+    padding: 0 2px;
     box-sizing: border-box;
 }
 
@@ -40,9 +41,9 @@
     gap: 4px;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 0.78rem;
+    border-radius: 7px;
+    padding: 5px 9px;
+    font-size: 0.76rem;
     font-weight: 600;
     color: var(--text-main);
     cursor: pointer;
@@ -50,11 +51,11 @@
 }
 
 .tipping-nav-btn:hover {
-    border-color: var(--primary);
-    color: var(--primary);
+    border-color: #047857;
+    color: #047857;
 }
 
-/* 3. Main Single Card Container (Clean, focused, no glassmorphism or heavy shadow) */
+/* 3. Main Single Card Container (The ONLY container card on the page) */
 .tipping-main-card {
     width: 100%;
     max-width: 480px;
@@ -62,7 +63,7 @@
     border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 1.5rem 1.25rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     box-sizing: border-box;
     transition: border-color 0.15s ease;
 }
@@ -73,16 +74,16 @@
     }
 }
 
-/* 4. Creator Profile Header (Clean, Human, Focused) */
+/* 4. Creator Profile Header (Clean, Flat, Human) */
 .creator-profile-header {
     text-align: center;
     margin-bottom: 1.25rem;
 }
 
 .creator-avatar-ring {
-    width: 72px;
-    height: 72px;
-    margin: 0 auto 0.65rem;
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 0.6rem;
     position: relative;
     border-radius: 50%;
     border: 2px solid var(--border-color);
@@ -102,13 +103,13 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: var(--primary-light);
-    color: var(--primary);
+    background: #E6F4EA;
+    color: #047857;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
-    font-weight: 800;
+    font-size: 1.75rem;
+    font-weight: 700;
 }
 
 .creator-info-block {
@@ -119,7 +120,7 @@
 }
 
 .creator-display-name {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--text-main);
     margin: 0;
@@ -131,17 +132,21 @@
 }
 
 .creator-handle-tag {
-    font-size: 0.825rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: var(--primary);
+    color: #047857;
+}
+
+[data-theme='dark'] .creator-handle-tag {
+    color: #10B981;
 }
 
 .creator-bio-text {
     font-size: 0.825rem;
     color: var(--text-muted);
     line-height: 1.45;
-    margin: 0.45rem auto 0;
-    max-width: 90%;
+    margin: 0.4rem auto 0;
+    max-width: 92%;
     word-break: break-word;
 }
 
@@ -149,7 +154,7 @@
     display: flex;
     justify-content: center;
     gap: 6px;
-    margin-top: 0.65rem;
+    margin-top: 0.6rem;
     flex-wrap: wrap;
 }
 
@@ -158,11 +163,11 @@
     align-items: center;
     gap: 4px;
     font-size: 0.72rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-muted);
-    background: var(--bg-color);
-    padding: 3px 8px;
-    border-radius: 6px;
+    background: transparent;
+    padding: 2px 7px;
+    border-radius: 5px;
     border: 1px solid var(--border-color);
     text-decoration: none;
     transition: all 0.15s ease;
@@ -170,15 +175,15 @@
 
 .creator-social-pill:hover {
     color: var(--text-main);
-    border-color: var(--text-muted);
+    border-color: #94A3B8;
 }
 
-/* Creator Goal Widget (Simple & Compact) */
+/* Creator Goal Widget (Simple subtle track, no heavy card) */
 .creator-clean-goal {
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 0.65rem 0.85rem;
+    background: transparent;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.6rem 0.2rem;
     margin-top: 0.85rem;
     text-align: left;
 }
@@ -187,8 +192,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.8rem;
-    font-weight: 700;
+    font-size: 0.78rem;
+    font-weight: 600;
     margin-bottom: 0.35rem;
 }
 
@@ -201,8 +206,12 @@
 
 .goal-pct {
     color: #047857;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 0.75rem;
+}
+
+[data-theme='dark'] .goal-pct {
+    color: #10B981;
 }
 
 .goal-bar-track {
@@ -221,6 +230,10 @@
     transition: width 0.4s ease;
 }
 
+[data-theme='dark'] .goal-bar-fill {
+    background: #10B981;
+}
+
 .goal-row-bottom {
     display: flex;
     justify-content: space-between;
@@ -230,7 +243,7 @@
 }
 
 /* ==========================================================================
-   5. GIFT SELECTION SECTION (NO BOX-IN-A-BOX, CLEAN FLOW)
+   5. GIFT SELECTION SECTION (FLAT, OPEN PRODUCT CATALOG)
    ========================================================================== */
 
 .gift-section-block {
@@ -241,7 +254,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.55rem;
+    margin-bottom: 0.45rem;
 }
 
 .clean-section-title {
@@ -250,115 +263,134 @@
     color: var(--text-main);
 }
 
-/* Category Filter Chips (Simple, sleek, Dark Navy / Emerald Active, NO YELLOW) */
-.clean-category-chips {
+/* Category Navigation Tabs (Clean horizontal tabs, no pill everywhere) */
+.clean-category-tabs {
     display: flex;
-    gap: 5px;
+    gap: 4px;
     overflow-x: auto;
-    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0;
     margin-bottom: 0.75rem;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
 }
 
-.clean-category-chips::-webkit-scrollbar {
+.clean-category-tabs::-webkit-scrollbar {
     display: none;
 }
 
-.clean-cat-chip {
+.clean-cat-tab {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 5px 11px;
-    border-radius: 16px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-color);
+    padding: 6px 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
     color: var(--text-muted);
-    font-size: 0.76rem;
-    font-weight: 600;
+    font-size: 0.78rem;
+    font-weight: 500;
     white-space: nowrap;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: color 0.15s ease, border-color 0.15s ease;
     user-select: none;
+    margin-bottom: -1px;
 }
 
-.clean-cat-chip:hover {
+.clean-cat-tab:hover {
     color: var(--text-main);
-    border-color: var(--border-hover);
 }
 
-/* Active Category Pill: Solid Dark Navy (Clean, Human, Professional) */
-.clean-cat-chip.active {
-    background: #0F172A !important;
-    border-color: #0F172A !important;
-    color: #FFFFFF !important;
+/* Selected Category: GurshaPay green text & clean underline */
+.clean-cat-tab.active {
+    color: #047857 !important;
+    border-bottom-color: #047857 !important;
     font-weight: 700;
 }
 
-[data-theme='dark'] .clean-cat-chip.active {
-    background: #047857 !important;
-    border-color: #047857 !important;
-    color: #FFFFFF !important;
+[data-theme='dark'] .clean-cat-tab.active {
+    color: #10B981 !important;
+    border-bottom-color: #10B981 !important;
 }
 
-/* 3-Column Clean Gift Grid */
+.cat-tab-icon {
+    font-size: 0.85rem;
+}
+
+.cat-tab-label {
+    letter-spacing: -0.01em;
+}
+
+/* 3-Column Flat Gift Grid (WHITE PAGE -> GIFT IMAGE -> GIFT NAME -> PRICE) */
 .clean-gift-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 8px 6px;
     max-height: 380px;
     overflow-y: auto;
     padding: 2px;
-    margin-bottom: 0.65rem;
+    margin-bottom: 0.5rem;
     scrollbar-width: thin;
     scrollbar-color: rgba(4, 120, 87, 0.25) transparent;
 }
 
+/* NO BACKGROUND CARD ON UNSELECTED GIFTS. Direct flat surface. */
 .clean-gift-card {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 10px 4px 8px;
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
+    padding: 8px 3px 6px;
+    background: transparent;
+    border: 1.5px solid transparent;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), 
+                background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
     outline: none;
     text-align: center;
     user-select: none;
-    min-height: 124px;
+    min-height: 116px;
 }
 
+/* Hover: Slight image scale ~1.04, subtle background hint, cursor pointer */
 .clean-gift-card:hover {
-    border-color: #047857;
-    transform: translateY(-2px);
+    background: rgba(0, 0, 0, 0.015);
 }
 
+[data-theme='dark'] .clean-gift-card:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.clean-gift-card:hover .gift-icon-box {
+    transform: scale(1.05);
+}
+
+/* Press/Tap: Small tactile scale feedback */
 .clean-gift-card:active {
-    transform: translateY(0);
+    transform: scale(0.97);
 }
 
-/* Selected Gift Tile */
+/* Selected Gift: Subtle GurshaPay green treatment (thin green outline, small check) */
 .clean-gift-card.selected {
-    background: rgba(4, 120, 87, 0.05) !important;
-    border: 1.5px solid #047857 !important;
-    transform: translateY(-2px);
+    background: rgba(4, 120, 87, 0.035) !important;
+    border-color: #047857 !important;
+    box-shadow: 0 1px 3px rgba(4, 120, 87, 0.08);
 }
 
 [data-theme='dark'] .clean-gift-card.selected {
-    background: rgba(4, 120, 87, 0.15) !important;
+    background: rgba(16, 185, 129, 0.08) !important;
     border-color: #10B981 !important;
 }
 
 .gift-selected-tick {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 17px;
-    height: 17px;
+    top: 3px;
+    right: 3px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: #047857;
     color: #FFFFFF;
@@ -369,23 +401,29 @@
     animation: tickPop 0.18s ease forwards;
 }
 
+[data-theme='dark'] .gift-selected-tick {
+    background: #10B981;
+}
+
 @keyframes tickPop {
     from { transform: scale(0.4); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
 
+/* Gift Image Area (Directly on white surface, no container) */
 .gift-icon-box {
-    width: 54px;
-    height: 54px;
+    width: 52px;
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 4px;
-    transition: transform 0.18s ease;
+    transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent;
 }
 
-.clean-gift-card:hover .gift-icon-box {
-    transform: scale(1.06);
+.clean-gift-card.selected .gift-icon-box {
+    transform: scale(1.03);
 }
 
 .gift-text-wrap {
@@ -396,19 +434,28 @@
 }
 
 .gift-name-primary {
-    font-size: 0.8rem;
-    font-weight: 700;
+    font-size: 0.79rem;
+    font-weight: 600;
     color: var(--text-main);
-    line-height: 1.2;
+    line-height: 1.25;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
 }
 
+.clean-gift-card.selected .gift-name-primary {
+    font-weight: 700;
+    color: #047857;
+}
+
+[data-theme='dark'] .clean-gift-card.selected .gift-name-primary {
+    color: #10B981;
+}
+
 .gift-name-secondary {
-    font-size: 0.68rem;
-    font-weight: 500;
+    font-size: 0.67rem;
+    font-weight: 400;
     color: var(--text-muted);
     line-height: 1.15;
     margin-top: 1px;
@@ -423,52 +470,52 @@
     align-items: center;
     justify-content: center;
     gap: 3px;
-    margin-top: 4px;
-    font-size: 0.7rem;
-    font-weight: 700;
+    margin-top: 3px;
+    font-size: 0.71rem;
 }
 
 .price-etb {
     color: var(--text-main);
-    font-weight: 800;
-}
-
-.price-coins {
-    color: #D97706;
-    font-size: 0.65rem;
+    font-weight: 700;
 }
 
 .clean-gift-card.selected .price-etb {
     color: #047857;
+    font-weight: 800;
 }
 
 [data-theme='dark'] .clean-gift-card.selected .price-etb {
     color: #10B981;
 }
 
-/* Selected Gift Multiplier Strip (Clean & Integrated) */
+.price-coins {
+    color: #D97706;
+    font-size: 0.64rem;
+    font-weight: 500;
+}
+
+/* Selected Gift Multiplier Strip (Flat divider line, no heavy nested card) */
 .clean-multiplier-strip {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    padding: 8px 12px;
-    margin-top: 8px;
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
+    padding: 8px 2px 2px;
+    margin-top: 6px;
+    border-top: 1px solid var(--border-color);
+    background: transparent;
 }
 
 .strip-gift-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
 }
 
 .strip-mini-icon {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -482,7 +529,7 @@
 }
 
 .strip-name {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
     color: var(--text-main);
     white-space: nowrap;
@@ -491,15 +538,19 @@
 }
 
 .strip-en {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 400;
     color: var(--text-muted);
 }
 
 .strip-cost {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: #D97706;
+    font-size: 0.71rem;
+    font-weight: 600;
+    color: #047857;
+}
+
+[data-theme='dark'] .strip-cost {
+    color: #10B981;
 }
 
 .strip-multipliers-right {
@@ -510,10 +561,10 @@
 }
 
 .clean-mult-btn {
-    padding: 4px 8px;
+    padding: 3px 8px;
     border-radius: 6px;
     font-size: 0.72rem;
-    font-weight: 700;
+    font-weight: 600;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     color: var(--text-main);
@@ -526,30 +577,38 @@
     color: #047857;
 }
 
+.clean-mult-btn:active {
+    transform: scale(0.96);
+}
+
 .clean-mult-btn.active {
     background: #047857 !important;
     border-color: #047857 !important;
     color: #FFFFFF !important;
+    font-weight: 700;
+}
+
+[data-theme='dark'] .clean-mult-btn.active {
+    background: #10B981 !important;
+    border-color: #10B981 !important;
 }
 
 .clean-mult-btn.preview {
-    font-size: 0.75rem;
-    padding: 4px 6px;
+    font-size: 0.74rem;
+    padding: 3px 6px;
 }
 
-/* Custom Amount Box (Clean & Minimal) */
+/* Custom Amount Box (Clean & Flat) */
 .clean-custom-box {
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 10px 12px;
+    border-top: 1px solid var(--border-color);
+    padding: 10px 2px 2px;
     margin-bottom: 0.75rem;
 }
 
 .custom-input-label-row {
     display: flex;
     justify-content: space-between;
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     font-weight: 600;
     color: var(--text-muted);
     margin-bottom: 6px;
@@ -568,7 +627,7 @@
 .custom-prefix {
     position: absolute;
     left: 10px;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 0.8rem;
     color: var(--text-muted);
     pointer-events: none;
@@ -581,20 +640,21 @@
     border-radius: 8px;
     background: var(--card-bg);
     color: var(--text-main);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: 700;
     box-sizing: border-box;
     outline: none;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .clean-custom-input:focus {
     border-color: #047857;
+    box-shadow: 0 0 0 2px rgba(4, 120, 87, 0.12);
 }
 
 .custom-conversion-text {
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: 0.74rem;
+    font-weight: 600;
     color: #D97706;
     margin-top: 5px;
 }
@@ -604,7 +664,7 @@
    ========================================================================== */
 
 .clean-field-group {
-    margin-bottom: 0.95rem;
+    margin-bottom: 0.85rem;
 }
 
 .clean-field-header {
@@ -615,11 +675,11 @@
 }
 
 .clean-field-label {
-    font-size: 0.78rem;
+    font-size: 0.77rem;
     font-weight: 600;
     color: var(--text-muted);
     display: block;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.3rem;
 }
 
 .clean-field-header .clean-field-label {
@@ -630,8 +690,8 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.74rem;
+    font-weight: 500;
     color: var(--text-main);
     cursor: pointer;
 }
@@ -643,41 +703,41 @@
 
 .clean-text-input {
     width: 100%;
-    padding: 8px 12px;
+    padding: 8px 11px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    background: var(--bg-color);
+    background: var(--card-bg);
     color: var(--text-main);
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     box-sizing: border-box;
     outline: none;
-    transition: border-color 0.15s ease, background 0.15s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .clean-text-input:focus {
     border-color: #047857;
-    background: var(--card-bg);
+    box-shadow: 0 0 0 2px rgba(4, 120, 87, 0.12);
 }
 
 .clean-textarea-input {
     width: 100%;
-    padding: 8px 12px;
+    padding: 8px 11px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    background: var(--bg-color);
+    background: var(--card-bg);
     color: var(--text-main);
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     font-family: inherit;
     line-height: 1.4;
     box-sizing: border-box;
     outline: none;
     resize: none;
-    transition: border-color 0.15s ease, background 0.15s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .clean-textarea-input:focus {
     border-color: #047857;
-    background: var(--card-bg);
+    box-shadow: 0 0 0 2px rgba(4, 120, 87, 0.12);
 }
 
 .clean-char-counter {
@@ -687,16 +747,17 @@
 
 .clean-quick-messages {
     display: flex;
-    gap: 5px;
+    gap: 4px;
     flex-wrap: wrap;
     margin-top: 5px;
 }
 
+/* Suggested message chips: light, optional, small green highlight when selected */
 .clean-msg-chip {
     padding: 3px 8px;
     border-radius: 6px;
     border: 1px solid var(--border-color);
-    background: var(--bg-color);
+    background: transparent;
     color: var(--text-muted);
     font-size: 0.72rem;
     font-weight: 500;
@@ -707,10 +768,22 @@
 .clean-msg-chip:hover {
     border-color: #047857;
     color: #047857;
-    background: var(--card-bg);
 }
 
-/* Payment Method Selector (2 Compact Cards) */
+.clean-msg-chip.active {
+    background: rgba(4, 120, 87, 0.08) !important;
+    border-color: #047857 !important;
+    color: #047857 !important;
+    font-weight: 600;
+}
+
+[data-theme='dark'] .clean-msg-chip.active {
+    background: rgba(16, 185, 129, 0.12) !important;
+    border-color: #10B981 !important;
+    color: #10B981 !important;
+}
+
+/* Payment Method Selector (2 Clean Option Tiles) */
 .clean-payment-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -724,31 +797,35 @@
     padding: 8px 10px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    background: var(--bg-color);
+    background: var(--card-bg);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
     text-align: left;
     position: relative;
 }
 
 .clean-payment-tile:hover {
-    border-color: var(--border-hover);
+    border-color: #94A3B8;
+}
+
+.clean-payment-tile:active {
+    transform: scale(0.99);
 }
 
 .clean-payment-tile.active {
     border: 1.5px solid #047857 !important;
-    background: rgba(4, 120, 87, 0.04) !important;
+    background: rgba(4, 120, 87, 0.035) !important;
 }
 
 [data-theme='dark'] .clean-payment-tile.active {
     border-color: #10B981 !important;
-    background: rgba(4, 120, 87, 0.15) !important;
+    background: rgba(16, 185, 129, 0.08) !important;
 }
 
 .payment-tile-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -765,26 +842,30 @@
     color: #047857;
 }
 
+[data-theme='dark'] .payment-tile-icon.chapa {
+    color: #10B981;
+}
+
 .payment-tile-meta {
     display: flex;
     flex-direction: column;
 }
 
 .tile-title {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--text-main);
 }
 
 .tile-sub {
-    font-size: 0.68rem;
+    font-size: 0.67rem;
     color: var(--text-muted);
 }
 
 .payment-tile-check {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 4px;
+    right: 4px;
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -793,6 +874,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+[data-theme='dark'] .payment-tile-check {
+    background: #10B981;
 }
 
 /* Phone Number Field */
@@ -806,64 +891,67 @@
     position: absolute;
     left: 10px;
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.84rem;
     color: var(--text-muted);
     pointer-events: none;
 }
 
 .clean-phone-input {
     width: 100%;
-    padding: 9px 12px 9px 78px;
+    padding: 8px 12px 8px 76px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    background: var(--bg-color);
+    background: var(--card-bg);
     color: var(--text-main);
-    font-size: 0.95rem;
+    font-size: 0.925rem;
     font-weight: 700;
     box-sizing: border-box;
     outline: none;
-    transition: border-color 0.15s ease, background 0.15s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .clean-phone-input:focus {
     border-color: #047857;
-    background: var(--card-bg);
+    box-shadow: 0 0 0 2px rgba(4, 120, 87, 0.12);
 }
 
 /* Main Send Tip CTA Button (Solid, Prominent, Clear & Tactile) */
 .clean-send-btn {
     width: 100%;
-    height: 48px;
+    height: 46px;
     background: #047857;
     color: #FFFFFF;
     border: none;
-    border-radius: 10px;
-    font-size: 0.95rem;
+    border-radius: 8px;
+    font-size: 0.925rem;
     font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: background 0.15s ease, transform 0.1s ease;
+    transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
     margin-top: 0.5rem;
 }
 
 .clean-send-btn:hover {
     background: #065F46;
+    box-shadow: 0 2px 6px rgba(4, 120, 87, 0.2);
 }
 
 .clean-send-btn:active {
-    transform: translateY(1px);
+    transform: scale(0.985);
+    background: #064E3B;
 }
 
 .clean-send-btn:disabled {
-    opacity: 0.7;
+    opacity: 0.65;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
 .clean-send-icon {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
 }
 
 .clean-spin {
@@ -880,7 +968,7 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
-    font-size: 0.72rem;
+    font-size: 0.71rem;
     color: var(--text-muted);
     margin-top: 0.75rem;
 }
@@ -892,17 +980,17 @@
 .clean-share-bar {
     width: 100%;
     max-width: 480px;
-    margin-top: 1rem;
+    margin-top: 0.85rem;
     display: flex;
     align-items: center;
     gap: 6px;
     flex-wrap: wrap;
-    padding: 0 4px;
+    padding: 0 2px;
     box-sizing: border-box;
 }
 
 .clean-share-label {
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     color: var(--text-muted);
     font-weight: 600;
 }
@@ -911,12 +999,12 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 5px 10px;
+    padding: 4px 9px;
     border-radius: 6px;
     border: 1px solid var(--border-color);
     background: var(--card-bg);
     color: var(--text-main);
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
@@ -929,52 +1017,47 @@
 }
 
 .clean-share-link-btn.icon-only {
-    padding: 5px 8px;
+    padding: 5px;
 }
 
 /* ==========================================================================
-   8. STATUS SCREENS (SUCCESS & TELEBIRR PIN PROMPT)
+   8. TELEBIRR USSD LIVE PIN STATUS & RECEIPT STATES
    ========================================================================== */
 
 .status-card-header {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.65rem;
-    padding-bottom: 0.75rem;
-    margin-bottom: 0.85rem;
+    gap: 10px;
+    padding-bottom: 12px;
     border-bottom: 1px solid var(--border-color);
+    margin-bottom: 14px;
+    text-align: left;
 }
 
 .status-card-avatar {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #047857;
-    flex-shrink: 0;
+    border: 1.5px solid var(--border-color);
 }
 
 .status-card-avatar-fallback {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    background: var(--primary-light);
-    color: var(--primary);
+    background: #E6F4EA;
+    color: #047857;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: 700;
     font-size: 1.2rem;
-    font-weight: 800;
-    border: 2px solid #047857;
-    flex-shrink: 0;
 }
 
 .status-card-creator-info {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    line-height: 1.2;
 }
 
 .status-card-creator-name {
@@ -987,252 +1070,28 @@
 }
 
 .status-card-creator-handle {
-    font-size: 0.76rem;
-    font-weight: 600;
-    color: var(--primary);
-}
-
-.tip-order-summary-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 10px 12px;
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    margin-bottom: 0.85rem;
-    text-align: left;
-}
-
-.tip-order-gift-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-}
-
-.tip-order-gift-icon {
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.tip-order-coin-emoji {
-    font-size: 1.5rem;
-}
-
-.tip-order-gift-details {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.tip-order-gift-name {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.tip-order-gift-sub {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-}
-
-.tip-order-amount-col {
-    text-align: right;
-    flex-shrink: 0;
-}
-
-.tip-order-amount-etb {
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: #047857;
-}
-
-.tip-order-coins-sub {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: #D97706;
-}
-
-.compact-receipt-card {
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 8px 12px;
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.compact-receipt-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     font-size: 0.78rem;
-}
-
-.receipt-label {
-    color: var(--text-muted);
-    font-weight: 500;
-}
-
-.receipt-status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    background: rgba(4, 120, 87, 0.1);
     color: #047857;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 0.7rem;
-}
-
-.receipt-ref-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: rgba(0, 0, 0, 0.04);
-    border: 1px solid var(--border-color);
-    padding: 2px 6px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.receipt-ref-mono {
-    font-family: monospace;
-    font-size: 0.72rem;
     font-weight: 600;
 }
 
-.receipt-method-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: 600;
-    font-size: 0.78rem;
-}
-
-.receipt-method-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-}
-
-.receipt-method-dot.telebirr { background: #0088CC; }
-.receipt-method-dot.chapa { background: #047857; }
-
-.receipt-date-val {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-}
-
-.tip-success-emblem-wrap {
-    margin: 0.5rem auto 0.5rem;
-    display: flex;
-    justify-content: center;
-}
-
-.tip-success-emblem-ring {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: rgba(4, 120, 87, 0.1);
-    color: #047857;
-    border: 2px solid #047857;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.tip-success-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--text-main);
-    margin: 0 0 0.2rem;
-}
-
-.tip-success-subtitle {
-    font-size: 0.825rem;
-    color: var(--text-muted);
-    margin: 0 0 0.85rem;
-}
-
-.tip-cta-button {
-    width: 100%;
-    height: 44px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    border-radius: 8px;
-    margin-bottom: 0.85rem;
-}
-
-.compact-share-section {
-    border-top: 1px solid var(--border-color);
-    padding-top: 0.75rem;
-}
-
-.compact-share-title {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.compact-share-row {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-}
-
-.compact-share-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 5px 10px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-color);
-    color: var(--text-main);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.compact-share-pill:hover {
-    border-color: #047857;
-    color: #047857;
-}
-
-.compact-share-pill.telegram { color: #0088CC; }
-.compact-share-pill.whatsapp { color: #25D366; }
-
-/* Telebirr USSD Flow Card */
-.telebirr-flow-card {
-    background: var(--bg-color);
+/* Live Telebirr USSD Radar Tracker */
+.telebirr-flow-box {
     border: 1px solid var(--border-color);
     border-radius: 10px;
-    padding: 0.85rem;
-    margin-bottom: 0.85rem;
+    padding: 14px;
+    margin-bottom: 14px;
     text-align: left;
+    background: var(--card-bg);
 }
 
 .telebirr-flow-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.75rem;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .telebirr-flow-title {
@@ -1249,79 +1108,339 @@
     height: 8px;
     border-radius: 50%;
     background: #0088CC;
+    box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.2);
+    animation: radarPulse 1.5s infinite;
+}
+
+@keyframes radarPulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 136, 204, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(0, 136, 204, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 136, 204, 0); }
 }
 
 .telebirr-phone-pill {
-    font-size: 0.75rem;
+    font-size: 0.76rem;
     font-weight: 700;
-    color: var(--text-muted);
+    color: #0088CC;
+    background: rgba(0, 136, 204, 0.08);
+    padding: 2px 8px;
+    border-radius: 5px;
 }
 
 .telebirr-step-tracker {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-bottom: 0.75rem;
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
 .telebirr-step-item {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
 }
 
 .telebirr-step-bullet {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 700;
     flex-shrink: 0;
 }
 
-.telebirr-step-bullet.completed { background: #047857; color: #fff; }
-.telebirr-step-bullet.active { background: #0088CC; color: #fff; }
-.telebirr-step-bullet.pending { background: var(--border-color); color: var(--text-muted); }
+.telebirr-step-bullet.completed {
+    background: #047857;
+    color: #FFFFFF;
+}
 
-.telebirr-step-text { color: var(--text-muted); }
-.telebirr-step-text.active { color: var(--text-main); font-weight: 700; }
+.telebirr-step-bullet.active {
+    background: #0088CC;
+    color: #FFFFFF;
+    animation: stepPulse 1.2s infinite;
+}
+
+@keyframes stepPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.telebirr-step-bullet.pending {
+    background: var(--border-color);
+    color: var(--text-muted);
+}
+
+.telebirr-step-text.active {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.telebirr-step-text.pending {
+    color: var(--text-muted);
+}
 
 .telebirr-flow-note {
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     color: var(--text-muted);
-    line-height: 1.35;
-    margin: 0;
+    line-height: 1.4;
+    margin: 8px 0 0;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border-color);
+}
+
+/* Success Celebration Receipt */
+.tip-success-container {
+    text-align: center;
+}
+
+.tip-success-emblem-wrap {
+    margin: 12px auto 8px;
+}
+
+.tip-success-emblem-ring {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #E6F4EA;
+    color: #047857;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.tip-success-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0 0 4px;
+}
+
+.tip-success-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0 0 14px;
+}
+
+.tip-order-summary-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    background: var(--card-bg);
+}
+
+.tip-order-gift-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+}
+
+.tip-order-gift-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tip-order-coin-emoji {
+    font-size: 1.5rem;
+}
+
+.tip-order-gift-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.tip-order-gift-sub {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.tip-order-amount-col {
+    text-align: right;
+}
+
+.tip-order-amount-etb {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #047857;
+}
+
+.tip-order-coins-sub {
+    font-size: 0.68rem;
+    color: #D97706;
+}
+
+.compact-receipt-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 14px;
+    background: var(--card-bg);
+}
+
+.compact-receipt-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 0.76rem;
+}
+
+.compact-receipt-row:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.receipt-label {
+    color: var(--text-muted);
+}
+
+.receipt-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #047857;
+    background: #E6F4EA;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.receipt-ref-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+.receipt-ref-mono {
+    font-family: monospace;
+}
+
+.receipt-method-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.74rem;
+    font-weight: 600;
+}
+
+.receipt-method-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.receipt-method-dot.telebirr {
+    background: #0088CC;
+}
+
+.receipt-method-dot.chapa {
+    background: #047857;
+}
+
+.receipt-date-val {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.tip-cta-button {
+    width: 100% !important;
+    height: 44px !important;
+    font-weight: 700 !important;
+    background: #047857 !important;
+    border-radius: 8px !important;
+    margin-bottom: 12px;
+}
+
+.compact-share-section {
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+    text-align: center;
+}
+
+.compact-share-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 6px;
+}
+
+.compact-share-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.compact-share-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-main);
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.compact-share-pill:hover {
+    border-color: #047857;
+    color: #047857;
 }
 
 /* ==========================================================================
-   9. CLEAN QR CODE MODAL
+   9. QR MODAL (CLEAN & MINIMAL)
    ========================================================================== */
 
 .clean-modal-backdrop {
     position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
     padding: 1rem;
+    backdrop-filter: blur(2px);
 }
 
 .clean-modal-box {
-    max-width: 340px;
     width: 100%;
+    max-width: 360px;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 14px;
-    padding: 1.5rem;
-    text-align: center;
+    border-radius: 12px;
+    padding: 1.25rem;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
+    animation: modalIn 0.18s ease;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 .clean-modal-header {
@@ -1332,26 +1451,37 @@
 }
 
 .clean-modal-title {
-    margin: 0;
-    font-size: 1.05rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: var(--text-main);
+    margin: 0;
 }
 
 .clean-modal-close {
-    background: none;
+    background: transparent;
     border: none;
     color: var(--text-muted);
     cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.clean-modal-close:hover {
+    color: var(--text-main);
 }
 
 .clean-qr-image-wrapper {
     background: #FFFFFF;
-    padding: 1rem;
+    border: 1px solid var(--border-color);
     border-radius: 10px;
-    display: inline-block;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 0.85rem;
-    border: 1px solid #E2E8F0;
 }
 
 .clean-qr-img {
@@ -1361,63 +1491,8 @@
 }
 
 .clean-qr-caption {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
+    text-align: center;
     margin: 0 0 1rem;
-}
-
-/* ==========================================================================
-   10. ETHIOPIAN 3D GIFT VISUALS & NATURAL MOTION STYLES
-   ========================================================================== */
-
-.eth-gift-art-box {
-    position: relative;
-    border-radius: 8px;
-    overflow: visible;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.eth-gift-image-frame {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    z-index: 1;
-}
-
-.eth-gift-real-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.1));
-    animation: gentleLevitate 3.5s ease-in-out infinite alternate;
-    transition: transform 0.2s ease;
-}
-
-@keyframes gentleLevitate {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-3px); }
-    100% { transform: translateY(0px); }
-}
-
-.clean-gift-card:hover .eth-gift-real-img {
-    transform: translateY(-4px) scale(1.08);
-}
-
-.clean-gift-card.selected .eth-gift-real-img {
-    transform: translateY(-3px) scale(1.06);
-}
-
-.eth-gift-fallback-emoji {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
 }

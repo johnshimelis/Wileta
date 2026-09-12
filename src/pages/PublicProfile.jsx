@@ -636,13 +636,13 @@ export default function PublicProfile() {
                                     <span className="clean-section-title">Select a gift (ስጦታ ይምረጡ)</span>
                                 </div>
 
-                                {/* Category Navigation Chips */}
-                                <div className="clean-category-chips">
+                                {/* Category Navigation Tabs (Clean Horizontal Tabs) */}
+                                <div className="clean-category-tabs">
                                     {GIFT_CATEGORIES.map(tab => (
                                         <button
                                             key={tab.key}
                                             type="button"
-                                            className={`clean-cat-chip ${giftCategory === tab.key ? 'active' : ''}`}
+                                            className={`clean-cat-tab ${giftCategory === tab.key ? 'active' : ''}`}
                                             onClick={() => {
                                                 setGiftCategory(tab.key);
                                                 if (tab.key === 'custom') {
@@ -652,8 +652,8 @@ export default function PublicProfile() {
                                                 }
                                             }}
                                         >
-                                            <span>{tab.icon}</span>
-                                            <span>{tab.labelAm}</span>
+                                            <span className="cat-tab-icon">{tab.icon}</span>
+                                            <span className="cat-tab-label">{tab.labelAm}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -817,7 +817,7 @@ export default function PublicProfile() {
                                             key={i}
                                             type="button"
                                             onClick={() => setShoutOutMessage(msg)}
-                                            className="clean-msg-chip"
+                                            className={`clean-msg-chip ${shoutOutMessage === msg ? 'active' : ''}`}
                                         >
                                             {msg}
                                         </button>
