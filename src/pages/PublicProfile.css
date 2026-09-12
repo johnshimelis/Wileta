@@ -1,304 +1,1382 @@
 /* ==========================================================================
-   GURSHA PAY — AUTHENTIC ETHIOPIAN CREATOR PROFILE & GIFT SHOWCASE STYLES
+   GURSHA PAY — CLEAN, HUMAN & PROFESSIONAL CREATOR TIPPING PAGE
+   Simple fintech design, zero AI-generated aesthetic, subtle branding.
    ========================================================================== */
 
-/* Main Container Layout */
-.public-tipping-container {
+/* 1. Page Wrapper (Mobile-first, centered, clean natural spacing) */
+.tipping-page-wrapper {
     min-height: 100vh;
+    background: var(--bg-color);
+    color: var(--text-main);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding: 1.5rem 1rem 3rem;
-    background: var(--bg-color);
+    padding: 1.25rem 1rem 3rem;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* 2. Top Navigation Bar */
+.tipping-top-nav {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0 4px;
+    box-sizing: border-box;
+}
+
+.tipping-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tipping-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.tipping-nav-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* 3. Main Single Card Container (Clean, focused, no glassmorphism or heavy shadow) */
+.tipping-main-card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 1.5rem 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+    transition: border-color 0.15s ease;
+}
+
+@media (min-width: 520px) {
+    .tipping-main-card {
+        padding: 1.75rem 1.5rem;
+    }
+}
+
+/* 4. Creator Profile Header (Clean, Human, Focused) */
+.creator-profile-header {
+    text-align: center;
+    margin-bottom: 1.25rem;
+}
+
+.creator-avatar-ring {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 0.65rem;
     position: relative;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    overflow: hidden;
+    background: var(--bg-color);
+}
+
+.creator-avatar-photo {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.creator-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.creator-info-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.creator-display-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    letter-spacing: -0.01em;
+}
+
+.creator-handle-tag {
+    font-size: 0.825rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.creator-bio-text {
+    font-size: 0.825rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+    margin: 0.45rem auto 0;
+    max-width: 90%;
+    word-break: break-word;
+}
+
+.creator-social-pills {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.creator-social-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--bg-color);
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.creator-social-pill:hover {
+    color: var(--text-main);
+    border-color: var(--text-muted);
+}
+
+/* Creator Goal Widget (Simple & Compact) */
+.creator-clean-goal {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 0.65rem 0.85rem;
+    margin-top: 0.85rem;
+    text-align: left;
+}
+
+.goal-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+}
+
+.goal-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     color: var(--text-main);
 }
 
-/* ==========================================================================
-   1. ETHIOPIAN GIFT SHOWCASE CONTAINER & CATEGORY NAVIGATION
-   ========================================================================== */
-
-.eth-gift-showcase-container {
-    background: #FFFFFF !important;
-    border: 1px solid #E5E7EB !important;
-    border-radius: 16px;
-    padding: 1.15rem 1rem;
-    margin-bottom: 1.25rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    color: #111827 !important;
+.goal-pct {
+    color: #047857;
+    font-weight: 800;
+    font-size: 0.75rem;
 }
 
-.eth-category-nav {
+.goal-bar-track {
+    width: 100%;
+    height: 5px;
+    background: var(--border-color);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.35rem;
+}
+
+.goal-bar-fill {
+    height: 100%;
+    background: #047857;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+.goal-row-bottom {
     display: flex;
-    gap: 0.4rem;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   5. GIFT SELECTION SECTION (NO BOX-IN-A-BOX, CLEAN FLOW)
+   ========================================================================== */
+
+.gift-section-block {
+    margin-bottom: 1.25rem;
+}
+
+.section-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.55rem;
+}
+
+.clean-section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+/* Category Filter Chips (Simple, sleek, Dark Navy / Emerald Active, NO YELLOW) */
+.clean-category-chips {
+    display: flex;
+    gap: 5px;
     overflow-x: auto;
-    padding-bottom: 8px;
-    margin-bottom: 0.85rem;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    padding-bottom: 6px;
+    margin-bottom: 0.75rem;
+    scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
 }
 
-.eth-category-nav::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+.clean-category-chips::-webkit-scrollbar {
+    display: none;
 }
 
-.eth-category-chip {
+.clean-cat-chip {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.42rem 0.75rem;
-    border-radius: 20px;
-    border: 1px solid #E5E7EB;
-    background: #F9FAFB;
-    color: #4B5563;
-    font-size: 0.78rem;
+    gap: 4px;
+    padding: 5px 11px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    color: var(--text-muted);
+    font-size: 0.76rem;
     font-weight: 600;
     white-space: nowrap;
     cursor: pointer;
-    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.15s ease;
     user-select: none;
 }
 
-.eth-category-chip:hover {
-    color: #111827;
-    border-color: #D1D5DB;
-    background: #F3F4F6;
+.clean-cat-chip:hover {
+    color: var(--text-main);
+    border-color: var(--border-hover);
 }
 
-.eth-category-chip.active {
-    background: #FEF3C7 !important;
-    border-color: #F59E0B !important;
-    color: #B45309 !important;
+/* Active Category Pill: Solid Dark Navy (Clean, Human, Professional) */
+.clean-cat-chip.active {
+    background: #0F172A !important;
+    border-color: #0F172A !important;
+    color: #FFFFFF !important;
     font-weight: 700;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
 }
 
-/* ==========================================================================
-   2. FLAT WHITE SCREEN GIFT GRID & FREE-FLOATING 3D GIFTS (STRICTLY 3 COLUMNS)
-   ========================================================================== */
+[data-theme='dark'] .clean-cat-chip.active {
+    background: #047857 !important;
+    border-color: #047857 !important;
+    color: #FFFFFF !important;
+}
 
-.eth-gift-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 0.85rem 0.65rem !important;
-    max-height: 440px;
+/* 3-Column Clean Gift Grid */
+.clean-gift-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    max-height: 380px;
     overflow-y: auto;
-    overflow-x: hidden;
-    padding: 16px 6px 16px !important;
+    padding: 2px;
+    margin-bottom: 0.65rem;
     scrollbar-width: thin;
-    scrollbar-color: rgba(217, 119, 6, 0.3) transparent;
+    scrollbar-color: rgba(4, 120, 87, 0.25) transparent;
 }
 
-@media (min-width: 640px) {
-    .eth-gift-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 1rem 0.85rem !important;
-        max-height: 480px;
-        padding: 18px 8px 18px !important;
-    }
-}
-
-@media (min-width: 768px) {
-    .eth-gift-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 1.1rem 0.95rem !important;
-    }
-}
-
-/* Free-Floating 3D Gift Item - Directly on Flat White Screen (No Card Box) */
-.eth-gift-card {
-    background: transparent !important;
-    border: none !important;
-    border-radius: 14px;
-    padding: 0.65rem 0.3rem 0.75rem;
+.clean-gift-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 0.45rem;
+    padding: 10px 4px 8px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
     cursor: pointer;
-    position: relative;
-    user-select: none;
+    transition: all 0.15s ease;
     outline: none;
-    perspective: 800px;
-    transform-style: preserve-3d;
-    box-shadow: none !important;
-    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-    min-height: 140px;
+    text-align: center;
+    user-select: none;
+    min-height: 124px;
 }
 
-[data-theme='dark'] .eth-gift-card {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+.clean-gift-card:hover {
+    border-color: #047857;
+    transform: translateY(-2px);
 }
 
-.eth-gift-card:hover {
-    transform: translateY(-4px);
-    background: rgba(0, 0, 0, 0.02) !important;
-    border: none !important;
-    box-shadow: none !important;
+.clean-gift-card:active {
+    transform: translateY(0);
 }
 
-.eth-gift-card:active {
-    transform: translateY(-1px) scale(0.97);
+/* Selected Gift Tile */
+.clean-gift-card.selected {
+    background: rgba(4, 120, 87, 0.05) !important;
+    border: 1.5px solid #047857 !important;
+    transform: translateY(-2px);
 }
 
-.eth-gift-card.selected {
-    background: rgba(16, 185, 129, 0.08) !important;
-    border: 1.5px solid var(--primary) !important;
-    border-radius: 14px;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), 0 4px 14px rgba(16, 185, 129, 0.15) !important;
-    transform: translateY(-3px) scale(1.02);
+[data-theme='dark'] .clean-gift-card.selected {
+    background: rgba(4, 120, 87, 0.15) !important;
+    border-color: #10B981 !important;
 }
 
-[data-theme='dark'] .eth-gift-card.selected {
-    background: rgba(16, 185, 129, 0.14) !important;
-    border: 1.5px solid #10B981 !important;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25), 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-}
-
-.eth-gift-selected-badge {
+.gift-selected-tick {
     position: absolute;
-    top: 4px;
-    right: 4px;
-    width: 20px;
-    height: 20px;
+    top: 5px;
+    right: 5px;
+    width: 17px;
+    height: 17px;
     border-radius: 50%;
-    background: #10B981;
+    background: #047857;
     color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.45);
-    animation: popInBadge 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     z-index: 5;
+    animation: tickPop 0.18s ease forwards;
 }
 
-@keyframes popInBadge {
-    from { transform: scale(0.3); opacity: 0; }
+@keyframes tickPop {
+    from { transform: scale(0.4); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
 
-.eth-gift-icon-container {
-    width: 68px;
-    height: 68px;
+.gift-icon-box {
+    width: 54px;
+    height: 54px;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    overflow: visible;
+    margin-bottom: 4px;
+    transition: transform 0.18s ease;
 }
 
-.eth-gift-card:hover .eth-gift-icon-container {
-    transform: scale(1.08);
+.clean-gift-card:hover .gift-icon-box {
+    transform: scale(1.06);
 }
 
-.eth-gift-card.selected .eth-gift-icon-container {
-    transform: scale(1.12);
-}
-
-/* Subtle amber ground spotlight beneath the 3D gift when selected */
-.eth-gift-card.selected .eth-gift-icon-container::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 48px;
-    height: 10px;
-    border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(245, 158, 11, 0.3) 0%, transparent 75%);
-    pointer-events: none;
-    z-index: 0;
-}
-
-
-.eth-gift-card-labels {
+.gift-text-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-top: 6px;
 }
 
-.gift-card-name-am {
-    font-size: 0.78rem;
-    font-weight: 800;
-    color: #111827 !important;
+.gift-name-primary {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-main);
     line-height: 1.2;
-    text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
 }
 
-.gift-card-name-en {
-    font-size: 0.67rem;
+.gift-name-secondary {
+    font-size: 0.68rem;
     font-weight: 500;
-    color: #6B7280 !important;
+    color: var(--text-muted);
     line-height: 1.15;
-    text-align: center;
+    margin-top: 1px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
-    margin-top: 1px;
 }
 
-.gift-card-pricing {
+.gift-price-badge {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 3px;
     margin-top: 4px;
-    padding: 2px 7px;
-    border-radius: 12px;
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    transition: all 0.18s ease;
 }
 
-.gift-card-coins {
+.price-etb {
+    color: var(--text-main);
+    font-weight: 800;
+}
+
+.price-coins {
+    color: #D97706;
+    font-size: 0.65rem;
+}
+
+.clean-gift-card.selected .price-etb {
+    color: #047857;
+}
+
+[data-theme='dark'] .clean-gift-card.selected .price-etb {
+    color: #10B981;
+}
+
+/* Selected Gift Multiplier Strip (Clean & Integrated) */
+.clean-multiplier-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+
+.strip-gift-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.strip-mini-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.strip-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.strip-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.strip-en {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.strip-cost {
+    font-size: 0.72rem;
+    font-weight: 700;
     color: #D97706;
 }
 
-.gift-card-etb {
-    color: #6B7280;
-    font-size: 0.62rem;
+.strip-multipliers-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.clean-mult-btn {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.clean-mult-btn:hover {
+    border-color: #047857;
+    color: #047857;
+}
+
+.clean-mult-btn.active {
+    background: #047857 !important;
+    border-color: #047857 !important;
+    color: #FFFFFF !important;
+}
+
+.clean-mult-btn.preview {
+    font-size: 0.75rem;
+    padding: 4px 6px;
+}
+
+/* Custom Amount Box (Clean & Minimal) */
+.clean-custom-box {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 0.75rem;
+}
+
+.custom-input-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
     font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 6px;
 }
 
-.gift-card-pricing.pricing-selected,
-.eth-gift-card.selected .gift-card-pricing {
-    background: #10B981 !important;
-    border: 1px solid #059669 !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3) !important;
+.custom-rate-hint {
+    color: #D97706;
 }
 
-.eth-gift-card.selected .gift-card-pricing .gift-card-coins,
-.eth-gift-card.selected .gift-card-pricing .gift-card-etb {
-    color: #FFFFFF !important;
-    font-weight: 800 !important;
+.custom-field-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.custom-prefix {
+    position: absolute;
+    left: 10px;
+    font-weight: 800;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.clean-custom-input {
+    width: 100%;
+    padding: 8px 10px 8px 44px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 700;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.clean-custom-input:focus {
+    border-color: #047857;
+}
+
+.custom-conversion-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #D97706;
+    margin-top: 5px;
 }
 
 /* ==========================================================================
-   3. CLEAN ART BOX & REAL IMAGE PRESENTATION
+   6. FORM INPUTS & GROUPS (COMPACT, HUMAN, ACCESSIBLE)
+   ========================================================================== */
+
+.clean-field-group {
+    margin-bottom: 0.95rem;
+}
+
+.clean-field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.35rem;
+}
+
+.clean-field-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+.clean-field-header .clean-field-label {
+    margin-bottom: 0;
+}
+
+.clean-anon-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+.clean-anon-checkbox input {
+    accent-color: #047857;
+    cursor: pointer;
+}
+
+.clean-text-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-color);
+    color: var(--text-main);
+    font-size: 0.875rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.clean-text-input:focus {
+    border-color: #047857;
+    background: var(--card-bg);
+}
+
+.clean-textarea-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-color);
+    color: var(--text-main);
+    font-size: 0.875rem;
+    font-family: inherit;
+    line-height: 1.4;
+    box-sizing: border-box;
+    outline: none;
+    resize: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.clean-textarea-input:focus {
+    border-color: #047857;
+    background: var(--card-bg);
+}
+
+.clean-char-counter {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.clean-quick-messages {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+.clean-msg-chip {
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.clean-msg-chip:hover {
+    border-color: #047857;
+    color: #047857;
+    background: var(--card-bg);
+}
+
+/* Payment Method Selector (2 Compact Cards) */
+.clean-payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.clean-payment-tile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-color);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+    position: relative;
+}
+
+.clean-payment-tile:hover {
+    border-color: var(--border-hover);
+}
+
+.clean-payment-tile.active {
+    border: 1.5px solid #047857 !important;
+    background: rgba(4, 120, 87, 0.04) !important;
+}
+
+[data-theme='dark'] .clean-payment-tile.active {
+    border-color: #10B981 !important;
+    background: rgba(4, 120, 87, 0.15) !important;
+}
+
+.payment-tile-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.payment-tile-icon.telebirr {
+    background: rgba(0, 136, 204, 0.1);
+    color: #0088CC;
+}
+
+.payment-tile-icon.chapa {
+    background: rgba(4, 120, 87, 0.1);
+    color: #047857;
+}
+
+.payment-tile-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.tile-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.tile-sub {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+}
+
+.payment-tile-check {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #047857;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Phone Number Field */
+.clean-phone-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.clean-phone-prefix {
+    position: absolute;
+    left: 10px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.clean-phone-input {
+    width: 100%;
+    padding: 9px 12px 9px 78px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-color);
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 700;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.clean-phone-input:focus {
+    border-color: #047857;
+    background: var(--card-bg);
+}
+
+/* Main Send Tip CTA Button (Solid, Prominent, Clear & Tactile) */
+.clean-send-btn {
+    width: 100%;
+    height: 48px;
+    background: #047857;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.15s ease, transform 0.1s ease;
+    margin-top: 0.5rem;
+}
+
+.clean-send-btn:hover {
+    background: #065F46;
+}
+
+.clean-send-btn:active {
+    transform: translateY(1px);
+}
+
+.clean-send-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.clean-send-icon {
+    font-size: 1.15rem;
+}
+
+.clean-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.clean-security-footnote {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+}
+
+/* ==========================================================================
+   7. SHARE PAGE STRIP (BELOW MAIN CARD)
+   ========================================================================== */
+
+.clean-share-bar {
+    width: 100%;
+    max-width: 480px;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 0 4px;
+    box-sizing: border-box;
+}
+
+.clean-share-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.clean-share-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-main);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.clean-share-link-btn:hover {
+    border-color: #047857;
+    color: #047857;
+}
+
+.clean-share-link-btn.icon-only {
+    padding: 5px 8px;
+}
+
+/* ==========================================================================
+   8. STATUS SCREENS (SUCCESS & TELEBIRR PIN PROMPT)
+   ========================================================================== */
+
+.status-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.status-card-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #047857;
+    flex-shrink: 0;
+}
+
+.status-card-avatar-fallback {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 800;
+    border: 2px solid #047857;
+    flex-shrink: 0;
+}
+
+.status-card-creator-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+}
+
+.status-card-creator-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.status-card-creator-handle {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.tip-order-summary-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    margin-bottom: 0.85rem;
+    text-align: left;
+}
+
+.tip-order-gift-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.tip-order-gift-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tip-order-coin-emoji {
+    font-size: 1.5rem;
+}
+
+.tip-order-gift-details {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.tip-order-gift-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tip-order-gift-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.tip-order-amount-col {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.tip-order-amount-etb {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #047857;
+}
+
+.tip-order-coins-sub {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #D97706;
+}
+
+.compact-receipt-card {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.compact-receipt-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.78rem;
+}
+
+.receipt-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.receipt-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(4, 120, 87, 0.1);
+    color: #047857;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.7rem;
+}
+
+.receipt-ref-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-color);
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.receipt-ref-mono {
+    font-family: monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.receipt-method-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    font-size: 0.78rem;
+}
+
+.receipt-method-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.receipt-method-dot.telebirr { background: #0088CC; }
+.receipt-method-dot.chapa { background: #047857; }
+
+.receipt-date-val {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.tip-success-emblem-wrap {
+    margin: 0.5rem auto 0.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.tip-success-emblem-ring {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(4, 120, 87, 0.1);
+    color: #047857;
+    border: 2px solid #047857;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tip-success-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 0.2rem;
+}
+
+.tip-success-subtitle {
+    font-size: 0.825rem;
+    color: var(--text-muted);
+    margin: 0 0 0.85rem;
+}
+
+.tip-cta-button {
+    width: 100%;
+    height: 44px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    margin-bottom: 0.85rem;
+}
+
+.compact-share-section {
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.75rem;
+}
+
+.compact-share-title {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.compact-share-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.compact-share-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    color: var(--text-main);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.compact-share-pill:hover {
+    border-color: #047857;
+    color: #047857;
+}
+
+.compact-share-pill.telegram { color: #0088CC; }
+.compact-share-pill.whatsapp { color: #25D366; }
+
+/* Telebirr USSD Flow Card */
+.telebirr-flow-card {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 0.85rem;
+    margin-bottom: 0.85rem;
+    text-align: left;
+}
+
+.telebirr-flow-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.telebirr-flow-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.telebirr-radar-ring {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #0088CC;
+}
+
+.telebirr-phone-pill {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.telebirr-step-tracker {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 0.75rem;
+}
+
+.telebirr-step-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+}
+
+.telebirr-step-bullet {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.telebirr-step-bullet.completed { background: #047857; color: #fff; }
+.telebirr-step-bullet.active { background: #0088CC; color: #fff; }
+.telebirr-step-bullet.pending { background: var(--border-color); color: var(--text-muted); }
+
+.telebirr-step-text { color: var(--text-muted); }
+.telebirr-step-text.active { color: var(--text-main); font-weight: 700; }
+
+.telebirr-flow-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.35;
+    margin: 0;
+}
+
+/* ==========================================================================
+   9. CLEAN QR CODE MODAL
+   ========================================================================== */
+
+.clean-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.clean-modal-box {
+    max-width: 340px;
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.clean-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.clean-modal-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.clean-modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.clean-qr-image-wrapper {
+    background: #FFFFFF;
+    padding: 1rem;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 0.85rem;
+    border: 1px solid #E2E8F0;
+}
+
+.clean-qr-img {
+    width: 180px;
+    height: 180px;
+    display: block;
+}
+
+.clean-qr-caption {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0 0 1rem;
+}
+
+/* ==========================================================================
+   10. ETHIOPIAN 3D GIFT VISUALS & NATURAL MOTION STYLES
    ========================================================================== */
 
 .eth-gift-art-box {
     position: relative;
-    border-radius: 12px;
+    border-radius: 8px;
     overflow: visible;
     display: flex;
     align-items: center;
     justify-content: center;
-    perspective: 800px;
 }
 
 .eth-gift-image-frame {
@@ -318,2084 +1396,28 @@
     height: 100%;
     object-fit: contain;
     display: block;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.14));
-    animation: giftLevitate3D 3.5s ease-in-out infinite alternate;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.1));
+    animation: gentleLevitate 3.5s ease-in-out infinite alternate;
+    transition: transform 0.2s ease;
 }
 
-@keyframes giftLevitate3D {
-    0% {
-        transform: translateY(0px) rotateX(0deg) rotateY(0deg);
-        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.12));
-    }
-    50% {
-        transform: translateY(-4px) rotateX(4deg) rotateY(-3deg) scale(1.03);
-        filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.22));
-    }
-    100% {
-        transform: translateY(0px) rotateX(0deg) rotateY(0deg);
-        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.12));
-    }
+@keyframes gentleLevitate {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-3px); }
+    100% { transform: translateY(0px); }
 }
 
-.eth-gift-card:hover .eth-gift-real-img {
-    transform: translateY(-6px) scale(1.15) rotateZ(3deg);
-    filter: drop-shadow(0 12px 20px rgba(245, 158, 11, 0.38));
+.clean-gift-card:hover .eth-gift-real-img {
+    transform: translateY(-4px) scale(1.08);
 }
 
-.eth-gift-card.selected .eth-gift-real-img {
-    transform: translateY(-5px) scale(1.12);
-    filter: drop-shadow(0 10px 18px rgba(217, 119, 6, 0.45));
+.clean-gift-card.selected .eth-gift-real-img {
+    transform: translateY(-3px) scale(1.06);
 }
 
 .eth-gift-fallback-emoji {
-    font-size: 1.6rem;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.eth-motion-layer {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-    overflow: visible;
-}
-
-/* ==========================================================================
-   4. OBJECT-SPECIFIC ANIMATION KEYFRAMES (ALIVE, NATURAL & RESTRAINED)
-   ========================================================================== */
-
-/* 🫖 JEBENA POURING ANIMATION */
-.eth-anim-jebena {
-    transform-origin: 30% 70%;
-    animation: jebenaTiltPour 3.6s infinite ease-in-out;
-}
-
-@keyframes jebenaTiltPour {
-    0%, 100% { transform: rotate(0deg); }
-    30% { transform: rotate(-10deg) translateY(-2px); }
-    55% { transform: rotate(-10deg) translateY(-2px); }
-    75% { transform: rotate(0deg); }
-}
-
-.obj-fx-jebena {
-    position: absolute;
-    inset: 0;
-}
-
-.jebena-pour-stream-svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-}
-
-.coffee-pour-line {
-    stroke-dasharray: 40;
-    stroke-dashoffset: 40;
-    animation: coffeeStreamPour 3.6s infinite ease-in-out;
-}
-
-@keyframes coffeeStreamPour {
-    0%, 25% { stroke-dashoffset: 40; opacity: 0; }
-    32% { stroke-dashoffset: 0; opacity: 0.95; }
-    52% { stroke-dashoffset: 0; opacity: 0.95; }
-    60% { stroke-dashoffset: -40; opacity: 0; }
-    100% { stroke-dashoffset: -40; opacity: 0; }
-}
-
-.mini-sini-cup {
-    position: absolute;
-    right: 8%;
-    bottom: 8%;
-    width: 12px;
-    height: 8px;
-    border-radius: 0 0 6px 6px;
-    border: 1px solid rgba(245, 158, 11, 0.7);
-    background: rgba(255, 255, 255, 0.9);
-    opacity: 0;
-    animation: siniAppear 3.6s infinite ease-in-out;
-}
-
-@keyframes siniAppear {
-    0%, 25% { opacity: 0; transform: scale(0.6); }
-    32%, 60% { opacity: 1; transform: scale(1); }
-    70%, 100% { opacity: 0; transform: scale(0.6); }
-}
-
-.sini-surface-ripple {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: #3D2314;
-    animation: coffeeRipple 1s infinite ease-out;
-}
-
-@keyframes coffeeRipple {
-    0% { transform: scale(0.6); opacity: 0.8; }
-    100% { transform: scale(1.2); opacity: 0; }
-}
-
-.obj-steam-wisp {
-    position: absolute;
-    top: 15%;
-    right: 35%;
-    width: 6px;
-    height: 12px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 80%);
-    animation: steamWispFloat 2.4s infinite ease-out;
-}
-
-@keyframes steamWispFloat {
-    0% { transform: translateY(0) scale(0.6); opacity: 0; }
-    30% { opacity: 0.7; }
-    100% { transform: translateY(-16px) scale(1.4); opacity: 0; }
-}
-
-/* ☕ BUNA & REKEBOT STEAM */
-.eth-anim-buna,
-.eth-anim-rekebot {
-    animation: bunaGentleBreathe 4s infinite ease-in-out;
-}
-
-@keyframes bunaGentleBreathe {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-}
-
-.obj-fx-steam {
-    position: absolute;
-    inset: 0;
-}
-
-.delicate-steam-puff {
-    position: absolute;
-    width: 6px;
-    height: 14px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, transparent 75%);
-    animation: delicateSteamRise 2.8s infinite ease-out;
-}
-
-.wisp-1 { left: 42%; top: 20%; animation-delay: 0s; }
-.wisp-2 { left: 54%; top: 16%; animation-delay: 1.2s; }
-
-.censer-incense-smoke {
-    position: absolute;
-    right: 20%;
-    top: 25%;
-    width: 8px;
-    height: 20px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, transparent 80%);
-    animation: incenseSmokeCurl 3.2s infinite ease-out;
-}
-
-@keyframes delicateSteamRise {
-    0% { transform: translateY(0) scaleX(0.7); opacity: 0; }
-    25% { opacity: 0.6; }
-    100% { transform: translateY(-18px) scaleX(1.3) translateX(3px); opacity: 0; }
-}
-
-@keyframes incenseSmokeCurl {
-    0% { transform: translateY(0) scale(0.6); opacity: 0; }
-    30% { opacity: 0.5; }
-    100% { transform: translateY(-24px) scale(1.5) translateX(-4px); opacity: 0; }
-}
-
-/* 🪘 KEBERO DRUM RHYTHMIC TAP */
-.eth-anim-kebero {
-    animation: keberoSkinResonance 2s infinite cubic-bezier(0.36, 0.07, 0.19, 0.97);
-}
-
-@keyframes keberoSkinResonance {
-    0%, 100% { transform: scale(1); }
-    15% { transform: scale(1.03, 0.98); }
-    25% { transform: scale(0.99, 1.01); }
-    35% { transform: scale(1); }
-}
-
-.kebero-drumstick-tap {
-    position: absolute;
-    top: 10%;
-    right: 25%;
-    width: 3px;
-    height: 18px;
-    background: linear-gradient(to bottom, #8B5A2B, #5C3A1E);
-    border-radius: 2px;
-    transform-origin: top right;
-    animation: drumstickStrike 2s infinite ease-in;
-}
-
-@keyframes drumstickStrike {
-    0%, 10%, 30%, 100% { transform: rotate(-25deg) translateY(-3px); opacity: 0.7; }
-    15% { transform: rotate(5deg) translateY(2px); opacity: 1; }
-}
-
-.kebero-acoustic-ring {
-    position: absolute;
-    top: 18%;
-    left: 25%;
-    width: 50%;
-    height: 16px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(245, 158, 11, 0.5);
-    opacity: 0;
-    animation: acousticWave 2s infinite ease-out;
-}
-
-@keyframes acousticWave {
-    0%, 10% { transform: scale(0.7); opacity: 0; }
-    15% { opacity: 0.8; transform: scale(0.8); }
-    50% { opacity: 0; transform: scale(1.4); }
-    100% { opacity: 0; }
-}
-
-/* 🎻 MASENQO BOW DRAWING */
-.eth-anim-masenqo {
-    animation: masenqoSoundboxSway 3s infinite ease-in-out;
-}
-
-@keyframes masenqoSoundboxSway {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(1.5deg); }
-}
-
-.masenqo-gliding-bow {
-    position: absolute;
-    top: 48%;
-    left: -10%;
-    width: 120%;
-    height: 2.5px;
-    background: linear-gradient(90deg, transparent, #C28E5C 20%, #D4A373 80%, transparent);
-    border-radius: 2px;
-    animation: bowGlidingStroke 2.6s infinite ease-in-out;
-}
-
-@keyframes bowGlidingStroke {
-    0%, 100% { transform: translateX(-8px) rotate(-12deg); opacity: 0.8; }
-    50% { transform: translateX(8px) rotate(-14deg); opacity: 0.95; }
-}
-
-/* 🎸 KRAR STRINGS VIBRATION */
-.obj-fx-krar {
-    position: absolute;
-    top: 15%;
-    left: 30%;
-    width: 40%;
-    height: 60%;
-    display: flex;
-    justify-content: space-between;
-}
-
-.krar-string-wave {
-    width: 1px;
-    height: 100%;
-    background: rgba(254, 240, 138, 0.7);
-    animation: krarVibrate 0.8s infinite ease-in-out;
-}
-
-.str-1 { animation-delay: 0s; }
-.str-2 { animation-delay: 0.15s; }
-.str-3 { animation-delay: 0.3s; }
-.str-4 { animation-delay: 0.45s; }
-.str-5 { animation-delay: 0.6s; }
-
-@keyframes krarVibrate {
-    0%, 100% { transform: scaleX(1); opacity: 0.5; }
-    50% { transform: scaleX(2.5); opacity: 0.95; }
-}
-
-/* 📖 BIBLE & 📗 QURAN 3D LEATHER PERSPECTIVE & PAGE OPENING */
-.eth-anim-book {
-    perspective: 800px;
-    transform-style: preserve-3d;
-    animation: book3DPerspective 3.8s infinite ease-in-out;
-}
-
-@keyframes book3DPerspective {
-    0%, 100% {
-        transform: translateY(0) rotateX(10deg) rotateY(-8deg);
-    }
-    50% {
-        transform: translateY(-3px) rotateX(14deg) rotateY(6deg) scale(1.03);
-    }
-}
-
-.book-sacred-glow {
-    position: absolute;
-    inset: -6px;
-    border-radius: 12px;
-    pointer-events: none;
-    animation: sacredGlowPulse 3s infinite alternate ease-in-out;
-}
-
-.book-sacred-glow.gold {
-    background: radial-gradient(circle at 60% 50%, rgba(245, 158, 11, 0.35) 0%, transparent 70%);
-}
-
-.book-sacred-glow.emerald {
-    background: radial-gradient(circle at 60% 50%, rgba(16, 185, 129, 0.35) 0%, transparent 70%);
-}
-
-@keyframes sacredGlowPulse {
-    0% { opacity: 0.35; }
-    100% { opacity: 0.8; }
-}
-
-/* 📖 BIBLE & 📗 QURAN: AUTHENTIC 3D PAGE-OPENING & PERSPECTIVE SPREAD */
-.eth-anim-book {
-    perspective: 800px;
-    transform-style: preserve-3d;
-}
-
-.eth-anim-book .eth-gift-real-img,
-.eth-book-real-img {
-    transform-origin: left center;
-    animation: sacredBookOpenSpread 3.8s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
-    transition: transform 0.3s ease, filter 0.3s ease;
-    will-change: transform, filter;
-}
-
-[data-gift-id="bible"] .eth-gift-real-img {
-    animation: sacredBibleOpenSpread 3.8s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
-}
-
-[data-gift-id="quran"] .eth-gift-real-img {
-    animation: sacredQuranOpenSpread 3.8s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
-}
-
-@keyframes sacredBibleOpenSpread {
-    0% {
-        transform: perspective(600px) rotateY(0deg) rotateX(0deg) scale(1);
-        filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.18)) brightness(1);
-    }
-    35% {
-        transform: perspective(600px) rotateY(-10deg) rotateX(2deg) scale(1.04);
-        filter: drop-shadow(0 8px 18px rgba(245, 158, 11, 0.35)) brightness(1.08);
-    }
-    70% {
-        transform: perspective(600px) rotateY(-16deg) rotateX(3deg) scale(1.07);
-        filter: drop-shadow(0 12px 24px rgba(245, 158, 11, 0.5)) brightness(1.14);
-    }
-    100% {
-        transform: perspective(600px) rotateY(-18deg) rotateX(4deg) scale(1.09);
-        filter: drop-shadow(0 14px 28px rgba(245, 158, 11, 0.6)) brightness(1.18);
-    }
-}
-
-@keyframes sacredQuranOpenSpread {
-    0% {
-        transform: perspective(600px) rotateY(0deg) rotateX(0deg) scale(1);
-        filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.18)) brightness(1);
-    }
-    35% {
-        transform: perspective(600px) rotateY(-10deg) rotateX(2deg) scale(1.04);
-        filter: drop-shadow(0 8px 18px rgba(16, 185, 129, 0.35)) brightness(1.08);
-    }
-    70% {
-        transform: perspective(600px) rotateY(-16deg) rotateX(3deg) scale(1.07);
-        filter: drop-shadow(0 12px 24px rgba(16, 185, 129, 0.5)) brightness(1.14);
-    }
-    100% {
-        transform: perspective(600px) rotateY(-18deg) rotateX(4deg) scale(1.09);
-        filter: drop-shadow(0 14px 28px rgba(16, 185, 129, 0.6)) brightness(1.18);
-    }
-}
-
-/* 🌼 FLOWER & 🌹 ROSE GENTLE BREEZE SWAY */
-.eth-anim-flower {
-    transform-origin: bottom center;
-    animation: flowerBreezeSway 3.8s infinite ease-in-out;
-}
-
-@keyframes flowerBreezeSway {
-    0%, 100% { transform: rotate(0deg) scale(1); }
-    33% { transform: rotate(2.5deg) scale(1.015); }
-    66% { transform: rotate(-2deg) scale(1.01); }
-}
-
-.dew-shimmer-point {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: #FFFFFF;
-    box-shadow: 0 0 6px #FFFFFF;
-    animation: dewSparkle 3s infinite ease-in-out;
-}
-
-.d1 { top: 30%; left: 35%; animation-delay: 0.5s; }
-.d2 { top: 45%; right: 32%; animation-delay: 2s; }
-
-@keyframes dewSparkle {
-    0%, 100% { opacity: 0.2; transform: scale(0.6); }
-    50% { opacity: 0.95; transform: scale(1.2); }
-}
-
-/* 🛡️ WARRIOR SHIELD FILIGREE GLEAM */
-.shield-filigree-gleam {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.4) 50%, transparent 65%);
-    background-size: 200% 200%;
-    border-radius: 12px;
-    animation: shieldGleamSweep 4.5s infinite ease-in-out;
-}
-
-@keyframes shieldGleamSweep {
-    0%, 60% { background-position: -120% -120%; opacity: 0; }
-    70% { opacity: 0.8; }
-    85%, 100% { background-position: 120% 120%; opacity: 0; }
-}
-
-/* 🦁 LION OF JUDAH MAJESTIC BREATH */
-.eth-anim-lion {
-    animation: lionNobleBreathe 4.2s infinite ease-in-out;
-}
-
-@keyframes lionNobleBreathe {
-    0%, 100% { transform: scale(1); }
-    45% { transform: scale(1.03) translateY(-1px); }
-    70% { transform: scale(1.015); }
-}
-
-/* 🐐 WALIA IBEX LOOKOUT */
-.eth-anim-walia {
-    animation: waliaLookoutBreathe 4s infinite ease-in-out;
-}
-
-@keyframes waliaLookoutBreathe {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02) translateY(-1.5px); }
-}
-
-/* 🏇 GADAA HORSE NOBLE NOD */
-.eth-anim-horse {
-    transform-origin: 40% 60%;
-    animation: horseNobleNod 3.8s infinite ease-in-out;
-}
-
-@keyframes horseNobleNod {
-    0%, 100% { transform: rotate(0deg); }
-    40% { transform: rotate(2deg) translateY(-1px); }
-    60% { transform: rotate(-1deg); }
-}
-
-/* ✈️ ETHIOPIAN AIRLINES JET HIGH ALTITUDE 3D FLIGHT */
-.eth-anim-plane {
-    perspective: 800px;
-    transform-style: preserve-3d;
-    animation: planeHighAltitudeFlight 4.2s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
-}
-
-@keyframes planeHighAltitudeFlight {
-    0% {
-        transform: translateY(0) translateX(0) rotateZ(0deg) rotateY(-5deg) rotateX(4deg);
-    }
-    25% {
-        transform: translateY(-5px) translateX(3px) rotateZ(4deg) rotateY(8deg) rotateX(7deg) scale(1.04);
-    }
-    50% {
-        transform: translateY(-1px) translateX(1px) rotateZ(-2deg) rotateY(0deg) rotateX(2deg);
-    }
-    75% {
-        transform: translateY(-6px) translateX(-3px) rotateZ(-6deg) rotateY(-9deg) rotateX(6deg) scale(1.02);
-    }
-    100% {
-        transform: translateY(0) translateX(0) rotateZ(0deg) rotateY(-5deg) rotateX(4deg);
-    }
-}
-
-.plane-vapor-trail {
-    position: absolute;
-    bottom: 28%;
-    height: 3px;
-    border-radius: 2px;
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.9), rgba(210, 230, 255, 0.5) 60%, transparent 100%);
-    filter: blur(0.4px);
-    animation: vaporDisperseFast 1.5s infinite ease-out;
-}
-
-.trail-left {
-    right: 58%;
-    width: 28px;
-}
-
-.trail-right {
-    right: 28%;
-    width: 24px;
-    animation-delay: 0.25s;
-}
-
-@keyframes vaporDisperseFast {
-    0% {
-        transform: translateX(0) scaleX(0.5);
-        opacity: 0.9;
-    }
-    50% {
-        opacity: 0.6;
-    }
-    100% {
-        transform: translateX(-16px) scaleX(1.6);
-        opacity: 0;
-    }
-}
-
-.plane-wind-streak {
-    position: absolute;
-    height: 1px;
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.7), transparent);
-    animation: planeStreakRush 1.2s infinite linear;
-}
-
-.streak-1 {
-    top: 30%;
-    right: 15%;
-    width: 20px;
-    animation-delay: 0.1s;
-}
-
-.streak-2 {
-    top: 65%;
-    right: 20%;
-    width: 26px;
-    animation-delay: 0.7s;
-}
-
-@keyframes planeStreakRush {
-    0% { transform: translateX(10px); opacity: 0; }
-    30% { opacity: 0.8; }
-    100% { transform: translateX(-30px); opacity: 0; }
-}
-
-/* 🏎️ ADDIS SUPERCAR REAL DRIFT WITH TIRE SMOKE & SKIDMARKS */
-.eth-anim-car {
-    perspective: 800px;
-    transform-style: preserve-3d;
-    transform-origin: 50% 65%;
-    animation: supercarRealDrift 3.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-}
-
-@keyframes supercarRealDrift {
-    0% {
-        transform: translateX(0) translateY(0) rotateZ(0deg) rotateY(0deg) scale(1);
-    }
-    20% {
-        /* Turn-in towards right */
-        transform: translateX(4px) translateY(-2px) rotateZ(3deg) rotateY(-6deg) scale(1.02);
-    }
-    35% {
-        /* Sudden drift slide to the left with opposite lock and body roll */
-        transform: translateX(-6px) translateY(1px) rotateZ(-12deg) rotateY(14deg) skewX(-4deg) scale(1.04);
-    }
-    58% {
-        /* Holding wide drift angle */
-        transform: translateX(-8px) translateY(-1px) rotateZ(-10deg) rotateY(11deg) skewX(-3deg) scale(1.03);
-    }
-    75% {
-        /* Snap oversteer / counter-steer recovery */
-        transform: translateX(3px) translateY(-1px) rotateZ(4deg) rotateY(-4deg) skewX(2deg) scale(1.01);
-    }
-    100% {
-        transform: translateX(0) translateY(0) rotateZ(0deg) rotateY(0deg) scale(1);
-    }
-}
-
-.car-tire-smoke {
-    position: absolute;
-    bottom: 14%;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(190, 190, 190, 0.75) 0%, rgba(160, 160, 160, 0.3) 60%, transparent 85%);
-    pointer-events: none;
-    filter: blur(0.8px);
-    animation: tireSmokeDrift 1.7s infinite ease-out;
-}
-
-.car-tire-smoke.left {
-    left: 20%;
-}
-
-.car-tire-smoke.right {
-    right: 22%;
-}
-
-.car-tire-smoke.puff-2 {
-    animation-delay: 0.45s;
-}
-
-@keyframes tireSmokeDrift {
-    0%, 25% {
-        transform: scale(0.3) translateY(0) translateX(0);
-        opacity: 0;
-    }
-    35% {
-        opacity: 0.8;
-    }
-    70% {
-        transform: scale(1.8) translateY(-9px) translateX(14px);
-        opacity: 0.4;
-    }
-    100% {
-        transform: scale(2.4) translateY(-16px) translateX(22px);
-        opacity: 0;
-    }
-}
-
-.car-drift-skidmark {
-    position: absolute;
-    bottom: 12%;
-    width: 18px;
-    height: 2.5px;
-    background: rgba(50, 50, 50, 0.22);
-    border-radius: 2px;
-    transform-origin: center;
-    animation: skidmarkFade 3.4s infinite ease-in-out;
-}
-
-.car-drift-skidmark.left {
-    left: 18%;
-    transform: rotate(-16deg);
-}
-
-.car-drift-skidmark.right {
-    right: 22%;
-    transform: rotate(-16deg);
-}
-
-@keyframes skidmarkFade {
-    0%, 30% { opacity: 0; transform: scaleX(0.2) rotate(-16deg); }
-    36%, 60% { opacity: 0.55; transform: scaleX(1) rotate(-16deg); }
-    78%, 100% { opacity: 0; transform: scaleX(1) rotate(-16deg); }
-}
-
-/* 🛰️ ETRSS-1 SATELLITE ORBITAL SWAY */
-.eth-anim-satellite {
-    animation: satelliteOrbitalPitch 4.8s infinite ease-in-out;
-}
-
-@keyframes satelliteOrbitalPitch {
-    0%, 100% { transform: rotate(0deg) translateY(0); }
-    35% { transform: rotate(3deg) translateY(-2px); }
-    70% { transform: rotate(-2.5deg) translateY(1px); }
-}
-
-.antenna-signal-ring {
-    position: absolute;
-    top: 20%;
-    left: 48%;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    border: 1px solid rgba(59, 130, 246, 0.6);
-    opacity: 0;
-    animation: antennaPulse 2.6s infinite ease-out;
-}
-
-.ring-2 { animation-delay: 1.3s; }
-
-@keyframes antennaPulse {
-    0% { transform: scale(0.5); opacity: 0.8; }
-    100% { transform: scale(2.2); opacity: 0; }
-}
-
-/* 🏛️ MONUMENTS SUNBEAM SWEEP */
-.sunbeam-soft-sweep {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent 40%, rgba(253, 224, 71, 0.25) 50%, transparent 60%);
-    background-size: 200% 200%;
-    animation: sunbeamTraverse 6s infinite ease-in-out;
-}
-
-@keyframes sunbeamTraverse {
-    0% { background-position: -100% -100%; }
-    100% { background-position: 100% 100%; }
-}
-
-/* 🏰 GONDAR CASTLE LANTERN */
-.castle-lantern-glow {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 45% 45%, rgba(245, 158, 11, 0.2) 0%, transparent 60%);
-    animation: lanternFlicker 3s infinite ease-in-out;
-}
-
-@keyframes lanternFlicker {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 0.9; }
-}
-
-/* 🧺 MESOB LID LIFT */
-.eth-anim-mesob {
-    animation: mesobBreathe 3.6s infinite ease-in-out;
-}
-
-@keyframes mesobBreathe {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-2px); }
-}
-
-/* 👗 KEMIS TEXTILE BREEZE */
-.eth-anim-kemis {
-    animation: kemisFabricBreeze 3.8s infinite ease-in-out;
-}
-
-@keyframes kemisFabricBreeze {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(1deg) skewX(1deg); }
-}
-
-/* 💎 DIAMOND PRISM */
-.prism-light-sweep {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.5) 50%, transparent 70%);
-    background-size: 200% 200%;
-    animation: diamondPrismSweep 3.5s infinite ease-in-out;
-}
-
-@keyframes diamondPrismSweep {
-    0% { background-position: -100% -100%; }
-    100% { background-position: 100% 100%; }
-}
-
-/* 👑 REGAL LUSTER */
-.eth-anim-regal {
-    animation: regalAmbientFloat 3.5s infinite ease-in-out;
-}
-
-@keyframes regalAmbientFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-2.5px); }
-}
-
-.regal-gold-highlight {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(110deg, transparent 40%, rgba(254, 240, 138, 0.4) 50%, transparent 60%);
-    background-size: 200% 200%;
-    animation: goldShimmer 4s infinite ease-in-out;
-}
-
-@keyframes goldShimmer {
-    0%, 50% { background-position: -100% -100%; opacity: 0; }
-    65% { opacity: 0.8; }
-    80%, 100% { background-position: 100% 100%; opacity: 0; }
-}
-
-/* ==========================================================================
-   5. SELECTED GIFT INTERACTIVE PREVIEW CARD
-   ========================================================================== */
-
-.eth-selected-preview-card {
-    background: #F9FAFB !important;
-    border: 1px solid #E5E7EB !important;
-    border-radius: 14px;
-    padding: 12px 16px;
-    margin-top: 0.85rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-[data-theme='dark'] .eth-selected-preview-card {
-    background: #F9FAFB !important;
-    border-color: #E5E7EB !important;
-}
-
-/* ==========================================================================
-   5. SLEEK SELECTED GIFT COMPACT STRIP (TIGHT & INTERACTIVE)
-   ========================================================================== */
-
-.selected-gift-compact-strip {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    padding: 0.55rem 0.85rem;
-    margin-top: 0.75rem;
-    background: #F9FAFB;
-    border: 1px solid #E5E7EB;
-    border-radius: 12px;
-    transition: all 0.2s ease;
-}
-
-[data-theme='dark'] .selected-gift-compact-strip {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-.selected-gift-info-left {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    min-width: 0;
-}
-
-.selected-gift-mini-icon {
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.selected-gift-text {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.selected-gift-name {
-    font-size: 0.825rem;
-    font-weight: 800;
-    color: var(--text-main);
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.selected-gift-cost {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: #D97706;
-}
-
-.multiplier-quick-group {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    flex-shrink: 0;
-}
-
-.multiplier-quick-btn {
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    color: #4B5563;
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-[data-theme='dark'] .multiplier-quick-btn {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.12);
-    color: #E5E7EB;
-}
-
-.multiplier-quick-btn.active {
-    background: #FEF3C7;
-    border-color: #F59E0B;
-    color: #B45309;
-}
-
-[data-theme='dark'] .multiplier-quick-btn.active {
-    background: rgba(245, 158, 11, 0.2);
-    border-color: #F59E0B;
-    color: #FCD34D;
-}
-
-/* ==========================================================================
-   6. COMPACT STATUS VIEWS (SUCCESS & PIN PROMPT)
-   ========================================================================== */
-
-/* ==========================================================================
-   6. PREMIUM STATUS VIEWS (ELEGANT HEIGHT & TELEBIRR VERIFICATION FLOW)
-   ========================================================================== */
-
-.status-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding-bottom: 0.85rem;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.status-card-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2.5px solid var(--primary);
-    flex-shrink: 0;
-}
-
-.status-card-avatar-fallback {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--primary-light);
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    font-weight: 800;
-    border: 2.5px solid var(--primary);
-    flex-shrink: 0;
-}
-
-.status-card-creator-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    line-height: 1.25;
-}
-
-.status-card-creator-name {
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: var(--text-main);
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-
-.status-card-creator-handle {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--primary);
-}
-
-/* Dedicated Tip & Gift Summary Card */
-.tip-order-summary-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    text-align: left;
-}
-
-.tip-order-gift-left {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-width: 0;
-}
-
-.tip-order-gift-icon {
-    width: 44px;
-    height: 44px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.tip-order-gift-details {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.tip-order-gift-name {
-    font-size: 0.88rem;
-    font-weight: 800;
-    color: var(--text-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.tip-order-gift-sub {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-}
-
-.tip-order-amount-col {
-    text-align: right;
-    flex-shrink: 0;
-}
-
-.tip-order-amount-etb {
-    font-size: 1.15rem;
-    font-weight: 900;
-    color: #10B981;
-}
-
-.tip-order-coins-sub {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #D97706;
-}
-
-/* Telebirr Verification & Tracker Card */
-.telebirr-flow-card {
-    background: linear-gradient(180deg, rgba(5, 150, 105, 0.05) 0%, rgba(5, 150, 105, 0.01) 100%);
-    border: 1px solid rgba(5, 150, 105, 0.25);
-    border-radius: 14px;
-    padding: 1rem 1.1rem;
-    margin-bottom: 1.1rem;
-    text-align: left;
-}
-
-.telebirr-flow-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.85rem;
-    padding-bottom: 0.65rem;
-    border-bottom: 1px solid rgba(5, 150, 105, 0.15);
-}
-
-.telebirr-flow-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 800;
-    color: #059669;
-}
-
-.telebirr-radar-ring {
-    position: relative;
-    width: 10px;
-    height: 10px;
-    background: #059669;
-    border-radius: 50%;
-}
-
-.telebirr-radar-ring::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 2px solid #059669;
-    animation: radarPulse 1.6s infinite ease-out;
-}
-
-@keyframes radarPulse {
-    0% { transform: scale(0.6); opacity: 1; }
-    100% { transform: scale(1.8); opacity: 0; }
-}
-
-.telebirr-phone-pill {
-    background: #FFFFFF;
-    border: 1px solid rgba(5, 150, 105, 0.3);
-    padding: 0.25rem 0.65rem;
-    border-radius: 12px;
-    font-size: 0.78rem;
-    font-weight: 800;
-    color: var(--text-main);
-    font-family: monospace;
-}
-
-[data-theme='dark'] .telebirr-phone-pill {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-/* 3-Step Timeline Tracker */
-.telebirr-step-tracker {
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-    margin-bottom: 0.75rem;
-}
-
-.telebirr-step-item {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    font-size: 0.8125rem;
-}
-
-.telebirr-step-bullet {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 800;
-    flex-shrink: 0;
-}
-
-.telebirr-step-bullet.completed {
-    background: #10B981;
-    color: #FFFFFF;
-}
-
-.telebirr-step-bullet.active {
-    background: #FEF3C7;
-    color: #B45309;
-    border: 1.5px solid #F59E0B;
-    animation: pulseActive 1.8s infinite;
-}
-
-@keyframes pulseActive {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
-    50% { transform: scale(1.08); box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
-}
-
-.telebirr-step-bullet.pending {
-    background: var(--border-color);
-    color: var(--text-muted);
-}
-
-.telebirr-step-text {
-    font-weight: 600;
-    color: var(--text-main);
-}
-
-.telebirr-step-text.active {
-    font-weight: 800;
-    color: #B45309;
-}
-
-.telebirr-step-text.pending {
-    color: var(--text-muted);
-}
-
-.telebirr-flow-note {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    line-height: 1.35;
-    margin: 0;
-    padding-top: 0.5rem;
-    border-top: 1px dashed rgba(5, 150, 105, 0.15);
-}
-
-.spin-slow {
-    animation: spinSlow 2s linear infinite;
-}
-
-@keyframes spinSlow {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.preview-main-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.preview-gift-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
-}
-
-.preview-art-wrapper {
-    flex-shrink: 0;
-    width: 58px;
-    height: 58px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.preview-gift-titles {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.preview-title-am {
-    font-size: 0.95rem;
-    font-weight: 900;
-    color: #111827 !important;
-    line-height: 1.25;
-}
-
-.preview-title-en {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: #6B7280 !important;
-    margin-top: 1px;
-}
-
-.preview-description {
-    font-size: 0.74rem;
-    color: #6B7280 !important;
-    margin-top: 3px;
-    line-height: 1.3;
-}
-
-.preview-gift-pricing {
-    text-align: right;
-    flex-shrink: 0;
-}
-
-.preview-coins {
-    font-size: 0.95rem;
-    font-weight: 900;
-    color: #D97706;
-}
-
-.preview-etb {
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: #059669;
-    margin-top: 2px;
-}
-
-/* Quick Multiplier Chips */
-.preview-multiplier-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-    padding-top: 8px;
-    border-top: 1px solid #E5E7EB;
-}
-
-.multiplier-chips-group {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.mult-chip {
-    padding: 0.3rem 0.65rem;
-    border-radius: 8px;
-    border: 1px solid #E5E7EB;
-    background: #FFFFFF;
-    color: #374151;
-    font-size: 0.75rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.mult-chip:hover {
-    border-color: #D97706;
-    color: #D97706;
-}
-
-.mult-chip.active {
-    background: #D97706 !important;
-    border-color: #D97706 !important;
-    color: #FFFFFF !important;
-}
-
-.preview-test-anim-btn {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 0.3rem 0.65rem;
-    border-radius: 8px;
-    border: 1px solid #D97706;
-    background: #FFFBEB;
-    color: #B45309;
-    font-size: 0.72rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.preview-test-anim-btn:hover {
-    background: #FEF3C7;
-}
-
-/* ==========================================================================
-   6. CUSTOM AMOUNT INPUT BOX
-   ========================================================================== */
-
-.eth-custom-amount-box {
-    margin-top: 0.85rem;
-    padding: 1rem 1.15rem;
-    background: #FFFBEB;
-    border: 1.5px solid #FCD34D;
-    border-radius: 12px;
-}
-
-.custom-box-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.65rem;
-}
-
-.custom-box-title {
-    font-size: 0.82rem;
-    font-weight: 800;
-    color: #92400E;
-}
-
-.custom-box-rate {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #D97706;
-}
-
-.custom-input-wrapper {
-    position: relative;
-}
-
-.custom-input-prefix {
-    position: absolute;
-    left: 0.9rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-weight: 800;
-    color: #D97706;
-    font-size: 0.85rem;
-    pointer-events: none;
-}
-
-.custom-amount-input {
-    width: 100%;
-    padding: 0.75rem 1rem 0.75rem 4.5rem;
-    border: 1px solid #D1D5DB !important;
-    border-radius: 8px;
-    background: #FFFFFF !important;
-    color: #111827 !important;
-    font-size: 0.95rem;
-    font-weight: 800;
-    box-sizing: border-box;
-    outline: none;
-}
-
-.custom-amount-input:focus {
-    border-color: #D97706;
-}
-
-.custom-coin-conversion {
-    margin-top: 0.5rem;
-    font-size: 0.8rem;
-    color: #F59E0B;
-    font-weight: 700;
-}
-
-/* ==========================================================================
-   7. CINEMATIC CELEBRATION SHOWCASE MODAL (LIVE STREAM BROADCAST STYLE)
-   ========================================================================== */
-
-.eth-celebration-backdrop {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
-    background: radial-gradient(circle at 50% 38%, rgba(217, 119, 6, 0.22) 0%, rgba(15, 23, 42, 0.96) 65%, #05070B 100%);
-    backdrop-filter: blur(14px);
-    z-index: 999999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: clamp(0.6rem, 1.8vh, 1.25rem) 1rem clamp(0.6rem, 1.8vh, 1.25rem);
-    box-sizing: border-box;
-    animation: celebrationFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    overflow: hidden;
-}
-
-@keyframes celebrationFadeIn {
-    from { opacity: 0; transform: scale(0.97); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-/* Close icon */
-.eth-celebration-close-icon {
-    position: absolute;
-    top: clamp(0.6rem, 1.8vh, 1.2rem);
-    right: clamp(0.6rem, 1.8vh, 1.2rem);
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #FFFFFF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 0.88rem;
-    z-index: 30;
-    transition: all 0.15s ease;
-}
-
-.eth-celebration-close-icon:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: scale(1.08);
-}
-
-/* Ambient Floating Sparkle Particles */
-.eth-celebration-particles {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.p-star {
-    position: absolute;
-    color: #FCD34D;
-    opacity: 0;
-    filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.8));
-    animation: floatParticle 4s infinite ease-in-out;
-}
-
-.p1 { top: 20%; left: 15%; font-size: 1.4rem; animation-delay: 0.2s; }
-.p2 { top: 35%; right: 18%; font-size: 1.8rem; animation-delay: 1.1s; }
-.p3 { top: 60%; left: 12%; font-size: 1.2rem; animation-delay: 2.3s; }
-.p4 { top: 75%; right: 22%; font-size: 1.5rem; animation-delay: 0.7s; }
-.p5 { top: 25%; right: 30%; font-size: 1.1rem; animation-delay: 1.8s; }
-.p6 { top: 80%; left: 28%; font-size: 1.6rem; animation-delay: 2.8s; }
-
-@keyframes floatParticle {
-    0% { transform: translateY(20px) scale(0.6); opacity: 0; }
-    40% { opacity: 0.85; transform: translateY(-10px) scale(1.1); }
-    80% { opacity: 0.6; transform: translateY(-25px) scale(0.9); }
-    100% { transform: translateY(-40px) scale(0.5); opacity: 0; }
-}
-
-/* Top Live Supporter Banner */
-.eth-celebration-banner {
-    z-index: 10;
-    animation: bannerSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    flex-shrink: 0;
-}
-
-@keyframes bannerSlideDown {
-    from { transform: translateY(-25px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-.eth-celebration-supporter-card {
-    background: rgba(17, 24, 39, 0.85);
-    border: 1px solid rgba(245, 158, 11, 0.35);
-    backdrop-filter: blur(16px);
-    padding: 6px 14px 6px 8px;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(245, 158, 11, 0.15);
-}
-
-.supporter-avatar-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #D97706 0%, #059669 100%);
-    color: #FFFFFF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.95rem;
-    font-weight: 900;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    flex-shrink: 0;
-}
-
-.supporter-details-col {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    line-height: 1.2;
-}
-
-.supporter-headline {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.85rem;
-}
-
-.supporter-name-bold {
-    color: #FBBF24;
-    font-weight: 800;
-}
-
-.action-tag {
-    color: #D1D5DB;
-    font-size: 0.76rem;
-    font-weight: 500;
-}
-
-.supporter-target {
-    font-size: 0.72rem;
-    color: #9CA3AF;
-}
-
-.creator-highlight {
-    color: #FFFFFF;
-    font-weight: 700;
-}
-
-.supporter-gift-badge {
-    font-size: 1.2rem;
-    margin-left: 2px;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
-}
-
-/* Central 3D Celebration Stage */
-.eth-celebration-stage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    z-index: 10;
-    margin: auto 0;
-    max-height: 62vh;
-    animation: stagePopIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    flex-shrink: 0;
-}
-
-@keyframes stagePopIn {
-    from { transform: scale(0.88); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-.eth-celebration-hero-art {
-    position: relative;
-    margin-bottom: clamp(0.4rem, 1.2vh, 0.85rem);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 165px;
-    height: 165px;
-    filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.55));
-}
-
-.eth-celebration-hero-art::before {
-    content: '';
-    position: absolute;
-    inset: -12px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.22) 0%, rgba(245, 158, 11, 0.05) 50%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-    animation: celebrationAuraPulse 3s ease-in-out infinite alternate;
-}
-
-@keyframes celebrationAuraPulse {
-    0% { transform: scale(0.95); opacity: 0.7; }
-    100% { transform: scale(1.08); opacity: 1; }
-}
-
-.hero-art-spotlight {
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 140px;
-    height: 24px;
-    border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(245, 158, 11, 0.45) 0%, transparent 75%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.eth-celebration-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.hero-name-geez {
-    font-size: clamp(1.4rem, 3.2vh, 1.95rem);
-    font-weight: 900;
-    color: #FFFFFF;
-    margin: 0 0 0.15rem 0;
-    letter-spacing: -0.01em;
-    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
-    line-height: 1.15;
-}
-
-.hero-name-en-tag {
-    font-size: clamp(0.72rem, 1.4vh, 0.85rem);
-    font-weight: 700;
-    color: #F59E0B;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: clamp(0.35rem, 1vh, 0.65rem);
-}
-
-.hero-value-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    padding: 4px 14px;
-    border-radius: 24px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
-    font-size: clamp(0.75rem, 1.4vh, 0.85rem);
-}
-
-.hero-etb-val {
-    color: #10B981;
-    font-weight: 800;
-}
-
-.hero-divider {
-    color: rgba(255, 255, 255, 0.3);
-}
-
-.hero-coin-val {
-    color: #FCD34D;
-    font-weight: 800;
-}
-
-/* Bottom Actions Bar */
-.eth-celebration-bottom-bar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.45rem;
-    z-index: 10;
-    width: 100%;
-    max-width: 280px;
-    margin-bottom: 0;
-    flex-shrink: 0;
-}
-
-.eth-celebration-love-btn {
-    width: 100%;
-    background: linear-gradient(135deg, #EF4444 0%, #D97706 50%, #10B981 100%);
-    background-size: 200% 200%;
-    border: none;
-    border-radius: 24px;
-    padding: 9px 20px;
-    color: #FFFFFF;
-    font-weight: 800;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.38), 0 0 12px rgba(217, 119, 6, 0.25);
-    transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-
-.eth-celebration-love-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(239, 68, 68, 0.48);
-}
-
-.eth-celebration-love-btn:active {
-    transform: scale(0.96);
-}
-
-.love-icon {
-    font-size: 1.15rem;
-    animation: heartBeat 1.2s infinite;
-}
-
-@keyframes heartBeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.25); }
-}
-
-.love-text {
-    letter-spacing: 0.02em;
-}
-
-.combo-count-badge {
-    background: rgba(0, 0, 0, 0.3);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.78rem;
-    font-weight: 900;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-.eth-celebration-dismiss-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #E5E7EB;
-    padding: 5px 22px;
-    border-radius: 16px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.eth-celebration-dismiss-btn:hover {
-    background: rgba(255, 255, 255, 0.16);
-    color: #FFFFFF;
-    border-color: rgba(255, 255, 255, 0.4);
-}
-
-/* ==========================================================================
-   8. POST-TIP SUCCESS RECEIPT SCREEN (PREMIUM FINTECH DIGITAL RECEIPT)
-   ========================================================================== */
-
-.tip-success-container {
-    text-align: center;
-    padding: 0.5rem 0.25rem;
-    max-width: 440px;
-    margin: 0 auto;
-    animation: successFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes successFadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.tip-success-emblem-wrap {
-    margin: 0 auto 0.75rem;
-    display: flex;
-    justify-content: center;
-}
-
-.tip-success-emblem-ring {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.25) 100%);
-    color: #059669;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2.5px solid #10B981;
-    box-shadow: 0 0 24px rgba(16, 185, 129, 0.28);
-    animation: emblemPulse 2.5s ease-in-out infinite alternate;
-}
-
-@keyframes emblemPulse {
-    0% { transform: scale(1); box-shadow: 0 0 16px rgba(16, 185, 129, 0.2); }
-    100% { transform: scale(1.05); box-shadow: 0 0 28px rgba(16, 185, 129, 0.36); }
-}
-
-.tip-success-title {
-    font-size: 1.35rem;
-    font-weight: 900;
-    color: var(--text-main);
-    margin: 0 0 0.25rem 0;
-    letter-spacing: -0.01em;
-}
-
-.tip-success-subtitle {
-    color: var(--text-muted);
-    font-size: 0.88rem;
-    margin: 0 0 1.15rem 0;
-    line-height: 1.4;
-}
-
-/* Dedicated Tip Order Summary Card */
-.tip-order-summary-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 16px;
-    background: var(--bg-secondary, #F8FAFC);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    margin-bottom: 0.95rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-    transition: all 0.2s ease;
-}
-
-[data-theme='dark'] .tip-order-summary-box {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.08);
-}
-
-.tip-order-gift-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
-    text-align: left;
-}
-
-.tip-order-gift-icon {
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
-    min-height: 48px;
-    border-radius: 12px;
-    background: rgba(245, 158, 11, 0.12);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    overflow: hidden;
-}
-
-.tip-order-coin-emoji {
-    font-size: 1.65rem;
     user-select: none;
-}
-
-.tip-order-gift-details {
-    min-width: 0;
-    overflow: hidden;
-}
-
-.tip-order-gift-name {
-    font-size: 0.92rem;
-    font-weight: 800;
-    color: var(--text-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.3;
-}
-
-.tip-order-gift-sub {
-    font-size: 0.77rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.tip-order-amount-col {
-    text-align: right;
-    flex-shrink: 0;
-}
-
-.tip-order-amount-etb {
-    font-size: 1.18rem;
-    font-weight: 900;
-    color: var(--text-main);
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-}
-
-.tip-order-coins-sub {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #F59E0B;
-    margin-top: 2px;
-}
-
-/* Compact Digital Receipt Card */
-.compact-receipt-card {
-    background: var(--bg-secondary, #F8FAFC);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    padding: 10px 16px;
-    margin-bottom: 1.15rem;
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-}
-
-[data-theme='dark'] .compact-receipt-card {
-    background: rgba(255, 255, 255, 0.035);
-    border-color: rgba(255, 255, 255, 0.08);
-}
-
-.compact-receipt-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.82rem;
-    padding: 2px 0;
-}
-
-.receipt-label {
-    color: var(--text-muted);
-    font-weight: 600;
-    font-size: 0.8rem;
-}
-
-.receipt-status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: rgba(16, 185, 129, 0.12);
-    color: #059669;
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 2px 10px;
-    border-radius: 16px;
-    font-weight: 800;
-    font-size: 0.74rem;
-    letter-spacing: 0.04em;
-}
-
-[data-theme='dark'] .receipt-status-pill {
-    background: rgba(16, 185, 129, 0.2);
-    color: #10B981;
-    border-color: rgba(16, 185, 129, 0.4);
-}
-
-.receipt-ref-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 2px 8px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-[data-theme='dark'] .receipt-ref-badge {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.12);
-}
-
-.receipt-ref-badge:hover {
-    border-color: var(--primary);
-    background: rgba(16, 185, 129, 0.08);
-}
-
-.receipt-ref-mono {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-main);
-    letter-spacing: -0.01em;
-}
-
-.receipt-method-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 700;
-    color: var(--text-main);
-    font-size: 0.82rem;
-}
-
-.receipt-method-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.receipt-method-dot.telebirr {
-    background: #0088CC;
-    box-shadow: 0 0 6px rgba(0, 136, 204, 0.6);
-}
-
-.receipt-method-dot.chapa {
-    background: #10B981;
-    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
-}
-
-.receipt-date-val {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    font-weight: 600;
-}
-
-.tip-success-repeat-btn {
-    width: 100%;
-    margin-bottom: 0.95rem;
-    font-weight: 800;
-    height: 46px;
-    font-size: 0.96rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
-    transition: all 0.2s ease;
-}
-
-.tip-success-repeat-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
-}
-
-/* Compact Branded Share Row */
-.compact-share-section {
-    padding-top: 0.85rem;
-    border-top: 1px solid var(--border-color);
-    margin-top: 0.4rem;
-}
-
-.compact-share-title {
-    font-size: 0.74rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 700;
-    color: var(--text-muted);
-    margin-bottom: 0.65rem;
-}
-
-.compact-share-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.compact-share-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 14px;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    text-decoration: none;
-    border: 1px solid var(--border-color);
-    background: var(--bg-card, #FFFFFF);
-    color: var(--text-main);
-    cursor: pointer;
-    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-}
-
-[data-theme='dark'] .compact-share-pill {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-.share-pill-link:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    background: rgba(16, 185, 129, 0.08);
-    transform: translateY(-1px);
-}
-
-.share-pill-telegram {
-    color: #0088CC !important;
-    border-color: rgba(0, 136, 204, 0.25) !important;
-}
-
-.share-pill-telegram:hover {
-    background: rgba(0, 136, 204, 0.1) !important;
-    transform: translateY(-1px);
-}
-
-.share-pill-whatsapp {
-    color: #25D366 !important;
-    border-color: rgba(37, 211, 102, 0.25) !important;
-}
-
-.share-pill-whatsapp:hover {
-    background: rgba(37, 211, 102, 0.1) !important;
-    transform: translateY(-1px);
-}
-
-.share-pill-x:hover {
-    background: rgba(0, 0, 0, 0.06);
-    transform: translateY(-1px);
-}
-
-[data-theme='dark'] .share-pill-x:hover {
-    background: rgba(255, 255, 255, 0.1);
 }
