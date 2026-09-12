@@ -18,10 +18,10 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         description: 'Highland yellow New Year bloom', 
         animationType: 'flower',
         quickMessages: [
-            '🌼 መልካም አዲስ ዓመት!',
-            '🌼 Blooming with highland beauty!',
-            '🌼 Yellow flower of joy for you!',
-            '🌼 በርታ አበባችን!'
+            '🌼 የመስከረም ወር አደይ አበባ ብሩህ ተስፋና አዲስ ድል ይዞልዎት ይምጣ!',
+            '🌼 እንደ ቢጫው አደይ አበባ በፈጠራ ስራዎ ሁሌም ፈክተው ይታዩ!',
+            '🌼 Blooming highland beauty and fresh blessings for your incredible journey!',
+            '🌼 A bright bouquet of Adey Abeba to honor your inspiring work!'
         ]
     },
     { 
@@ -36,10 +36,10 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         description: 'Fresh Ethiopian highland red rose', 
         animationType: 'flower',
         quickMessages: [
-            '🌹 ትልቅ ክብርና ፍቅር አለኝ!',
-            '🌹 Highland rose for your dedication!',
-            '🌹 ውብ ሥራህን እወዳለሁ!',
-            '🌹 Keep blossoming!'
+            '🌹 የደጋው ውብ ጽጌረዳ ፍቅርና የከበረ ምስጋናዬ መግለጫ ይሁንልኝ!',
+            '🌹 ውብ እና ያማረ የፈጠራ ስራዎ ሁሌም እንደ ጽጌረዳ ይፈካል!',
+            '🌹 Fresh highland rose blooming with love for your inspiring craft!',
+            '🌹 Heartfelt appreciation and fragrant wishes for your bright future!'
         ]
     },
     
@@ -56,10 +56,10 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         description: 'Freshly brewed Ethiopian coffee', 
         animationType: 'steam',
         quickMessages: [
-            '☕ ቡና በረከታችሁ ይብዛ!',
-            '☕ Buna on me! Keep creating!',
-            '☕ Enjoy a fresh highland coffee!',
-            '☕ ትኩስ ቡና ጠጡልኝ!'
+            '☕ ባህላዊው ትኩስ ሲኒ ቡና አዕምሮዎን አድሶ ለአዳዲስ ፈጠራዎች ያነሳሳዎት!',
+            '☕ ቡና በረከታችሁ ይብዛ! በስራዎ ሁሌም ደስ እያለን ነው በርቱልን!',
+            '☕ A hot, freshly brewed cup of Ethiopian highland coffee to fuel your brilliance!',
+            '☕ Enjoying your content with a sweet cup of buna—keep inspiring us!'
         ]
     },
     { 
@@ -74,10 +74,10 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         description: 'Authentic clay coffee pot', 
         animationType: 'pour',
         quickMessages: [
-            '🫖 የሸክላ ጀበና ቡና ለምወደው ፈጣሪ!',
-            '🫖 Authentic Jebena brew for you!',
-            '🫖 ባህላዊ ጀበና ይጣፍጣል!',
-            '🫖 Brewing greatness every day!'
+            '🫖 በሸክላ ጀበና የተፈላውን ጣፋጭ የኢትዮጵያ ቡና እየጠጡ ስራዎን ይቀጥሉ!',
+            '🫖 የጀበና ቡና ፈልቶ እንደሚጣፍጠው ሁሉ፣ የርስዎም ጥበብና ፈጠራ ልብ ያሞቃል!',
+            '🫖 Pouring rich traditional Jebena coffee and endless love for your journey!',
+            '🫖 Authentic clay Jebena brew in honor of your outstanding dedication!'
         ]
     },
     { 
@@ -92,10 +92,10 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         description: 'Handcrafted woven dining table', 
         animationType: 'mesob',
         quickMessages: [
-            '🧺 የሐበሻ መሶብ ማዕድ ይባረክ!',
-            '🧺 Blessed table of friendship!',
-            '🧺 ማዕዳችንን ስላደመቅክ እናመሰግናለን!',
-            '🧺 Sharing the feast of creativity!'
+            '🧺 የሐበሻ ባህላዊ መሶብ ማዕድ ይባረክ! የፍቅርና የወንድማማችነት አንድነታችን ይለምልም!',
+            '🧺 በመሶባችን ዙሪያ ተሰባስበን በጥበብዎ እንደምንደሰተው ሁሉ፣ በረከቱ ይብዛልዎት!',
+            '🧺 Traditional woven Mesob table filled with warmth, feast, and friendship!',
+            '🧺 The sacred dining table of Ethiopian hospitality celebrating your craft!'
         ]
     },
     { 
@@ -110,10 +110,10 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         description: 'Beyaynetu feast with Doro Wot', 
         animationType: 'feast',
         quickMessages: [
-            '🍲 ጉርሻ ለወዳጄ! በያይነቱ ማዕድ!',
-            '🍲 Authentic Habesha Gursha for you!',
-            '🍲 ጣፋጭ የሀበሻ ማዕድ ይሁንልህ!',
-            '🍲 Big Gursha love!'
+            '🍲 የጉርሻ ባህላችን አንድነትን እንደሚያጠነክረው፣ ለርስዎም ፍቅርና ጉርሻዬ ይድረስዎ!',
+            '🍲 በማዕዳችን ላይ የሚቀርበው ማዕድ ይባረክ! በጋራ እንድንደሰት ስላደረጉን እናመሰግናለን!',
+            '🍲 Generous Gursha feast of unity, brotherhood, and shared celebration!',
+            '🍲 Sharing the finest feast of gratitude for your generous contributions!'
         ]
     },
     { 
@@ -128,10 +128,10 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         description: 'Complete coffee ceremony service', 
         animationType: 'rekebot',
         quickMessages: [
-            '☕ ረከቦትና ዕጣን ለሙሉ ክብርህ!',
-            '☕ Complete coffee ceremony of honor!',
-            '☕ በዕጣን የደመቀ ቡና ይሁንልህ!',
-            '☕ Highland hospitality for you!'
+            '☕ በደመቀው ረከቦት ዙሪያ ተቀምጠን ቡና ስንጠጣ፣ በስራዎ ልባችን ይሞቃል!',
+            '☕ ባህላዊውን የቡና ረከቦት አዘጋጅተን በክብር እያመሰገንንዎት ነው!',
+            '☕ Elegantly arranged Rekebot coffee ceremony honoring your bright presence!',
+            '☕ Traditional hospitality and sweet gathering blessings for our creator!'
         ]
     },
 
@@ -148,28 +148,28 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         description: 'Leatherbound Ge’ez scriptures', 
         animationType: 'book',
         quickMessages: [
-            '📖 ቃሉ መንገድህን ያብራው!',
-            '📖 Divine grace and blessings upon you!',
-            '📖 ሰላም እና በረከት ይብዛልህ!',
-            '📖 May God bless your journey!'
+            '📖 የእግዚአብሔር ቃልና ጥበብ ሁሌም መንገዶትን ያብራ፣ በበረከት ይጎብኙ!',
+            '📖 የሰላም፣ የፍቅርና የእምነት በረከት ከርስዎና ከስራዎ ጋር ይሁን!',
+            '📖 Divine wisdom, peace, and heavenly grace guiding all your endeavors!',
+            '📖 Sacred gift of scripture in honor of your good heart and hard work!'
         ]
     },
     { 
         id: 'quran', 
         nameEn: 'Holy Quran', 
-        nameAm: 'ቅዱስ ቁርኣን', 
+        nameAm: 'ቅዱስ ቁርዓን', 
         emoji: '📗', 
         etb: '250', 
         coins: 2500, 
         category: 'culture', 
-        shortAm: 'ክቡር ቁርኣን', 
-        description: 'Gilded sacred scriptures', 
+        shortAm: 'የተቀደሰ ቁርዓን', 
+        description: 'Embossed Arabic sacred Quran', 
         animationType: 'book',
         quickMessages: [
-            '📗 ቅዱስ ቁርኣን እና በረከት!',
-            '📗 May Allah grant you success and peace!',
-            '📗 ሰላም ለሁላችን ይሁን!',
-            '📗 Ramadan & eternal blessings!'
+            '📗 አላህ መልካም ስራዎትን ይቀበልዎት፣ በበረከትና በስኬት ያድምቅዎት!',
+            '📗 በቅዱሱ ቁርዓን ብርሃን ህይወትዎና ስራዎ ሁሌም የተባረከ ይሁን!',
+            '📗 May Allah bless your efforts with abundant barakah, wisdom, and peace!',
+            '📗 Sacred tribute of divine peace and honor for your inspiring talent!'
         ]
     },
     { 
@@ -180,14 +180,14 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         etb: '1000', 
         coins: 10000, 
         category: 'culture', 
-        shortAm: 'ጥልፍ የሐበሻ ቀሚስ', 
-        description: 'Handspun cotton dress with Tibeb', 
+        shortAm: 'የጥልፍ ቀሚስ', 
+        description: 'Handspun cotton with golden embroidery', 
         animationType: 'kemis',
         quickMessages: [
-            '👗 የሐበሻ ውበትና ጥበብ ይብራልህ!',
-            '👗 Pure cultural elegance and pride!',
-            '👗 ጥልፍ የሐበሻ ቀሚስ ውበት!',
-            '👗 Honoring your artistic grace!'
+            '👗 ባህላዊው የሐበሻ ቀሚስ ጥልፍ እንደሚደምቀው፣ ስራዎም በኢትዮጵያዊ ውበት ያሸበረቀ ነው!',
+            '👗 የጥበብ ልብስ ለብሰው ባህላችንን በክብር ስላደመቁልን ትልቅ ክብር አለን!',
+            '👗 Elegant Habesha Kemis woven with cultural pride and graceful artistry!',
+            '👗 Shining with the timeless golden embroidery of Ethiopian heritage!'
         ]
     },
     { 
@@ -198,14 +198,14 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         etb: '1500', 
         coins: 15000, 
         category: 'culture', 
-        shortAm: 'የጀግና ጋሻና ጦር', 
-        description: 'Embossed leather shield & spears', 
+        shortAm: 'የአድዋ ጋሻ', 
+        description: 'Adwa hero leather & brass shield', 
         animationType: 'shield',
         quickMessages: [
-            '🛡️ የጀግና ጋሻና ጦር! አይዞህ በርታ!',
-            '🛡️ Fearless warrior of your craft!',
-            '🛡️ በፅናት ተራመድ!',
-            '🛡️ Unbreakable resilience!'
+            '🛡️ የዓድዋ ጀግኖች ጋሻና ጦር ወኔ ሁሌም ከስራዎ ጋር ይሁን! አሸናፊ ነዎት!',
+            '🛡️ ጠንካራ ጋሻ ሆነው ጥበብንና ባህልን ስለሚያስከብሩልን ከልብ እናመሰግናለን!',
+            '🛡️ Warrior Shield of heritage and unbreakable resilience for our champion!',
+            '🛡️ Victorious defense and enduring strength for your creative journey!'
         ]
     },
     { 
@@ -216,14 +216,14 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         etb: '10000', 
         coins: 100000, 
         category: 'culture', 
-        shortAm: 'የኢትዮጵያ ንጉሥ ዘውድ', 
-        description: 'Imperial 24K solid gold crown', 
-        animationType: 'crown',
+        shortAm: 'የንጉሠ ነገሥት ዘውድ', 
+        description: 'Imperial Ethiopian royal crown', 
+        animationType: 'regal',
         quickMessages: [
-            '👑 ንጉሥ ነህ! ዘውድ ይገባሃል!',
-            '👑 Royal respect for your incredible craft!',
-            '👑 You dropped this crown, king!',
-            '👑 ታላቅ ክብር ለፈጣሪያችን!'
+            '👑 ለታታሪውና ለተዋጣለት ፈጣሪ ንጉሣዊ የክብር ዘውድ ይገባዎታል!',
+            '👑 በስራዎ ንጉሥ ነዎት! ይህ የንጉሥ ዘውድ የላቀ ክብርና አድናቆቴ መግለጫዬ ነው!',
+            '👑 Crowning your brilliance! You rule your creative craft with pure excellence!',
+            '👑 Royal tribute to the master of content—wear your crown with pride!'
         ]
     },
     { 
@@ -234,108 +234,182 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         etb: '100000', 
         coins: 1000000, 
         category: 'culture', 
-        shortAm: 'ታላቅ ብሔራዊ ክብር', 
-        description: 'Order of the Star of Ethiopia', 
-        animationType: 'honor',
+        shortAm: 'የላቀ የሀገር ክብር', 
+        description: 'Highest Ethiopian civilian medal', 
+        animationType: 'regal',
         quickMessages: [
-            '🏅 ታላቅ ብሔራዊ ክብር ይገባሃል!',
-            '🏅 Order of Ethiopian Excellence!',
-            '🏅 ኩራታችን ነህ! ለሀገር ኩራት!',
-            '🏅 Highest honor for your work!'
+            '🏅 ለሀገርና ለወገን በፈጠራ ስራዎ ላበረከቱት አስተዋፅዖ የከበረ የሀገር ሜዳልያ ይገባዎታል!',
+            '🏅 በስራዎ ሀገራችንን በኩራት ስላስጠሩልን ታላቅ የክብር ሰላምታ እናቀርባለን!',
+            '🏅 Conferred with highest National Honor and heartfelt gratitude from Ethiopia!',
+            '🏅 The supreme golden medal of civic achievement for an outstanding creator!'
         ]
     },
 
-    // 🎶 Music & Performing Arts
+    // 🪘 Traditional Music
     { 
         id: 'kebero', 
         nameEn: 'Kebero Drum', 
         nameAm: 'ባህላዊ ከበሮ', 
         emoji: '🪘', 
-        etb: '350', 
-        coins: 3500, 
+        etb: '300', 
+        coins: 3000, 
         category: 'music', 
         shortAm: 'የበዓል ከበሮ', 
-        description: 'Traditional ceremonial drum', 
+        description: 'Double-headed ceremonial wooden drum', 
         animationType: 'kebero',
         quickMessages: [
-            '🪘 ደስታ ይሙላህ! የበዓል ከበሮ!',
-            '🪘 Rhythm of our highland pride!',
-            '🪘 በከበሮ ድምፅ ደስታ ይብዛ!',
-            '🪘 Celebration beat for you!'
+            '🪘 የከበሮው ምት የኢትዮጵያን ደስታ እንደሚቀሰቅስ፣ የርስዎም ፈጠራ ደስታችን ነው!',
+            '🪘 በደመቀው የከበሮ ድምፅና እስክስታ በስራዎ እንደሰታለን! በርቱልን!',
+            '🪘 Ceremonial Kebero rhythm beating with joy and energy for your art!',
+            '🪘 The joyful heartbeat of Ethiopian culture cheering for your success!'
         ]
     },
     { 
         id: 'masenqo', 
-        nameEn: 'Masenqo Lute', 
+        nameEn: 'Masenqo', 
         nameAm: 'ማሲንቆ', 
         emoji: '🎻', 
         etb: '500', 
         coins: 5000, 
         category: 'music', 
-        shortAm: 'ባህላዊ ማሲንቆ', 
-        description: 'Single-string bowed lute', 
+        shortAm: 'የአዝማሪ ማሲንቆ', 
+        description: 'Single-string diamond-shaped bowed lute', 
         animationType: 'masenqo',
         quickMessages: [
-            '🎻 ማሲንቆው ድምፅህ ነው! ዜማህ ይማርካል!',
-            '🎻 Sweet acoustic melodies of heritage!',
-            '🎻 ባህላችንን በዜማ አድምቅ!',
-            '🎻 Pure Ethiopian strings!'
+            '🎻 የአዝማሪው ማሲንቆ ቃና ልብ እንደሚነካ፣ የርስዎም የፈጠራ ስራ ነፍስ ያድሳል!',
+            '🎻 አንድ ክር ሆኖ ውብ ዜማ በሚያወጣው ማሲንቆ ስም ጥበብዎ ይባረክ!',
+            '🎻 Soulful single-string Masenqo melody celebrating your artistic spirit!',
+            '🎻 The authentic voice of Ethiopian highlands singing praises for your craft!'
         ]
     },
     { 
         id: 'krar', 
-        nameEn: 'Acoustic Krar', 
+        nameEn: 'Traditional Krar', 
         nameAm: 'ባህላዊ ክራር', 
         emoji: '🎸', 
-        etb: '750', 
-        coins: 7500, 
+        etb: '800', 
+        coins: 8000, 
         category: 'music', 
-        shortAm: 'ባለ አምስት ክር ክራር', 
-        description: 'Traditional five-string lyre', 
+        shortAm: 'ባለ 6 ክር ክራር', 
+        description: 'Six-string Ethiopian bowl lyre', 
         animationType: 'krar',
         quickMessages: [
-            '🎸 ባለ አምስት ክር ክራር! ድንቅ ዜማ!',
-            '🎸 Plucking the chords of greatness!',
-            '🎸 ባህላዊ ክራር ለምትወደው ፈጣሪ!',
-            '🎸 Beautiful harmony!'
+            '🎸 የአባቶች ክራር ቃና እንደሚያስደስተን ሁሉ፣ የርስዎም ጥበብ ልዩ ትውስታ ያኖራል!',
+            '🎸 በባህላዊው ክራር ዜማ ለታታሪው ስራዎ ያለንን ክብርና ፍቅር እንገልጻለን!',
+            '🎸 Vibrant highland Krar strings strumming with inspiration for you!',
+            '🎸 Resonating with ancient acoustic energy and modern creative flair!'
         ]
     },
 
-    // 🦁 Nature & Wildlife
+    // 🏛️ Historical Landmarks
+    { 
+        id: 'axum', 
+        nameEn: 'Axum Obelisk', 
+        nameAm: 'የአክሱም ሐውልት', 
+        emoji: '🏛️', 
+        etb: '3000', 
+        coins: 30000, 
+        category: 'places', 
+        shortAm: 'የጥንቱ አክሱም', 
+        description: 'Ancient monolithic granite stele', 
+        animationType: 'monument',
+        quickMessages: [
+            '🏛️ እንደ ጥንታዊው የአክሱም ሐውልት በጽናትና በክብር ሺህ ዓመታት ዘልቀው ይኑሩ!',
+            '🏛️ የታሪካችንና የኩራታችን መገለጫ በሆነው አክሱም ስም ታላቅ ክብር አለን!',
+            '🏛️ Standing tall, unbreakable, and monumental like the granite of Axum!',
+            '🏛️ Ancient stone heritage honoring your lasting legacy in the digital era!'
+        ]
+    },
+    { 
+        id: 'lalibela', 
+        nameEn: 'Bet Giyorgis', 
+        nameAm: 'ቤተ ጊዮርጊስ', 
+        emoji: '⛪', 
+        etb: '4000', 
+        coins: 40000, 
+        category: 'places', 
+        shortAm: 'የላሊበላ ፍልፍል', 
+        description: 'Cross-shaped monolithic rock church', 
+        animationType: 'monument',
+        quickMessages: [
+            '⛪ ከድንጋይ እንደተፈለፈለው የላሊበላ ድንቅ ህንፃ፣ የርስዎም ጥበብ ድንቅ ተአምር ነው!',
+            '⛪ በቅዱሱ የላሊበላ አብያተ ክርስቲያናት ጥበብና በረከት ስራዎ ይደምቅ!',
+            '⛪ Rock-hewn Lalibela wonder honoring your devotion, faith, and patience!',
+            '⛪ Architectural masterpiece of the highlands dedicated to your genius!'
+        ]
+    },
+    { 
+        id: 'gondar', 
+        nameEn: 'Fasil Ghebbi', 
+        nameAm: 'ፋሲል ግቢ', 
+        emoji: '🏰', 
+        etb: '5000', 
+        coins: 50000, 
+        category: 'places', 
+        shortAm: 'የጎንደር ቤተ-መንግሥት', 
+        description: 'Royal stone castle fortress', 
+        animationType: 'gondar',
+        quickMessages: [
+            '🏰 እንደ ፋሲል ግቢ ቤተ-መንግሥት የፈጠራ ማማዎ የፀናና ግርማ ሞገስ ያለው ይሁን!',
+            '🏰 የጎንደር ነገሥታት የጥበብ ታሪክ ለስራዎ ታላቅ ክብርና መነሳሳት ይሁንልን!',
+            '🏰 Imperial Gondar Castle majesty for a creator building an empire of greatness!',
+            '🏰 Royal stone fortress of excellence guarding your continuous success!'
+        ]
+    },
+    { 
+        id: 'erta_ale', 
+        nameEn: 'Erta Ale Volcano', 
+        nameAm: 'ኤርታ አሌ', 
+        emoji: '🌋', 
+        etb: '6000', 
+        coins: 60000, 
+        category: 'places', 
+        shortAm: 'የዳሎል እሳተ ጎመራ', 
+        description: 'Active bubbling basaltic lava lake', 
+        animationType: 'volcano',
+        quickMessages: [
+            '🌋 እንደ ኤርታ አሌ እሳተ ጎመራ የፈጠራ ወኔዎ ሁሌም እየፈላ ወደ ዓለም ይፍሰስ!',
+            '🌋 የሚያንቦገቡግ የእሳት ሃይልና ፅናት ለታላቅ ስራዎ ይሁንልዎ!',
+            '🌋 Boiling magma passion and volcanic creative brilliance erupting forward!',
+            '🌋 The eternal fire of Erta Ale fueling your unstoppable ambition!'
+        ]
+    },
+
+    // 🦁 Endemic Wildlife
     { 
         id: 'walia', 
         nameEn: 'Walia Ibex', 
-        nameAm: 'ዋሊያ አይቤክስ', 
+        nameAm: 'ዋልያ አይቤክስ', 
         emoji: '🐐', 
         etb: '2500', 
         coins: 25000, 
         category: 'nature', 
-        shortAm: 'የሰሜን ተራሮች ዋሊያ', 
-        description: 'Endemic Simien mountain ibex', 
+        shortAm: 'የስሜን ተራራ ዋልያ', 
+        description: 'Rare endemic Simien ibex', 
         animationType: 'walia',
         quickMessages: [
-            '🐐 የሰሜን ተራሮች ዋሊያ ጀግና!',
-            '🐐 Simien Mountain strength and pride!',
-            '🐐 ወደ ተራራው ጫፍ ውጣ!',
-            '🐐 Endemic greatness!'
+            '🐐 እንደ ዋልያ በሰሜን ተራሮች ገደላማ ጫፍ ላይ በፅናትና በቅልጥፍና ይብረሩ!',
+            '🐐 ብርቅዬው የኢትዮጵያ ሀብት ዋልያ እንደሆነው፣ ርስዎም ለጥበብ ዓለም ብርቅዬ ነዎት!',
+            '🐐 Rare Simien Walia agility conquering the highest highland peaks!',
+            '🐐 Majestic mountain spirit of endurance and highland distinction!'
         ]
     },
     { 
         id: 'horse', 
-        nameEn: 'Gadaa Horse', 
-        nameAm: 'የኦሮሞ ፈረስ', 
+        nameEn: 'Oromo Horse', 
+        nameAm: 'የፈረሰኛ ፈረስ', 
         emoji: '🏇', 
-        etb: '3000', 
-        coins: 30000, 
+        etb: '3500', 
+        coins: 35000, 
         category: 'nature', 
-        shortAm: 'የገዳ ሥርዓት ፈረስ', 
-        description: 'Ceremonial Oromo war steed', 
+        shortAm: 'የጀግና ፈረስ', 
+        description: 'Majestic ceremonial war steed', 
         animationType: 'horse',
         quickMessages: [
-            '🏇 የገዳ ፈረስ! ወደ ድል ተጓዝ!',
-            '🏇 Galloping toward legendary victory!',
-            '🏇 የኦሮሞ ፈረስ ጀግንነት!',
-            '🏇 Ride with honor and courage!'
+            '🏇 እንደ አበው የፈረስ ጉልበት በድልና በጀግንነት ወደፊት ይጋልቡ! ማንም አያስቆምዎትም!',
+            '🏇 የዓድዋ ፈረሰኞች ወኔና ብርታት ሁሌም በስራዎ ላይ ይንፀባረቅ!',
+            '🏇 Galloping with thunderous speed and noble courage towards victory!',
+            '🏇 Unstoppable equestrian power and heroic stride for our leader!'
         ]
     },
     { 
@@ -346,108 +420,34 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         etb: '5000', 
         coins: 50000, 
         category: 'nature', 
-        shortAm: 'ግርማ ሞገስ አንበሳ', 
-        description: 'Imperial Ethiopian lion', 
+        shortAm: 'ግርማ ሞገስ', 
+        description: 'Black-maned Ethiopian lion', 
         animationType: 'lion',
         quickMessages: [
-            '🦁 የይሁዳ አንበሳ! አንበሳ ሁን ሁሌም!',
-            '🦁 Majestic Lion of Judah power!',
-            '🦁 ጀግናችን ነህ! ግርማ ሞገስ ይሁንልህ!',
-            '🦁 Roar with pride, brother!'
+            '🦁 እንደ ይሁዳ አንበሳ በግርማ ሞገስና በጽናት ሁሌም በሙያዎ አሸናፊ ይሁኑ!',
+            '🦁 የአንበሳ ልብና ጥንካሬ ይስጥዎት! ሁሌም ከጎንዎ ነን ጀግናችን!',
+            '🦁 True Lion of Judah energy and regal pride for an extraordinary creator!',
+            '🦁 Roaring with unstoppable Ethiopian strength and supreme creativity!'
         ]
     },
 
-    // 🏛️ Historical Landmarks
-    { 
-        id: 'axum', 
-        nameEn: 'Axum Obelisk', 
-        nameAm: 'የአክሱም ሐውልት', 
-        emoji: '🏛️', 
-        etb: '35000', 
-        coins: 350000, 
-        category: 'places', 
-        shortAm: 'ጥንታዊ የአክሱም ሐውልት', 
-        description: 'Monolithic carved granite stela', 
-        animationType: 'axum',
-        quickMessages: [
-            '🏛️ ጥንታዊ የአክሱም ሐውልት ፅናት!',
-            '🏛️ Standing tall and timeless like Axum!',
-            '🏛️ የታሪካችን ምልክት ነህ!',
-            '🏛️ Monolithic greatness!'
-        ]
-    },
-    { 
-        id: 'gondar', 
-        nameEn: 'Gondar Castle', 
-        nameAm: 'ፋሲል ግቢ', 
-        emoji: '🏰', 
-        etb: '40000', 
-        coins: 400000, 
-        category: 'places', 
-        shortAm: 'የአፄ ፋሲል ቤተ-መንግሥት', 
-        description: 'Medieval imperial stone castle', 
-        animationType: 'gondar',
-        quickMessages: [
-            '🏰 የነገሥታት ፋሲል ግቢ ክብር!',
-            '🏰 Castle of legends and royal heritage!',
-            '🏰 የታሪክ ገድልህ ይቀጥል!',
-            '🏰 Imperial fortress strength!'
-        ]
-    },
-    { 
-        id: 'lalibela', 
-        nameEn: 'Lalibela Church', 
-        nameAm: 'ላሊበላ ቤተ ጊዮርጊስ', 
-        emoji: '⛪', 
-        etb: '50000', 
-        coins: 500000, 
-        category: 'places', 
-        shortAm: 'ከአንድ አለት የተፈለፈለው', 
-        description: 'Rock-hewn Bete Giyorgis church', 
-        animationType: 'lalibela',
-        quickMessages: [
-            '⛪ ከአንድ አለት የተፈለፈለው ድንቅ ቅርስ!',
-            '⛪ Monumental wonder of faith & genius!',
-            '⛪ ቅዱስ ላሊበላ ይባርክህ!',
-            '⛪ Masterpiece of dedication!'
-        ]
-    },
-    { 
-        id: 'erta_ale', 
-        nameEn: 'Erta Ale', 
-        nameAm: 'ኤርታሌ እሳተ ጎመራ', 
-        emoji: '🌋', 
-        etb: '60000', 
-        coins: 600000, 
-        category: 'places', 
-        shortAm: 'የዳናኪል እሳተ ጎመራ', 
-        description: 'Active molten basaltic shield volcano', 
-        animationType: 'volcano',
-        quickMessages: [
-            '🌋 የዳናኪል እሳተ ጎመራ ጉልበት!',
-            '🌋 Unstoppable molten basaltic passion!',
-            '🌋 ተቀጣጣይ እሳት ሁን በርታ!',
-            '🌋 Pure explosive energy!'
-        ]
-    },
-
-    // 🚀 Modern Ethiopia
+    // 🚀 Modern Aspirations
     { 
         id: 'diamond', 
-        nameEn: 'Precious Gem', 
-        nameAm: 'ቴሌብር አልማዝ', 
+        nameEn: 'African Diamond', 
+        nameAm: 'አልማዝ', 
         emoji: '💎', 
-        etb: '15000', 
-        coins: 150000, 
+        etb: '7000', 
+        coins: 70000, 
         category: 'modern', 
-        shortAm: 'ደማቅ አልማዝ', 
-        description: 'Brilliant-cut radiant gemstone', 
+        shortAm: 'የከበረ ዕንቁ', 
+        description: 'Brilliant cut gemstone', 
         animationType: 'diamond',
         quickMessages: [
-            '💎 አንተ ውድ የኢትዮጵያ አልማዝ ነህ!',
-            '💎 Brilliant cut pure diamond quality!',
-            '💎 ብሩህ አልማዝ ሁን አብራ!',
-            '💎 Shining bright forever!'
+            '💎 በከበረ አልማዝ ጥንካሬና ውበት ጥበብዎ በደመቀ አንፀባራቂ ብርሃን ይብራ!',
+            '💎 እውነተኛ አልማዝ የሆነ ፈጣሪ ነዎት! በዋጋ የማይተመን ስራዎን እናደንቃለን!',
+            '💎 Flawless crystalline brilliance and unmatched sparkle for your genius!',
+            '💎 Shining through every facet with radiant elegance and distinction!'
         ]
     },
     { 
@@ -455,53 +455,53 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         nameEn: 'Addis Supercar', 
         nameAm: 'ስፖርት መኪና', 
         emoji: '🏎️', 
-        etb: '25000', 
-        coins: 250000, 
+        etb: '15000', 
+        coins: 150000, 
         category: 'modern', 
-        shortAm: 'ዘመናዊ ስፖርት መኪና', 
-        description: 'High-performance luxury supercar', 
+        shortAm: 'ፈጣን መኪና', 
+        description: 'High-speed luxury sports car', 
         animationType: 'car',
         quickMessages: [
-            '🏎️ የአዲስ ስፖርት መኪና! ጋዝ ጨምርበት!',
-            '🏎️ Accelerate your dream on the fast lane!',
-            '🏎️ በከፍተኛ ፍጥነት ወደ ስኬት!',
-            '🏎️ Addis drift champion!'
+            '🏎️ በአዲስ አበባ ጎዳናዎች በከፍተኛ ፍጥነት እንደሚበር ስፖርት መኪና ወደፊት ይንደፉ!',
+            '🏎️ በፈጣን ጉዞና በከፍተኛ ብቃት ወደ ስኬት ማማ ይብረሩ! ማንም አይቀድምዎትም!',
+            '🏎️ Shifting into top gear! You are unstoppable on the fast track of success!',
+            '🏎️ Addis Supercar horsepower for your incredible talent and work ethic!'
         ]
     },
     { 
         id: 'plane', 
-        nameEn: 'Ethiopian Jet', 
-        nameAm: 'የኢትዮጵያ አየር መንገድ', 
+        nameEn: 'Boeing 787', 
+        nameAm: 'የኢትዮጵያ አውሮፕላን', 
         emoji: '✈️', 
-        etb: '75000', 
-        coins: 750000, 
+        etb: '25000', 
+        coins: 250000, 
         category: 'modern', 
-        shortAm: 'ቦይንግ 787 ድሪምላይነር', 
-        description: 'Boeing 787 Dreamliner flagship', 
+        shortAm: 'የበረራ ንግሥት', 
+        description: 'Ethiopian Airlines flagship jet', 
         animationType: 'plane',
         quickMessages: [
-            '✈️ የኢትዮጵያ አየር መንገድ ድሪምላይነር!',
-            '✈️ Flying our flag high in the skies!',
-            '✈️ ወደ ሰማይ ውጣ! Sky is not the limit!',
-            '✈️ Flagship Ethiopian wings!'
+            '✈️ እንደ ታላቁ የኢትዮጵያ አየር መንገድ አውሮፕላን ከአድማስ ማዶ ወደ ዓለም ከፍታ ይብረሩ!',
+            '✈️ ጥበብዎ ድንበር ተሻግሮ ዓለምን እንዲያዳርስ ምኞቴ ነው! ወደፊት ይብረሩ!',
+            '✈️ Flying first-class to global horizons! The sky is not the limit for you!',
+            '✈️ Boeing 787 altitude for your soaring dreams and unstoppable ambition!'
         ]
     },
     { 
         id: 'satellite', 
         nameEn: 'ETRSS-1 Satellite', 
-        nameAm: 'የኢትዮጵያ ሳተላይት', 
+        nameAm: 'ኢትዮጵያ ሳተላይት', 
         emoji: '🛰️', 
-        etb: '90000', 
-        coins: 900000, 
+        etb: '50000', 
+        coins: 500000, 
         category: 'modern', 
-        shortAm: 'የመጀመሪያዋ ሳተላይት', 
-        description: 'Remote sensing satellite in orbit', 
+        shortAm: 'የጠፈር መንኮራኩር', 
+        description: 'Ethiopian Earth observation satellite', 
         animationType: 'satellite',
         quickMessages: [
-            '🛰️ የመጀመርያዋ ሳተላይት ETRSS-1!',
-            '🛰️ Reaching the cosmos from Ethiopia!',
-            '🛰️ የጠፈር ጉዞ ወደፊት!',
-            '🛰️ Orbiting with innovation!'
+            '🛰️ የመጀመርያዋ የኢትዮጵያ ሳተላይት ETRSS-1 በጠፈር እንደምትበረው፣ ወደ ጠፈር ከፍታ ይብረሩ!',
+            '🛰️ የቴክኖሎጂና የፈጠራ ድንበር ሰባሪ ሆነው ስለሚያበሩልን ትልቅ ክብር አለን!',
+            '🛰️ Orbiting in outer space with high-tech vision and Ethiopian ambition!',
+            '🛰️ ETRSS-1 telemetry sending cosmic applause to our innovative star!'
         ]
     }
 ];
@@ -587,121 +587,19 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false, isS
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                background: 'transparent'
+                background: 'transparent',
+                overflow: 'visible'
             }}
         >
-            {/* Sacred Ambient Light Aura Behind Books */}
+            {/* Background Ambient Light Aura Behind Sacred Books & Lion */}
             {(id === 'bible' || id === 'quran') && (
                 <div className={`book-sacred-glow ${id === 'quran' ? 'emerald' : 'gold'}`} />
             )}
-
-            {/* Addis Supercar: Tire Drift Smoke Puffs */}
-            {animated && id === 'car' && (
-                <div className={`gift-fx-car-smoke ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
-                    <span className="smoke-puff p1" />
-                    <span className="smoke-puff p2" />
-                    <span className="smoke-puff p3" />
-                </div>
+            {id === 'anbessa' && (
+                <div className="lion-mane-glow" />
             )}
 
-            {/* Ethiopian Jet: High-Altitude Contrail Streams & Cloud Wisps */}
-            {animated && id === 'plane' && (
-                <div className={`gift-fx-plane-clouds ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
-                    <span className="contrail-stream c1" />
-                    <span className="contrail-stream c2" />
-                    <span className="flight-cloud f1" />
-                </div>
-            )}
-
-            {/* Clay Jebena: Coffee Pouring Stream + Rising Steam */}
-            {animated && id === 'jebena' && (
-                <div className={`gift-fx-pour ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
-                    <svg className="pour-stream-svg" viewBox="0 0 32 38" fill="none">
-                        <path className="coffee-flow-path" d="M10 6 C 14 16, 17 24, 21 34" stroke="#451A03" strokeWidth="2.5" strokeLinecap="round" />
-                        <path className="coffee-flow-highlight" d="M10 6 C 14 16, 17 24, 21 34" stroke="#B45309" strokeWidth="1" strokeLinecap="round" />
-                    </svg>
-                    <span className="pour-drop d1" />
-                    <div className="gift-fx-steam in-jebena">
-                        <svg className="steam-svg" viewBox="0 0 36 36" fill="none">
-                            <path d="M12 24C10 18 14 14 12 8" stroke="rgba(160,174,192,0.7)" strokeWidth="2" strokeLinecap="round" className="steam-path p1" />
-                            <path d="M19 26C17 19 21 15 19 9" stroke="rgba(160,174,192,0.8)" strokeWidth="2.2" strokeLinecap="round" className="steam-path p2" />
-                        </svg>
-                    </div>
-                </div>
-            )}
-
-            {/* Sini Buna, Rekebot & Enjera: Continuous Aromatic Steam Wisps */}
-            {animated && ['buna', 'rekebot', 'enjera'].includes(id) && (
-                <div className={`gift-fx-steam ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
-                    <svg className="steam-svg" viewBox="0 0 36 36" fill="none">
-                        <path d="M10 26C8 20 12 15 10 10C8 7 11 3 10 1" stroke="rgba(160,174,192,0.65)" strokeWidth="2" strokeLinecap="round" className="steam-path p1" />
-                        <path d="M18 28C16 21 20 16 18 11C16 7 19 4 18 1" stroke="rgba(160,174,192,0.75)" strokeWidth="2.2" strokeLinecap="round" className="steam-path p2" />
-                        <path d="M26 26C24 20 28 15 26 10C24 7 27 3 26 1" stroke="rgba(160,174,192,0.65)" strokeWidth="2" strokeLinecap="round" className="steam-path p3" />
-                    </svg>
-                </div>
-            )}
-
-            {/* Adey Abeba & Highland Rose: Blooming Golden Pollen & Sparkles */}
-            {animated && ['adey_abeba', 'rose'].includes(id) && (
-                <div className={`gift-fx-bloom-pollen ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
-                    <span className="pollen-dot p1" />
-                    <span className="pollen-dot p2" />
-                    <span className="pollen-dot p3" />
-                    <span className="pollen-sparkle s1">✧</span>
-                </div>
-            )}
-
-            {/* Kebero Drum: Rhythmic Radiating Sonic Acoustic Rings */}
-            {animated && id === 'kebero' && (
-                <div className={`gift-fx-kebero-wave ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
-                    <span className="sonic-ring ring1" />
-                    <span className="sonic-ring ring2" />
-                </div>
-            )}
-
-            {/* Masenqo & Krar: Harmonic Strings Vibration & Floating Notes */}
-            {animated && ['masenqo', 'krar'].includes(id) && (
-                <div className={`gift-fx-string-waves ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
-                    <span className="vibe-line v1" />
-                    <span className="vibe-line v2" />
-                    <span className="music-note n1">♪</span>
-                </div>
-            )}
-
-            {/* Axum, Lalibela & Gondar: Sunlit Golden Sheen Beam Sweep */}
-            {animated && ['axum', 'lalibela', 'gondar'].includes(id) && (
-                <div className={`gift-fx-golden-sheen ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
-                    <div className="sheen-sweep-bar" />
-                </div>
-            )}
-
-            {/* Diamond, Crown & National Honor: Crystalline Star Sparkles */}
-            {animated && ['diamond', 'crown', 'national_honor'].includes(id) && (
-                <div className={`gift-fx-sparkle-stars ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
-                    <span className="sparkle-star s1">✦</span>
-                    <span className="sparkle-star s2">✧</span>
-                    <span className="sparkle-star s3">✦</span>
-                </div>
-            )}
-
-            {/* ETRSS-1 Satellite: Radar Telemetry Waves */}
-            {animated && id === 'satellite' && (
-                <div className={`gift-fx-satellite-signal ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
-                    <span className="sat-ping p1" />
-                    <span className="sat-ping p2" />
-                </div>
-            )}
-
-            {/* Erta Ale Volcano: Bubbling Magma Glow & Floating Embers */}
-            {animated && id === 'erta_ale' && (
-                <div className={`gift-fx-volcano-embers ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
-                    <span className="ember-spark e1" />
-                    <span className="ember-spark e2" />
-                    <span className="ember-spark e3" />
-                </div>
-            )}
-
-            {/* Visual Frame */}
+            {/* Visual Frame for PNG/JPG Image or Fallback Emoji */}
             <div 
                 className="eth-gift-image-frame"
                 style={{
@@ -711,7 +609,9 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false, isS
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'transparent'
+                    background: 'transparent',
+                    position: 'relative',
+                    zIndex: 2
                 }}
             >
                 {imgStep < 2 ? (
@@ -770,13 +670,132 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false, isS
                     </div>
                 )}
             </div>
+
+            {/* FOREGROUND LIVING GRAPHICAL MOTION & PARTICLE OVERLAYS (zIndex: 10) */}
+            {/* 1. Addis Supercar: Drifting Tire Smoke Billowing Clouds */}
+            {animated && id === 'car' && (
+                <div className={`gift-fx-car-smoke ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="smoke-puff p1" />
+                    <span className="smoke-puff p2" />
+                    <span className="smoke-puff p3" />
+                </div>
+            )}
+
+            {/* 2. Ethiopian Jet: High-Altitude Contrail Streams & Cloud Wisps */}
+            {animated && id === 'plane' && (
+                <div className={`gift-fx-plane-clouds ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="contrail-stream c1" />
+                    <span className="contrail-stream c2" />
+                    <span className="flight-cloud f1" />
+                </div>
+            )}
+
+            {/* 3. Clay Jebena: Coffee Pouring Liquid Stream & Steam Curls */}
+            {animated && id === 'jebena' && (
+                <div className={`gift-fx-pour ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <svg className="pour-stream-svg" viewBox="0 0 32 38" fill="none">
+                        <path className="coffee-flow-path" d="M10 6 C 14 16, 17 24, 21 34" stroke="#451A03" strokeWidth="2.8" strokeLinecap="round" />
+                        <path className="coffee-flow-highlight" d="M10 6 C 14 16, 17 24, 21 34" stroke="#B45309" strokeWidth="1.2" strokeLinecap="round" />
+                    </svg>
+                    <span className="pour-drop d1" />
+                    <div className="gift-fx-steam in-jebena">
+                        <svg className="steam-svg" viewBox="0 0 36 36" fill="none">
+                            <path d="M12 24C10 18 14 14 12 8" stroke="rgba(160,174,192,0.75)" strokeWidth="2" strokeLinecap="round" className="steam-path p1" />
+                            <path d="M19 26C17 19 21 15 19 9" stroke="rgba(160,174,192,0.85)" strokeWidth="2.2" strokeLinecap="round" className="steam-path p2" />
+                        </svg>
+                    </div>
+                </div>
+            )}
+
+            {/* 4. Sini Buna, Rekebot & Enjera: Continuous Aromatic Steam Wisps */}
+            {animated && ['buna', 'rekebot', 'enjera'].includes(id) && (
+                <div className={`gift-fx-steam ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <svg className="steam-svg" viewBox="0 0 36 36" fill="none">
+                        <path d="M10 26C8 20 12 15 10 10C8 7 11 3 10 1" stroke="rgba(160,174,192,0.7)" strokeWidth="2" strokeLinecap="round" className="steam-path p1" />
+                        <path d="M18 28C16 21 20 16 18 11C16 7 19 4 18 1" stroke="rgba(160,174,192,0.8)" strokeWidth="2.2" strokeLinecap="round" className="steam-path p2" />
+                        <path d="M26 26C24 20 28 15 26 10C24 7 27 3 26 1" stroke="rgba(160,174,192,0.7)" strokeWidth="2" strokeLinecap="round" className="steam-path p3" />
+                    </svg>
+                </div>
+            )}
+
+            {/* 5. Adey Abeba & Highland Rose: Blooming Golden Pollen & Sparkles */}
+            {animated && ['adey_abeba', 'rose'].includes(id) && (
+                <div className={`gift-fx-bloom-pollen ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="pollen-dot p1" />
+                    <span className="pollen-dot p2" />
+                    <span className="pollen-dot p3" />
+                    <span className="pollen-sparkle s1">✧</span>
+                </div>
+            )}
+
+            {/* 6. Kebero Drum: Rhythmic Radiating Sonic Acoustic Rings */}
+            {animated && id === 'kebero' && (
+                <div className={`gift-fx-kebero-wave ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="sonic-ring ring1" />
+                    <span className="sonic-ring ring2" />
+                </div>
+            )}
+
+            {/* 7. Masenqo & Krar: Harmonic Strings Vibration & Floating Notes */}
+            {animated && ['masenqo', 'krar'].includes(id) && (
+                <div className={`gift-fx-string-waves ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="vibe-line v1" />
+                    <span className="vibe-line v2" />
+                    <span className="music-note n1">♪</span>
+                </div>
+            )}
+
+            {/* 8. Axum, Lalibela & Gondar: Sunlit Golden Sheen Beam Sweep */}
+            {animated && ['axum', 'lalibela', 'gondar'].includes(id) && (
+                <div className={`gift-fx-golden-sheen ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <div className="sheen-sweep-bar" />
+                </div>
+            )}
+
+            {/* 9. Diamond, Crown & National Honor: Crystalline Star Sparkles */}
+            {animated && ['diamond', 'crown', 'national_honor'].includes(id) && (
+                <div className={`gift-fx-sparkle-stars ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="sparkle-star s1">✦</span>
+                    <span className="sparkle-star s2">✧</span>
+                    <span className="sparkle-star s3">✦</span>
+                </div>
+            )}
+
+            {/* 10. ETRSS-1 Satellite: Radar Telemetry Waves */}
+            {animated && id === 'satellite' && (
+                <div className={`gift-fx-satellite-signal ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="sat-ping p1" />
+                    <span className="sat-ping p2" />
+                </div>
+            )}
+
+            {/* 11. Erta Ale Volcano: Bubbling Magma Glow & Floating Embers */}
+            {animated && id === 'erta_ale' && (
+                <div className={`gift-fx-volcano-embers ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="ember-spark e1" />
+                    <span className="ember-spark e2" />
+                    <span className="ember-spark e3" />
+                </div>
+            )}
+
+            {/* 12. Warrior Shield: Metallic Gleam Flash */}
+            {animated && id === 'shield' && (
+                <div className={`gift-fx-shield-sheen ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <div className="shield-gleam-bar" />
+                </div>
+            )}
+
+            {/* 13. Habesha Kemis & Mesob: Golden Embroidery Shimmer */}
+            {animated && ['kemis', 'mesob'].includes(id) && (
+                <div className={`gift-fx-kemis-shimmer ${isSelected ? 'is-selected' : 'in-place'}`} aria-hidden="true">
+                    <span className="kemis-sparkle k1">✦</span>
+                    <span className="kemis-sparkle k2">✧</span>
+                </div>
+            )}
         </div>
     );
 };
 
-// =========================================================================
-// 3. SUBTLE NATIVE WEB AUDIO EFFECTS (OPTIONAL & DISCREET)
-// =========================================================================
 
 export const playAudioEffect = (type = 'chime') => {
     try {

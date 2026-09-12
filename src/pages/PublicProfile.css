@@ -285,14 +285,13 @@
     letter-spacing: -0.01em;
 }
 
-/* Category Navigation Tabs (Clean horizontal tabs, no pill everywhere) */
+/* 6. Category Navigation Tabs (Sleek Modern Segmented Pills) */
 .clean-category-tabs {
     display: flex;
-    gap: 4px;
+    gap: 7px;
     overflow-x: auto;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0;
-    margin-bottom: 0.75rem;
+    padding: 2px 2px 10px;
+    margin-bottom: 0.85rem;
     scrollbar-width: none;
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
@@ -305,63 +304,86 @@
 .clean-cat-tab {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 6px 11px;
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid transparent;
-    color: var(--text-muted);
-    font-size: 0.78rem;
-    font-weight: 500;
+    gap: 6px;
+    padding: 7px 15px;
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    border-radius: 9999px;
+    color: #475569;
+    font-size: 0.81rem;
+    font-weight: 600;
     white-space: nowrap;
     cursor: pointer;
-    transition: color 0.15s ease, border-color 0.15s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     user-select: none;
-    margin-bottom: -1px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .clean-cat-tab:hover {
-    color: var(--text-main);
+    background: #E2E8F0;
+    color: #0F172A;
+    border-color: #CBD5E1;
+    transform: translateY(-1px);
 }
 
-/* Selected Category: GurshaPay green text & clean underline */
+.clean-cat-tab:active {
+    transform: scale(0.96);
+}
+
+/* Active Category Pill: Solid GurshaPay Emerald Green */
 .clean-cat-tab.active {
-    color: #047857 !important;
-    border-bottom-color: #047857 !important;
-    font-weight: 600;
+    background: #047857 !important;
+    color: #FFFFFF !important;
+    border-color: #047857 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 3px 10px rgba(4, 120, 87, 0.28) !important;
+}
+
+[data-theme='dark'] .clean-cat-tab {
+    background: #1E293B;
+    border-color: #334155;
+    color: #94A3B8;
+}
+
+[data-theme='dark'] .clean-cat-tab:hover {
+    background: #334155;
+    color: #F8FAFC;
+    border-color: #475569;
 }
 
 [data-theme='dark'] .clean-cat-tab.active {
-    color: #10B981 !important;
-    border-bottom-color: #10B981 !important;
+    background: #10B981 !important;
+    color: #0F172A !important;
+    border-color: #10B981 !important;
+    box-shadow: 0 3px 12px rgba(16, 185, 129, 0.35) !important;
 }
 
 .cat-tab-icon {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
+    line-height: 1;
 }
 
 .cat-tab-label {
     letter-spacing: -0.01em;
 }
 
-/* 3-Column Flat Gift Grid (WHITE PAGE -> GIFT IMAGE -> GIFT NAME -> PRICE) */
+/* 3-Column Premium Fintech Gift Grid */
 .clean-gift-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px 6px;
-    max-height: 380px;
+    gap: 10px 8px;
+    max-height: 400px;
     overflow-y: auto;
-    padding: 2px;
+    padding: 3px 2px;
     margin-bottom: 0.5rem;
     scrollbar-width: thin;
-    scrollbar-color: #E2E8F0 transparent;
+    scrollbar-color: #CBD5E1 transparent;
 }
 
 [data-theme='dark'] .clean-gift-grid {
     scrollbar-color: #334155 transparent;
 }
 
-/* Modern sleek custom scrollbar for gift grid */
 .clean-gift-grid::-webkit-scrollbar {
     width: 4px;
 }
@@ -371,89 +393,102 @@
 }
 
 .clean-gift-grid::-webkit-scrollbar-thumb {
-    background: #E2E8F0;
+    background: #CBD5E1;
     border-radius: 4px;
 }
 
 .clean-gift-grid::-webkit-scrollbar-thumb:hover {
-    background: #CBD5E1;
+    background: #94A3B8;
 }
 
-[data-theme='dark'] .clean-gift-grid::-webkit-scrollbar-thumb {
-    background: #334155;
-}
-
-/* NO BACKGROUND CARD ON UNSELECTED GIFTS. Direct flat surface. */
+/* 7. Beautiful Modern Gift Cards */
 .clean-gift-card {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 8px 4px 6px;
-    background: transparent;
-    border: 1.5px solid transparent;
-    border-radius: 9px;
+    padding: 12px 6px 10px;
+    background: #FFFFFF;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 14px;
     cursor: pointer;
-    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), 
-                border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1), 
-                background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     outline: none;
     text-align: center;
     user-select: none;
-    min-height: 116px;
+    min-height: 124px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+    box-sizing: border-box;
+    overflow: visible;
 }
 
-/* Hover: Slight image scale ~1.05, subtle background hint, cursor pointer */
+/* Hover: Tactile elevation & soft shadow */
 .clean-gift-card:hover {
-    background: rgba(4, 120, 87, 0.02);
-    border-color: rgba(4, 120, 87, 0.15);
+    background: #F8FAFC;
+    border-color: #047857;
+    transform: translateY(-2.5px);
+    box-shadow: 0 6px 16px -2px rgba(4, 120, 87, 0.14);
+}
+
+[data-theme='dark'] .clean-gift-card {
+    background: #1E293B;
+    border-color: #334155;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 [data-theme='dark'] .clean-gift-card:hover {
-    background: rgba(255, 255, 255, 0.02);
-    border-color: rgba(16, 185, 129, 0.2);
+    background: #243044;
+    border-color: #10B981;
+    box-shadow: 0 6px 16px -2px rgba(16, 185, 129, 0.22);
 }
 
 .clean-gift-card:hover .gift-icon-box {
     transform: scale(1.06);
 }
 
-/* Press/Tap: Small tactile scale feedback */
 .clean-gift-card:active {
     transform: scale(0.97);
 }
 
-/* Selected Gift: Subtle GurshaPay green treatment (thin green outline, small check) */
+/* Selected Gift Card: Emerald highlight & subtle mint gradient tint */
 .clean-gift-card.selected {
-    background: rgba(4, 120, 87, 0.035) !important;
+    background: linear-gradient(180deg, #ECFDF5 0%, #FFFFFF 100%) !important;
     border-color: #047857 !important;
-    box-shadow: 0 1px 3px rgba(4, 120, 87, 0.08);
+    border-width: 2px !important;
+    box-shadow: 0 0 0 1px #047857, 0 4px 16px rgba(4, 120, 87, 0.18) !important;
+    transform: translateY(-2px);
 }
 
 [data-theme='dark'] .clean-gift-card.selected {
-    background: rgba(16, 185, 129, 0.08) !important;
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.14) 0%, #1E293B 100%) !important;
     border-color: #10B981 !important;
+    box-shadow: 0 0 0 1px #10B981, 0 4px 18px rgba(16, 185, 129, 0.28) !important;
 }
 
 .gift-selected-tick {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 17px;
-    height: 17px;
+    top: 6px;
+    right: 6px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: #047857;
     color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 5;
+    z-index: 20;
+    box-shadow: 0 2px 6px rgba(4, 120, 87, 0.35);
     animation: tickPop 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 [data-theme='dark'] .gift-selected-tick {
     background: #10B981;
+    color: #0F172A;
 }
 
 @keyframes tickPop {
@@ -461,20 +496,22 @@
     to { transform: scale(1); opacity: 1; }
 }
 
-/* Gift Image Area (Directly on white surface, no container) */
+/* Gift Image Area */
 .gift-icon-box {
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     background: transparent;
+    position: relative;
+    overflow: visible;
 }
 
 .clean-gift-card.selected .gift-icon-box {
-    transform: scale(1.02);
+    transform: scale(1.05);
 }
 
 .gift-text-wrap {
@@ -482,11 +519,12 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    margin-top: 2px;
 }
 
 .gift-name-primary {
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 0.82rem;
+    font-weight: 700;
     color: var(--text-main);
     line-height: 1.25;
     white-space: nowrap;
@@ -496,7 +534,6 @@
 }
 
 .clean-gift-card.selected .gift-name-primary {
-    font-weight: 700;
     color: #047857;
 }
 
@@ -505,8 +542,8 @@
 }
 
 .gift-name-secondary {
-    font-size: 0.6875rem;
-    font-weight: 400;
+    font-size: 0.68rem;
+    font-weight: 500;
     color: var(--text-muted);
     line-height: 1.15;
     margin-top: 1px;
@@ -516,18 +553,43 @@
     max-width: 100%;
 }
 
+/* Price Badge Pill (NEVER wraps or line-breaks) */
 .gift-price-badge {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 3px;
-    margin-top: 3px;
+    gap: 4px;
+    margin-top: 5px;
+    padding: 2px 7px;
+    background: #F1F5F9;
+    border-radius: 9999px;
+    border: 1px solid #E2E8F0;
     font-size: 0.72rem;
+    white-space: nowrap;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+[data-theme='dark'] .gift-price-badge {
+    background: #0F172A;
+    border-color: #334155;
+}
+
+.clean-gift-card.selected .gift-price-badge {
+    background: rgba(4, 120, 87, 0.1);
+    border-color: rgba(4, 120, 87, 0.25);
+}
+
+[data-theme='dark'] .clean-gift-card.selected .gift-price-badge {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.35);
 }
 
 .price-etb {
     color: var(--text-main);
     font-weight: 700;
+    font-size: 0.72rem;
+    white-space: nowrap;
 }
 
 .clean-gift-card.selected .price-etb {
@@ -541,36 +603,57 @@
 
 .price-coins {
     color: #D97706;
-    font-size: 0.65rem;
-    font-weight: 500;
+    font-size: 0.66rem;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
-/* Selected Gift Multiplier Strip (Flat divider line, no heavy nested card) */
+/* Selected Gift Multiplier Strip (Clean Rounded Fintech Card) */
 .clean-multiplier-strip {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    padding: 8px 2px 2px;
-    margin-top: 6px;
-    border-top: 1px solid var(--border-color);
-    background: transparent;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 14px;
+    margin: 0.75rem 0 0.95rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 13px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme='dark'] .clean-multiplier-strip {
+    background: #1E293B;
+    border-color: #334155;
 }
 
 .strip-gift-left {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     min-width: 0;
+    flex: 1 1 auto;
 }
 
 .strip-mini-icon {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: #FFFFFF;
+    border-radius: 9px;
+    border: 1px solid #E2E8F0;
+    padding: 2px;
+    box-sizing: border-box;
+}
+
+[data-theme='dark'] .strip-mini-icon {
+    background: #0F172A;
+    border-color: #334155;
 }
 
 .strip-info {
@@ -580,7 +663,7 @@
 }
 
 .strip-name {
-    font-size: 0.8rem;
+    font-size: 0.84rem;
     font-weight: 700;
     color: var(--text-main);
     white-space: nowrap;
@@ -589,37 +672,42 @@
 }
 
 .strip-en {
-    font-size: 0.6875rem;
-    font-weight: 400;
+    font-size: 0.7rem;
+    font-weight: 500;
     color: var(--text-muted);
 }
 
 .strip-cost {
-    font-size: 0.72rem;
-    font-weight: 600;
+    font-size: 0.74rem;
+    font-weight: 700;
     color: #047857;
+    margin-top: 1px;
 }
 
 [data-theme='dark'] .strip-cost {
     color: #10B981;
 }
 
+.strip-cost .number-counter-pulse {
+    display: inline-block;
+}
+
 .strip-multipliers-right {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     flex-shrink: 0;
 }
 
 .clean-mult-btn {
-    padding: 3px 8px;
-    min-width: 28px;
-    height: 26px;
-    border-radius: 6px;
-    font-size: 0.72rem;
+    padding: 5px 10px;
+    min-width: 32px;
+    height: 28px;
+    border-radius: 8px;
+    font-size: 0.76rem;
     font-weight: 600;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
     color: var(--text-main);
     cursor: pointer;
     transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
@@ -632,14 +720,22 @@
     border-color: #047857;
     color: #047857;
     background: #F8FAFC;
+    transform: translateY(-1px);
 }
 
 .clean-mult-btn:active {
-    transform: scale(0.94);
+    transform: scale(0.95);
+}
+
+[data-theme='dark'] .clean-mult-btn {
+    background: #0F172A;
+    border-color: #334155;
+    color: #94A3B8;
 }
 
 [data-theme='dark'] .clean-mult-btn:hover {
     background: #1E293B;
+    color: #F8FAFC;
 }
 
 .clean-mult-btn.active {
@@ -647,11 +743,12 @@
     border-color: #047857 !important;
     color: #FFFFFF !important;
     font-weight: 700;
-    box-shadow: 0 1px 2px rgba(4, 120, 87, 0.25);
+    box-shadow: 0 2px 6px rgba(4, 120, 87, 0.28);
 }
 
 [data-theme='dark'] .clean-mult-btn.active {
     background: #10B981 !important;
+    color: #0F172A !important;
     border-color: #10B981 !important;
 }
 
@@ -659,42 +756,41 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    height: 26px;
-    padding: 0 9px;
-    border-radius: 6px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: #047857;
+    padding: 5px 12px;
+    height: 28px;
     background: rgba(4, 120, 87, 0.08);
-    border: 1px solid rgba(4, 120, 87, 0.25);
+    border: 1px solid #047857;
+    border-radius: 8px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #047857;
     cursor: pointer;
-    transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-    white-space: nowrap;
+    transition: all 0.18s ease;
+    box-sizing: border-box;
 }
 
 .clean-preview-btn:hover {
     background: #047857;
-    border-color: #047857;
     color: #FFFFFF;
     transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(4, 120, 87, 0.2);
+    box-shadow: 0 2px 8px rgba(4, 120, 87, 0.25);
 }
 
 .clean-preview-btn:active {
-    transform: scale(0.94);
+    transform: scale(0.95);
 }
 
 [data-theme='dark'] .clean-preview-btn {
     background: rgba(16, 185, 129, 0.12);
-    border-color: rgba(16, 185, 129, 0.3);
+    border-color: #10B981;
     color: #10B981;
 }
 
 [data-theme='dark'] .clean-preview-btn:hover {
     background: #10B981;
-    border-color: #10B981;
     color: #0F172A;
 }
+
 
 /* Custom Amount Box (Clean & Flat) */
 .clean-custom-box {
@@ -1739,63 +1835,52 @@
 }
 
 @keyframes carDriftSequence {
-    0% {
-        transform: translateX(0) rotate(0deg) scale(1);
-    }
-    20% {
-        transform: translateX(4px) rotate(-4deg) scale(1.06);
-    }
-    50% {
-        transform: translateX(-6px) rotate(11deg) scale(1.1);
-    }
-    75% {
-        transform: translateX(-1px) rotate(-3deg) scale(1.04);
-    }
-    100% {
-        transform: translateX(0) rotate(0deg) scale(1.02);
-    }
+    0% { transform: translateX(0) rotate(0deg) scale(1); }
+    20% { transform: translateX(5px) rotate(-6deg) scale(1.08); }
+    50% { transform: translateX(-8px) rotate(14deg) scale(1.12); }
+    75% { transform: translateX(-2px) rotate(-4deg) scale(1.05); }
+    100% { transform: translateX(0) rotate(0deg) scale(1.02); }
 }
 
-/* Addis Supercar: Tire Drift Smoke Puffs */
+/* Addis Supercar: Active Drifting Smoke Clouds */
 .gift-fx-car-smoke {
     position: absolute;
-    bottom: 3px;
-    left: -2px;
-    width: 30px;
-    height: 20px;
+    bottom: 4px;
+    left: -4px;
+    width: 32px;
+    height: 22px;
     pointer-events: none;
-    z-index: 6;
+    z-index: 10;
     overflow: visible;
 }
 
 .smoke-puff {
     position: absolute;
-    background: radial-gradient(circle, rgba(160, 174, 192, 0.85) 0%, rgba(203, 213, 225, 0) 75%);
+    background: radial-gradient(circle, rgba(160, 174, 192, 0.9) 0%, rgba(226, 232, 240, 0.7) 45%, rgba(203, 213, 225, 0) 80%);
     border-radius: 50%;
     opacity: 0;
 }
 
-/* In-place continuous drifting smoke puffs */
 .gift-fx-car-smoke.in-place .smoke-puff.p1 {
     bottom: 2px;
     left: 4px;
-    width: 10px;
-    height: 10px;
-    animation: smokeDriftLoop 1.8s 0s infinite ease-out;
+    width: 12px;
+    height: 12px;
+    animation: smokeDriftLoop 1.6s 0s infinite ease-out;
 }
 .gift-fx-car-smoke.in-place .smoke-puff.p2 {
-    bottom: 5px;
+    bottom: 6px;
     left: 0px;
-    width: 13px;
-    height: 13px;
-    animation: smokeDriftLoop 1.8s 0.6s infinite ease-out;
+    width: 15px;
+    height: 15px;
+    animation: smokeDriftLoop 1.6s 0.5s infinite ease-out;
 }
 .gift-fx-car-smoke.in-place .smoke-puff.p3 {
     bottom: 1px;
     left: 8px;
-    width: 9px;
-    height: 9px;
-    animation: smokeDriftLoop 1.8s 1.2s infinite ease-out;
+    width: 11px;
+    height: 11px;
+    animation: smokeDriftLoop 1.6s 1.0s infinite ease-out;
 }
 
 @keyframes smokeDriftLoop {
@@ -1804,62 +1889,49 @@
         opacity: 0;
     }
     25% {
-        opacity: 0.85;
-        transform: translate3d(-4px, -3px, 0) scale(1);
+        opacity: 0.95;
+        transform: translate3d(-5px, -3px, 0) scale(1);
     }
     65% {
-        opacity: 0.45;
-        transform: translate3d(-10px, -7px, 0) scale(1.5);
+        opacity: 0.5;
+        transform: translate3d(-12px, -8px, 0) scale(1.7);
     }
     100% {
-        transform: translate3d(-18px, -11px, 0) scale(2.2);
+        transform: translate3d(-20px, -13px, 0) scale(2.4);
         opacity: 0;
     }
 }
 
-/* Selection burst smoke */
 .gift-fx-car-smoke.is-selected .smoke-puff.p1 {
     bottom: 2px;
     left: 4px;
-    width: 11px;
-    height: 11px;
+    width: 14px;
+    height: 14px;
     animation: smokeDriftBurst 0.75s 0.05s ease-out forwards;
 }
 .gift-fx-car-smoke.is-selected .smoke-puff.p2 {
     bottom: 5px;
     left: 0px;
-    width: 14px;
-    height: 14px;
+    width: 17px;
+    height: 17px;
     animation: smokeDriftBurst 0.85s 0.15s ease-out forwards;
 }
 .gift-fx-car-smoke.is-selected .smoke-puff.p3 {
     bottom: 1px;
     left: 8px;
-    width: 10px;
-    height: 10px;
+    width: 13px;
+    height: 13px;
     animation: smokeDriftBurst 0.7s 0.25s ease-out forwards;
 }
 
 @keyframes smokeDriftBurst {
-    0% {
-        transform: scale(0.4) translate(0, 0);
-        opacity: 0;
-    }
-    30% {
-        opacity: 0.95;
-        transform: scale(1.2) translate(-5px, -4px);
-    }
-    70% {
-        opacity: 0.5;
-        transform: scale(1.8) translate(-12px, -8px);
-    }
-    100% {
-        transform: scale(2.5) translate(-20px, -12px);
-        opacity: 0;
-    }
+    0% { transform: scale(0.4) translate(0, 0); opacity: 0; }
+    30% { opacity: 1; transform: scale(1.3) translate(-6px, -5px); }
+    70% { opacity: 0.55; transform: scale(2) translate(-14px, -9px); }
+    100% { transform: scale(2.8) translate(-22px, -14px); opacity: 0; }
 }
 
-/* 2. Coffee, Jebena, Rekebot, Enjera Selection Animation */
+/* 2. Clay Jebena Pouring Liquid Stream & Steam */
 .eth-gift-art-box.gift-is-selected.eth-anim-jebena,
 .eth-gift-art-box.gift-is-selected.eth-anim-buna,
 .eth-gift-art-box.gift-is-selected.eth-anim-rekebot,
@@ -1873,51 +1945,50 @@
     100% { transform: scale(1.02); }
 }
 
-/* Clay Jebena Pouring Stream & Droplets */
 .gift-fx-pour {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 7;
+    z-index: 10;
     overflow: visible;
 }
 
 .pour-stream-svg {
     position: absolute;
     bottom: -4px;
-    right: 3px;
-    width: 32px;
-    height: 38px;
+    right: 2px;
+    width: 34px;
+    height: 40px;
     overflow: visible;
 }
 
 .coffee-flow-path {
-    stroke-dasharray: 40;
-    stroke-dashoffset: 40;
-    animation: streamFlowLoop 3.4s infinite ease-in-out;
+    stroke-dasharray: 45;
+    stroke-dashoffset: 45;
+    animation: streamFlowLoop 2.8s infinite ease-in-out;
 }
 
 .coffee-flow-highlight {
-    stroke-dasharray: 40;
-    stroke-dashoffset: 40;
-    animation: streamFlowLoop 3.4s infinite ease-in-out;
+    stroke-dasharray: 45;
+    stroke-dashoffset: 45;
+    animation: streamFlowLoop 2.8s infinite ease-in-out;
 }
 
 @keyframes streamFlowLoop {
-    0%, 15% {
-        stroke-dashoffset: 40;
+    0%, 12% {
+        stroke-dashoffset: 45;
         opacity: 0;
     }
-    26% {
+    24% {
         stroke-dashoffset: 0;
-        opacity: 0.95;
+        opacity: 1;
     }
-    68% {
+    70% {
         stroke-dashoffset: 0;
-        opacity: 0.95;
+        opacity: 1;
     }
-    78%, 100% {
-        stroke-dashoffset: -40;
+    82%, 100% {
+        stroke-dashoffset: -45;
         opacity: 0;
     }
 }
@@ -1925,28 +1996,19 @@
 .pour-drop {
     position: absolute;
     bottom: 2px;
-    right: 6px;
-    width: 4px;
-    height: 4px;
+    right: 5px;
+    width: 5px;
+    height: 5px;
     background: #451A03;
     border-radius: 50%;
     opacity: 0;
-    animation: dropSplashLoop 3.4s infinite ease-in-out;
+    animation: dropSplashLoop 2.8s infinite ease-in-out;
 }
 
 @keyframes dropSplashLoop {
-    0%, 25% {
-        opacity: 0;
-        transform: scale(0.5);
-    }
-    35%, 68% {
-        opacity: 1;
-        transform: scale(1.2);
-    }
-    78%, 100% {
-        opacity: 0;
-        transform: scale(0.3);
-    }
+    0%, 20% { opacity: 0; transform: scale(0.5); }
+    30%, 70% { opacity: 1; transform: scale(1.3); }
+    82%, 100% { opacity: 0; transform: scale(0.3); }
 }
 
 .gift-fx-steam.in-jebena {
@@ -1957,14 +2019,14 @@
     transform: none;
 }
 
-/* Continuous Steam Wisps */
+/* Continuous Rising Aromatic Steam Wisps */
 .gift-fx-steam {
     position: absolute;
     top: -14px;
     left: 50%;
     transform: translateX(-50%);
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     pointer-events: none;
     z-index: 10;
     overflow: visible;
@@ -1979,11 +2041,11 @@
 .gift-fx-steam.in-place .steam-path {
     stroke-dasharray: 22;
     stroke-dashoffset: 22;
-    animation: steamWaftLoop 2.2s infinite ease-out;
+    animation: steamWaftLoop 2s infinite ease-out;
 }
 .gift-fx-steam.in-place .steam-path.p1 { animation-delay: 0s; }
-.gift-fx-steam.in-place .steam-path.p2 { animation-delay: 0.55s; }
-.gift-fx-steam.in-place .steam-path.p3 { animation-delay: 1.1s; }
+.gift-fx-steam.in-place .steam-path.p2 { animation-delay: 0.5s; }
+.gift-fx-steam.in-place .steam-path.p3 { animation-delay: 1.0s; }
 
 .gift-fx-steam.is-selected .steam-path {
     stroke-dasharray: 22;
@@ -2001,17 +2063,17 @@
         transform: translateY(6px) scale(0.85);
     }
     35% {
-        opacity: 0.85;
+        opacity: 0.9;
         transform: translateY(1px) scale(1);
     }
     75% {
         opacity: 0.45;
-        transform: translateY(-7px) scale(1.1);
+        transform: translateY(-8px) scale(1.15);
     }
     100% {
         stroke-dashoffset: 0;
         opacity: 0;
-        transform: translateY(-14px) scale(1.25);
+        transform: translateY(-16px) scale(1.3);
     }
 }
 
@@ -2032,32 +2094,23 @@
     }
 }
 
-/* 3. Highland Flower Bloom Sway (Selection) */
+/* 3. Highland Flowers Blooming & Pollen */
 .eth-gift-art-box.gift-is-selected.eth-anim-flower {
     animation: flowerBloomSway 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes flowerBloomSway {
-    0% {
-        transform: scale(1) rotate(0deg);
-    }
-    30% {
-        transform: scale(1.14) rotate(6deg);
-    }
-    60% {
-        transform: scale(1.05) rotate(-4deg);
-    }
-    100% {
-        transform: scale(1.03) rotate(0deg);
-    }
+    0% { transform: scale(1) rotate(0deg); }
+    30% { transform: scale(1.16) rotate(8deg); }
+    60% { transform: scale(1.06) rotate(-5deg); }
+    100% { transform: scale(1.03) rotate(0deg); }
 }
 
-/* Blooming Golden Pollen Motifs & Floral Sparkles */
 .gift-fx-bloom-pollen {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 8;
+    z-index: 10;
     overflow: visible;
 }
 
@@ -2065,85 +2118,79 @@
     position: absolute;
     border-radius: 50%;
     background: #F59E0B;
-    box-shadow: 0 0 5px rgba(245, 158, 11, 0.7);
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.8);
     opacity: 0;
 }
 
 .gift-fx-bloom-pollen.in-place .pollen-dot.p1 {
-    width: 4px;
-    height: 4px;
-    top: 18%;
-    left: 20%;
-    animation: pollenFloatLoop 2.4s 0s infinite ease-in-out;
+    width: 4.5px;
+    height: 4.5px;
+    top: 16%;
+    left: 18%;
+    animation: pollenFloatLoop 2.2s 0s infinite ease-in-out;
 }
 
 .gift-fx-bloom-pollen.in-place .pollen-dot.p2 {
-    width: 3.5px;
-    height: 3.5px;
-    top: 26%;
-    right: 20%;
-    animation: pollenFloatLoop 2.4s 0.8s infinite ease-in-out;
+    width: 4px;
+    height: 4px;
+    top: 24%;
+    right: 18%;
+    animation: pollenFloatLoop 2.2s 0.7s infinite ease-in-out;
 }
 
 .gift-fx-bloom-pollen.in-place .pollen-dot.p3 {
-    width: 3px;
-    height: 3px;
-    bottom: 25%;
-    left: 28%;
-    animation: pollenFloatLoop 2.4s 1.5s infinite ease-in-out;
+    width: 3.5px;
+    height: 3.5px;
+    bottom: 22%;
+    left: 26%;
+    animation: pollenFloatLoop 2.2s 1.4s infinite ease-in-out;
 }
 
 .gift-fx-bloom-pollen.in-place .pollen-sparkle.s1 {
     position: absolute;
-    top: 6px;
-    right: 8px;
-    font-size: 11px;
+    top: 5px;
+    right: 6px;
+    font-size: 13px;
     color: #F59E0B;
     opacity: 0;
-    text-shadow: 0 0 5px rgba(245, 158, 11, 0.8);
-    animation: pollenTwinkleLoop 2s infinite ease-in-out;
+    text-shadow: 0 0 6px rgba(245, 158, 11, 0.9);
+    animation: pollenTwinkleLoop 1.8s infinite ease-in-out;
 }
 
 @keyframes pollenFloatLoop {
     0% {
-        transform: translate3d(0, 0, 0) scale(0.6);
+        transform: translate3d(0, 0, 0) scale(0.5);
         opacity: 0;
     }
     30% {
-        opacity: 0.9;
-        transform: translate3d(3px, -6px, 0) scale(1.1);
+        opacity: 0.95;
+        transform: translate3d(4px, -7px, 0) scale(1.15);
     }
     70% {
         opacity: 0.6;
-        transform: translate3d(-3px, -14px, 0) scale(1);
+        transform: translate3d(-4px, -16px, 0) scale(1);
     }
     100% {
-        transform: translate3d(2px, -22px, 0) scale(0.4);
+        transform: translate3d(3px, -25px, 0) scale(0.4);
         opacity: 0;
     }
 }
 
 @keyframes pollenTwinkleLoop {
-    0%, 100% {
-        transform: scale(0) rotate(0deg);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.2) rotate(45deg);
-        opacity: 0.95;
-    }
+    0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
+    50% { transform: scale(1.3) rotate(45deg); opacity: 1; }
 }
 
-/* 4. Kebero Drum Rhythmic Pulse & Sonic Waves */
+/* 4. Kebero Drum Rhythmic Beat & Sonic Waves */
 .eth-gift-art-box.gift-is-selected.eth-anim-kebero {
     animation: keberoBeatPulse 0.65s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 @keyframes keberoBeatPulse {
     0% { transform: scale(1); }
-    20% { transform: scale(1.14) rotate(-3deg); }
-    45% { transform: scale(0.96) rotate(2deg); }
-    70% { transform: scale(1.07) rotate(-1deg); }
+    20% { transform: scale(1.16) rotate(-4deg); }
+    45% { transform: scale(0.95) rotate(2deg); }
+    70% { transform: scale(1.08) rotate(-1deg); }
     100% { transform: scale(1.02) rotate(0deg); }
 }
 
@@ -2155,7 +2202,7 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 8;
+    z-index: 10;
 }
 
 .sonic-ring {
@@ -2165,21 +2212,21 @@
     right: 0;
     bottom: 0;
     border-radius: 50%;
-    border: 2px solid rgba(4, 120, 87, 0.65);
+    border: 2px solid rgba(4, 120, 87, 0.7);
     opacity: 0;
-    transform: scale(0.6);
+    transform: scale(0.5);
 }
 
 [data-theme='dark'] .sonic-ring {
-    border-color: rgba(16, 185, 129, 0.7);
+    border-color: rgba(16, 185, 129, 0.8);
 }
 
 .gift-fx-kebero-wave.in-place .sonic-ring.ring1 {
-    animation: sonicWaveRippleLoop 2.2s 0.14s infinite cubic-bezier(0.1, 0.8, 0.3, 1);
+    animation: sonicWaveRippleLoop 1.8s 0.12s infinite cubic-bezier(0.1, 0.8, 0.3, 1);
 }
 
 .gift-fx-kebero-wave.in-place .sonic-ring.ring2 {
-    animation: sonicWaveRippleLoop 2.2s 0.36s infinite cubic-bezier(0.1, 0.8, 0.3, 1);
+    animation: sonicWaveRippleLoop 1.8s 0.34s infinite cubic-bezier(0.1, 0.8, 0.3, 1);
 }
 
 .gift-fx-kebero-wave.is-selected .sonic-ring.ring1 {
@@ -2191,35 +2238,17 @@
 }
 
 @keyframes sonicWaveRippleLoop {
-    0% {
-        transform: scale(0.4);
-        opacity: 0.9;
-        border-width: 2px;
-    }
-    70% {
-        opacity: 0.4;
-    }
-    100% {
-        transform: scale(1.6);
-        opacity: 0;
-        border-width: 1px;
-    }
+    0% { transform: scale(0.4); opacity: 0.95; border-width: 2.5px; }
+    70% { opacity: 0.45; }
+    100% { transform: scale(1.65); opacity: 0; border-width: 1px; }
 }
 
 @keyframes sonicWaveRipple {
-    0% {
-        transform: scale(0.5);
-        opacity: 0.85;
-        border-width: 2px;
-    }
-    100% {
-        transform: scale(1.55);
-        opacity: 0;
-        border-width: 1px;
-    }
+    0% { transform: scale(0.5); opacity: 0.9; border-width: 2px; }
+    100% { transform: scale(1.6); opacity: 0; border-width: 1px; }
 }
 
-/* 5. Masenqo & Krar Acoustic String Vibration Oscillation */
+/* 5. Masenqo & Krar Acoustic Strings & Notes */
 .eth-gift-art-box.gift-is-selected.eth-anim-masenqo,
 .eth-gift-art-box.gift-is-selected.eth-anim-krar {
     animation: stringVibeFast 0.65s ease-out forwards;
@@ -2227,11 +2256,9 @@
 
 @keyframes stringVibeFast {
     0% { transform: translateX(0) rotate(0deg) scale(1); }
-    15% { transform: translateX(3px) rotate(3deg) scale(1.06); }
-    30% { transform: translateX(-3px) rotate(-3deg) scale(1.06); }
-    45% { transform: translateX(2px) rotate(2deg) scale(1.04); }
-    60% { transform: translateX(-2px) rotate(-1.5deg) scale(1.03); }
-    75% { transform: translateX(1px) rotate(1deg) scale(1.02); }
+    15% { transform: translateX(4px) rotate(4deg) scale(1.08); }
+    30% { transform: translateX(-4px) rotate(-4deg) scale(1.08); }
+    45% { transform: translateX(2px) rotate(2deg) scale(1.05); }
     100% { transform: translateX(0) rotate(0deg) scale(1.02); }
 }
 
@@ -2239,7 +2266,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 8;
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2248,84 +2275,55 @@
 .vibe-line {
     position: absolute;
     width: 2px;
-    height: 65%;
-    background: rgba(4, 120, 87, 0.5);
+    height: 70%;
+    background: rgba(4, 120, 87, 0.6);
     border-radius: 1px;
     opacity: 0;
 }
 
 [data-theme='dark'] .vibe-line {
-    background: rgba(16, 185, 129, 0.6);
+    background: rgba(16, 185, 129, 0.7);
 }
 
 .gift-fx-string-waves.in-place .vibe-line.v1 {
-    transform: translateX(-6px);
-    animation: stringOscillateLoop 1.8s 0s infinite ease-in-out;
+    transform: translateX(-7px);
+    animation: stringOscillateLoop 1.6s 0s infinite ease-in-out;
 }
 
 .gift-fx-string-waves.in-place .vibe-line.v2 {
-    transform: translateX(6px);
-    animation: stringOscillateLoop 1.8s 0.3s infinite ease-in-out;
+    transform: translateX(7px);
+    animation: stringOscillateLoop 1.6s 0.25s infinite ease-in-out;
 }
 
 .gift-fx-string-waves.in-place .music-note.n1 {
     position: absolute;
-    top: 4px;
-    right: 4px;
-    font-size: 13px;
+    top: 2px;
+    right: 3px;
+    font-size: 14px;
     color: #047857;
     opacity: 0;
-    animation: musicNoteRiseLoop 2.4s infinite ease-out;
+    animation: musicNoteRiseLoop 2.2s infinite ease-out;
 }
 
 [data-theme='dark'] .music-note.n1 {
     color: #10B981;
 }
 
-.gift-fx-string-waves.is-selected .vibe-line.v1 {
-    transform: translateX(-6px);
-    animation: stringOscillate 0.55s 0.05s ease-out forwards;
-}
-
-.gift-fx-string-waves.is-selected .vibe-line.v2 {
-    transform: translateX(6px);
-    animation: stringOscillate 0.55s 0.12s ease-out forwards;
-}
-
 @keyframes stringOscillateLoop {
     0%, 100% { opacity: 0; transform: scaleY(0.7) scaleX(1); }
-    25% { opacity: 0.75; transform: scaleY(1.1) scaleX(2.2); }
-    50% { opacity: 0.4; transform: scaleY(0.9) scaleX(1.4); }
-    75% { opacity: 0.75; transform: scaleY(1.05) scaleX(2); }
+    25% { opacity: 0.85; transform: scaleY(1.15) scaleX(2.5); }
+    50% { opacity: 0.45; transform: scaleY(0.9) scaleX(1.5); }
+    75% { opacity: 0.85; transform: scaleY(1.1) scaleX(2.2); }
 }
 
 @keyframes musicNoteRiseLoop {
-    0% {
-        transform: translate3d(0, 4px, 0) scale(0.6);
-        opacity: 0;
-    }
-    30% {
-        opacity: 0.85;
-        transform: translate3d(2px, -4px, 0) scale(1);
-    }
-    80% {
-        opacity: 0.45;
-        transform: translate3d(-3px, -14px, 0) scale(1.1);
-    }
-    100% {
-        transform: translate3d(1px, -22px, 0) scale(0.8);
-        opacity: 0;
-    }
+    0% { transform: translate3d(0, 4px, 0) scale(0.6); opacity: 0; }
+    30% { opacity: 0.95; transform: translate3d(3px, -5px, 0) scale(1); }
+    80% { opacity: 0.5; transform: translate3d(-4px, -16px, 0) scale(1.1); }
+    100% { transform: translate3d(2px, -24px, 0) scale(0.8); opacity: 0; }
 }
 
-@keyframes stringOscillate {
-    0% { opacity: 0; transform: scaleY(0.6) scaleX(1); }
-    25% { opacity: 0.7; transform: scaleY(1.1) scaleX(2.5); }
-    50% { opacity: 0.5; transform: scaleY(0.9) scaleX(1.5); }
-    100% { opacity: 0; transform: scaleY(1) scaleX(0.5); }
-}
-
-/* 6. Axum, Lalibela & Gondar Golden Sheen Sweep */
+/* 6. Axum, Lalibela & Gondar Golden Sheen */
 .eth-gift-art-box.gift-is-selected.eth-anim-monument,
 .eth-gift-art-box.gift-is-selected.eth-anim-gondar {
     animation: monumentRise 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -2333,7 +2331,7 @@
 
 @keyframes monumentRise {
     0% { transform: translateY(0) scale(1); }
-    40% { transform: translateY(-5px) scale(1.06); }
+    40% { transform: translateY(-6px) scale(1.07); }
     80% { transform: translateY(-2px) scale(1.03); }
     100% { transform: translateY(-1px) scale(1.02); }
 }
@@ -2341,10 +2339,10 @@
 .gift-fx-golden-sheen {
     position: absolute;
     inset: 0;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
     pointer-events: none;
-    z-index: 8;
+    z-index: 10;
 }
 
 .sheen-sweep-bar {
@@ -2356,45 +2354,24 @@
     background: linear-gradient(
         135deg,
         rgba(255, 215, 0, 0) 30%,
-        rgba(255, 215, 0, 0.45) 50%,
+        rgba(255, 215, 0, 0.55) 50%,
         rgba(255, 215, 0, 0) 70%
     );
     transform: translateX(-100%) translateY(-100%) rotate(30deg);
 }
 
 .gift-fx-golden-sheen.in-place .sheen-sweep-bar {
-    animation: sheenLoop 3.6s infinite cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.gift-fx-golden-sheen.is-selected .sheen-sweep-bar {
-    animation: sheenDiagonalSweep 0.8s 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: sheenLoop 3.2s infinite cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes sheenLoop {
-    0%, 40% {
+    0%, 35% {
         transform: translateX(-100%) translateY(-100%) rotate(30deg);
         opacity: 0;
     }
-    50% {
-        opacity: 0.9;
-    }
-    75% {
-        opacity: 0.9;
-    }
+    45% { opacity: 1; }
+    75% { opacity: 1; }
     90%, 100% {
-        transform: translateX(100%) translateY(100%) rotate(30deg);
-        opacity: 0;
-    }
-}
-
-@keyframes sheenDiagonalSweep {
-    0% {
-        transform: translateX(-100%) translateY(-100%) rotate(30deg);
-        opacity: 0;
-    }
-    30% { opacity: 1; }
-    70% { opacity: 1; }
-    100% {
         transform: translateX(100%) translateY(100%) rotate(30deg);
         opacity: 0;
     }
@@ -2408,8 +2385,8 @@
 
 @keyframes regalShimmer {
     0% { transform: scale(1); }
-    35% { transform: scale(1.12) rotate(3deg); }
-    70% { transform: scale(1.04) rotate(-2deg); }
+    35% { transform: scale(1.14) rotate(4deg); }
+    70% { transform: scale(1.05) rotate(-2deg); }
     100% { transform: scale(1.03) rotate(0deg); }
 }
 
@@ -2422,235 +2399,198 @@
 
 .sparkle-star {
     position: absolute;
-    font-size: 14px;
+    font-size: 15px;
     color: #F59E0B;
     line-height: 1;
     opacity: 0;
-    text-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+    text-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
 }
 
-.sparkle-star.s1 { top: 2px; right: 4px; }
-.sparkle-star.s2 { bottom: 4px; left: 2px; font-size: 11px; }
-.sparkle-star.s3 { top: 6px; left: 6px; font-size: 13px; }
+.sparkle-star.s1 { top: 2px; right: 3px; }
+.sparkle-star.s2 { bottom: 4px; left: 2px; font-size: 12px; }
+.sparkle-star.s3 { top: 5px; left: 5px; font-size: 14px; }
 
 .gift-fx-sparkle-stars.in-place .sparkle-star.s1 {
-    animation: sparkleTwinkleLoop 2.4s 0s infinite ease-in-out;
+    animation: sparkleTwinkleLoop 2.2s 0s infinite ease-in-out;
 }
 .gift-fx-sparkle-stars.in-place .sparkle-star.s2 {
-    animation: sparkleTwinkleLoop 2.4s 0.8s infinite ease-in-out;
+    animation: sparkleTwinkleLoop 2.2s 0.7s infinite ease-in-out;
 }
 .gift-fx-sparkle-stars.in-place .sparkle-star.s3 {
-    animation: sparkleTwinkleLoop 2.4s 1.6s infinite ease-in-out;
-}
-
-.gift-fx-sparkle-stars.is-selected .sparkle-star.s1 {
-    animation: sparkleTwinkle 0.6s 0.1s ease-in-out forwards;
-}
-.gift-fx-sparkle-stars.is-selected .sparkle-star.s2 {
-    animation: sparkleTwinkle 0.6s 0.25s ease-in-out forwards;
-}
-.gift-fx-sparkle-stars.is-selected .sparkle-star.s3 {
-    animation: sparkleTwinkle 0.6s 0.35s ease-in-out forwards;
+    animation: sparkleTwinkleLoop 2.2s 1.4s infinite ease-in-out;
 }
 
 @keyframes sparkleTwinkleLoop {
-    0%, 100% {
-        transform: scale(0) rotate(0deg);
-        opacity: 0;
-    }
-    35% {
-        transform: scale(1.25) rotate(45deg);
-        opacity: 0.95;
-    }
-    70% {
-        transform: scale(0.6) rotate(90deg);
-        opacity: 0.3;
-    }
+    0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
+    35% { transform: scale(1.3) rotate(45deg); opacity: 1; }
+    70% { transform: scale(0.6) rotate(90deg); opacity: 0.35; }
 }
 
-@keyframes sparkleTwinkle {
-    0% { transform: scale(0) rotate(0deg); opacity: 0; }
-    50% { transform: scale(1.25) rotate(45deg); opacity: 1; }
-    100% { transform: scale(0.2) rotate(90deg); opacity: 0; }
-}
-
-/* 8. Lion of Judah, Walia & Horse Wildlife Stance Rise */
-.eth-gift-art-box.gift-is-selected.eth-anim-lion,
-.eth-gift-art-box.gift-is-selected.eth-anim-walia,
-.eth-gift-art-box.gift-is-selected.eth-anim-horse {
-    animation: wildlifeRise 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes wildlifeRise {
-    0% { transform: translateY(0) scale(1); }
-    35% { transform: translateY(-5px) scale(1.09); }
-    70% { transform: translateY(-2px) scale(1.04); }
-    100% { transform: translateY(-1px) scale(1.02); }
-}
-
-/* 9. Ethiopian Jet Takeoff Glide & Contrails */
+/* 8. Boeing 787 Ethiopian Jet Flight & Contrails */
 .eth-gift-art-box.gift-is-selected.eth-anim-plane {
     animation: planeTakeoff 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes planeTakeoff {
-    0% {
-        transform: translate(0, 0) rotate(0deg) scale(1);
-    }
-    40% {
-        transform: translate(4px, -6px) rotate(-7deg) scale(1.09);
-    }
-    80% {
-        transform: translate(2px, -2px) rotate(-3deg) scale(1.04);
-    }
-    100% {
-        transform: translate(0, 0) rotate(0deg) scale(1.02);
-    }
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    40% { transform: translate(5px, -8px) rotate(-8deg) scale(1.12); }
+    80% { transform: translate(2px, -3px) rotate(-3deg) scale(1.05); }
+    100% { transform: translate(0, 0) rotate(0deg) scale(1.02); }
 }
 
 .gift-fx-plane-clouds {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 6;
+    z-index: 10;
     overflow: visible;
 }
 
 .contrail-stream {
     position: absolute;
-    height: 2px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(203, 213, 225, 0.85) 50%, rgba(255, 255, 255, 0) 100%);
+    height: 2.5px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(203, 213, 225, 0.9) 50%, rgba(255, 255, 255, 0.95) 100%);
     border-radius: 2px;
     opacity: 0;
 }
 
 .gift-fx-plane-clouds.in-place .contrail-stream.c1 {
-    top: 40%;
-    right: -6px;
-    width: 22px;
-    animation: contrailStreamLoop 1.6s infinite linear;
+    top: 38%;
+    right: -7px;
+    width: 24px;
+    animation: contrailStreamLoop 1.5s infinite linear;
 }
 
 .gift-fx-plane-clouds.in-place .contrail-stream.c2 {
-    bottom: 40%;
-    right: -6px;
-    width: 20px;
-    animation: contrailStreamLoop 1.6s 0.4s infinite linear;
+    bottom: 38%;
+    right: -7px;
+    width: 22px;
+    animation: contrailStreamLoop 1.5s 0.35s infinite linear;
 }
 
 .gift-fx-plane-clouds.in-place .flight-cloud.f1 {
     position: absolute;
-    top: 15%;
-    left: -8px;
-    width: 14px;
-    height: 6px;
-    background: radial-gradient(ellipse, rgba(226, 232, 240, 0.7) 0%, rgba(226, 232, 240, 0) 70%);
+    top: 14%;
+    left: -10px;
+    width: 16px;
+    height: 7px;
+    background: radial-gradient(ellipse, rgba(226, 232, 240, 0.85) 0%, rgba(226, 232, 240, 0) 75%);
     border-radius: 50%;
-    animation: cloudPassLoop 2.8s infinite linear;
+    animation: cloudPassLoop 2.5s infinite linear;
 }
 
 @keyframes contrailStreamLoop {
-    0% {
-        transform: translateX(-4px) scaleX(0.5);
-        opacity: 0;
-    }
-    30% {
-        opacity: 0.85;
-        transform: translateX(0px) scaleX(1);
-    }
-    80% {
-        opacity: 0.5;
-        transform: translateX(8px) scaleX(1.3);
-    }
-    100% {
-        transform: translateX(14px) scaleX(1.6);
-        opacity: 0;
-    }
+    0% { transform: translateX(-4px) scaleX(0.5); opacity: 0; }
+    30% { opacity: 0.95; transform: translateX(0px) scaleX(1); }
+    80% { opacity: 0.55; transform: translateX(10px) scaleX(1.4); }
+    100% { transform: translateX(16px) scaleX(1.8); opacity: 0; }
 }
 
 @keyframes cloudPassLoop {
-    0% {
-        transform: translateX(50px) scale(0.6);
-        opacity: 0;
-    }
-    30% { opacity: 0.7; }
-    80% { opacity: 0.6; }
-    100% {
-        transform: translateX(-15px) scale(1.2);
-        opacity: 0;
-    }
+    0% { transform: translateX(55px) scale(0.6); opacity: 0; }
+    30% { opacity: 0.8; }
+    80% { opacity: 0.7; }
+    100% { transform: translateX(-18px) scale(1.3); opacity: 0; }
 }
 
-/* 10. ETRSS-1 Satellite Orbit Tilt & Pings */
-.eth-gift-art-box.gift-is-selected.eth-anim-satellite {
-    animation: satelliteOrbit 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes satelliteOrbit {
-    0% { transform: rotate(0deg) scale(1); }
-    45% { transform: rotate(18deg) scale(1.08); }
-    80% { transform: rotate(5deg) scale(1.04); }
-    100% { transform: rotate(6deg) scale(1.02); }
-}
-
+/* 9. ETRSS-1 Satellite Radar Telemetry Waves */
 .gift-fx-satellite-signal {
     position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 24px;
-    height: 24px;
+    top: 5px;
+    right: 5px;
+    width: 26px;
+    height: 26px;
     pointer-events: none;
-    z-index: 8;
+    z-index: 10;
 }
 
 .sat-ping {
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    border: 1.5px solid rgba(59, 130, 246, 0.75);
+    border: 2px solid rgba(59, 130, 246, 0.8);
     opacity: 0;
 }
 
 .gift-fx-satellite-signal.in-place .sat-ping.p1 {
-    animation: satPingLoop 2s 0s infinite ease-out;
+    animation: satPingLoop 1.8s 0s infinite ease-out;
 }
 .gift-fx-satellite-signal.in-place .sat-ping.p2 {
-    animation: satPingLoop 2s 0.8s infinite ease-out;
+    animation: satPingLoop 1.8s 0.7s infinite ease-out;
 }
 
 @keyframes satPingLoop {
-    0% { transform: scale(0.3); opacity: 0.9; }
-    100% { transform: scale(1.7); opacity: 0; }
+    0% { transform: scale(0.3); opacity: 0.95; }
+    100% { transform: scale(1.8); opacity: 0; }
 }
 
-/* 11. Warrior Shield Parry */
-.eth-gift-art-box.gift-is-selected.eth-anim-shield {
-    animation: shieldParry 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* 10. Warrior Shield Metallic Gleam Flash */
+.gift-fx-shield-sheen {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 10;
 }
 
-@keyframes shieldParry {
-    0% { transform: scale(1) translateY(0); }
-    30% { transform: scale(1.1) translateY(-3px); }
-    70% { transform: scale(1.04) translateY(-1px); }
-    100% { transform: scale(1.02) translateY(0); }
+.shield-gleam-bar {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0) 35%,
+        rgba(255, 255, 255, 0.75) 50%,
+        rgba(255, 255, 255, 0) 65%
+    );
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    animation: shieldGleamLoop 2.8s infinite cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* 12. Erta Ale Volcano Magma Warmth & Embers */
-.eth-gift-art-box.gift-is-selected.eth-anim-volcano {
-    animation: volcanoWarmth 0.8s ease-in-out forwards;
+@keyframes shieldGleamLoop {
+    0%, 40% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+    50% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
 }
 
-@keyframes volcanoWarmth {
-    0% { transform: scale(1); filter: brightness(1); }
-    40% { transform: scale(1.08); filter: brightness(1.2) drop-shadow(0 0 6px rgba(239, 68, 68, 0.4)); }
-    100% { transform: scale(1.02); filter: brightness(1.05); }
+/* 11. Habesha Kemis Golden Embroidery Shimmer */
+.gift-fx-kemis-shimmer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
 }
 
+.kemis-sparkle {
+    position: absolute;
+    color: #F59E0B;
+    font-size: 13px;
+    opacity: 0;
+    text-shadow: 0 0 6px rgba(245, 158, 11, 0.9);
+}
+
+.kemis-sparkle.k1 {
+    top: 25%;
+    right: 20%;
+    animation: sparkleTwinkleLoop 2s 0s infinite ease-in-out;
+}
+
+.kemis-sparkle.k2 {
+    bottom: 25%;
+    left: 22%;
+    animation: sparkleTwinkleLoop 2s 1s infinite ease-in-out;
+}
+
+/* 12. Erta Ale Volcano Magma Embers */
 .gift-fx-volcano-embers {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 8;
+    z-index: 10;
     overflow: visible;
 }
 
@@ -2667,319 +2607,244 @@
     height: 4px;
     bottom: 35%;
     left: 45%;
-    animation: emberRiseLoop 1.8s 0s infinite ease-out;
+    animation: emberRiseLoop 1.6s 0s infinite ease-out;
 }
 .gift-fx-volcano-embers.in-place .ember-spark.e2 {
-    width: 3px;
-    height: 3px;
-    bottom: 40%;
-    left: 35%;
-    animation: emberRiseLoop 1.8s 0.6s infinite ease-out;
-}
-.gift-fx-volcano-embers.in-place .ember-spark.e3 {
     width: 3.5px;
     height: 3.5px;
+    bottom: 40%;
+    left: 35%;
+    animation: emberRiseLoop 1.6s 0.5s infinite ease-out;
+}
+.gift-fx-volcano-embers.in-place .ember-spark.e3 {
+    width: 4px;
+    height: 4px;
     bottom: 35%;
     right: 35%;
-    animation: emberRiseLoop 1.8s 1.2s infinite ease-out;
+    animation: emberRiseLoop 1.6s 1.0s infinite ease-out;
 }
 
 @keyframes emberRiseLoop {
-    0% {
-        transform: translate3d(0, 0, 0) scale(0.6);
-        opacity: 0;
-    }
-    25% {
-        opacity: 1;
-        transform: translate3d(-2px, -8px, 0) scale(1.1);
-    }
-    80% {
-        opacity: 0.5;
-        transform: translate3d(3px, -18px, 0) scale(0.8);
-    }
-    100% {
-        transform: translate3d(-1px, -26px, 0) scale(0.3);
-        opacity: 0;
-    }
+    0% { transform: translate3d(0, 0, 0) scale(0.6); opacity: 0; }
+    25% { opacity: 1; transform: translate3d(-2px, -8px, 0) scale(1.2); }
+    80% { opacity: 0.6; transform: translate3d(3px, -18px, 0) scale(0.8); }
+    100% { transform: translate3d(-1px, -26px, 0) scale(0.3); opacity: 0; }
 }
 
-/* 13. Habesha Kemis & Mesob Elegance */
-.eth-gift-art-box.gift-is-selected.eth-anim-kemis,
-.eth-gift-art-box.gift-is-selected.eth-anim-mesob {
-    animation: elegantSway 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes elegantSway {
-    0% { transform: scale(1) rotate(0deg); }
-    35% { transform: scale(1.08) rotate(3deg); }
-    70% { transform: scale(1.03) rotate(-2deg); }
-    100% { transform: scale(1.02) rotate(0deg); }
-}
-
-/* 14. Sacred Books Aura Glow */
+/* 13. Sacred Scriptures Radiant Halo & Lion Mane Glow */
 .book-sacred-glow {
     position: absolute;
-    width: 85%;
-    height: 85%;
+    width: 105%;
+    height: 105%;
     border-radius: 50%;
-    filter: blur(10px);
-    opacity: 0.35;
+    filter: blur(8px);
+    opacity: 0.65;
     pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 1;
+    animation: haloPulse 2.4s infinite ease-in-out;
 }
 
 .book-sacred-glow.gold {
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.8) 0%, rgba(245, 158, 11, 0) 70%);
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.9) 0%, rgba(245, 158, 11, 0) 72%);
 }
 
 .book-sacred-glow.emerald {
-    background: radial-gradient(circle, rgba(16, 185, 129, 0.8) 0%, rgba(16, 185, 129, 0) 70%);
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.9) 0%, rgba(16, 185, 129, 0) 72%);
 }
 
-.eth-gift-art-box.gift-is-selected .book-sacred-glow {
-    opacity: 0.75;
-    transform: scale(1.3);
+.lion-mane-glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    filter: blur(8px);
+    opacity: 0.5;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.8) 0%, rgba(245, 158, 11, 0) 70%);
+    pointer-events: none;
+    z-index: 1;
+    animation: haloPulse 2.8s infinite ease-in-out;
+}
+
+@keyframes haloPulse {
+    0%, 100% { transform: scale(0.9); opacity: 0.5; }
+    50% { transform: scale(1.15); opacity: 0.85; }
 }
 
 /* ==========================================================================
-   11. CONTINUOUS IN-PLACE LIVING MOTION GRAPHICS FOR RESTING GIFTS
+   11. NOTICEABLE LIVING IN-PLACE GRAPHICAL MOTIONS FOR ALL RESTING GIFTS
    ========================================================================== */
 
-/* 1. Addis Supercar In-Place Drifting Motion */
+/* 1. Addis Supercar In-Place Active Drifting */
 .eth-anim-car:not(.gift-is-selected) {
-    animation: carDriftLoop 2.8s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
+    animation: carDriftLoop 2.2s infinite ease-in-out;
     transform-origin: center 70%;
 }
 @keyframes carDriftLoop {
-    0% {
-        transform: translate3d(0, 0, 0) rotate(0deg);
-    }
-    18% {
-        /* Throttle acceleration */
-        transform: translate3d(2px, -2px, 0) rotate(-1.5deg);
-    }
-    38% {
-        /* Rear end kick into drift */
-        transform: translate3d(5px, -3.5px, 0) rotate(-7deg);
-    }
-    58% {
-        /* Counter-steer balance hold */
-        transform: translate3d(3px, -1.5px, 0) rotate(-4deg);
-    }
-    78% {
-        /* Straighten line */
-        transform: translate3d(-1px, 0, 0) rotate(2deg);
-    }
-    100% {
-        transform: translate3d(0, 0, 0) rotate(0deg);
-    }
+    0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    20% { transform: translate3d(4px, -2px, 0) rotate(-7deg); }
+    45% { transform: translate3d(7px, -4px, 0) rotate(-11deg); }
+    70% { transform: translate3d(-3px, -1px, 0) rotate(6deg); }
+    100% { transform: translate3d(0, 0, 0) rotate(0deg); }
 }
 
 /* 2a. Clay Jebena In-Place Pouring Motion */
 .eth-anim-jebena:not(.gift-is-selected) {
-    animation: jebenaPourLoop 3.4s infinite ease-in-out;
+    animation: jebenaPourLoop 2.8s infinite ease-in-out;
     transform-origin: 30% 70%;
 }
 @keyframes jebenaPourLoop {
-    0%, 100% {
-        transform: translate3d(0, 0, 0) rotate(0deg);
-    }
-    18% {
-        /* Tilts forward to begin pouring */
-        transform: translate3d(2px, -2px, 0) rotate(-14deg);
-    }
-    35%, 65% {
-        /* Main pouring stream angle */
-        transform: translate3d(3px, -4px, 0) rotate(-18deg);
-    }
-    82% {
-        /* Raising back up */
-        transform: translate3d(1px, -1px, 0) rotate(-4deg);
-    }
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    20% { transform: translate3d(3px, -3px, 0) rotate(-16deg); }
+    35%, 68% { transform: translate3d(4px, -5px, 0) rotate(-22deg); }
+    84% { transform: translate3d(1px, -1px, 0) rotate(-4deg); }
 }
 
 /* 2b. Coffee, Rekebot & Feast In-Place Warmth */
 .eth-anim-buna:not(.gift-is-selected),
 .eth-anim-rekebot:not(.gift-is-selected),
 .eth-anim-feast:not(.gift-is-selected) {
-    animation: coffeeGentleFloat 2.6s infinite ease-in-out;
+    animation: coffeeGentleFloat 2.4s infinite ease-in-out;
 }
 @keyframes coffeeGentleFloat {
     0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-3px) scale(1.03); }
+    50% { transform: translateY(-4px) scale(1.04); }
 }
 
-/* 3. Highland Flowers In-Place Blooming & Breeze */
+/* 3. Highland Flowers In-Place Blooming Petals & Breeze */
 .eth-anim-flower:not(.gift-is-selected) {
-    animation: flowerBloomLoop 3.2s infinite ease-in-out;
+    animation: flowerBloomLoop 2.6s infinite ease-in-out;
     transform-origin: center bottom;
 }
 @keyframes flowerBloomLoop {
-    0%, 100% {
-        transform: scale(0.95) rotate(0deg);
-    }
-    30% {
-        /* Petals blooming outwards */
-        transform: scale(1.08) rotate(4deg);
-    }
-    60% {
-        /* Highland breeze sway */
-        transform: scale(1.04) rotate(-3deg);
-    }
-    85% {
-        transform: scale(0.98) rotate(1deg);
-    }
+    0%, 100% { transform: scale(0.92) rotate(0deg); }
+    30% { transform: scale(1.14) rotate(6deg); }
+    60% { transform: scale(1.08) rotate(-5deg); }
+    85% { transform: scale(0.97) rotate(2deg); }
 }
 
-/* 4. Kebero Drum In-Place Rhythmic Beat */
+/* 4. Kebero Drum In-Place Rhythmic Pulse */
 .eth-anim-kebero:not(.gift-is-selected) {
-    animation: keberoRhythmBeat 2.2s infinite ease-in-out;
+    animation: keberoRhythmBeat 1.8s infinite ease-in-out;
 }
 @keyframes keberoRhythmBeat {
-    0%, 100% {
-        transform: scale(1);
-    }
-    14% {
-        /* 1st strike */
-        transform: scale(1.1) rotate(-3deg);
-    }
-    24% {
-        transform: scale(0.96) rotate(1deg);
-    }
-    36% {
-        /* 2nd strike */
-        transform: scale(1.07) rotate(-2deg);
-    }
-    50% {
-        transform: scale(1.02);
-    }
-    70% {
-        transform: scale(1);
-    }
+    0%, 100% { transform: scale(1); }
+    12% { transform: scale(1.15) rotate(-3deg); }
+    22% { transform: scale(0.92) rotate(1deg); }
+    34% { transform: scale(1.10) rotate(-2deg); }
+    50% { transform: scale(1.02); }
+    70% { transform: scale(1); }
 }
 
 /* 5. Acoustic Strings In-Place Resonance */
 .eth-anim-masenqo:not(.gift-is-selected),
 .eth-anim-krar:not(.gift-is-selected) {
-    animation: stringHarmonic 2.4s infinite ease-in-out;
+    animation: stringHarmonic 2.0s infinite ease-in-out;
 }
 @keyframes stringHarmonic {
     0%, 100% { transform: scale(1) rotate(0deg); }
-    15% { transform: scale(1.05) rotate(2.5deg) translateX(1px); }
-    30% { transform: scale(1.02) rotate(-2.5deg) translateX(-1px); }
-    45% { transform: scale(1.04) rotate(1.5deg); }
-    60% { transform: scale(1.01) rotate(-1deg); }
+    15% { transform: scale(1.06) rotate(3deg) translateX(2px); }
+    30% { transform: scale(1.02) rotate(-3deg) translateX(-2px); }
+    45% { transform: scale(1.05) rotate(2deg); }
+    60% { transform: scale(1.01) rotate(-1.5deg); }
     80% { transform: scale(1.02) rotate(0.5deg); }
 }
 
 /* 6. Monuments In-Place Regal Presence */
 .eth-anim-monument:not(.gift-is-selected),
 .eth-anim-gondar:not(.gift-is-selected) {
-    animation: monumentPresence 3.4s infinite ease-in-out;
+    animation: monumentPresence 3.0s infinite ease-in-out;
 }
 @keyframes monumentPresence {
     0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-3.5px) scale(1.025); }
+    50% { transform: translateY(-4px) scale(1.03); }
 }
 
 /* 7. Jewels & Regalia In-Place Shimmer */
 .eth-anim-regal:not(.gift-is-selected),
 .eth-anim-diamond:not(.gift-is-selected) {
-    animation: gemShimmerFloat 2.8s infinite ease-in-out;
+    animation: gemShimmerFloat 2.4s infinite ease-in-out;
 }
 @keyframes gemShimmerFloat {
     0%, 100% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.05) rotate(2.5deg); }
+    50% { transform: scale(1.06) rotate(3.5deg); }
 }
 
 /* 8. Wildlife In-Place Majestic Breath */
 .eth-anim-lion:not(.gift-is-selected),
 .eth-anim-walia:not(.gift-is-selected),
 .eth-anim-horse:not(.gift-is-selected) {
-    animation: wildlifeBreathe 2.8s infinite ease-in-out;
+    animation: wildlifeBreathe 2.5s infinite ease-in-out;
 }
 @keyframes wildlifeBreathe {
     0%, 100% { transform: scale(1) translateY(0); }
-    50% { transform: scale(1.04) translateY(-3px); }
+    50% { transform: scale(1.05) translateY(-4px); }
 }
 
 /* 9. Ethiopian Jet In-Place Flying Path */
 .eth-anim-plane:not(.gift-is-selected) {
-    animation: planeFlyPath 3.2s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
+    animation: planeFlyPath 2.6s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 @keyframes planeFlyPath {
-    0% {
-        transform: translate3d(0, 0, 0) rotate(0deg);
-    }
-    25% {
-        /* Climb and bank left */
-        transform: translate3d(-3px, -5px, 0) rotate(-6deg);
-    }
-    50% {
-        /* Level out at high altitude */
-        transform: translate3d(1px, -7px, 0) rotate(-1deg);
-    }
-    75% {
-        /* Bank right glide */
-        transform: translate3d(4px, -3px, 0) rotate(5deg);
-    }
-    100% {
-        transform: translate3d(0, 0, 0) rotate(0deg);
-    }
+    0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    25% { transform: translate3d(-5px, -7px, 0) rotate(-8deg); }
+    50% { transform: translate3d(2px, -9px, 0) rotate(-1deg); }
+    75% { transform: translate3d(6px, -4px, 0) rotate(7deg); }
+    100% { transform: translate3d(0, 0, 0) rotate(0deg); }
 }
 
 /* 10. Satellite In-Place Orbit Drift */
 .eth-anim-satellite:not(.gift-is-selected) {
-    animation: satelliteOrbitDrift 4s infinite linear;
+    animation: satelliteOrbitDrift 3.5s infinite linear;
 }
 @keyframes satelliteOrbitDrift {
     0% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(8deg) scale(1.04) translateY(-2px); }
+    50% { transform: rotate(10deg) scale(1.05) translateY(-3px); }
     100% { transform: rotate(0deg) scale(1); }
 }
 
 /* 11. Warrior Shield In-Place Resilience */
 .eth-anim-shield:not(.gift-is-selected) {
-    animation: shieldSteady 2.5s infinite ease-in-out;
+    animation: shieldSteady 2.2s infinite ease-in-out;
 }
 @keyframes shieldSteady {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.025) translateY(-1.5px); }
+    50% { transform: scale(1.04) translateY(-2px); }
 }
 
 /* 12. Erta Ale Volcano In-Place Magma Glow */
 .eth-anim-volcano:not(.gift-is-selected) {
-    animation: volcanoMagmaGlow 2.4s infinite alternate ease-in-out;
+    animation: volcanoMagmaGlow 2.0s infinite alternate ease-in-out;
 }
 @keyframes volcanoMagmaGlow {
     from {
         transform: scale(1);
-        filter: brightness(1) drop-shadow(0 0 4px rgba(239, 68, 68, 0.25));
+        filter: brightness(1) drop-shadow(0 0 5px rgba(239, 68, 68, 0.3));
     }
     to {
-        transform: scale(1.04);
-        filter: brightness(1.22) drop-shadow(0 0 10px rgba(239, 68, 68, 0.65));
+        transform: scale(1.06);
+        filter: brightness(1.26) drop-shadow(0 0 12px rgba(239, 68, 68, 0.75));
     }
 }
 
 /* 13. Habesha Kemis & Mesob In-Place Grace */
 .eth-anim-kemis:not(.gift-is-selected),
 .eth-anim-mesob:not(.gift-is-selected) {
-    animation: culturalGrace 3s infinite ease-in-out;
+    animation: culturalGrace 2.6s infinite ease-in-out;
 }
 @keyframes culturalGrace {
     0%, 100% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(2.5deg) scale(1.03) translateY(-2px); }
+    50% { transform: rotate(3deg) scale(1.04) translateY(-3px); }
 }
 
 /* 14. Sacred Scriptures In-Place Ambient Glow */
 .eth-anim-book:not(.gift-is-selected) {
-    animation: bookSacredFloat 3s infinite ease-in-out;
+    animation: bookSacredFloat 2.6s infinite ease-in-out;
 }
 @keyframes bookSacredFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-3px) scale(1.025); }
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-4px) scale(1.03); }
 }
+
 
 /* ==========================================================================
    12. TIKTOK LIVE CINEMATIC CELEBRATION MODAL
