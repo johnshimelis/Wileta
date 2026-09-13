@@ -521,19 +521,38 @@ export const GIFT_CATEGORIES = [
 // 2. TACTILE ETHIOPIAN GIFT VISUAL COMPONENT WITH OBJECT-SPECIFIC ANIMATIONS
 // =========================================================================
 
+// Bundle all gift assets directly through Vite at build time so they never 404 or show emojis
+const giftPngModules = import.meta.glob('../assets/gifts/*.png', { eager: true, import: 'default' });
+const giftJpgModules = import.meta.glob('../assets/gifts/*.jpg', { eager: true, import: 'default' });
+
+export const getGiftImageUrl = (id, tryJpg = false) => {
+    if (tryJpg) {
+        const jpgKey = `../assets/gifts/${id}.jpg`;
+        if (giftJpgModules[jpgKey]) return giftJpgModules[jpgKey];
+        return `/gifts/${id}.jpg`;
+    }
+    const pngKey = `../assets/gifts/${id}.png`;
+    if (giftPngModules[pngKey]) return giftPngModules[pngKey];
+    const jpgKey = `../assets/gifts/${id}.jpg`;
+    if (giftJpgModules[jpgKey]) return giftJpgModules[jpgKey];
+    return `/gifts/${id}.png`;
+};
+
 export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false, isSelected = false }) => {
     const s = size;
-    const [imgStep, setImgStep] = useState(0); // 0 = png, 1 = jpg, 2 = emoji
+    const [useJpg, setUseJpg] = useState(false);
 
     useEffect(() => {
-        setImgStep(0);
+        setUseJpg(false);
     }, [id]);
 
     const handleImgError = () => {
-        setImgStep(prev => prev + 1);
+        if (!useJpg) {
+            setUseJpg(true);
+        }
     };
 
-    const imgSrc = imgStep === 0 ? `/gifts/${id}.png` : `/gifts/${id}.jpg`;
+    const imgSrc = getGiftImageUrl(id, useJpg);
 
     // Object-specific motion class
     const getMovementClass = () => {
@@ -599,7 +618,7 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false, isS
                 <div className="lion-mane-glow" />
             )}
 
-            {/* Visual Frame for PNG/JPG Image or Fallback Emoji */}
+            {/* Visual Frame for Real 3D Graphical Image */}
             <div 
                 className="eth-gift-image-frame"
                 style={{
@@ -614,61 +633,22 @@ export const Gift3DIcon = ({ id, size = 56, animated = true, isHero = false, isS
                     zIndex: 2
                 }}
             >
-                {imgStep < 2 ? (
-                    <img 
-                        src={imgSrc} 
-                        alt={id}
-                        className={`eth-gift-real-img ${id === 'bible' || id === 'quran' ? 'eth-book-real-img' : ''}`}
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            maxWidth: '100%',
-                            maxHeight: '100%',
-                            objectFit: 'contain',
-                            aspectRatio: '1 / 1',
-                            display: 'block'
-                        }}
-                        onError={handleImgError}
-                        loading="eager"
-                    />
-                ) : (
-                    <div 
-                        className="eth-gift-fallback-emoji"
-                        style={{ 
-                            fontSize: `${Math.max(22, Math.round(s * 0.52))}px`,
-                            lineHeight: 1,
-                            userSelect: 'none'
-                        }}
-                    >
-                        {id === 'adey_abeba' ? '🌼' :
-                         id === 'rose' ? '🌹' :
-                         id === 'buna' ? '☕' :
-                         id === 'jebena' ? '🫖' :
-                         id === 'mesob' ? '🧺' :
-                         id === 'enjera' ? '🍲' :
-                         id === 'bible' ? '📖' :
-                         id === 'quran' ? '📗' :
-                         id === 'kebero' ? '🪘' :
-                         id === 'masenqo' ? '🎻' :
-                         id === 'krar' ? '🎸' :
-                         id === 'kemis' ? '👗' :
-                         id === 'shield' ? '🛡️' :
-                         id === 'rekebot' ? '☕' :
-                         id === 'walia' ? '🐐' :
-                         id === 'horse' ? '🏇' :
-                         id === 'anbessa' ? '🦁' :
-                         id === 'crown' ? '👑' :
-                         id === 'diamond' ? '💎' :
-                         id === 'car' ? '🏎️' :
-                         id === 'axum' ? '🏛️' :
-                         id === 'gondar' ? '🏰' :
-                         id === 'lalibela' ? '⛪' :
-                         id === 'erta_ale' ? '🌋' :
-                         id === 'plane' ? '✈️' :
-                         id === 'satellite' ? '🛰️' :
-                         id === 'national_honor' ? '🏅' : '🎁'}
-                    </div>
-                )}
+                <img 
+                    src={imgSrc} 
+                    alt={id}
+                    className={`eth-gift-real-img ${id === 'bible' || id === 'quran' ? 'eth-book-real-img' : ''}`}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        objectFit: 'contain',
+                        aspectRatio: '1 / 1',
+                        display: 'block'
+                    }}
+                    onError={handleImgError}
+                    loading="eager"
+                />
             </div>
 
             {/* FOREGROUND LIVING GRAPHICAL MOTION & PARTICLE OVERLAYS (zIndex: 10) */}
@@ -966,7 +946,7 @@ export const TikTokLiveGiftShowcase = ({
                         </div>
                     </div>
                     <div className="supporter-gift-badge">
-                        <span>{gift.emoji || '🎁'}</span>
+                        <Gift3DIcon id={gift.id} size={30} animated={false} isSelected={false} />
                     </div>
                 </div>
             </div>
