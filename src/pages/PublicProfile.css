@@ -1888,827 +1888,231 @@
     }
 }
 
-/* 1. Addis Supercar Drift Sequence (When Selected) */
-.eth-gift-art-box.gift-is-selected.eth-anim-car {
-    animation: carDriftSequence 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-@keyframes carDriftSequence {
-    0% { transform: translateX(0) rotate(0deg) scale(1); }
-    20% { transform: translateX(5px) rotate(-6deg) scale(1.08); }
-    50% { transform: translateX(-8px) rotate(14deg) scale(1.12); }
-    75% { transform: translateX(-2px) rotate(-4deg) scale(1.05); }
-    100% { transform: translateX(0) rotate(0deg) scale(1.02); }
-}
-
-/* Addis Supercar: Active Drifting Smoke Clouds */
-.gift-fx-car-smoke {
-    position: absolute;
-    bottom: 4px;
-    left: -4px;
-    width: 32px;
-    height: 22px;
-    pointer-events: none;
-    z-index: 10;
-    overflow: visible;
-}
-
-.smoke-puff {
-    position: absolute;
-    background: radial-gradient(circle, rgba(160, 174, 192, 0.9) 0%, rgba(226, 232, 240, 0.7) 45%, rgba(203, 213, 225, 0) 80%);
-    border-radius: 50%;
-    opacity: 0;
-}
-
-.gift-fx-car-smoke.in-place .smoke-puff.p1 {
-    bottom: 2px;
-    left: 4px;
-    width: 12px;
-    height: 12px;
-    animation: smokeDriftLoop 1.6s 0s infinite ease-out;
-}
-.gift-fx-car-smoke.in-place .smoke-puff.p2 {
-    bottom: 6px;
-    left: 0px;
-    width: 15px;
-    height: 15px;
-    animation: smokeDriftLoop 1.6s 0.5s infinite ease-out;
-}
-.gift-fx-car-smoke.in-place .smoke-puff.p3 {
-    bottom: 1px;
-    left: 8px;
-    width: 11px;
-    height: 11px;
-    animation: smokeDriftLoop 1.6s 1.0s infinite ease-out;
-}
-
-@keyframes smokeDriftLoop {
-    0% {
-        transform: translate3d(0, 0, 0) scale(0.4);
-        opacity: 0;
-    }
-    25% {
-        opacity: 0.95;
-        transform: translate3d(-5px, -3px, 0) scale(1);
-    }
-    65% {
-        opacity: 0.5;
-        transform: translate3d(-12px, -8px, 0) scale(1.7);
-    }
-    100% {
-        transform: translate3d(-20px, -13px, 0) scale(2.4);
-        opacity: 0;
-    }
-}
-
-.gift-fx-car-smoke.is-selected .smoke-puff.p1 {
-    bottom: 2px;
-    left: 4px;
-    width: 14px;
-    height: 14px;
-    animation: smokeDriftBurst 0.75s 0.05s ease-out forwards;
-}
-.gift-fx-car-smoke.is-selected .smoke-puff.p2 {
-    bottom: 5px;
-    left: 0px;
-    width: 17px;
-    height: 17px;
-    animation: smokeDriftBurst 0.85s 0.15s ease-out forwards;
-}
-.gift-fx-car-smoke.is-selected .smoke-puff.p3 {
-    bottom: 1px;
-    left: 8px;
-    width: 13px;
-    height: 13px;
-    animation: smokeDriftBurst 0.7s 0.25s ease-out forwards;
-}
-
-@keyframes smokeDriftBurst {
-    0% { transform: scale(0.4) translate(0, 0); opacity: 0; }
-    30% { opacity: 1; transform: scale(1.3) translate(-6px, -5px); }
-    70% { opacity: 0.55; transform: scale(2) translate(-14px, -9px); }
-    100% { transform: scale(2.8) translate(-22px, -14px); opacity: 0; }
-}
-
-/* 2. Clay Jebena Pouring Liquid Stream & Steam */
-.eth-gift-art-box.gift-is-selected.eth-anim-jebena,
-.eth-gift-art-box.gift-is-selected.eth-anim-buna,
-.eth-gift-art-box.gift-is-selected.eth-anim-rekebot,
-.eth-gift-art-box.gift-is-selected.eth-anim-feast {
-    animation: coffeeWarmSwell 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes coffeeWarmSwell {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.08); }
-    100% { transform: scale(1.02); }
-}
-
-.gift-fx-pour {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 10;
-    overflow: visible;
-}
-
-.pour-stream-svg {
-    position: absolute;
-    bottom: -4px;
-    right: 2px;
-    width: 34px;
-    height: 40px;
-    overflow: visible;
-}
-
-.coffee-flow-path {
-    stroke-dasharray: 45;
-    stroke-dashoffset: 45;
-    animation: streamFlowLoop 2.8s infinite ease-in-out;
-}
-
-.coffee-flow-highlight {
-    stroke-dasharray: 45;
-    stroke-dashoffset: 45;
-    animation: streamFlowLoop 2.8s infinite ease-in-out;
-}
-
-@keyframes streamFlowLoop {
-    0%, 12% {
-        stroke-dashoffset: 45;
-        opacity: 0;
-    }
-    24% {
-        stroke-dashoffset: 0;
-        opacity: 1;
-    }
-    70% {
-        stroke-dashoffset: 0;
-        opacity: 1;
-    }
-    82%, 100% {
-        stroke-dashoffset: -45;
-        opacity: 0;
-    }
-}
-
-.pour-drop {
-    position: absolute;
-    bottom: 2px;
-    right: 5px;
-    width: 5px;
-    height: 5px;
-    background: #451A03;
-    border-radius: 50%;
-    opacity: 0;
-    animation: dropSplashLoop 2.8s infinite ease-in-out;
-}
-
-@keyframes dropSplashLoop {
-    0%, 20% { opacity: 0; transform: scale(0.5); }
-    30%, 70% { opacity: 1; transform: scale(1.3); }
-    82%, 100% { opacity: 0; transform: scale(0.3); }
-}
-
-.gift-fx-steam.in-jebena {
-    position: absolute;
-    top: -12px;
-    right: 2px;
-    left: auto;
-    transform: none;
-}
-
-/* Continuous Rising Aromatic Steam Wisps */
-.gift-fx-steam {
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 34px;
-    height: 34px;
-    pointer-events: none;
-    z-index: 10;
-    overflow: visible;
-}
-
-.steam-svg {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-}
-
-.gift-fx-steam.in-place .steam-path {
-    stroke-dasharray: 22;
-    stroke-dashoffset: 22;
-    animation: steamWaftLoop 2s infinite ease-out;
-}
-.gift-fx-steam.in-place .steam-path.p1 { animation-delay: 0s; }
-.gift-fx-steam.in-place .steam-path.p2 { animation-delay: 0.5s; }
-.gift-fx-steam.in-place .steam-path.p3 { animation-delay: 1.0s; }
-
-.gift-fx-steam.is-selected .steam-path {
-    stroke-dasharray: 22;
-    stroke-dashoffset: 22;
-    animation: steamWaft 0.9s ease-out forwards;
-}
-.gift-fx-steam.is-selected .steam-path.p1 { animation-delay: 0.05s; }
-.gift-fx-steam.is-selected .steam-path.p2 { animation-delay: 0.15s; }
-.gift-fx-steam.is-selected .steam-path.p3 { animation-delay: 0.25s; }
-
-@keyframes steamWaftLoop {
-    0% {
-        stroke-dashoffset: 22;
-        opacity: 0;
-        transform: translateY(6px) scale(0.85);
-    }
-    35% {
-        opacity: 0.9;
-        transform: translateY(1px) scale(1);
-    }
-    75% {
-        opacity: 0.45;
-        transform: translateY(-8px) scale(1.15);
-    }
-    100% {
-        stroke-dashoffset: 0;
-        opacity: 0;
-        transform: translateY(-16px) scale(1.3);
-    }
-}
-
-@keyframes steamWaft {
-    0% {
-        stroke-dashoffset: 20;
-        opacity: 0;
-        transform: translateY(6px) scale(0.85);
-    }
-    40% {
-        opacity: 0.85;
-        transform: translateY(0) scale(1);
-    }
-    100% {
-        stroke-dashoffset: 0;
-        opacity: 0;
-        transform: translateY(-12px) scale(1.15);
-    }
-}
-
-/* 3. Highland Flowers Blooming & Pollen */
-.eth-gift-art-box.gift-is-selected.eth-anim-flower {
-    animation: flowerBloomSway 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes flowerBloomSway {
-    0% { transform: scale(1) rotate(0deg); }
-    30% { transform: scale(1.16) rotate(8deg); }
-    60% { transform: scale(1.06) rotate(-5deg); }
-    100% { transform: scale(1.03) rotate(0deg); }
-}
-
-.gift-fx-bloom-pollen {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 10;
-    overflow: visible;
-}
-
-.pollen-dot {
-    position: absolute;
-    border-radius: 50%;
-    background: #F59E0B;
-    box-shadow: 0 0 6px rgba(245, 158, 11, 0.8);
-    opacity: 0;
-}
-
-.gift-fx-bloom-pollen.in-place .pollen-dot.p1 {
-    width: 4.5px;
-    height: 4.5px;
-    top: 16%;
-    left: 18%;
-    animation: pollenFloatLoop 2.2s 0s infinite ease-in-out;
-}
-
-.gift-fx-bloom-pollen.in-place .pollen-dot.p2 {
-    width: 4px;
-    height: 4px;
-    top: 24%;
-    right: 18%;
-    animation: pollenFloatLoop 2.2s 0.7s infinite ease-in-out;
-}
-
-.gift-fx-bloom-pollen.in-place .pollen-dot.p3 {
-    width: 3.5px;
-    height: 3.5px;
-    bottom: 22%;
-    left: 26%;
-    animation: pollenFloatLoop 2.2s 1.4s infinite ease-in-out;
-}
-
-.gift-fx-bloom-pollen.in-place .pollen-sparkle.s1 {
-    position: absolute;
-    top: 5px;
-    right: 6px;
-    font-size: 13px;
-    color: #F59E0B;
-    opacity: 0;
-    text-shadow: 0 0 6px rgba(245, 158, 11, 0.9);
-    animation: pollenTwinkleLoop 1.8s infinite ease-in-out;
-}
-
-@keyframes pollenFloatLoop {
-    0% {
-        transform: translate3d(0, 0, 0) scale(0.5);
-        opacity: 0;
-    }
-    30% {
-        opacity: 0.95;
-        transform: translate3d(4px, -7px, 0) scale(1.15);
-    }
-    70% {
-        opacity: 0.6;
-        transform: translate3d(-4px, -16px, 0) scale(1);
-    }
-    100% {
-        transform: translate3d(3px, -25px, 0) scale(0.4);
-        opacity: 0;
-    }
-}
-
-@keyframes pollenTwinkleLoop {
-    0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
-    50% { transform: scale(1.3) rotate(45deg); opacity: 1; }
-}
-
-/* 4. Kebero Drum Rhythmic Beat & Sonic Waves */
-.eth-gift-art-box.gift-is-selected.eth-anim-kebero {
-    animation: keberoBeatPulse 0.65s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-@keyframes keberoBeatPulse {
-    0% { transform: scale(1); }
-    20% { transform: scale(1.16) rotate(-4deg); }
-    45% { transform: scale(0.95) rotate(2deg); }
-    70% { transform: scale(1.08) rotate(-1deg); }
-    100% { transform: scale(1.02) rotate(0deg); }
-}
-
-.gift-fx-kebero-wave {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 10;
-}
-
-.sonic-ring {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 50%;
-    border: 2px solid rgba(4, 120, 87, 0.7);
-    opacity: 0;
-    transform: scale(0.5);
-}
-
-[data-theme='dark'] .sonic-ring {
-    border-color: rgba(16, 185, 129, 0.8);
-}
-
-.gift-fx-kebero-wave.in-place .sonic-ring.ring1 {
-    animation: sonicWaveRippleLoop 1.8s 0.12s infinite cubic-bezier(0.1, 0.8, 0.3, 1);
-}
-
-.gift-fx-kebero-wave.in-place .sonic-ring.ring2 {
-    animation: sonicWaveRippleLoop 1.8s 0.34s infinite cubic-bezier(0.1, 0.8, 0.3, 1);
-}
-
-.gift-fx-kebero-wave.is-selected .sonic-ring.ring1 {
-    animation: sonicWaveRipple 0.65s 0.05s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-}
-
-.gift-fx-kebero-wave.is-selected .sonic-ring.ring2 {
-    animation: sonicWaveRipple 0.65s 0.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-}
-
-@keyframes sonicWaveRippleLoop {
-    0% { transform: scale(0.4); opacity: 0.95; border-width: 2.5px; }
-    70% { opacity: 0.45; }
-    100% { transform: scale(1.65); opacity: 0; border-width: 1px; }
-}
-
-@keyframes sonicWaveRipple {
-    0% { transform: scale(0.5); opacity: 0.9; border-width: 2px; }
-    100% { transform: scale(1.6); opacity: 0; border-width: 1px; }
-}
-
-/* 5. Masenqo & Krar Acoustic Strings & Notes */
-.eth-gift-art-box.gift-is-selected.eth-anim-masenqo,
-.eth-gift-art-box.gift-is-selected.eth-anim-krar {
-    animation: stringVibeFast 0.65s ease-out forwards;
-}
-
-@keyframes stringVibeFast {
-    0% { transform: translateX(0) rotate(0deg) scale(1); }
-    15% { transform: translateX(4px) rotate(4deg) scale(1.08); }
-    30% { transform: translateX(-4px) rotate(-4deg) scale(1.08); }
-    45% { transform: translateX(2px) rotate(2deg) scale(1.05); }
-    100% { transform: translateX(0) rotate(0deg) scale(1.02); }
-}
-
-.gift-fx-string-waves {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* ==========================================================================
+   LIVING 3D GRAPHICAL MOTIONS & INTERACTIVE EFFECTS (NO OVERLAY LINES)
+   Every gift breathes, moves, and responds with fluid GPU acceleration
+   ========================================================================== */
 
-.vibe-line {
-    position: absolute;
-    width: 2px;
-    height: 70%;
-    background: rgba(4, 120, 87, 0.6);
-    border-radius: 1px;
-    opacity: 0;
+/* Base container setup for smooth GPU rendering */
+.eth-gift-art-box {
+    transform-origin: center center;
+    will-change: transform, filter;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-theme='dark'] .vibe-line {
-    background: rgba(16, 185, 129, 0.7);
+.eth-gift-real-img {
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.12));
+    transition: filter 0.2s ease;
 }
 
-.gift-fx-string-waves.in-place .vibe-line.v1 {
-    transform: translateX(-7px);
-    animation: stringOscillateLoop 1.6s 0s infinite ease-in-out;
+[data-theme='dark'] .eth-gift-real-img {
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
 }
 
-.gift-fx-string-waves.in-place .vibe-line.v2 {
-    transform: translateX(7px);
-    animation: stringOscillateLoop 1.6s 0.25s infinite ease-in-out;
+/* 1. Kebero Drum: Rhythmic Ethiopian Festival Double-Beat Pulse */
+.eth-anim-kebero {
+    animation: animKeberoRhythm 2.0s infinite cubic-bezier(0.25, 1, 0.5, 1);
 }
-
-.gift-fx-string-waves.in-place .music-note.n1 {
-    position: absolute;
-    top: 2px;
-    right: 3px;
-    font-size: 14px;
-    color: #047857;
-    opacity: 0;
-    animation: musicNoteRiseLoop 2.2s infinite ease-out;
-}
-
-[data-theme='dark'] .music-note.n1 {
-    color: #10B981;
-}
-
-@keyframes stringOscillateLoop {
-    0%, 100% { opacity: 0; transform: scaleY(0.7) scaleX(1); }
-    25% { opacity: 0.85; transform: scaleY(1.15) scaleX(2.5); }
-    50% { opacity: 0.45; transform: scaleY(0.9) scaleX(1.5); }
-    75% { opacity: 0.85; transform: scaleY(1.1) scaleX(2.2); }
-}
-
-@keyframes musicNoteRiseLoop {
-    0% { transform: translate3d(0, 4px, 0) scale(0.6); opacity: 0; }
-    30% { opacity: 0.95; transform: translate3d(3px, -5px, 0) scale(1); }
-    80% { opacity: 0.5; transform: translate3d(-4px, -16px, 0) scale(1.1); }
-    100% { transform: translate3d(2px, -24px, 0) scale(0.8); opacity: 0; }
-}
-
-/* 6. Axum, Lalibela & Gondar Golden Sheen */
-.eth-gift-art-box.gift-is-selected.eth-anim-monument,
-.eth-gift-art-box.gift-is-selected.eth-anim-gondar {
-    animation: monumentRise 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes monumentRise {
-    0% { transform: translateY(0) scale(1); }
-    40% { transform: translateY(-6px) scale(1.07); }
-    80% { transform: translateY(-2px) scale(1.03); }
-    100% { transform: translateY(-1px) scale(1.02); }
-}
-
-.gift-fx-golden-sheen {
-    position: absolute;
-    inset: 0;
-    border-radius: 10px;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 10;
-}
-
-.sheen-sweep-bar {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 215, 0, 0) 30%,
-        rgba(255, 215, 0, 0.55) 50%,
-        rgba(255, 215, 0, 0) 70%
-    );
-    transform: translateX(-100%) translateY(-100%) rotate(30deg);
+@keyframes animKeberoRhythm {
+    0%, 100% { transform: scale(1) translateY(0) rotate(0deg); }
+    15% { transform: scale(1.10) translateY(-3px) rotate(-2.5deg); }
+    28% { transform: scale(0.95) translateY(1px) rotate(1.5deg); }
+    42% { transform: scale(1.06) translateY(-1.5px) rotate(-1deg); }
+    60% { transform: scale(1) translateY(0) rotate(0deg); }
 }
 
-.gift-fx-golden-sheen.in-place .sheen-sweep-bar {
-    animation: sheenLoop 3.2s infinite cubic-bezier(0.16, 1, 0.3, 1);
+/* 2. Masenqo: Acoustic Harmonic Sway & Resonant Strumming */
+.eth-anim-masenqo {
+    animation: animMasenqoStrum 2.6s infinite ease-in-out;
 }
-
-@keyframes sheenLoop {
-    0%, 35% {
-        transform: translateX(-100%) translateY(-100%) rotate(30deg);
-        opacity: 0;
-    }
-    45% { opacity: 1; }
-    75% { opacity: 1; }
-    90%, 100% {
-        transform: translateX(100%) translateY(100%) rotate(30deg);
-        opacity: 0;
-    }
+@keyframes animMasenqoStrum {
+    0%, 100% { transform: rotate(0deg) scale(1) translateY(0); }
+    25% { transform: rotate(-3deg) scale(1.04) translateY(-2.5px); }
+    50% { transform: rotate(2deg) scale(0.98) translateY(1px); }
+    75% { transform: rotate(-1.5deg) scale(1.02) translateY(-1px); }
 }
 
-/* 7. Diamond, Crown & National Honor Crystalline Sparkles */
-.eth-gift-art-box.gift-is-selected.eth-anim-regal,
-.eth-gift-art-box.gift-is-selected.eth-anim-diamond {
-    animation: regalShimmer 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+/* 3. Traditional Krar: 6-String Lyre Resonance & Melodic Tilt */
+.eth-anim-krar {
+    animation: animKrarMelody 2.8s infinite ease-in-out;
 }
-
-@keyframes regalShimmer {
-    0% { transform: scale(1); }
-    35% { transform: scale(1.14) rotate(4deg); }
-    70% { transform: scale(1.05) rotate(-2deg); }
-    100% { transform: scale(1.03) rotate(0deg); }
+@keyframes animKrarMelody {
+    0%, 100% { transform: rotate(0deg) scale(1) translateY(0); }
+    30% { transform: rotate(2.5deg) scale(1.04) translateY(-2.5px); }
+    65% { transform: rotate(-2.5deg) scale(1.02) translateY(-1px); }
 }
 
-.gift-fx-sparkle-stars {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 10;
+/* 4. Addis Supercar: Dynamic Drifting Rumble & Acceleration Tilt */
+.eth-anim-car {
+    animation: animCarDrift 2.2s infinite ease-in-out;
 }
-
-.sparkle-star {
-    position: absolute;
-    font-size: 15px;
-    color: #F59E0B;
-    line-height: 1;
-    opacity: 0;
-    text-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+@keyframes animCarDrift {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    22% { transform: translate3d(3px, -2.5px, 0) rotate(3deg); }
+    48% { transform: translate3d(-2px, -1px, 0) rotate(-2deg); }
+    72% { transform: translate3d(2px, -3px, 0) rotate(2deg); }
 }
 
-.sparkle-star.s1 { top: 2px; right: 3px; }
-.sparkle-star.s2 { bottom: 4px; left: 2px; font-size: 12px; }
-.sparkle-star.s3 { top: 5px; left: 5px; font-size: 14px; }
-
-.gift-fx-sparkle-stars.in-place .sparkle-star.s1 {
-    animation: sparkleTwinkleLoop 2.2s 0s infinite ease-in-out;
-}
-.gift-fx-sparkle-stars.in-place .sparkle-star.s2 {
-    animation: sparkleTwinkleLoop 2.2s 0.7s infinite ease-in-out;
+/* 5. Boeing 787 Ethiopian Jet: High-Altitude Soaring & Banking Wings */
+.eth-anim-plane {
+    animation: animFlightSoar 3.2s infinite ease-in-out;
 }
-.gift-fx-sparkle-stars.in-place .sparkle-star.s3 {
-    animation: sparkleTwinkleLoop 2.2s 1.4s infinite ease-in-out;
+@keyframes animFlightSoar {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    32% { transform: translate3d(3.5px, -4.5px, 0) rotate(-4deg); }
+    68% { transform: translate3d(-3px, -2.5px, 0) rotate(2.5deg); }
 }
 
-@keyframes sparkleTwinkleLoop {
-    0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
-    35% { transform: scale(1.3) rotate(45deg); opacity: 1; }
-    70% { transform: scale(0.6) rotate(90deg); opacity: 0.35; }
+/* 6. Clay Jebena: Coffee Brewing Pour & Gentle Steam Float */
+.eth-anim-jebena {
+    animation: animJebenaPour 3.0s infinite ease-in-out;
+    transform-origin: 30% 70%;
 }
-
-/* 8. Boeing 787 Ethiopian Jet Flight & Contrails */
-.eth-gift-art-box.gift-is-selected.eth-anim-plane {
-    animation: planeTakeoff 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes animJebenaPour {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    35% { transform: rotate(-10deg) translateY(-3px); }
+    65% { transform: rotate(-3deg) translateY(-1px); }
 }
 
-@keyframes planeTakeoff {
-    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-    40% { transform: translate(5px, -8px) rotate(-8deg) scale(1.12); }
-    80% { transform: translate(2px, -3px) rotate(-3deg) scale(1.05); }
-    100% { transform: translate(0, 0) rotate(0deg) scale(1.02); }
+/* 7. Sini Buna, Rekebot & Gursha Feast: Warm Aromatic Elevation */
+.eth-anim-buna,
+.eth-anim-rekebot,
+.eth-anim-feast {
+    animation: animWarmFloat 2.6s infinite ease-in-out;
 }
-
-.gift-fx-plane-clouds {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 10;
-    overflow: visible;
+@keyframes animWarmFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-4px) scale(1.04); }
 }
 
-.contrail-stream {
-    position: absolute;
-    height: 2.5px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(203, 213, 225, 0.9) 50%, rgba(255, 255, 255, 0.95) 100%);
-    border-radius: 2px;
-    opacity: 0;
+/* 8. Lion of Judah (Anbessa): Regal Highland Breathing & Majestic Stance */
+.eth-anim-lion {
+    animation: animLionRegal 3.2s infinite ease-in-out;
 }
-
-.gift-fx-plane-clouds.in-place .contrail-stream.c1 {
-    top: 38%;
-    right: -7px;
-    width: 24px;
-    animation: contrailStreamLoop 1.5s infinite linear;
+@keyframes animLionRegal {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.06) translateY(-3px); }
 }
 
-.gift-fx-plane-clouds.in-place .contrail-stream.c2 {
-    bottom: 38%;
-    right: -7px;
-    width: 22px;
-    animation: contrailStreamLoop 1.5s 0.35s infinite linear;
+/* 9. Simien Walia & Oromo Ceremonial Horse: Highland Poise & Noble Stride */
+.eth-anim-walia,
+.eth-anim-horse {
+    animation: animNobleStride 2.8s infinite ease-in-out;
 }
-
-.gift-fx-plane-clouds.in-place .flight-cloud.f1 {
-    position: absolute;
-    top: 14%;
-    left: -10px;
-    width: 16px;
-    height: 7px;
-    background: radial-gradient(ellipse, rgba(226, 232, 240, 0.85) 0%, rgba(226, 232, 240, 0) 75%);
-    border-radius: 50%;
-    animation: cloudPassLoop 2.5s infinite linear;
+@keyframes animNobleStride {
+    0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+    40% { transform: translateY(-3.5px) scale(1.04) rotate(1.5deg); }
+    75% { transform: translateY(-1px) scale(1.02) rotate(-0.8deg); }
 }
 
-@keyframes contrailStreamLoop {
-    0% { transform: translateX(-4px) scaleX(0.5); opacity: 0; }
-    30% { opacity: 0.95; transform: translateX(0px) scaleX(1); }
-    80% { opacity: 0.55; transform: translateX(10px) scaleX(1.4); }
-    100% { transform: translateX(16px) scaleX(1.8); opacity: 0; }
+/* 10. Adey Abeba & Highland Rose: Organic Breeze Sway & Blooming Petals */
+.eth-anim-flower {
+    animation: animBloomSway 3.0s infinite ease-in-out;
+    transform-origin: center bottom;
 }
-
-@keyframes cloudPassLoop {
-    0% { transform: translateX(55px) scale(0.6); opacity: 0; }
-    30% { opacity: 0.8; }
-    80% { opacity: 0.7; }
-    100% { transform: translateX(-18px) scale(1.3); opacity: 0; }
+@keyframes animBloomSway {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    30% { transform: rotate(3.5deg) scale(1.06); }
+    70% { transform: rotate(-3.5deg) scale(1.02); }
 }
 
-/* 9. ETRSS-1 Satellite Radar Telemetry Waves */
-.gift-fx-satellite-signal {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 26px;
-    height: 26px;
-    pointer-events: none;
-    z-index: 10;
+/* 11. Negus Crown, National Honor & African Diamond: Royal Shimmer & Luster */
+.eth-anim-regal,
+.eth-anim-diamond {
+    animation: animLuxuryShimmer 2.6s infinite ease-in-out;
 }
-
-.sat-ping {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 2px solid rgba(59, 130, 246, 0.8);
-    opacity: 0;
+@keyframes animLuxuryShimmer {
+    0%, 100% { transform: rotate(0deg) scale(1); filter: brightness(1); }
+    35% { transform: rotate(-2.5deg) scale(1.06); filter: brightness(1.16) drop-shadow(0 0 10px rgba(234, 179, 8, 0.45)); }
+    70% { transform: rotate(2.5deg) scale(1.02); filter: brightness(1.08); }
 }
 
-.gift-fx-satellite-signal.in-place .sat-ping.p1 {
-    animation: satPingLoop 1.8s 0s infinite ease-out;
+/* 12. Warrior Shield: Heroic Battle Defense Pulse & Metallic Gleam */
+.eth-anim-shield {
+    animation: animShieldHero 2.8s infinite ease-in-out;
 }
-.gift-fx-satellite-signal.in-place .sat-ping.p2 {
-    animation: satPingLoop 1.8s 0.7s infinite ease-out;
+@keyframes animShieldHero {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
+    50% { transform: scale(1.07); filter: drop-shadow(0 6px 14px rgba(217, 119, 6, 0.35)); }
 }
 
-@keyframes satPingLoop {
-    0% { transform: scale(0.3); opacity: 0.95; }
-    100% { transform: scale(1.8); opacity: 0; }
+/* 13. Habesha Kemis & Harari Mesob: Traditional Eskista Shoulder Sway */
+.eth-anim-kemis,
+.eth-anim-mesob {
+    animation: animEskistaSway 2.4s infinite ease-in-out;
 }
-
-/* 10. Warrior Shield Metallic Gleam Flash */
-.gift-fx-shield-sheen {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 10;
+@keyframes animEskistaSway {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(-3px) rotate(-2.5deg); }
+    75% { transform: translateX(3px) rotate(2.5deg); }
 }
 
-.shield-gleam-bar {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0) 35%,
-        rgba(255, 255, 255, 0.75) 50%,
-        rgba(255, 255, 255, 0) 65%
-    );
-    transform: translateX(-100%) translateY(-100%) rotate(45deg);
-    animation: shieldGleamLoop 2.8s infinite cubic-bezier(0.16, 1, 0.3, 1);
+/* 14. Axum Obelisk, Lalibela Rock Church & Gondar Castle: Highland Monument Majesty */
+.eth-anim-monument,
+.eth-anim-gondar {
+    animation: animMonumentMajesty 3.6s infinite ease-in-out;
 }
-
-@keyframes shieldGleamLoop {
-    0%, 40% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
-    50% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+@keyframes animMonumentMajesty {
+    0%, 100% { transform: translateY(0); filter: brightness(1); }
+    50% { transform: translateY(-3.5px); filter: brightness(1.10); }
 }
 
-/* 11. Habesha Kemis Golden Embroidery Shimmer */
-.gift-fx-kemis-shimmer {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 10;
+/* 15. ETRSS-1 Satellite: Zero-Gravity Orbital Cosmic Drift */
+.eth-anim-satellite {
+    animation: animOrbitDrift 4.0s infinite ease-in-out;
 }
-
-.kemis-sparkle {
-    position: absolute;
-    color: #F59E0B;
-    font-size: 13px;
-    opacity: 0;
-    text-shadow: 0 0 6px rgba(245, 158, 11, 0.9);
+@keyframes animOrbitDrift {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    50% { transform: translate3d(-4px, -4px, 0) rotate(-5deg); }
 }
 
-.kemis-sparkle.k1 {
-    top: 25%;
-    right: 20%;
-    animation: sparkleTwinkleLoop 2s 0s infinite ease-in-out;
+/* 16. Erta Ale Volcano: Bubbling Magma Thermal Radiant Glow */
+.eth-anim-volcano {
+    animation: animMagmaPulse 2.4s infinite ease-in-out;
 }
-
-.kemis-sparkle.k2 {
-    bottom: 25%;
-    left: 22%;
-    animation: sparkleTwinkleLoop 2s 1s infinite ease-in-out;
+@keyframes animMagmaPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.2)); }
+    50% { transform: scale(1.06); filter: drop-shadow(0 0 12px rgba(249, 115, 22, 0.5)); }
 }
 
-/* 12. Erta Ale Volcano Magma Embers */
-.gift-fx-volcano-embers {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 10;
-    overflow: visible;
+/* 17. Holy Bible & Holy Quran: Sacred Scripture Reverent Breathing */
+.eth-anim-book {
+    animation: animSacredGlow 3.0s infinite ease-in-out;
 }
-
-.ember-spark {
-    position: absolute;
-    border-radius: 50%;
-    background: #EF4444;
-    box-shadow: 0 0 6px #F59E0B;
-    opacity: 0;
+@keyframes animSacredGlow {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.05) translateY(-2.5px); }
 }
 
-.gift-fx-volcano-embers.in-place .ember-spark.e1 {
-    width: 4px;
-    height: 4px;
-    bottom: 35%;
-    left: 45%;
-    animation: emberRiseLoop 1.6s 0s infinite ease-out;
-}
-.gift-fx-volcano-embers.in-place .ember-spark.e2 {
-    width: 3.5px;
-    height: 3.5px;
-    bottom: 40%;
-    left: 35%;
-    animation: emberRiseLoop 1.6s 0.5s infinite ease-out;
-}
-.gift-fx-volcano-embers.in-place .ember-spark.e3 {
-    width: 4px;
-    height: 4px;
-    bottom: 35%;
-    right: 35%;
-    animation: emberRiseLoop 1.6s 1.0s infinite ease-out;
+/* Default Calm Resting Float */
+.eth-anim-calm {
+    animation: animCalmFloat 2.8s infinite ease-in-out;
 }
-
-@keyframes emberRiseLoop {
-    0% { transform: translate3d(0, 0, 0) scale(0.6); opacity: 0; }
-    25% { opacity: 1; transform: translate3d(-2px, -8px, 0) scale(1.2); }
-    80% { opacity: 0.6; transform: translate3d(3px, -18px, 0) scale(0.8); }
-    100% { transform: translate3d(-1px, -26px, 0) scale(0.3); opacity: 0; }
+@keyframes animCalmFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2.5px); }
 }
 
-/* 13. Sacred Scriptures Radiant Halo & Lion Mane Glow */
+/* Background Soft Radiant Halo for Sacred Books (No borders, pure blur) */
 .book-sacred-glow {
     position: absolute;
-    width: 105%;
-    height: 105%;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    filter: blur(8px);
-    opacity: 0.65;
+    filter: blur(10px);
+    opacity: 0.6;
     pointer-events: none;
     z-index: 1;
-    animation: haloPulse 2.4s infinite ease-in-out;
+    animation: sacredHaloPulse 3.2s infinite ease-in-out;
 }
 
 .book-sacred-glow.gold {
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.9) 0%, rgba(245, 158, 11, 0) 72%);
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.75) 0%, rgba(245, 158, 11, 0) 70%);
 }
 
 .book-sacred-glow.emerald {
-    background: radial-gradient(circle, rgba(16, 185, 129, 0.9) 0%, rgba(16, 185, 129, 0) 72%);
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.75) 0%, rgba(16, 185, 129, 0) 70%);
 }
 
 .lion-mane-glow {
@@ -2716,194 +2120,85 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    filter: blur(8px);
+    filter: blur(10px);
     opacity: 0.5;
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.8) 0%, rgba(245, 158, 11, 0) 70%);
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.65) 0%, rgba(245, 158, 11, 0) 70%);
     pointer-events: none;
     z-index: 1;
-    animation: haloPulse 2.8s infinite ease-in-out;
+    animation: sacredHaloPulse 2.8s infinite ease-in-out;
 }
 
-@keyframes haloPulse {
-    0%, 100% { transform: scale(0.9); opacity: 0.5; }
-    50% { transform: scale(1.15); opacity: 0.85; }
+@keyframes sacredHaloPulse {
+    0%, 100% { transform: scale(0.92); opacity: 0.45; }
+    50% { transform: scale(1.12); opacity: 0.8; }
 }
 
 /* ==========================================================================
-   11. NOTICEABLE LIVING IN-PLACE GRAPHICAL MOTIONS FOR ALL RESTING GIFTS
+   INTERACTIVE STATES: HOVER, SELECTED & ACTIVE TAP (FLUID & TACTILE)
    ========================================================================== */
 
-/* 1. Addis Supercar In-Place Active Drifting */
-.eth-anim-car:not(.gift-is-selected) {
-    animation: carDriftLoop 2.2s infinite ease-in-out;
-    transform-origin: center 70%;
-}
-@keyframes carDriftLoop {
-    0% { transform: translate3d(0, 0, 0) rotate(0deg); }
-    20% { transform: translate3d(4px, -2px, 0) rotate(-7deg); }
-    45% { transform: translate3d(7px, -4px, 0) rotate(-11deg); }
-    70% { transform: translate3d(-3px, -1px, 0) rotate(6deg); }
-    100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+/* Hover on Gift Card: 3D Gift Lifts with Emerald Aura & Quickened Rhythm */
+.clean-gift-card:hover .eth-gift-art-box {
+    transform: translateY(-4px) scale(1.14) !important;
+    filter: drop-shadow(0 8px 18px rgba(4, 120, 87, 0.3)) !important;
+    animation-duration: 1.4s !important;
 }
 
-/* 2a. Clay Jebena In-Place Pouring Motion */
-.eth-anim-jebena:not(.gift-is-selected) {
-    animation: jebenaPourLoop 2.8s infinite ease-in-out;
-    transform-origin: 30% 70%;
-}
-@keyframes jebenaPourLoop {
-    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
-    20% { transform: translate3d(3px, -3px, 0) rotate(-16deg); }
-    35%, 68% { transform: translate3d(4px, -5px, 0) rotate(-22deg); }
-    84% { transform: translate3d(1px, -1px, 0) rotate(-4deg); }
+[data-theme='dark'] .clean-gift-card:hover .eth-gift-art-box {
+    filter: drop-shadow(0 8px 20px rgba(16, 185, 129, 0.4)) !important;
 }
 
-/* 2b. Coffee, Rekebot & Feast In-Place Warmth */
-.eth-anim-buna:not(.gift-is-selected),
-.eth-anim-rekebot:not(.gift-is-selected),
-.eth-anim-feast:not(.gift-is-selected) {
-    animation: coffeeGentleFloat 2.4s infinite ease-in-out;
-}
-@keyframes coffeeGentleFloat {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-4px) scale(1.04); }
+/* Selected Card: Active Celebratory Elevation & Emerald/Gold Radiance */
+.clean-gift-card.selected .eth-gift-art-box {
+    transform: scale(1.12) !important;
+    filter: drop-shadow(0 6px 15px rgba(4, 120, 87, 0.35)) !important;
+    animation-duration: 1.8s !important;
 }
 
-/* 3. Highland Flowers In-Place Blooming Petals & Breeze */
-.eth-anim-flower:not(.gift-is-selected) {
-    animation: flowerBloomLoop 2.6s infinite ease-in-out;
-    transform-origin: center bottom;
-}
-@keyframes flowerBloomLoop {
-    0%, 100% { transform: scale(0.92) rotate(0deg); }
-    30% { transform: scale(1.14) rotate(6deg); }
-    60% { transform: scale(1.08) rotate(-5deg); }
-    85% { transform: scale(0.97) rotate(2deg); }
+[data-theme='dark'] .clean-gift-card.selected .eth-gift-art-box {
+    filter: drop-shadow(0 6px 18px rgba(16, 185, 129, 0.45)) !important;
 }
 
-/* 4. Kebero Drum In-Place Rhythmic Pulse */
-.eth-anim-kebero:not(.gift-is-selected) {
-    animation: keberoRhythmBeat 1.8s infinite ease-in-out;
-}
-@keyframes keberoRhythmBeat {
-    0%, 100% { transform: scale(1); }
-    12% { transform: scale(1.15) rotate(-3deg); }
-    22% { transform: scale(0.92) rotate(1deg); }
-    34% { transform: scale(1.10) rotate(-2deg); }
-    50% { transform: scale(1.02); }
-    70% { transform: scale(1); }
+/* Active Tap: Spring Press Down */
+.clean-gift-card:active .eth-gift-art-box {
+    transform: scale(0.92) !important;
+    transition: transform 0.08s ease !important;
 }
 
-/* 5. Acoustic Strings In-Place Resonance */
-.eth-anim-masenqo:not(.gift-is-selected),
-.eth-anim-krar:not(.gift-is-selected) {
-    animation: stringHarmonic 2.0s infinite ease-in-out;
-}
-@keyframes stringHarmonic {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    15% { transform: scale(1.06) rotate(3deg) translateX(2px); }
-    30% { transform: scale(1.02) rotate(-3deg) translateX(-2px); }
-    45% { transform: scale(1.05) rotate(2deg); }
-    60% { transform: scale(1.01) rotate(-1.5deg); }
-    80% { transform: scale(1.02) rotate(0.5deg); }
+/* Soft Celebratory Sparkles (Pure Magic, Zero Clutter Lines) */
+.gift-selected-sparkles {
+    position: absolute;
+    inset: -6px;
+    pointer-events: none;
+    z-index: 10;
 }
 
-/* 6. Monuments In-Place Regal Presence */
-.eth-anim-monument:not(.gift-is-selected),
-.eth-anim-gondar:not(.gift-is-selected) {
-    animation: monumentPresence 3.0s infinite ease-in-out;
-}
-@keyframes monumentPresence {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-4px) scale(1.03); }
+.gift-selected-sparkles .sparkle-star {
+    position: absolute;
+    color: #F59E0B;
+    font-size: 13px;
+    line-height: 1;
+    animation: sparkleTwinkle 1.8s infinite ease-in-out;
 }
 
-/* 7. Jewels & Regalia In-Place Shimmer */
-.eth-anim-regal:not(.gift-is-selected),
-.eth-anim-diamond:not(.gift-is-selected) {
-    animation: gemShimmerFloat 2.4s infinite ease-in-out;
-}
-@keyframes gemShimmerFloat {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.06) rotate(3.5deg); }
+.gift-selected-sparkles .sparkle-star.s1 {
+    top: -2px;
+    right: 0px;
+    animation-delay: 0s;
 }
 
-/* 8. Wildlife In-Place Majestic Breath */
-.eth-anim-lion:not(.gift-is-selected),
-.eth-anim-walia:not(.gift-is-selected),
-.eth-anim-horse:not(.gift-is-selected) {
-    animation: wildlifeBreathe 2.5s infinite ease-in-out;
-}
-@keyframes wildlifeBreathe {
-    0%, 100% { transform: scale(1) translateY(0); }
-    50% { transform: scale(1.05) translateY(-4px); }
+.gift-selected-sparkles .sparkle-star.s2 {
+    bottom: 2px;
+    left: -2px;
+    animation-delay: 0.9s;
+    color: #10B981;
 }
 
-/* 9. Ethiopian Jet In-Place Flying Path */
-.eth-anim-plane:not(.gift-is-selected) {
-    animation: planeFlyPath 2.6s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
+@keyframes sparkleTwinkle {
+    0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
+    35% { transform: scale(1.35) rotate(45deg); opacity: 1; }
+    70% { transform: scale(0.7) rotate(90deg); opacity: 0.4; }
 }
-@keyframes planeFlyPath {
-    0% { transform: translate3d(0, 0, 0) rotate(0deg); }
-    25% { transform: translate3d(-5px, -7px, 0) rotate(-8deg); }
-    50% { transform: translate3d(2px, -9px, 0) rotate(-1deg); }
-    75% { transform: translate3d(6px, -4px, 0) rotate(7deg); }
-    100% { transform: translate3d(0, 0, 0) rotate(0deg); }
-}
-
-/* 10. Satellite In-Place Orbit Drift */
-.eth-anim-satellite:not(.gift-is-selected) {
-    animation: satelliteOrbitDrift 3.5s infinite linear;
-}
-@keyframes satelliteOrbitDrift {
-    0% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(10deg) scale(1.05) translateY(-3px); }
-    100% { transform: rotate(0deg) scale(1); }
-}
-
-/* 11. Warrior Shield In-Place Resilience */
-.eth-anim-shield:not(.gift-is-selected) {
-    animation: shieldSteady 2.2s infinite ease-in-out;
-}
-@keyframes shieldSteady {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.04) translateY(-2px); }
-}
-
-/* 12. Erta Ale Volcano In-Place Magma Glow */
-.eth-anim-volcano:not(.gift-is-selected) {
-    animation: volcanoMagmaGlow 2.0s infinite alternate ease-in-out;
-}
-@keyframes volcanoMagmaGlow {
-    from {
-        transform: scale(1);
-        filter: brightness(1) drop-shadow(0 0 5px rgba(239, 68, 68, 0.3));
-    }
-    to {
-        transform: scale(1.06);
-        filter: brightness(1.26) drop-shadow(0 0 12px rgba(239, 68, 68, 0.75));
-    }
-}
-
-/* 13. Habesha Kemis & Mesob In-Place Grace */
-.eth-anim-kemis:not(.gift-is-selected),
-.eth-anim-mesob:not(.gift-is-selected) {
-    animation: culturalGrace 2.6s infinite ease-in-out;
-}
-@keyframes culturalGrace {
-    0%, 100% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(3deg) scale(1.04) translateY(-3px); }
-}
-
-/* 14. Sacred Scriptures In-Place Ambient Glow */
-.eth-anim-book:not(.gift-is-selected) {
-    animation: bookSacredFloat 2.6s infinite ease-in-out;
-}
-@keyframes bookSacredFloat {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-4px) scale(1.03); }
-}
-
 
 /* ==========================================================================
    12. TIKTOK LIVE CINEMATIC CELEBRATION MODAL
