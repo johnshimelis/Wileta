@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
     MessageSquare, X, Send, ShieldCheck, CheckCheck, Check,
@@ -315,26 +315,16 @@ export default function DirectChatDrawer() {
 
             {/* Chat Floating Window / Drawer */}
             {isOpen && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 'calc(100% + 8px)',
-                        right: 0,
-                        width: '380px',
-                        maxWidth: 'calc(100vw - 24px)',
-                        height: '520px',
-                        maxHeight: 'calc(100vh - 100px)',
-                        background: 'var(--card-bg)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '16px',
-                        boxShadow: '0 12px 36px rgba(0, 0, 0, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        overflow: 'hidden',
-                        zIndex: 1000,
-                        animation: 'chatFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-                    }}
-                >
+                <>
+                    <div 
+                        className="direct-chat-backdrop" 
+                        onClick={() => setIsOpen(false)} 
+                        aria-hidden="true" 
+                    />
+                    <div
+                        className="direct-chat-popover"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                     {/* Header */}
                     <div style={{
                         padding: '12px 16px',
@@ -632,6 +622,7 @@ export default function DirectChatDrawer() {
                         </button>
                     </div>
                 </div>
+            </>
             )}
         </div>
     );

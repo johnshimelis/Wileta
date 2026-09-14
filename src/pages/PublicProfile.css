@@ -411,8 +411,8 @@
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: flex-start !important;
-    padding: 6px 2px 4px !important;
+    justify-content: space-between !important;
+    padding: 6px 3px 5px !important;
     background: transparent !important;
     border: 1.5px solid transparent !important;
     border-radius: 12px !important;
@@ -421,7 +421,7 @@
     outline: none !important;
     text-align: center !important;
     user-select: none !important;
-    min-height: 106px !important;
+    min-height: 112px !important;
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
@@ -522,10 +522,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-end;
     width: 100%;
     min-width: 0;
     max-width: 100%;
-    overflow: hidden;
+    flex: 1 0 auto;
+    overflow: visible !important;
 }
 
 .gift-name-primary {
@@ -559,21 +561,22 @@
     max-width: 100%;
 }
 
-/* Price Badge Pill (NEVER wraps, fits neatly in 3 columns) */
+/* Price Badge Pill (Adaptive 2-Tier Stack on Mobile -> 100% Uncropped ETB & Coins) */
 .gift-price-badge {
-    display: inline-flex !important;
+    display: flex !important;
+    flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 3px !important;
+    gap: 1px !important;
     margin-top: 3px !important;
-    padding: 1.5px 5px !important;
+    padding: 2.5px 5px !important;
     background: #F1F5F9;
-    border-radius: 9999px;
+    border-radius: 8px !important;
     border: 1px solid #E2E8F0;
-    font-size: 0.68rem !important;
-    white-space: nowrap !important;
-    max-width: 100% !important;
+    width: 100% !important;
+    max-width: 95px !important;
     box-sizing: border-box !important;
+    line-height: 1.15 !important;
 }
 
 [data-theme='dark'] .gift-price-badge {
@@ -593,9 +596,11 @@
 
 .price-etb {
     color: var(--text-main);
-    font-weight: 700;
-    font-size: 0.68rem !important;
+    font-weight: 800;
+    font-size: 0.70rem !important;
     white-space: nowrap;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
 }
 
 .clean-gift-card.selected .price-etb {
@@ -612,6 +617,23 @@
     font-size: 0.63rem !important;
     font-weight: 600;
     white-space: nowrap;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Wide viewports (>= 640px) allow side-by-side pill */
+@media (min-width: 640px) {
+    .gift-price-badge {
+        flex-direction: row !important;
+        border-radius: 9999px !important;
+        max-width: 100% !important;
+        width: auto !important;
+        gap: 5px !important;
+        padding: 2px 8px !important;
+    }
 }
 
 /* ==========================================================================

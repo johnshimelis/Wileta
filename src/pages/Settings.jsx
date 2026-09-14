@@ -531,10 +531,22 @@ export default function Settings() {
                                         <label className="form-label" style={{ fontSize: '0.8rem', marginBottom: '0.35rem' }}>
                                             Telebirr Mobile Number
                                         </label>
-                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                            <div className="input-group" style={{ flex: 1 }}>
-                                                <span style={{ position: 'absolute', left: '0.85rem', fontWeight: 800, color: 'var(--text-muted)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                                                    <span>🇪🇹</span> +251
+                                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                            <div className="input-group" style={{ flex: 1, minWidth: 0 }}>
+                                                <span style={{ 
+                                                    position: 'absolute', 
+                                                    left: '0.75rem', 
+                                                    fontWeight: 700, 
+                                                    color: 'var(--text-muted)', 
+                                                    fontSize: '0.85rem', 
+                                                    display: 'flex', 
+                                                    alignItems: 'center', 
+                                                    gap: '0.25rem',
+                                                    pointerEvents: 'none',
+                                                    zIndex: 2,
+                                                    whiteSpace: 'nowrap'
+                                                }}>
+                                                    <span style={{ fontSize: '0.95rem', lineHeight: 1 }}>🇪🇹</span> +251
                                                 </span>
                                                 <input
                                                     type="tel"
@@ -548,7 +560,13 @@ export default function Settings() {
                                                         if (tbOtpSent) setTbOtpSent(false);
                                                     }}
                                                     maxLength={9}
-                                                    style={{ paddingLeft: '5.5rem' }}
+                                                    style={{ 
+                                                        paddingLeft: '4.15rem', 
+                                                        paddingRight: '0.5rem',
+                                                        letterSpacing: '0.5px',
+                                                        width: '100%',
+                                                        boxSizing: 'border-box'
+                                                    }}
                                                 />
                                             </div>
 

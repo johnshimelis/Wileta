@@ -58,6 +58,22 @@ export default function Login() {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
         const errParam = params.get('error');
+        const platform = params.get('platform');
+        const source = params.get('source');
+
+        // If returned from mobile login flow, immediately bounce into Flutter mobile app
+        if (token && (platform === 'mobile' || source === 'mobile')) {
+            const intentUrl = `intent://auth/callback?token=${token}#Intent;scheme=gurshapay;package=com.gursha.pay;end`;
+            const customScheme = `gurshapay://auth/callback?token=${token}`;
+            try {
+                window.location.replace(intentUrl);
+            } catch (e) {}
+            setTimeout(() => {
+                window.location.href = customScheme;
+            }, 300);
+            return;
+        }
+
         if (token) {
             localStorage.setItem('token', token);
             setLoading(true);
@@ -185,17 +201,19 @@ export default function Login() {
                 </div>
 
                 {/* Modal Card with Logo INSIDE */}
-                <div style={{
-                    width: '100%',
-                    maxWidth: '440px',
-                    margin: 'auto 0',
-                    background: 'var(--card-bg)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '16px',
-                    padding: '2.25rem 2rem',
-                    boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)',
-                    boxSizing: 'border-box'
-                }}>
+                <div 
+                    className="auth-card-modal"
+                    style={{
+                        width: '100%',
+                        maxWidth: '440px',
+                        margin: 'auto 0',
+                        background: 'var(--card-bg)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '16px',
+                        boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)',
+                        boxSizing: 'border-box'
+                    }}
+                >
                     {/* Centered Bigger Brand Logo INSIDE the Modal with Tight Gap */}
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.85rem' }}>
                         <Logo size="large" />
@@ -383,10 +401,22 @@ export default function Login() {
                                     <>
                                         <div className="form-group">
                                             <label className="form-label">{t('phoneNumber')}</label>
-                                            <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                                <div className="input-group" style={{ flex: 1 }}>
-                                                    <span style={{ position: 'absolute', left: '0.85rem', fontWeight: 800, color: 'var(--text-muted)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                                                        <span>🇪🇹</span> +251
+                                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'stretch' }}>
+                                                <div className="input-group" style={{ flex: 1, minWidth: 0 }}>
+                                                    <span style={{ 
+                                                        position: 'absolute', 
+                                                        left: '0.75rem', 
+                                                        fontWeight: 700, 
+                                                        color: 'var(--text-muted)', 
+                                                        fontSize: '0.85rem', 
+                                                        display: 'flex', 
+                                                        alignItems: 'center', 
+                                                        gap: '0.25rem',
+                                                        pointerEvents: 'none',
+                                                        zIndex: 2,
+                                                        whiteSpace: 'nowrap'
+                                                    }}>
+                                                        <span style={{ fontSize: '0.95rem', lineHeight: 1 }}>🇪🇹</span> +251
                                                     </span>
                                                     <input
                                                         type="tel"
@@ -399,7 +429,13 @@ export default function Login() {
                                                             setPhone(val.slice(0, 9));
                                                         }}
                                                         maxLength={9}
-                                                        style={{ paddingLeft: '5.5rem' }}
+                                                        style={{ 
+                                                            paddingLeft: '4.15rem', 
+                                                            paddingRight: '0.5rem',
+                                                            letterSpacing: '0.5px',
+                                                            width: '100%',
+                                                            boxSizing: 'border-box'
+                                                        }}
                                                         required
                                                     />
                                                 </div>
@@ -410,7 +446,15 @@ export default function Login() {
                                                     onClick={handleSendOtp}
                                                     loading={sendingOtp}
                                                     disabled={resendCountdown > 0}
-                                                    style={{ flexShrink: 0 }}
+                                                    style={{ 
+                                                        flexShrink: 0,
+                                                        padding: '0 0.85rem',
+                                                        height: '42px',
+                                                        fontSize: '0.825rem',
+                                                        fontWeight: 700,
+                                                        whiteSpace: 'nowrap',
+                                                        borderRadius: '8px'
+                                                    }}
                                                 >
                                                     {resendCountdown > 0 ? `${resendCountdown}s` : (otpSent ? 'Resend' : t('getOtp'))}
                                                 </Button>
