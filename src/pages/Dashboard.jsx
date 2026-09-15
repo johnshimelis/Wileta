@@ -86,6 +86,13 @@ const WithdrawModal = ({
 }) => {
     const { t } = useLanguage();
     const [selectedBankIndex, setSelectedBankIndex] = useState(0);
+    const [modalError, setModalError] = useState('');
+
+    useEffect(() => {
+        if (show) {
+            setModalError('');
+        }
+    }, [show, withdrawType]);
 
     if (!show) return null;
 
@@ -95,10 +102,41 @@ const WithdrawModal = ({
     const amountVal = withdrawType === 'all' ? availableBal : Number(customAmount || 0);
 
     const handleConfirmClick = () => {
-        if (amountVal <= 0 || isNaN(amountVal)) return;
-        if (amountVal > availableBal) return;
-        if (isBank && banks.length === 0) return;
+        if (availableBal <= 0) {
+            setModalError(t('noBalanceAvailable') || 'You have no withdrawable balance.');
+            return;
+        }
+        if (amountVal <= 0 || isNaN(amountVal)) {
+            setModalError(t('enterValidAmount') || 'Please enter a valid withdrawal amount.');
+            return;
+        }
+        if (amountVal > availableBal) {
+            setModalError(
+                (t('amountExceedsBalance') || 'Amount exceeds available balance') +
+                ` (${availableBal.toFixed(2)} ETB)`
+            );
+            return;
+        }
+        if (isBank && banks.length === 0) {
+            setModalError(t('noBankConfigured') || 'Please configure a bank account first.');
+            return;
+        }
+        setModalError('');
         onConfirm(isBank ? banks[selectedBankIndex] : null);
+    };
+
+    const handleCustomAmountChange = (e) => {
+        const val = e.target.value;
+        setCustomAmount(val);
+        const num = Number(val);
+        if (num > availableBal) {
+            setModalError(
+                (t('amountExceedsBalance') || 'Amount exceeds available balance') +
+                ` (${availableBal.toFixed(2)} ETB)`
+            );
+        } else if (modalError) {
+            setModalError('');
+        }
     };
 
     return (
@@ -132,14 +170,18 @@ const WithdrawModal = ({
                 }}
                 onClick={e => e.stopPropagation()}
             >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                         <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <Wallet size={22} />
                         </div>
                         <div>
-                            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>{t('withdrawFunds')}</h3>
-                            <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>Available: {availableBal.toFixed(2)} ETB</span>
+                            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>
+                                {t('withdrawFunds')}
+                            </h3>
+                            <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>
+                                {t('available') || 'Available'}: {availableBal.toFixed(2)} ETB
+                            </span>
                         </div>
                     </div>
                     <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}>
@@ -147,10 +189,31 @@ const WithdrawModal = ({
                     </button>
                 </div>
 
+                {/* Inline Modal Error Message */}
+                {modalError && (
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        background: 'var(--danger-light, rgba(239, 68, 68, 0.12))',
+                        border: '1px solid var(--danger, #EF4444)',
+                        color: 'var(--danger, #EF4444)',
+                        borderRadius: '10px',
+                        padding: '0.65rem 0.85rem',
+                        fontSize: '0.825rem',
+                        fontWeight: 700,
+                        marginBottom: '1rem',
+                        animation: 'fadeIn 0.2s ease-out'
+                    }}>
+                        <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                        <span>{modalError}</span>
+                    </div>
+                )}
+
                 {/* Destination */}
                 <div style={{ marginBottom: '1.25rem' }}>
                     <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Payout Destination
+                        {t('payoutDestination') || 'Payout Destination'}
                     </label>
                     {isBank ? (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -191,7 +254,7 @@ const WithdrawModal = ({
                                     </div>
                                 );
                             }) : (
-                                <p style={{ color: 'var(--danger)', fontSize: '0.85rem' }}>No bank accounts configured.</p>
+                                <p style={{ color: 'var(--danger)', fontSize: '0.85rem' }}>{t('noBankAccounts') || 'No bank accounts configured.'}</p>
                             )}
                         </div>
                     ) : (
@@ -200,11 +263,11 @@ const WithdrawModal = ({
                                 <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                             </div>
                             <div>
-                                <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-main)' }}>Telebirr Wallet</div>
+                                <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-main)' }}>{t('telebirrWallet') || 'Telebirr Wallet'}</div>
                                 <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
                                     {(() => {
                                         const raw = (user?.telebirr_number || user?.telebirrAccount?.phoneNumber || '').toString();
-                                        if (!raw) return 'No Telebirr number configured';
+                                        if (!raw) return t('noTelebirrConfigured') || 'No Telebirr number configured';
                                         if (raw.startsWith('+251')) return raw;
                                         if (raw.startsWith('0') && raw.length === 10) return `+251 ${raw.substring(1)}`;
                                         if (raw.length === 9) return `+251 ${raw}`;
@@ -219,12 +282,15 @@ const WithdrawModal = ({
                 {/* Amount Option */}
                 <div style={{ marginBottom: '1.5rem' }}>
                     <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Withdrawal Amount
+                        {t('withdrawalAmount') || 'Withdrawal Amount'}
                     </label>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.75rem' }}>
                         <button
                             type="button"
-                            onClick={() => setWithdrawType('all')}
+                            onClick={() => {
+                                setWithdrawType('all');
+                                setModalError('');
+                            }}
                             style={{
                                 padding: '0.75rem',
                                 borderRadius: '8px',
@@ -237,7 +303,7 @@ const WithdrawModal = ({
                                 transition: 'all 0.15s ease'
                             }}
                         >
-                            Full Balance ({availableBal.toFixed(2)} ETB)
+                            {t('fullBalance') || 'Full Balance'} ({availableBal.toFixed(2)} ETB)
                         </button>
                         <button
                             type="button"
@@ -254,21 +320,25 @@ const WithdrawModal = ({
                                 transition: 'all 0.15s ease'
                             }}
                         >
-                            Custom Amount
+                            {t('customAmount') || 'Custom Amount'}
                         </button>
                     </div>
 
                     {withdrawType === 'custom' && (
-                        <div className="input-group">
-                            <span style={{ position: 'absolute', left: '1rem', fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.85rem' }}>ETB</span>
+                        <div className="input-group" style={{ position: 'relative' }}>
+                            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.85rem' }}>ETB</span>
                             <input
                                 type="number"
                                 min="1"
+                                max={availableBal}
                                 placeholder="0.00"
                                 className="form-input"
                                 value={customAmount}
-                                onChange={(e) => setCustomAmount(e.target.value)}
-                                style={{ paddingLeft: '3.5rem' }}
+                                onChange={handleCustomAmountChange}
+                                style={{
+                                    paddingLeft: '3.5rem',
+                                    border: (Number(customAmount) > availableBal) ? '1.5px solid var(--danger, #EF4444)' : undefined
+                                }}
                                 autoFocus
                             />
                         </div>
@@ -277,15 +347,14 @@ const WithdrawModal = ({
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '0.75rem' }}>
                     <Button variant="secondary" size="md" onClick={onClose}>
-                        Cancel
+                        {t('cancel') || 'Cancel'}
                     </Button>
                     <Button
                         variant="primary"
                         size="md"
-                        disabled={availableBal <= 0 || (isBank && banks.length === 0) || (withdrawType === 'custom' && (!customAmount || Number(customAmount) <= 0))}
                         onClick={handleConfirmClick}
                     >
-                        Confirm Payout
+                        {t('confirmPayout') || 'Confirm Payout'}
                     </Button>
                 </div>
             </div>
@@ -549,13 +618,19 @@ export default function Dashboard() {
         try {
             await fetchMetrics();
 
-            const [txRes, leaderboardRes] = await Promise.all([
+            const [meRes, txRes, leaderboardRes] = await Promise.all([
+                api.get('/auth/me').catch(() => null),
                 api.get('/dashboard/transactions').catch(err => {
                     console.warn('[Dashboard] Tx fetch error:', err.message);
                     return { data: [] };
                 }),
                 api.get('/dashboard/leaderboard').catch(() => ({ data: [] }))
             ]);
+
+            if (meRes?.data) {
+                setUser(meRes.data);
+                localStorage.setItem('gp_cached_user', JSON.stringify(meRes.data));
+            }
 
             const txList = Array.isArray(txRes.data) 
                 ? txRes.data 
@@ -752,7 +827,10 @@ export default function Dashboard() {
         });
     }, [transactions, txFilter, searchQuery]);
 
-    const isVerified = user?.kycStatus === 'approved' || user?.isVerified;
+    const currentKycStatus = (user?.kycStatus || metrics?.kycStatus || 'none').toLowerCase();
+    const isVerified = (currentKycStatus === 'approved' || currentKycStatus === 'verified') && currentKycStatus !== 'rejected' && user?.isVerified !== false;
+    const isKycRejected = currentKycStatus === 'rejected';
+    const isKycPending = currentKycStatus === 'pending' || currentKycStatus === 'under_review';
 
     // Resolve Active Payout Rail Logo
     const activeBankName = user?.payoutMethod === 'bank' ? bankAccounts[0]?.bankName : 'Telebirr';
@@ -794,7 +872,7 @@ export default function Dashboard() {
                             </h1>
                         </div>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.25rem', marginBottom: 0 }}>
-                            Real-time overview of your monetization and incoming Telebirr support.
+                            {t('dashboardSubtitle') || 'Real-time overview of your monetization and incoming Telebirr support.'}
                         </p>
                     </div>
 
@@ -825,11 +903,11 @@ export default function Dashboard() {
                                 Creator Monetization Checklist
                             </h3>
                             <span style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
-                                Complete these steps to maximize your tip conversion
+                                {t('checklistSubtitle') || 'Complete these steps to maximize your tip conversion'}
                             </span>
                         </div>
                         <span style={{ fontSize: '0.725rem', fontWeight: 700, padding: '0.15rem 0.55rem', borderRadius: '9999px', background: 'var(--primary-light)', color: 'var(--primary)' }}>
-                            {isVerified ? '3 of 3 Completed' : '2 of 3 Completed'}
+                            {isVerified ? (t('threeOfThreeCompleted') || '3 of 3 Completed') : (t('twoOfThreeCompleted') || '2 of 3 Completed')}
                         </span>
                     </div>
 
@@ -847,29 +925,51 @@ export default function Dashboard() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                 <CheckCircle size={16} color="var(--primary)" />
                                 <div>
-                                    <div style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-main)' }}>Set up payout rail</div>
-                                    <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Telebirr / Bank connected</div>
+                                    <div style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-main)' }}>{t('setupPayoutRail') || 'Set up payout rail'}</div>
+                                    <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>{t('telebirrBankConnected') || 'Telebirr / Bank connected'}</div>
                                 </div>
                             </div>
-                            <Badge variant="success" size="sm">Active</Badge>
+                            <Badge variant="success" size="sm">{t('active') || 'Active'}</Badge>
                         </div>
 
                         {/* Item 2: KYC Identity */}
                         <div 
                             onClick={() => { if (!isVerified) setShowForcedKYCModal(true); }}
-                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 0.85rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease' }}
-                            onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
-                            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 0.85rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1.5px solid ' + (isKycRejected ? 'rgba(239, 68, 68, 0.4)' : 'var(--border-color)'), cursor: 'pointer', transition: 'all 0.15s ease' }}
+                            onMouseEnter={e => e.currentTarget.style.borderColor = isKycRejected ? 'var(--danger, #EF4444)' : 'var(--primary)'}
+                            onMouseLeave={e => e.currentTarget.style.borderColor = isKycRejected ? 'rgba(239, 68, 68, 0.4)' : 'var(--border-color)'}
                         >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                {isVerified ? <CheckCircle size={16} color="var(--primary)" /> : <ShieldCheck size={16} color="var(--warning)" />}
+                                {isVerified ? (
+                                    <CheckCircle size={16} color="var(--primary)" />
+                                ) : isKycRejected ? (
+                                    <AlertTriangle size={16} color="var(--danger, #EF4444)" />
+                                ) : isKycPending ? (
+                                    <Clock size={16} color="var(--info, #3B82F6)" />
+                                ) : (
+                                    <ShieldCheck size={16} color="var(--warning)" />
+                                )}
                                 <div>
-                                    <div style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-main)' }}>Verify National ID</div>
-                                    <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Fayda ID / Passport</div>
+                                    <div style={{ fontSize: '0.825rem', fontWeight: 700, color: isKycRejected ? 'var(--danger, #EF4444)' : 'var(--text-main)' }}>
+                                        {t('verifyNationalId') || 'Verify National ID'}
+                                    </div>
+                                    <div style={{ fontSize: '0.725rem', color: isKycRejected ? 'var(--danger, #EF4444)' : 'var(--text-muted)' }}>
+                                        {isKycRejected 
+                                            ? (t('kycRejectedNotice') || 'Verification Rejected • Tap to Resubmit') 
+                                            : isKycPending 
+                                            ? (t('kycUnderReview') || 'Under Review') 
+                                            : (t('faydaIdPassport') || 'Fayda ID / Passport')}
+                                    </div>
                                 </div>
                             </div>
-                            <Badge variant={isVerified ? 'success' : 'warning'} size="sm">
-                                {isVerified ? 'Verified' : 'Required'}
+                            <Badge variant={isVerified ? 'success' : isKycRejected ? 'danger' : isKycPending ? 'info' : 'warning'} size="sm">
+                                {isVerified 
+                                    ? (t('verified') || 'Verified') 
+                                    : isKycRejected 
+                                    ? (t('rejected') || 'Rejected') 
+                                    : isKycPending 
+                                    ? (t('reviewing') || 'Reviewing') 
+                                    : (t('required') || 'Required')}
                             </Badge>
                         </div>
 
@@ -883,11 +983,11 @@ export default function Dashboard() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                 <CheckCircle size={16} color="var(--primary)" />
                                 <div>
-                                    <div style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-main)' }}>Share your link</div>
+                                    <div style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-main)' }}>{t('shareYourLink') || 'Share your link'}</div>
                                     <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>gurshapay.com/@{user?.username}</div>
                                 </div>
                             </div>
-                            <Badge variant="primary" size="sm">Ready</Badge>
+                            <Badge variant="primary" size="sm">{t('ready') || 'Ready'}</Badge>
                         </div>
                     </div>
                 </div>
@@ -999,7 +1099,7 @@ export default function Dashboard() {
                                 size="sm"
                                 icon={ArrowUpRight}
                                 iconPosition="right"
-                                disabled={Number(metrics?.availableBalance ?? metrics?.walletBalance ?? metrics?.wallet_balance ?? 0) <= 0}
+                                disabled={Number(metrics?.availableBalance ?? metrics?.walletBalance ?? metrics?.wallet_balance ?? 0) <= 0 || !isVerified}
                                 onClick={() => {
                                     if (user?.payoutLocked || user?.accountStatus === 'suspended') {
                                         setAlert({
@@ -1020,7 +1120,7 @@ export default function Dashboard() {
                                 {t('withdrawFunds')}
                             </Button>
                             <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
-                                {user?.payoutLocked ? '🔒 Payouts locked' : isVerified ? '⚡ Instant payout' : '🔒 KYC required'}
+                                {user?.payoutLocked ? ('🔒 ' + (t('payoutsLocked') || 'Payouts locked')) : isKycRejected ? ('⚠️ ' + (t('rejected') || 'KYC Rejected')) : isVerified ? ('⚡ ' + (t('instantPayout') || 'Instant payout')) : ('🔒 ' + (t('kycRequiredNotice') || 'KYC required'))}
                             </span>
                         </div>
 

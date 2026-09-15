@@ -259,6 +259,53 @@ const translations = {
         deleteNotice2: "Once you delete your account, there is no going back. Please be certain.",
         deactivateAccount: "Deactivate Account"
     },
+        // Drawer & Sidebar
+        supportAndHelp: "Support & Help",
+        verifyKyc: "Verify KYC",
+        actionReq: "Action Req",
+        reviewing: "Reviewing",
+        privacyAndTerms: "Privacy & Terms",
+        signOut: "Sign out",
+
+        // Dashboard Checklist & Header
+        dashboardSubtitle: "Real-time overview of your monetization and incoming Telebirr support.",
+        monetizationChecklist: "Creator Monetization Checklist",
+        checklistSubtitle: "Complete these steps to maximize your tip conversion",
+        threeOfThreeCompleted: "3 of 3 Completed",
+        twoOfThreeCompleted: "2 of 3 Completed",
+        oneOfThreeCompleted: "1 of 3 Completed",
+        setupPayoutRail: "Set up payout rail",
+        telebirrBankConnected: "Telebirr / Bank connected",
+        active: "Active",
+        verifyNationalId: "Verify National ID",
+        faydaIdPassport: "Fayda ID / Passport",
+        verified: "Verified",
+        required: "Required",
+        rejected: "Rejected",
+        kycRejectedNotice: "Verification Rejected • Please Resubmit",
+        kycUnderReview: "Under Review",
+        shareYourLink: "Share your link",
+        ready: "Ready",
+        withdrawableBalance: "Withdrawable Balance",
+        instantPayout: "Instant payout",
+        kycRequiredNotice: "KYC required",
+        payoutsLocked: "Payouts locked",
+
+        // Withdraw Modal
+        withdrawalAmount: "Withdrawal Amount",
+        fullBalance: "Full Balance",
+        customAmount: "Custom Amount",
+        confirmPayout: "Confirm Payout",
+        available: "Available",
+        amountExceedsBalance: "Amount exceeds available balance",
+        insufficientBalance: "Insufficient balance. Available:",
+        enterValidAmount: "Please enter a valid withdrawal amount.",
+        noBankConfigured: "Please configure a bank account first.",
+        noBalanceAvailable: "You have no withdrawable balance.",
+        telebirrWallet: "Telebirr Wallet",
+        noTelebirrConfigured: "No Telebirr number configured",
+        noBankAccounts: "No bank accounts configured.",
+
     am: {
         appName: "ጉርሻፔይ",
         amharic: "አማርኛ",
@@ -513,6 +560,52 @@ const translations = {
         emailReports: "የኢሜይል ሪፖርቶች",
         emailReportsDesc: "የሳምንታዊ ገቢዎ አጠቃላይ ማጠቃለያ",
         deleteNotice2: "አንዴ አካውንትዎን ከሰረዙ በኋላ መልሰው ማግኘት አይችሉም። እባክዎ እርግጠኛ ይሁኑ።",
+                // Drawer & Sidebar
+        supportAndHelp: "እርዳታ እና ድጋፍ",
+        verifyKyc: "ማንነት አረጋግጥ",
+        actionReq: "አስፈላጊ",
+        reviewing: "በግምገማ ላይ",
+        privacyAndTerms: "ግላዊነት እና ደንቦች",
+        signOut: "ውጣ",
+
+        // Dashboard Checklist & Header
+        dashboardSubtitle: "የገቢዎ እና የቴሌብር ድጋፍ የቀጥታ አጠቃላይ እይታ።",
+        monetizationChecklist: "የፈጣሪ የገቢ ማግኛ ደረጃዎች",
+        checklistSubtitle: "የጉርሻ ገቢዎን ለማሳደግ እነዚህን ደረጃዎች ያጠናቅቁ",
+        threeOfThreeCompleted: "3 ከ 3 ተጠናቋል",
+        twoOfThreeCompleted: "2 ከ 3 ተጠናቋል",
+        oneOfThreeCompleted: "1 ከ 3 ተጠናቋል",
+        setupPayoutRail: "የክፍያ መቀበያ ያዘጋጁ",
+        telebirrBankConnected: "ቴሌብር / ባንክ ተገናኝቷል",
+        active: "ንቁ",
+        verifyNationalId: "ብሔራዊ መታወቂያ ያረጋግጡ",
+        faydaIdPassport: "የፋይዳ መታወቂያ / ፓስፖርት",
+        verified: "ተረጋግጧል",
+        required: "አስፈላጊ",
+        rejected: "ውድቅ ተደርጓል",
+        kycRejectedNotice: "ማረጋገጫው ውድቅ ተደርጓል • እባክዎ እንደገና ያስገቡ",
+        kycUnderReview: "በግምገማ ላይ",
+        shareYourLink: "የጉርሻ ሊንክዎን ያጋሩ",
+        ready: "ዝግጁ",
+        withdrawableBalance: "ሊወጣ የሚችል ሂሳብ",
+        instantPayout: "ፈጣን ክፍያ",
+        kycRequiredNotice: "ማንነት ማረጋገጥ ያስፈልጋል",
+        payoutsLocked: "ክፍያዎች ታግደዋል",
+
+        // Withdraw Modal
+        withdrawalAmount: "የማውጫ መጠን",
+        fullBalance: "ሙሉ ሂሳብ",
+        customAmount: "የተወሰነ መጠን",
+        confirmPayout: "ክፍያውን አረጋግጥ",
+        available: "የሚገኝ ሂሳብ",
+        amountExceedsBalance: "የተጠየቀው መጠን ካለው ሂሳብ ይበልጣል",
+        insufficientBalance: "በቂ ያልሆነ ሂሳብ። የሚገኝ፡",
+        enterValidAmount: "እባክዎ ትክክለኛ የማውጫ መጠን ያስገቡ።",
+        noBankConfigured: "እባክዎ መጀመሪያ የባንክ አካውንት ያዘጋጁ።",
+        noBalanceAvailable: "ሊወጣ የሚችል ሂሳብ የለዎትም።",
+        telebirrWallet: "የቴሌብር አካውንት",
+        noTelebirrConfigured: "የተገናኘ የቴሌብር ቁጥር የለም",
+        noBankAccounts: "የተገናኘ የባንክ አካውንት የለም።",
         deactivateAccount: "አካውንት ያጥፉ"
     }
 };
@@ -524,7 +617,7 @@ export const LanguageProvider = ({ children }) => {
         localStorage.setItem('language', language);
     }, [language]);
 
-    const t = (key) => {
+        const t = (key) => {
         return translations[language]?.[key] || translations['en']?.[key] || key;
     };
 
