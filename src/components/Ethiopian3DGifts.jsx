@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 // =========================================================================
 
 export const ETHIOPIAN_GIFTS_CATALOG = [
-    // 🌼 Nature & Flora
     { 
         id: 'adey_abeba', 
         nameEn: 'Adey Flower', 
@@ -24,6 +23,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '🌼 A bright bouquet of Adey Abeba to honor your inspiring work!'
         ]
     },
+
     { 
         id: 'rose', 
         nameEn: 'Highland Rose', 
@@ -42,8 +42,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '🌹 Heartfelt appreciation and fragrant wishes for your bright future!'
         ]
     },
-    
-    // ☕ Food & Hospitality
+
     { 
         id: 'buna', 
         nameEn: 'Sini Buna', 
@@ -62,6 +61,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '☕ Enjoying your content with a sweet cup of buna—keep inspiring us!'
         ]
     },
+
     { 
         id: 'jebena', 
         nameEn: 'Clay Jebena', 
@@ -80,6 +80,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '🫖 Authentic clay Jebena brew in honor of your outstanding dedication!'
         ]
     },
+
     { 
         id: 'mesob', 
         nameEn: 'Mesob Basket', 
@@ -98,6 +99,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '🧺 The sacred dining table of Ethiopian hospitality celebrating your craft!'
         ]
     },
+
     { 
         id: 'enjera', 
         nameEn: 'Gursha Feast', 
@@ -116,26 +118,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '🍲 Sharing the finest feast of gratitude for your generous contributions!'
         ]
     },
-    { 
-        id: 'rekebot', 
-        nameEn: 'Rekebot Set', 
-        nameAm: 'ረከቦትና ዕጣን', 
-        emoji: '☕', 
-        etb: '2000', 
-        coins: 20000, 
-        category: 'food', 
-        shortAm: 'የቡና ሥነ-ስርዓት', 
-        description: 'Complete coffee ceremony service', 
-        animationType: 'rekebot',
-        quickMessages: [
-            '☕ በደመቀው ረከቦት ዙሪያ ተቀምጠን ቡና ስንጠጣ፣ በስራዎ ልባችን ይሞቃል!',
-            '☕ ባህላዊውን የቡና ረከቦት አዘጋጅተን በክብር እያመሰገንንዎት ነው!',
-            '☕ Elegantly arranged Rekebot coffee ceremony honoring your bright presence!',
-            '☕ Traditional hospitality and sweet gathering blessings for our creator!'
-        ]
-    },
 
-    // 📖 Culture & Tradition
     { 
         id: 'bible', 
         nameEn: 'Holy Bible', 
@@ -154,6 +137,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '📖 Sacred gift of scripture in honor of your good heart and hard work!'
         ]
     },
+
     { 
         id: 'quran', 
         nameEn: 'Holy Quran', 
@@ -172,80 +156,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '📗 Sacred tribute of divine peace and honor for your inspiring talent!'
         ]
     },
-    { 
-        id: 'kemis', 
-        nameEn: 'Habesha Kemis', 
-        nameAm: 'የሐበሻ ቀሚስ', 
-        emoji: '👗', 
-        etb: '1000', 
-        coins: 10000, 
-        category: 'culture', 
-        shortAm: 'የጥልፍ ቀሚስ', 
-        description: 'Handspun cotton with golden embroidery', 
-        animationType: 'kemis',
-        quickMessages: [
-            '👗 ባህላዊው የሐበሻ ቀሚስ ጥልፍ እንደሚደምቀው፣ ስራዎም በኢትዮጵያዊ ውበት ያሸበረቀ ነው!',
-            '👗 የጥበብ ልብስ ለብሰው ባህላችንን በክብር ስላደመቁልን ትልቅ ክብር አለን!',
-            '👗 Elegant Habesha Kemis woven with cultural pride and graceful artistry!',
-            '👗 Shining with the timeless golden embroidery of Ethiopian heritage!'
-        ]
-    },
-    { 
-        id: 'shield', 
-        nameEn: 'Warrior Shield', 
-        nameAm: 'ጋሻና ጦር', 
-        emoji: '🛡️', 
-        etb: '1500', 
-        coins: 15000, 
-        category: 'culture', 
-        shortAm: 'የአድዋ ጋሻ', 
-        description: 'Adwa hero leather & brass shield', 
-        animationType: 'shield',
-        quickMessages: [
-            '🛡️ የዓድዋ ጀግኖች ጋሻና ጦር ወኔ ሁሌም ከስራዎ ጋር ይሁን! አሸናፊ ነዎት!',
-            '🛡️ ጠንካራ ጋሻ ሆነው ጥበብንና ባህልን ስለሚያስከብሩልን ከልብ እናመሰግናለን!',
-            '🛡️ Warrior Shield of heritage and unbreakable resilience for our champion!',
-            '🛡️ Victorious defense and enduring strength for your creative journey!'
-        ]
-    },
-    { 
-        id: 'crown', 
-        nameEn: 'Negus Crown', 
-        nameAm: 'የንጉሥ ዘውድ', 
-        emoji: '👑', 
-        etb: '10000', 
-        coins: 100000, 
-        category: 'culture', 
-        shortAm: 'የንጉሠ ነገሥት ዘውድ', 
-        description: 'Imperial Ethiopian royal crown', 
-        animationType: 'regal',
-        quickMessages: [
-            '👑 ለታታሪውና ለተዋጣለት ፈጣሪ ንጉሣዊ የክብር ዘውድ ይገባዎታል!',
-            '👑 በስራዎ ንጉሥ ነዎት! ይህ የንጉሥ ዘውድ የላቀ ክብርና አድናቆቴ መግለጫዬ ነው!',
-            '👑 Crowning your brilliance! You rule your creative craft with pure excellence!',
-            '👑 Royal tribute to the master of content—wear your crown with pride!'
-        ]
-    },
-    { 
-        id: 'national_honor', 
-        nameEn: 'National Honor', 
-        nameAm: 'የክብር ሜዳሊያ', 
-        emoji: '🏅', 
-        etb: '100000', 
-        coins: 1000000, 
-        category: 'culture', 
-        shortAm: 'የላቀ የሀገር ክብር', 
-        description: 'Highest Ethiopian civilian medal', 
-        animationType: 'regal',
-        quickMessages: [
-            '🏅 ለሀገርና ለወገን በፈጠራ ስራዎ ላበረከቱት አስተዋፅዖ የከበረ የሀገር ሜዳልያ ይገባዎታል!',
-            '🏅 በስራዎ ሀገራችንን በኩራት ስላስጠሩልን ታላቅ የክብር ሰላምታ እናቀርባለን!',
-            '🏅 Conferred with highest National Honor and heartfelt gratitude from Ethiopia!',
-            '🏅 The supreme golden medal of civic achievement for an outstanding creator!'
-        ]
-    },
 
-    // 🪘 Traditional Music
     { 
         id: 'kebero', 
         nameEn: 'Kebero Drum', 
@@ -264,6 +175,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '🪘 The joyful heartbeat of Ethiopian culture cheering for your success!'
         ]
     },
+
     { 
         id: 'masenqo', 
         nameEn: 'Masenqo', 
@@ -282,6 +194,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '🎻 The authentic voice of Ethiopian highlands singing praises for your craft!'
         ]
     },
+
     { 
         id: 'krar', 
         nameEn: 'Traditional Krar', 
@@ -301,81 +214,63 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         ]
     },
 
-    // 🏛️ Historical Landmarks
     { 
-        id: 'axum', 
-        nameEn: 'Axum Obelisk', 
-        nameAm: 'የአክሱም ሐውልት', 
-        emoji: '🏛️', 
-        etb: '3000', 
-        coins: 30000, 
-        category: 'places', 
-        shortAm: 'የጥንቱ አክሱም', 
-        description: 'Ancient monolithic granite stele', 
-        animationType: 'monument',
+        id: 'kemis', 
+        nameEn: 'Habesha Kemis', 
+        nameAm: 'የሐበሻ ቀሚስ', 
+        emoji: '👗', 
+        etb: '1000', 
+        coins: 10000, 
+        category: 'culture', 
+        shortAm: 'የጥልፍ ቀሚስ', 
+        description: 'Handspun cotton with golden embroidery', 
+        animationType: 'kemis',
         quickMessages: [
-            '🏛️ እንደ ጥንታዊው የአክሱም ሐውልት በጽናትና በክብር ሺህ ዓመታት ዘልቀው ይኑሩ!',
-            '🏛️ የታሪካችንና የኩራታችን መገለጫ በሆነው አክሱም ስም ታላቅ ክብር አለን!',
-            '🏛️ Standing tall, unbreakable, and monumental like the granite of Axum!',
-            '🏛️ Ancient stone heritage honoring your lasting legacy in the digital era!'
-        ]
-    },
-    { 
-        id: 'lalibela', 
-        nameEn: 'Bet Giyorgis', 
-        nameAm: 'ቤተ ጊዮርጊስ', 
-        emoji: '⛪', 
-        etb: '4000', 
-        coins: 40000, 
-        category: 'places', 
-        shortAm: 'የላሊበላ ፍልፍል', 
-        description: 'Cross-shaped monolithic rock church', 
-        animationType: 'monument',
-        quickMessages: [
-            '⛪ ከድንጋይ እንደተፈለፈለው የላሊበላ ድንቅ ህንፃ፣ የርስዎም ጥበብ ድንቅ ተአምር ነው!',
-            '⛪ በቅዱሱ የላሊበላ አብያተ ክርስቲያናት ጥበብና በረከት ስራዎ ይደምቅ!',
-            '⛪ Rock-hewn Lalibela wonder honoring your devotion, faith, and patience!',
-            '⛪ Architectural masterpiece of the highlands dedicated to your genius!'
-        ]
-    },
-    { 
-        id: 'gondar', 
-        nameEn: 'Fasil Ghebbi', 
-        nameAm: 'ፋሲል ግቢ', 
-        emoji: '🏰', 
-        etb: '5000', 
-        coins: 50000, 
-        category: 'places', 
-        shortAm: 'የጎንደር ቤተ-መንግሥት', 
-        description: 'Royal stone castle fortress', 
-        animationType: 'gondar',
-        quickMessages: [
-            '🏰 እንደ ፋሲል ግቢ ቤተ-መንግሥት የፈጠራ ማማዎ የፀናና ግርማ ሞገስ ያለው ይሁን!',
-            '🏰 የጎንደር ነገሥታት የጥበብ ታሪክ ለስራዎ ታላቅ ክብርና መነሳሳት ይሁንልን!',
-            '🏰 Imperial Gondar Castle majesty for a creator building an empire of greatness!',
-            '🏰 Royal stone fortress of excellence guarding your continuous success!'
-        ]
-    },
-    { 
-        id: 'erta_ale', 
-        nameEn: 'Erta Ale Volcano', 
-        nameAm: 'ኤርታ አሌ', 
-        emoji: '🌋', 
-        etb: '6000', 
-        coins: 60000, 
-        category: 'places', 
-        shortAm: 'የዳሎል እሳተ ጎመራ', 
-        description: 'Active bubbling basaltic lava lake', 
-        animationType: 'volcano',
-        quickMessages: [
-            '🌋 እንደ ኤርታ አሌ እሳተ ጎመራ የፈጠራ ወኔዎ ሁሌም እየፈላ ወደ ዓለም ይፍሰስ!',
-            '🌋 የሚያንቦገቡግ የእሳት ሃይልና ፅናት ለታላቅ ስራዎ ይሁንልዎ!',
-            '🌋 Boiling magma passion and volcanic creative brilliance erupting forward!',
-            '🌋 The eternal fire of Erta Ale fueling your unstoppable ambition!'
+            '👗 ባህላዊው የሐበሻ ቀሚስ ጥልፍ እንደሚደምቀው፣ ስራዎም በኢትዮጵያዊ ውበት ያሸበረቀ ነው!',
+            '👗 የጥበብ ልብስ ለብሰው ባህላችንን በክብር ስላደመቁልን ትልቅ ክብር አለን!',
+            '👗 Elegant Habesha Kemis woven with cultural pride and graceful artistry!',
+            '👗 Shining with the timeless golden embroidery of Ethiopian heritage!'
         ]
     },
 
-    // 🦁 Endemic Wildlife
+    { 
+        id: 'shield', 
+        nameEn: 'Warrior Shield', 
+        nameAm: 'ጋሻና ጦር', 
+        emoji: '🛡️', 
+        etb: '1500', 
+        coins: 15000, 
+        category: 'culture', 
+        shortAm: 'የአድዋ ጋሻ', 
+        description: 'Adwa hero leather & brass shield', 
+        animationType: 'shield',
+        quickMessages: [
+            '🛡️ የዓድዋ ጀግኖች ጋሻና ጦር ወኔ ሁሌም ከስራዎ ጋር ይሁን! አሸናፊ ነዎት!',
+            '🛡️ ጠንካራ ጋሻ ሆነው ጥበብንና ባህልን ስለሚያስከብሩልን ከልብ እናመሰግናለን!',
+            '🛡️ Warrior Shield of heritage and unbreakable resilience for our champion!',
+            '🛡️ Victorious defense and enduring strength for your creative journey!'
+        ]
+    },
+
+    { 
+        id: 'rekebot', 
+        nameEn: 'Rekebot Set', 
+        nameAm: 'ረከቦትና ዕጣን', 
+        emoji: '☕', 
+        etb: '2000', 
+        coins: 20000, 
+        category: 'food', 
+        shortAm: 'የቡና ሥነ-ስርዓት', 
+        description: 'Complete coffee ceremony service', 
+        animationType: 'rekebot',
+        quickMessages: [
+            '☕ በደመቀው ረከቦት ዙሪያ ተቀምጠን ቡና ስንጠጣ፣ በስራዎ ልባችን ይሞቃል!',
+            '☕ ባህላዊውን የቡና ረከቦት አዘጋጅተን በክብር እያመሰገንንዎት ነው!',
+            '☕ Elegantly arranged Rekebot coffee ceremony honoring your bright presence!',
+            '☕ Traditional hospitality and sweet gathering blessings for our creator!'
+        ]
+    },
+
     { 
         id: 'walia', 
         nameEn: 'Walia Ibex', 
@@ -394,6 +289,26 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '🐐 Majestic mountain spirit of endurance and highland distinction!'
         ]
     },
+
+    { 
+        id: 'axum', 
+        nameEn: 'Axum Obelisk', 
+        nameAm: 'የአክሱም ሐውልት', 
+        emoji: '🏛️', 
+        etb: '3000', 
+        coins: 30000, 
+        category: 'places', 
+        shortAm: 'የጥንቱ አክሱም', 
+        description: 'Ancient monolithic granite stele', 
+        animationType: 'monument',
+        quickMessages: [
+            '🏛️ እንደ ጥንታዊው የአክሱም ሐውልት በጽናትና በክብር ሺህ ዓመታት ዘልቀው ይኑሩ!',
+            '🏛️ የታሪካችንና የኩራታችን መገለጫ በሆነው አክሱም ስም ታላቅ ክብር አለን!',
+            '🏛️ Standing tall, unbreakable, and monumental like the granite of Axum!',
+            '🏛️ Ancient stone heritage honoring your lasting legacy in the digital era!'
+        ]
+    },
+
     { 
         id: 'horse', 
         nameEn: 'Oromo Horse', 
@@ -412,6 +327,45 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '🏇 Unstoppable equestrian power and heroic stride for our leader!'
         ]
     },
+
+    { 
+        id: 'lalibela', 
+        nameEn: 'Bet Giyorgis', 
+        nameAm: 'ቤተ ጊዮርጊስ', 
+        emoji: '⛪', 
+        etb: '4000', 
+        coins: 40000, 
+        category: 'places', 
+        shortAm: 'የላሊበላ ፍልፍል', 
+        description: 'Cross-shaped monolithic rock church', 
+        animationType: 'monument',
+        quickMessages: [
+            '⛪ ከድንጋይ እንደተፈለፈለው የላሊበላ ድንቅ ህንፃ፣ የርስዎም ጥበብ ድንቅ ተአምር ነው!',
+            '⛪ በቅዱሱ የላሊበላ አብያተ ክርስቲያናት ጥበብና በረከት ስራዎ ይደምቅ!',
+            '⛪ Rock-hewn Lalibela wonder honoring your devotion, faith, and patience!',
+            '⛪ Architectural masterpiece of the highlands dedicated to your genius!'
+        ]
+    },
+
+    { 
+        id: 'gondar', 
+        nameEn: 'Fasil Ghebbi', 
+        nameAm: 'ፋሲል ግቢ', 
+        emoji: '🏰', 
+        etb: '5000', 
+        coins: 50000, 
+        category: 'places', 
+        shortAm: 'የጎንደር ቤተ-መንግሥት', 
+        description: 'Royal stone castle fortress', 
+        animationType: 'gondar',
+        quickMessages: [
+            '🏰 እንደ ፋሲል ግቢ ቤተ-መንግሥት የፈጠራ ማማዎ የፀናና ግርማ ሞገስ ያለው ይሁን!',
+            '🏰 የጎንደር ነገሥታት የጥበብ ታሪክ ለስራዎ ታላቅ ክብርና መነሳሳት ይሁንልን!',
+            '🏰 Imperial Gondar Castle majesty for a creator building an empire of greatness!',
+            '🏰 Royal stone fortress of excellence guarding your continuous success!'
+        ]
+    },
+
     { 
         id: 'anbessa', 
         nameEn: 'Lion of Judah', 
@@ -431,7 +385,25 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
         ]
     },
 
-    // 🚀 Modern Aspirations
+    { 
+        id: 'erta_ale', 
+        nameEn: 'Erta Ale Volcano', 
+        nameAm: 'ኤርታ አሌ', 
+        emoji: '🌋', 
+        etb: '6000', 
+        coins: 60000, 
+        category: 'places', 
+        shortAm: 'የዳሎል እሳተ ጎመራ', 
+        description: 'Active bubbling basaltic lava lake', 
+        animationType: 'volcano',
+        quickMessages: [
+            '🌋 እንደ ኤርታ አሌ እሳተ ጎመራ የፈጠራ ወኔዎ ሁሌም እየፈላ ወደ ዓለም ይፍሰስ!',
+            '🌋 የሚያንቦገቡግ የእሳት ሃይልና ፅናት ለታላቅ ስራዎ ይሁንልዎ!',
+            '🌋 Boiling magma passion and volcanic creative brilliance erupting forward!',
+            '🌋 The eternal fire of Erta Ale fueling your unstoppable ambition!'
+        ]
+    },
+
     { 
         id: 'diamond', 
         nameEn: 'African Diamond', 
@@ -450,6 +422,26 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '💎 Shining through every facet with radiant elegance and distinction!'
         ]
     },
+
+    { 
+        id: 'crown', 
+        nameEn: 'Negus Crown', 
+        nameAm: 'የንጉሥ ዘውድ', 
+        emoji: '👑', 
+        etb: '10000', 
+        coins: 100000, 
+        category: 'culture', 
+        shortAm: 'የንጉሠ ነገሥት ዘውድ', 
+        description: 'Imperial Ethiopian royal crown', 
+        animationType: 'regal',
+        quickMessages: [
+            '👑 ለታታሪውና ለተዋጣለት ፈጣሪ ንጉሣዊ የክብር ዘውድ ይገባዎታል!',
+            '👑 በስራዎ ንጉሥ ነዎት! ይህ የንጉሥ ዘውድ የላቀ ክብርና አድናቆቴ መግለጫዬ ነው!',
+            '👑 Crowning your brilliance! You rule your creative craft with pure excellence!',
+            '👑 Royal tribute to the master of content—wear your crown with pride!'
+        ]
+    },
+
     { 
         id: 'car', 
         nameEn: 'Addis Supercar', 
@@ -468,6 +460,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '🏎️ Addis Supercar horsepower for your incredible talent and work ethic!'
         ]
     },
+
     { 
         id: 'plane', 
         nameEn: 'Boeing 787', 
@@ -486,6 +479,7 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '✈️ Boeing 787 altitude for your soaring dreams and unstoppable ambition!'
         ]
     },
+
     { 
         id: 'satellite', 
         nameEn: 'ETRSS-1 Satellite', 
@@ -502,6 +496,25 @@ export const ETHIOPIAN_GIFTS_CATALOG = [
             '🛰️ የቴክኖሎጂና የፈጠራ ድንበር ሰባሪ ሆነው ስለሚያበሩልን ትልቅ ክብር አለን!',
             '🛰️ Orbiting in outer space with high-tech vision and Ethiopian ambition!',
             '🛰️ ETRSS-1 telemetry sending cosmic applause to our innovative star!'
+        ]
+    },
+
+    { 
+        id: 'national_honor', 
+        nameEn: 'National Honor', 
+        nameAm: 'የክብር ሜዳሊያ', 
+        emoji: '🏅', 
+        etb: '100000', 
+        coins: 1000000, 
+        category: 'culture', 
+        shortAm: 'የላቀ የሀገር ክብር', 
+        description: 'Highest Ethiopian civilian medal', 
+        animationType: 'regal',
+        quickMessages: [
+            '🏅 ለሀገርና ለወገን በፈጠራ ስራዎ ላበረከቱት አስተዋፅዖ የከበረ የሀገር ሜዳልያ ይገባዎታል!',
+            '🏅 በስራዎ ሀገራችንን በኩራት ስላስጠሩልን ታላቅ የክብር ሰላምታ እናቀርባለን!',
+            '🏅 Conferred with highest National Honor and heartfelt gratitude from Ethiopia!',
+            '🏅 The supreme golden medal of civic achievement for an outstanding creator!'
         ]
     }
 ];

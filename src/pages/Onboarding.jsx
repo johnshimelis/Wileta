@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
+import EthiopianFlag from '../components/EthiopianFlag';
 
 export default function Onboarding() {
     const { user, onboard, requestTelebirrOtp, verifyTelebirrOtp } = useAuth();
@@ -211,7 +212,7 @@ export default function Onboarding() {
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
                             <div className="input-group" style={{ flex: 1 }}>
                                 <span style={{ position: 'absolute', left: '0.85rem', fontWeight: 800, color: 'var(--text-muted)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                                    <span>🇪🇹</span> +251
+                                    <EthiopianFlag width={20} height={14} /> +251
                                 </span>
                                 <input
                                     type="tel"
@@ -403,8 +404,10 @@ export default function Onboarding() {
                 </form>
             </div>
 
-            <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                🔒 Secured by GurshaPay Financial Compliance • 🇪🇹 Ethiopia
+            <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}>
+                <span>🔒 Secured by GurshaPay Financial Compliance •</span>
+                <EthiopianFlag width={16} height={11} />
+                <span>Ethiopia</span>
             </div>
         </div>
     );

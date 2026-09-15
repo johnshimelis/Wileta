@@ -11,6 +11,7 @@ import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
+import EthiopianFlag from '../components/EthiopianFlag';
 
 export default function Login() {
     const [loginMethod, setLoginMethod] = useState('email'); // 'email' | 'phone'
@@ -416,7 +417,7 @@ export default function Login() {
                                                         zIndex: 2,
                                                         whiteSpace: 'nowrap'
                                                     }}>
-                                                        <span style={{ fontSize: '0.95rem', lineHeight: 1 }}>🇪🇹</span> +251
+                                                        <EthiopianFlag width={20} height={14} style={{ marginRight: '4px' }} /> +251
                                                     </span>
                                                     <input
                                                         type="tel"
@@ -573,8 +574,10 @@ export default function Login() {
                     )}
                 </div>
 
-                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-                    🔒 Secured by GurshaPay Financial Compliance • 🇪🇹 Ethiopia
+                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}>
+                    <span>🔒 Secured by GurshaPay Financial Compliance •</span>
+                    <EthiopianFlag width={16} height={11} />
+                    <span>Ethiopia</span>
                 </div>
             </div>
 
@@ -605,7 +608,7 @@ export default function Login() {
                 <div style={{ maxWidth: '460px', width: '100%', position: 'relative', zIndex: 2 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
                         <span style={{ background: 'rgba(255,255,255,0.18)', color: '#FFFFFF', padding: '0.3rem 0.75rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 700, border: '1px solid rgba(255,255,255,0.3)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-                            <Sparkles size={14} color="#FBBF24" /> Ethiopian Creator Economy 🇪🇹
+                            <Sparkles size={14} color="#FBBF24" /> Ethiopian Creator Economy <EthiopianFlag width={18} height={12} style={{ marginLeft: '4px' }} />
                         </span>
                         {simulatedAlert && (
                             <span style={{ background: '#10B981', color: 'white', padding: '0.25rem 0.65rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800, animation: 'pulse 1s infinite' }}>

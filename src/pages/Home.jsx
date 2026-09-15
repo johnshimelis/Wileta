@@ -12,6 +12,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import EthiopianFlag from '../components/EthiopianFlag';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function Home() {
@@ -239,7 +240,8 @@ export default function Home() {
                     <div>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.25rem 0.65rem', borderRadius: '9999px', background: 'var(--primary-light)', color: 'var(--primary)', fontWeight: 700, fontSize: '0.75rem', marginBottom: '1rem', border: '1px solid rgba(4, 120, 87, 0.2)', maxWidth: '100%', boxSizing: 'border-box' }}>
                             <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: 'var(--primary)', display: 'inline-block' }}></span>
-                            Ethiopia's Creator Monetization Infrastructure 🇪🇹
+                            <span>Ethiopia's Creator Monetization Infrastructure</span>
+                            <EthiopianFlag width={18} height={12} />
                         </div>
 
                         <h1 style={{ fontSize: 'clamp(1.75rem, 5.5vw, 3.4rem)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.12, marginBottom: '1.25rem', color: 'var(--text-main)' }}>

@@ -15,6 +15,7 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import TopAlert from '../components/TopAlert';
+import EthiopianFlag from '../components/EthiopianFlag';
 
 export default function Settings() {
     const { user, setUser, api, requestTelebirrOtp, verifyTelebirrOtp } = useAuth();
@@ -460,7 +461,7 @@ export default function Settings() {
                                                 Linked Telebirr Wallet
                                             </div>
                                             <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }} className="mono-num">
-                                                <span>🇪🇹</span>
+                                                <EthiopianFlag width={22} height={15} />
                                                 <span>+251 {currentTelebirrNumber.replace(/(\d{2})(\d{3})(\d{4})/, '$1 $2 $3')}</span>
                                             </div>
                                         </div>
@@ -546,7 +547,7 @@ export default function Settings() {
                                                     zIndex: 2,
                                                     whiteSpace: 'nowrap'
                                                 }}>
-                                                    <span style={{ fontSize: '0.95rem', lineHeight: 1 }}>🇪🇹</span> +251
+                                                    <EthiopianFlag width={20} height={14} style={{ marginRight: '4px' }} /> +251
                                                 </span>
                                                 <input
                                                     type="tel"

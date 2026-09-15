@@ -21,6 +21,7 @@ import {
     ETHIOPIAN_GIFTS_CATALOG,
     GIFT_CATEGORIES
 } from '../components/Ethiopian3DGifts';
+import EthiopianFlag from '../components/EthiopianFlag';
 import './PublicProfile.css';
 
 // Verified Blue Tick SVG Emblem
@@ -110,6 +111,9 @@ export default function PublicProfile() {
         setSelectedGift(gift);
         setAmount(gift.etb);
         setIsCustom(false);
+        if (typeof window !== 'undefined' && window.navigator?.vibrate) {
+            try { window.navigator.vibrate(12); } catch (e) {}
+        }
         try {
             if (gift.id === 'car') {
                 playAudioEffect('car_rev');
@@ -129,6 +133,9 @@ export default function PublicProfile() {
         if (!selectedGift) return;
         const newAmount = String(Number(selectedGift.etb) * mult);
         setAmount(newAmount);
+        if (typeof window !== 'undefined' && window.navigator?.vibrate) {
+            try { window.navigator.vibrate(15); } catch (e) {}
+        }
         try { playAudioEffect('chime'); } catch (e) {}
     };
 
@@ -210,6 +217,9 @@ export default function PublicProfile() {
         if (paymentMethod === 'telebirr' && !phoneRegex.test(cleanPhone)) {
             showAlert("Please enter a valid 9-digit Ethiopian mobile number starting with 9 (e.g. 967432143)", "error");
             return;
+        }
+        if (typeof window !== 'undefined' && window.navigator?.vibrate) {
+            try { window.navigator.vibrate([15, 20, 15]); } catch (e) {}
         }
         setTippingState('processing');
 
@@ -671,9 +681,15 @@ export default function PublicProfile() {
                                                 } else {
                                                     setIsCustom(false);
                                                 }
+                                                if (typeof window !== 'undefined' && window.navigator?.vibrate) {
+                                                    try { window.navigator.vibrate(8); } catch (e) {}
+                                                }
+                                                try { playAudioEffect('chime'); } catch (e) {}
                                             }}
                                         >
-                                            <span className="cat-tab-icon">{tab.icon}</span>
+                                            <span className="cat-tab-icon">
+                                                {tab.key === 'culture' ? <EthiopianFlag width={18} height={12} /> : tab.icon}
+                                            </span>
                                             <span className="cat-tab-label">{tab.labelAm}</span>
                                         </button>
                                     ))}
@@ -684,6 +700,7 @@ export default function PublicProfile() {
                                     <div key={giftCategory} className="clean-gift-grid">
                                         {ETHIOPIAN_GIFTS_CATALOG
                                             .filter(g => giftCategory === 'all' || g.category === giftCategory)
+                                            .sort((a, b) => Number(a.etb) - Number(b.etb))
                                             .map((gift) => {
                                                 const isSelected = selectedGift?.id === gift.id;
                                                 return (
@@ -765,7 +782,7 @@ export default function PublicProfile() {
                                                     </div>
                                                     <div className="multiplier-cost-row">
                                                         <span key={amount} className="cost-etb-val">
-                                                            {amount || selectedGift.etb} ETB
+                                                            {(Number(amount || selectedGift.etb)).toLocaleString()} ETB
                                                         </span>
                                                         <span className="cost-dot">•</span>
                                                         <span key={currentCoins} className="cost-coins-val">
@@ -783,6 +800,10 @@ export default function PublicProfile() {
                                                     setCelebrationGift(selectedGift);
                                                     setComboCount(1);
                                                     setShowCelebrationModal(true);
+                                                    if (typeof window !== 'undefined' && window.navigator?.vibrate) {
+                                                        try { window.navigator.vibrate(15); } catch (e) {}
+                                                    }
+                                                    try { playAudioEffect('sacred_chime'); } catch (e) {}
                                                 }}
                                             >
                                                 <span>✨</span>
@@ -856,7 +877,13 @@ export default function PublicProfile() {
                                         <button
                                             key={i}
                                             type="button"
-                                            onClick={() => setShoutOutMessage(msg)}
+                                            onClick={() => {
+                                                setShoutOutMessage(msg);
+                                                if (typeof window !== 'undefined' && window.navigator?.vibrate) {
+                                                    try { window.navigator.vibrate(10); } catch (e) {}
+                                                }
+                                                try { playAudioEffect('chime'); } catch (e) {}
+                                            }}
                                             className={`clean-msg-chip ${shoutOutMessage === msg ? 'active' : ''}`}
                                         >
                                             {msg}
@@ -872,7 +899,12 @@ export default function PublicProfile() {
                                     <button
                                         type="button"
                                         className={`clean-payment-tile ${paymentMethod === 'telebirr' ? 'active' : ''}`}
-                                        onClick={() => setPaymentMethod('telebirr')}
+                                        onClick={() => {
+                                            setPaymentMethod('telebirr');
+                                            if (typeof window !== 'undefined' && window.navigator?.vibrate) {
+                                                try { window.navigator.vibrate(10); } catch (e) {}
+                                            }
+                                        }}
                                     >
                                         <div className="payment-tile-icon telebirr">
                                             <Smartphone size={18} />
@@ -891,7 +923,12 @@ export default function PublicProfile() {
                                     <button
                                         type="button"
                                         className={`clean-payment-tile ${paymentMethod === 'chapa_checkout' ? 'active' : ''}`}
-                                        onClick={() => setPaymentMethod('chapa_checkout')}
+                                        onClick={() => {
+                                            setPaymentMethod('chapa_checkout');
+                                            if (typeof window !== 'undefined' && window.navigator?.vibrate) {
+                                                try { window.navigator.vibrate(10); } catch (e) {}
+                                            }
+                                        }}
                                     >
                                         <div className="payment-tile-icon chapa">
                                             <CreditCard size={18} />
@@ -914,7 +951,9 @@ export default function PublicProfile() {
                                 <div className="clean-field-group">
                                     <label className="clean-field-label">Telebirr mobile number</label>
                                     <div className="clean-phone-wrapper">
-                                        <span className="clean-phone-prefix">🇪🇹 +251</span>
+                                        <span className="clean-phone-prefix">
+                                            <EthiopianFlag width={20} height={14} style={{ marginRight: '6px' }} /> +251
+                                        </span>
                                         <input
                                             type="tel"
                                             placeholder="967432143"
@@ -947,7 +986,7 @@ export default function PublicProfile() {
                                     <>
                                         <span className="clean-send-icon">{isCustom ? '🪙' : (selectedGift?.emoji || '☕')}</span>
                                         <span key={`${isCustom ? customAmount : amount}-${selectedGift?.id}`} className="send-btn-amount-pulse">
-                                            Send {isCustom ? `${customAmount || '0'} ETB` : `${selectedGift?.nameEn || 'Gursha'} (${amount} ETB)`}
+                                            Send {isCustom ? `${Number(customAmount || 0).toLocaleString()} ETB` : `${selectedGift?.nameEn || 'Gursha'} (${Number(amount || 0).toLocaleString()} ETB)`}
                                         </span>
                                     </>
                                 )}

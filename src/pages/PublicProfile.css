@@ -724,29 +724,53 @@
 .multiplier-cost-row {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.78rem;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    font-size: 0.76rem;
     font-weight: 700;
+    line-height: 1.25;
+    margin-top: 1px;
 }
 
 .cost-etb-val {
     color: #047857;
     font-weight: 800;
+    white-space: nowrap !important;
+    background: rgba(4, 120, 87, 0.08);
+    padding: 1.5px 6px;
+    border-radius: 6px;
+    letter-spacing: -0.01em;
 }
 
 [data-theme='dark'] .cost-etb-val {
     color: #10B981;
+    background: rgba(16, 185, 129, 0.15);
 }
 
 .cost-dot {
     color: #CBD5E1;
     font-size: 0.75rem;
+    line-height: 1;
+}
+
+[data-theme='dark'] .cost-dot {
+    color: #64748B;
 }
 
 .cost-coins-val {
-    color: #D97706;
-    font-weight: 600;
-    font-size: 0.74rem;
+    color: #B45309;
+    font-weight: 700;
+    font-size: 0.73rem;
+    white-space: nowrap !important;
+    background: rgba(245, 158, 11, 0.12);
+    padding: 1.5px 6px;
+    border-radius: 6px;
+    letter-spacing: -0.01em;
+}
+
+[data-theme='dark'] .cost-coins-val {
+    color: #FBBF24;
+    background: rgba(245, 158, 11, 0.2);
 }
 
 /* Preview Celebration Button */
@@ -754,12 +778,12 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 6px 14px;
-    height: 32px;
+    padding: 5px 12px;
+    height: 30px;
     background: #FFFFFF;
     border: 1.5px solid #047857;
     border-radius: 9999px;
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     font-weight: 700;
     color: #047857;
     cursor: pointer;
@@ -2617,5 +2641,113 @@
 .eth-celebration-dismiss-btn:active {
     transform: scale(0.96);
 }
+
+/* Mobile Responsive Overrides for Multiplier Strip & Interactive Touch Elements */
+@media (max-width: 480px) {
+    .clean-multiplier-strip {
+        padding: 10px 12px !important;
+        gap: 8px !important;
+        margin: 0.6rem 0 0.85rem !important;
+    }
+
+    .multiplier-strip-top {
+        gap: 6px !important;
+    }
+
+    .multiplier-strip-gift {
+        gap: 8px !important;
+        min-width: 0 !important;
+    }
+
+    .multiplier-gift-thumb {
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+    .multiplier-name-am {
+        font-size: 0.82rem !important;
+    }
+
+    .multiplier-name-en {
+        font-size: 0.68rem !important;
+    }
+
+    .multiplier-cost-row {
+        gap: 3px 5px !important;
+        font-size: 0.70rem !important;
+    }
+
+    .cost-dot {
+        display: none !important; /* Hide dot so badges stack or sit side-by-side cleanly without orphaned bullets */
+    }
+
+    .cost-etb-val,
+    .cost-coins-val {
+        padding: 1px 5px !important;
+        font-size: 0.70rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .clean-preview-btn {
+        padding: 4px 10px !important;
+        height: 28px !important;
+        font-size: 0.72rem !important;
+        gap: 3px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .multiplier-strip-bottom {
+        gap: 6px !important;
+        padding-top: 6px !important;
+    }
+
+    .multiplier-pills-label {
+        font-size: 0.70rem !important;
+    }
+
+    .clean-mult-btn {
+        padding: 3px 8px !important;
+        font-size: 0.72rem !important;
+        height: 26px !important;
+        min-width: 32px !important;
+    }
+
+    .clean-msg-chip {
+        font-size: 0.68rem !important;
+        padding: 3.5px 8px !important;
+    }
+}
+
+/* Mobile Interactive Spring Transitions & Active Micro-feedback */
+.clean-cat-tab:active {
+    transform: scale(0.94);
+    transition: transform 0.1s ease;
+}
+
+.clean-gift-card:active {
+    transform: scale(0.92) !important;
+    transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.clean-mult-btn:active {
+    transform: scale(0.90) !important;
+    transition: transform 0.1s ease !important;
+}
+
+.clean-msg-chip:active {
+    transform: scale(0.92) !important;
+    transition: transform 0.1s ease !important;
+}
+
+.clean-payment-tile:active {
+    transform: scale(0.97) !important;
+    transition: transform 0.1s ease !important;
+}
+
+.clean-send-btn:active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s ease !important;
+}
+
 
 
