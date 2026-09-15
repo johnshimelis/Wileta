@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
+import ComplianceBadge from '../components/ComplianceBadge';
 
 export default function ResetPassword() {
     const { token } = useParams();
@@ -129,6 +130,8 @@ export default function ResetPassword() {
                         </form>
                     )}
                 </Card>
+
+                <ComplianceBadge />
             </div>
         </div>
     );

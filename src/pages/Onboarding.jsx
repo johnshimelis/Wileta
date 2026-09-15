@@ -11,6 +11,7 @@ import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
 import EthiopianFlag from '../components/EthiopianFlag';
+import ComplianceBadge from '../components/ComplianceBadge';
 
 export default function Onboarding() {
     const { user, setUser, onboard, requestTelebirrOtp, verifyTelebirrOtp, logout, api } = useAuth();
@@ -1005,17 +1006,14 @@ export default function Onboarding() {
             {/* 3. PINNED COMPLIANCE FOOTER */}
             <footer style={{
                 textAlign: 'center',
-                padding: '1rem',
-                fontSize: '0.78rem',
-                color: 'var(--text-muted)',
+                padding: '0.75rem 1rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.4rem'
+                width: '100%',
+                boxSizing: 'border-box'
             }}>
-                <span>🔒 Secured by GurshaPay Financial Compliance •</span>
-                <EthiopianFlag width={18} height={12} />
-                <span>Ethiopia</span>
+                <ComplianceBadge style={{ marginTop: 0 }} />
             </footer>
         </div>
     );

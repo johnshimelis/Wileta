@@ -950,12 +950,43 @@ export default function PublicProfile() {
                             {paymentMethod === 'telebirr' && (
                                 <div className="clean-field-group">
                                     <label className="clean-field-label">Telebirr mobile number</label>
-                                    <div className="clean-phone-wrapper">
-                                        <span className="clean-phone-prefix">
-                                            <EthiopianFlag width={20} height={14} style={{ marginRight: '6px' }} /> +251
-                                        </span>
+                                    <div 
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            height: '44px',
+                                            background: 'var(--card-bg)',
+                                            border: '1.5px solid var(--border-color)',
+                                            borderRadius: '8px',
+                                            overflow: 'hidden',
+                                            transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
+                                        }}
+                                        className="phone-input-field"
+                                    >
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.4rem',
+                                            padding: '0 0.75rem',
+                                            height: '100%',
+                                            background: 'var(--card-bg-subtle, rgba(0, 0, 0, 0.03))',
+                                            borderRight: '1px solid var(--border-color)',
+                                            flexShrink: 0,
+                                            userSelect: 'none'
+                                        }}>
+                                            <EthiopianFlag width={20} height={14} />
+                                            <span style={{
+                                                fontWeight: 800,
+                                                fontSize: '0.88rem',
+                                                color: 'var(--text-main)',
+                                                letterSpacing: '0.5px'
+                                            }}>
+                                                +251
+                                            </span>
+                                        </div>
                                         <input
                                             type="tel"
+                                            inputMode="numeric"
                                             placeholder="967432143"
                                             value={tipperPhone}
                                             onChange={(e) => {
@@ -964,7 +995,21 @@ export default function PublicProfile() {
                                                 setTipperPhone(val.slice(0, 9));
                                             }}
                                             maxLength={9}
-                                            className="clean-phone-input"
+                                            style={{
+                                                flex: 1,
+                                                minWidth: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                border: 'none',
+                                                outline: 'none',
+                                                background: 'transparent',
+                                                padding: '0 0.75rem',
+                                                fontSize: '0.98rem',
+                                                fontWeight: 700,
+                                                letterSpacing: '1px',
+                                                color: 'var(--text-main)',
+                                                boxSizing: 'border-box'
+                                            }}
                                             required
                                         />
                                     </div>

@@ -12,6 +12,7 @@ import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
 import EthiopianFlag from '../components/EthiopianFlag';
+import ComplianceBadge from '../components/ComplianceBadge';
 
 export default function Login() {
     const [loginMethod, setLoginMethod] = useState('email'); // 'email' | 'phone'
@@ -429,25 +430,48 @@ export default function Login() {
                                         <div className="form-group">
                                             <label className="form-label">{t('phoneNumber')}</label>
                                             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'stretch' }}>
-                                                <div className="input-group" style={{ flex: 1, minWidth: 0 }}>
-                                                    <span style={{ 
-                                                        position: 'absolute', 
-                                                        left: '0.75rem', 
-                                                        fontWeight: 700, 
-                                                        color: 'var(--text-muted)', 
-                                                        fontSize: '0.85rem', 
-                                                        display: 'flex', 
-                                                        alignItems: 'center', 
-                                                        gap: '0.25rem',
-                                                        pointerEvents: 'none',
-                                                        zIndex: 2,
-                                                        whiteSpace: 'nowrap'
+                                                <div 
+                                                    style={{
+                                                        flex: 1,
+                                                        minWidth: 0,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        height: '44px',
+                                                        background: 'var(--card-bg)',
+                                                        border: '1.5px solid var(--border-color)',
+                                                        borderRadius: '8px',
+                                                        overflow: 'hidden',
+                                                        transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
+                                                    }}
+                                                    className="phone-input-field"
+                                                >
+                                                    {/* Country Flag & Prefix Badge */}
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.4rem',
+                                                        padding: '0 0.75rem',
+                                                        height: '100%',
+                                                        background: 'var(--card-bg-subtle, rgba(0, 0, 0, 0.03))',
+                                                        borderRight: '1px solid var(--border-color)',
+                                                        flexShrink: 0,
+                                                        userSelect: 'none'
                                                     }}>
-                                                        <EthiopianFlag width={20} height={14} style={{ marginRight: '4px' }} /> +251
-                                                    </span>
+                                                        <EthiopianFlag width={20} height={14} />
+                                                        <span style={{
+                                                            fontWeight: 800,
+                                                            fontSize: '0.88rem',
+                                                            color: 'var(--text-main)',
+                                                            letterSpacing: '0.5px'
+                                                        }}>
+                                                            +251
+                                                        </span>
+                                                    </div>
+
+                                                    {/* 9-digit Phone Input: Strictly partitioned, zero overlap */}
                                                     <input
                                                         type="tel"
-                                                        className="form-input"
+                                                        inputMode="numeric"
                                                         placeholder="911000000"
                                                         value={phone}
                                                         onChange={e => {
@@ -456,11 +480,19 @@ export default function Login() {
                                                             setPhone(val.slice(0, 9));
                                                         }}
                                                         maxLength={9}
-                                                        style={{ 
-                                                            paddingLeft: '4.15rem', 
-                                                            paddingRight: '0.5rem',
-                                                            letterSpacing: '0.5px',
+                                                        style={{
+                                                            flex: 1,
+                                                            minWidth: 0,
                                                             width: '100%',
+                                                            height: '100%',
+                                                            border: 'none',
+                                                            outline: 'none',
+                                                            background: 'transparent',
+                                                            padding: '0 0.75rem',
+                                                            fontSize: '0.98rem',
+                                                            fontWeight: 700,
+                                                            letterSpacing: '1px',
+                                                            color: 'var(--text-main)',
                                                             boxSizing: 'border-box'
                                                         }}
                                                         required
@@ -475,8 +507,8 @@ export default function Login() {
                                                     disabled={resendCountdown > 0}
                                                     style={{ 
                                                         flexShrink: 0,
-                                                        padding: '0 0.85rem',
-                                                        height: '42px',
+                                                        padding: '0 0.95rem',
+                                                        height: '44px',
                                                         fontSize: '0.825rem',
                                                         fontWeight: 700,
                                                         whiteSpace: 'nowrap',
@@ -601,11 +633,7 @@ export default function Login() {
                     )}
                 </div>
 
-                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}>
-                    <span>🔒 Secured by GurshaPay Financial Compliance •</span>
-                    <EthiopianFlag width={16} height={11} />
-                    <span>Ethiopia</span>
-                </div>
+                <ComplianceBadge />
             </div>
 
             {/* Right Column: Centered Rich Interactive Showcase (Desktop Only) */}

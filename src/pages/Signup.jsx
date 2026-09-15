@@ -10,6 +10,7 @@ import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
+import ComplianceBadge from '../components/ComplianceBadge';
 
 export default function Signup() {
     const [name, setName] = useState(() => {
@@ -547,6 +548,8 @@ export default function Signup() {
                 <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
                     By signing up, you agree to our Terms of Service & Privacy Policy.
                 </div>
+
+                <ComplianceBadge />
             </div>
 
             {/* Right Column: Rich Interactive Showcase (Desktop Only) */}
