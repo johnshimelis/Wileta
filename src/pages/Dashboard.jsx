@@ -865,10 +865,16 @@ export default function Dashboard() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem', width: '100%', boxSizing: 'border-box' }}>
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
-                            <h1 style={{ fontSize: 'clamp(1.35rem, 5vw, 1.75rem)', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                            <h1 style={{ fontSize: 'clamp(1.35rem, 5vw, 1.75rem)', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
                                 <span>{t('welcome')}, {user?.name?.split(' ')[0] || 'Creator'}</span>
                                 <span style={{ fontSize: '1.35rem' }}>👋</span>
                                 {isVerified && <VerifiedBlueTick size={22} title="GurshaPay Verified Creator" />}
+                                {user?.customCommissionRate === 0 && (
+                                    <span className="badge badge-vip" title="VIP Genesis Creator (0% Platform Fee)">👑 VIP (0% Fee)</span>
+                                )}
+                                {user?.customCommissionRate === 0.05 && (
+                                    <span className="badge badge-growth" title="Growth Tier Creator (5% Platform Fee)">⚡ Growth (5% Fee)</span>
+                                )}
                             </h1>
                         </div>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.25rem', marginBottom: 0 }}>

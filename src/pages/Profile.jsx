@@ -98,6 +98,12 @@ export default function Profile() {
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
                                     <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>{user?.name}</h2>
                                     {isVerified && <VerifiedBlueTick size={22} title="Verified Creator" />}
+                                    {user?.customCommissionRate === 0 && (
+                                        <span className="badge badge-vip" title="VIP Genesis Creator (0% Platform Fee)">👑 VIP (0% Fee)</span>
+                                    )}
+                                    {user?.customCommissionRate === 0.05 && (
+                                        <span className="badge badge-growth" title="Growth Tier Creator (5% Platform Fee)">⚡ Growth (5% Fee)</span>
+                                    )}
                                 </div>
                                 <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.9rem', marginTop: '0.2rem' }}>
                                     @{user?.username}

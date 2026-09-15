@@ -607,6 +607,12 @@ export default function PublicProfile() {
                                 <h1 className="creator-display-name">
                                     {creator.name}
                                     {creator.isVerified && <VerifiedBlueTick size={18} />}
+                                    {creator.customCommissionRate === 0 && (
+                                        <span className="badge badge-vip" style={{ marginLeft: '0.4rem', verticalAlign: 'middle', fontSize: '0.75rem' }} title="VIP Genesis Creator (0% Platform Fee)">👑 VIP Genesis</span>
+                                    )}
+                                    {creator.customCommissionRate === 0.05 && (
+                                        <span className="badge badge-growth" style={{ marginLeft: '0.4rem', verticalAlign: 'middle', fontSize: '0.75rem' }} title="Growth Tier Creator (5% Platform Fee)">⚡ Growth Tier</span>
+                                    )}
                                 </h1>
                                 <span className="creator-handle-tag">@{creator.username}</span>
                             </div>

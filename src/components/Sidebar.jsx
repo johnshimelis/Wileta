@@ -100,8 +100,10 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                             )}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                {user?.name || 'Creator'}
+                            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.name || 'Creator'}</span>
+                                {user?.customCommissionRate === 0 && <span style={{ fontSize: '0.7rem' }} title="VIP Creator (0% Fee)">👑</span>}
+                                {user?.customCommissionRate === 0.05 && <span style={{ fontSize: '0.7rem' }} title="Growth Tier (5% Fee)">⚡</span>}
                             </div>
                             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 @{user?.username || 'user'}
