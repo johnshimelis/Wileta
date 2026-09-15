@@ -12,8 +12,18 @@ import ThemeToggle from '../components/ThemeToggle';
 import Logo from '../components/Logo';
 
 export default function Signup() {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [name, setName] = useState(() => {
+        try {
+            const cached = JSON.parse(localStorage.getItem('gp_temp_signup') || '{}');
+            return cached.name || '';
+        } catch (_) { return ''; }
+    });
+    const [email, setEmail] = useState(() => {
+        try {
+            const cached = JSON.parse(localStorage.getItem('gp_temp_signup') || '{}');
+            return cached.email || '';
+        } catch (_) { return ''; }
+    });
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -118,6 +128,10 @@ export default function Signup() {
             });
 
             if (res && res.success) {
+                localStorage.setItem('gp_temp_signup', JSON.stringify({
+                    name: name.trim(),
+                    email: email.trim().toLowerCase()
+                }));
                 navigate('/onboarding');
             } else {
                 setError(res?.error || 'Registration failed. Please check your credentials.');
