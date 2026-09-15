@@ -154,7 +154,9 @@ const translations = {
         
         // Onboarding
         onboardingTitle: "Complete Your Profile",
-        onboardingSubtitle: "A few more details to set up your page.",
+        onboardingSubtitle: "Set up your creator account to start receiving tips directly to your Telebirr.",
+        onboardingDesc: "Set up your creator account to start receiving tips directly to your Telebirr.",
+        chooseAUsername: "Choose a Username",
         bioLabel: "Bio / Description",
         bioPlaceholder: "Tell your fans about yourself...",
         finishSetup: "Finish Setup",
@@ -403,7 +405,9 @@ const translations = {
         
         // Onboarding
         onboardingTitle: "መገለጫዎን ያጠናቅቁ",
-        onboardingSubtitle: "የጉርሻ ገጽዎን ለማስተካከል ጥቂት ዝርዝሮችን ያክሉ።",
+        onboardingSubtitle: "ጉርሻ በቀጥታ በቴሌብርዎ ለመቀበል የፈጣሪ መለያዎን ያዘጋጁ።",
+        onboardingDesc: "ጉርሻ በቀጥታ በቴሌብርዎ ለመቀበል የፈጣሪ መለያዎን ያዘጋጁ።",
+        chooseAUsername: "የተጠቃሚ ስም ይምረጡ",
         bioLabel: "ስለ እኔ / ማብራሪያ",
         bioPlaceholder: "ስለራስዎ ለአድናቂዎችዎ ይንገሩ...",
         finishSetup: "ምዝገባውን ጨርስ",

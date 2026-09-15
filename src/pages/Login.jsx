@@ -187,18 +187,44 @@ export default function Login() {
                 boxSizing: 'border-box',
                 width: '100%'
             }}>
-                {/* Top Controls Bar */}
+                {/* Top Controls Bar: Back icon on left, language & theme toggles on right */}
                 <div style={{
                     width: '100%',
                     maxWidth: '440px',
                     display: 'flex',
-                    justifyContent: 'flex-end',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
-                    gap: '0.5rem',
-                    marginBottom: '0.5rem'
+                    marginBottom: '0.75rem'
                 }}>
-                    <LanguageToggle />
-                    <ThemeToggle />
+                    <button
+                        type="button"
+                        onClick={() => navigate('/')}
+                        aria-label="Back to Home"
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '40px',
+                            height: '40px',
+                            background: 'var(--card-bg)',
+                            border: '1px solid var(--border-color)',
+                            color: 'var(--text-main)',
+                            borderRadius: '50%',
+                            cursor: 'pointer',
+                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+                        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                        title="Back to Home"
+                    >
+                        <ArrowLeft size={19} />
+                    </button>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <LanguageToggle />
+                        <ThemeToggle />
+                    </div>
                 </div>
 
                 {/* Modal Card with Logo INSIDE */}
