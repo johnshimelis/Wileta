@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
     MessageSquare, X, Send, ShieldCheck, CheckCheck, Check,
-    Sparkles, RefreshCw, AlertCircle, Clock, ChevronDown, User
+    Sparkles, RefreshCw, AlertCircle, Clock, ChevronDown, User, Maximize2
 } from 'lucide-react';
 import { io } from 'socket.io-client';
 import { soundFx } from '../utils/soundFx';
@@ -25,6 +26,7 @@ const SUGGESTED_TOPICS = [
 
 export default function DirectChatDrawer() {
     const { user, api } = useAuth();
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
@@ -172,6 +174,10 @@ export default function DirectChatDrawer() {
     // Handle open/close
     const toggleDrawer = () => {
         soundFx.playClick();
+        if (window.innerWidth < 768) {
+            navigate('/chat');
+            return;
+        }
         if (!isOpen) {
             setIsOpen(true);
             fetchMessages(true);
@@ -399,6 +405,26 @@ export default function DirectChatDrawer() {
                                 }}
                             >
                                 <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setIsOpen(false);
+                                    navigate('/chat');
+                                }}
+                                title="Open full screen chat"
+                                style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: 'var(--text-muted)',
+                                    cursor: 'pointer',
+                                    padding: '6px',
+                                    borderRadius: '8px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Maximize2 size={14} />
                             </button>
                             <button
                                 onClick={() => setIsOpen(false)}

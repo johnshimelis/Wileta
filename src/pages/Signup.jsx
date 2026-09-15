@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth, api } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -28,6 +28,38 @@ export default function Signup() {
     const { setUser } = authContext;
     const { t } = useLanguage();
     const navigate = useNavigate();
+
+    // Check for Google OAuth callback token
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        const errParam = params.get('error');
+
+        if (token) {
+            localStorage.setItem('token', token);
+            setLoading(true);
+            api.get('/auth/me')
+                .then(res => {
+                    if (typeof setUser === 'function') setUser(res.data);
+                    localStorage.setItem('gp_cached_user', JSON.stringify(res.data));
+                    if (res.data.isOnboarded) {
+                        navigate('/dashboard');
+                    } else {
+                        navigate('/onboarding');
+                    }
+                })
+                .catch(err => {
+                    console.error('Google signup callback error:', err);
+                    setError('Failed to sign up with Google account.');
+                    localStorage.removeItem('token');
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        } else if (errParam) {
+            setError(decodeURIComponent(errParam));
+        }
+    }, [navigate, setUser]);
 
     // Bulletproof Signup execution with direct API fallback
     const executeSignup = async (payload) => {
@@ -425,7 +457,8 @@ export default function Signup() {
                                 : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                                     ? 'http://localhost:5000'
                                     : 'https://wileta-backend.onrender.com');
-                            window.location.href = `${backendUrl}/api/auth/google`;
+                            const origin = encodeURIComponent(window.location.origin);
+                            window.location.href = `${backendUrl}/api/auth/google?origin=${origin}&platform=web`;
                         }}
                         style={{
                             width: '100%',

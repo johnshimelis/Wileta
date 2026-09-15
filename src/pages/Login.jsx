@@ -526,7 +526,8 @@ export default function Login() {
                                         : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                                             ? 'http://localhost:5000'
                                             : 'https://wileta-backend.onrender.com');
-                                    window.location.href = `${backendUrl}/api/auth/google`;
+                                    const origin = encodeURIComponent(window.location.origin);
+                                    window.location.href = `${backendUrl}/api/auth/google?origin=${origin}&platform=web`;
                                 }}
                                 style={{
                                     width: '100%',

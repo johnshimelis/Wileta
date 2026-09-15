@@ -21,6 +21,7 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const DataDeletion = lazy(() => import('./pages/DataDeletion'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const Support = lazy(() => import('./pages/Support'));
+const Chat = lazy(() => import('./pages/Chat'));
 const MaintenanceScreen = lazy(() => import('./components/MaintenanceScreen'));
 
 const PageLoader = () => (
@@ -132,6 +133,23 @@ const AnimatedRoutes = () => {
           {/* OBS Stream Overlay */}
           <Route path="/overlay/:creatorId" element={<PageTransition><Overlay /></PageTransition>} />
           
+          {/* Direct In-App Chat / Conversation */}
+          <Route path="/chat" element={
+            <ProtectedRoute>
+              <PageTransition><Chat /></PageTransition>
+            </ProtectedRoute>
+          } />
+          <Route path="/conversation" element={
+            <ProtectedRoute>
+              <PageTransition><Chat /></PageTransition>
+            </ProtectedRoute>
+          } />
+          <Route path="/messages" element={
+            <ProtectedRoute>
+              <PageTransition><Chat /></PageTransition>
+            </ProtectedRoute>
+          } />
+
           {/* Support & Contact Pages */}
           <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><Support /></PageTransition>} />
