@@ -3,7 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {
     AlertCircle, Smartphone, Check, ShieldCheck,
-    ArrowLeft, CheckCircle2, User, Mail, Lock, Eye, EyeOff, ArrowRight
+    ArrowLeft, CheckCircle2, User, Mail, Lock, Eye, EyeOff,
+    ArrowRight, Send, Globe, Sparkles
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
@@ -16,10 +17,17 @@ export default function Onboarding() {
     const { t } = useLanguage();
     const navigate = useNavigate();
 
+    // If user is already fully onboarded, redirect straight to dashboard
+    useEffect(() => {
+        if (user?.isOnboarded) {
+            navigate('/dashboard', { replace: true });
+        }
+    }, [user, navigate]);
+
     // Step state: 2 = Creator Profile (Username & Telebirr), 1 = Account Credentials (Name, Email, Password)
     const [step, setStep] = useState(2);
 
-    // Step 1: Account Credentials State (Name, Email, Password, Confirm Password)
+    // Step 1: Account Credentials State
     const [accountName, setAccountName] = useState(() => {
         try {
             const cached = JSON.parse(localStorage.getItem('gp_temp_signup') || '{}');
@@ -44,7 +52,7 @@ export default function Onboarding() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [savingAccount, setSavingAccount] = useState(false);
 
-    // Step 2: Creator Profile State (Username, Telebirr, OTP)
+    // Step 2: Creator Profile State
     const [username, setUsername] = useState(user?.username || '');
     const [telebirrInfo, setTelebirrInfo] = useState(() => {
         const raw = user?.telebirr_number || user?.phone || '';
@@ -66,7 +74,7 @@ export default function Onboarding() {
     const [successMsg, setSuccessMsg] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Sync state when user object loads
+    // Sync state when user loads
     useEffect(() => {
         if (user) {
             if (!accountName && user.name) setAccountName(user.name);
@@ -86,9 +94,7 @@ export default function Onboarding() {
         return () => clearInterval(timer);
     }, [resendCooldown]);
 
-    // Clean back button handler:
-    // If on Step 2 -> smoothly go back to Step 1 (where full name, email, password, and confirm password are)
-    // If on Step 1 -> log out and return to signup
+    // Clean back button handler
     const handleBack = () => {
         setError('');
         setSuccessMsg('');
@@ -96,7 +102,7 @@ export default function Onboarding() {
             setStep(1);
         } else {
             if (typeof logout === 'function') logout();
-            navigate('/signup');
+            navigate('/signup', { replace: true });
         }
     };
 
@@ -146,7 +152,6 @@ export default function Onboarding() {
                 localStorage.setItem('gp_cached_user', JSON.stringify(res.data));
             }
 
-            // Cache entered values in temporary storage
             localStorage.setItem('gp_temp_signup', JSON.stringify({
                 name: accountName.trim(),
                 email: accountEmail.trim().toLowerCase()
@@ -262,7 +267,8 @@ export default function Onboarding() {
 
             if (res.success) {
                 localStorage.removeItem('gp_temp_signup');
-                navigate('/dashboard');
+                // Use { replace: true } so pressing hardware back button on phone NEVER goes back to onboarding!
+                navigate('/dashboard', { replace: true });
             } else {
                 setError(res.error || 'Failed to complete profile setup.');
             }
@@ -275,276 +281,276 @@ export default function Onboarding() {
 
     return (
         <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            minHeight: '100vh',
+            minHeight: '100dvh',
             width: '100%',
             background: 'var(--bg-color)',
-            padding: '1.25rem 1rem',
-            boxSizing: 'border-box'
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative'
         }}>
-            {/* Top Navigation Bar: Clean Back Icon ONLY on the left, Controls on the right */}
-            <div style={{
+            {/* 1. STICKY TOP NAVIGATION BAR (Always visible, never scrolls out of screen) */}
+            <header style={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 50,
                 width: '100%',
-                maxWidth: '460px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '1rem'
-            }}>
-                {/* Back Button with ONLY the icon - no text or words */}
-                <button
-                    type="button"
-                    onClick={handleBack}
-                    aria-label="Back"
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '42px',
-                        height: '42px',
-                        background: 'var(--card-bg)',
-                        border: '1px solid var(--border-color)',
-                        color: 'var(--text-main)',
-                        borderRadius: '50%',
-                        cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
-                        transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-                    title={step === 2 ? "Go back to Step 1: Account Credentials" : "Back to Sign Up"}
-                >
-                    <ArrowLeft size={20} />
-                </button>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <LanguageToggle />
-                    <ThemeToggle />
-                </div>
-            </div>
-
-            {/* Main Centered Card */}
-            <div style={{
-                width: '100%',
-                maxWidth: '460px',
-                margin: 'auto 0',
                 background: 'var(--card-bg)',
-                border: '1px solid var(--border-color)',
-                borderRadius: '24px',
-                padding: '2.25rem 2rem',
-                boxShadow: '0 14px 34px -10px rgba(0, 0, 0, 0.12), 0 4px 14px -2px rgba(0, 0, 0, 0.05)',
-                boxSizing: 'border-box',
-                transition: 'all 0.25s ease'
+                borderBottom: '1px solid var(--border-color)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)'
             }}>
-                {/* Centered Logo */}
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
-                    <Logo size="large" />
+                <div style={{
+                    maxWidth: '560px',
+                    margin: '0 auto',
+                    padding: '0.75rem 1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    boxSizing: 'border-box'
+                }}>
+                    {/* Clean round back icon button */}
+                    <button
+                        type="button"
+                        onClick={handleBack}
+                        aria-label="Back"
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '40px',
+                            height: '40px',
+                            background: 'var(--card-bg-subtle)',
+                            border: '1px solid var(--border-color)',
+                            color: 'var(--text-main)',
+                            borderRadius: '50%',
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease',
+                            flexShrink: 0
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+                        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                        title={step === 2 ? "Go back to Step 1: Account Credentials" : "Back to Sign Up"}
+                    >
+                        <ArrowLeft size={19} />
+                    </button>
+
+                    {/* Step indicator pill */}
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.45rem',
+                        padding: '0.35rem 0.85rem',
+                        borderRadius: '9999px',
+                        background: 'var(--card-bg-subtle)',
+                        border: '1px solid var(--border-color)',
+                        fontSize: '0.78rem',
+                        fontWeight: 800,
+                        color: 'var(--text-main)',
+                        letterSpacing: '0.02em'
+                    }}>
+                        <span style={{
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
+                            background: step === 2 ? '#10B981' : 'var(--primary)'
+                        }}></span>
+                        <span>{step === 2 ? 'STEP 2 OF 2 • PROFILE' : 'STEP 1 OF 2 • ACCOUNT'}</span>
+                    </div>
+
+                    {/* Controls: Language and Theme */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <LanguageToggle />
+                        <ThemeToggle />
+                    </div>
                 </div>
+            </header>
 
-                {/* Success Banner */}
-                {successMsg && (
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        background: 'rgba(16, 185, 129, 0.12)',
-                        border: '1px solid #10B981',
-                        color: '#10B981',
-                        borderRadius: '12px',
-                        padding: '0.75rem 1rem',
-                        fontSize: '0.85rem',
-                        fontWeight: 700,
-                        marginBottom: '1.25rem'
-                    }}>
-                        <CheckCircle2 size={18} style={{ flexShrink: 0 }} />
-                        <span>{successMsg}</span>
+            {/* 2. MAIN CENTERED CONTENT CONTAINER */}
+            <main style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '1.5rem 1rem 2.5rem',
+                boxSizing: 'border-box'
+            }}>
+                <div style={{
+                    width: '100%',
+                    maxWidth: '480px',
+                    background: 'var(--card-bg)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '24px',
+                    padding: '2rem 1.75rem',
+                    boxShadow: '0 16px 40px -12px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.03)',
+                    boxSizing: 'border-box',
+                    transition: 'all 0.2s ease'
+                }}>
+                    {/* Centered Brand Emblem */}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                        <Logo size="medium" />
                     </div>
-                )}
 
-                {/* Error Banner */}
-                {error && (
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        background: 'var(--danger-light, rgba(239, 68, 68, 0.12))',
-                        border: '1px solid var(--danger, #EF4444)',
-                        color: 'var(--danger, #EF4444)',
-                        borderRadius: '12px',
-                        padding: '0.75rem 1rem',
-                        fontSize: '0.825rem',
-                        fontWeight: 600,
-                        marginBottom: '1.25rem'
-                    }}>
-                        <AlertCircle size={18} style={{ flexShrink: 0 }} />
-                        <span>{error}</span>
-                    </div>
-                )}
-
-                {/* ============================================================== */}
-                {/* STEP 1: ACCOUNT CREDENTIALS (NAME, EMAIL, PASSWORD, CONFIRM)   */}
-                {/* ============================================================== */}
-                {step === 1 && (
-                    <div>
-                        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-                            <h1 style={{
-                                fontSize: '1.6rem',
-                                fontWeight: 900,
-                                color: 'var(--text-main)',
-                                marginBottom: '0.45rem',
-                                letterSpacing: '-0.3px'
-                            }}>
-                                {t('accountCredentialsTitle') || 'Account Credentials'}
-                            </h1>
-                            <p style={{
-                                color: 'var(--text-muted)',
-                                fontSize: '0.875rem',
-                                lineHeight: 1.5,
-                                margin: 0
-                            }}>
-                                {t('accountCredentialsDesc') || 'Make any corrections to your name, email, or password before finishing your profile.'}
-                            </p>
+                    {/* Success Alert Banner */}
+                    {successMsg && (
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.6rem',
+                            background: 'rgba(16, 185, 129, 0.12)',
+                            border: '1px solid #10B981',
+                            color: '#10B981',
+                            borderRadius: '14px',
+                            padding: '0.85rem 1rem',
+                            fontSize: '0.85rem',
+                            fontWeight: 700,
+                            marginBottom: '1.25rem',
+                            animation: 'fadeIn 0.2s ease-out'
+                        }}>
+                            <CheckCircle2 size={19} style={{ flexShrink: 0 }} />
+                            <span>{successMsg}</span>
                         </div>
+                    )}
 
-                        <form onSubmit={handleSaveAccountCredentials}>
-                            {/* Full Name */}
-                            <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                                <label className="form-label" style={{ fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-main)', marginBottom: '0.45rem', display: 'block' }}>
-                                    {t('fullName') || 'Full Name'}
-                                </label>
-                                <div className="input-group" style={{ position: 'relative' }}>
-                                    <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
-                                        <User size={18} />
-                                    </span>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        placeholder="e.g. John Shimelis"
-                                        value={accountName}
-                                        onChange={(e) => setAccountName(e.target.value)}
-                                        style={{
-                                            width: '100%',
-                                            height: '50px',
-                                            paddingLeft: '2.6rem',
-                                            fontSize: '1rem',
-                                            fontWeight: 600,
-                                            borderRadius: '14px',
-                                            boxSizing: 'border-box'
-                                        }}
-                                        required
-                                    />
-                                </div>
+                    {/* Error Alert Banner */}
+                    {error && (
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.6rem',
+                            background: 'var(--danger-light, rgba(239, 68, 68, 0.12))',
+                            border: '1px solid var(--danger, #EF4444)',
+                            color: 'var(--danger, #EF4444)',
+                            borderRadius: '14px',
+                            padding: '0.85rem 1rem',
+                            fontSize: '0.85rem',
+                            fontWeight: 700,
+                            marginBottom: '1.25rem',
+                            animation: 'fadeIn 0.2s ease-out'
+                        }}>
+                            <AlertCircle size={19} style={{ flexShrink: 0 }} />
+                            <span>{error}</span>
+                        </div>
+                    )}
+
+                    {/* ============================================================== */}
+                    {/* STEP 1: ACCOUNT CREDENTIALS (NAME, EMAIL, PASSWORD, CONFIRM)   */}
+                    {/* ============================================================== */}
+                    {step === 1 && (
+                        <div>
+                            <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+                                <h1 style={{
+                                    fontSize: '1.5rem',
+                                    fontWeight: 900,
+                                    color: 'var(--text-main)',
+                                    marginBottom: '0.4rem',
+                                    letterSpacing: '-0.02em'
+                                }}>
+                                    {t('accountCredentialsTitle') || 'Account Credentials'}
+                                </h1>
+                                <p style={{
+                                    color: 'var(--text-muted)',
+                                    fontSize: '0.875rem',
+                                    lineHeight: 1.5,
+                                    margin: 0
+                                }}>
+                                    {t('accountCredentialsDesc') || 'Review or edit your account information before completing your profile.'}
+                                </p>
                             </div>
 
-                            {/* Email Address */}
-                            <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                                <label className="form-label" style={{ fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-main)', marginBottom: '0.45rem', display: 'block' }}>
-                                    {t('emailAddress') || 'Email Address'}
-                                </label>
-                                <div className="input-group" style={{ position: 'relative' }}>
-                                    <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
-                                        <Mail size={18} />
-                                    </span>
-                                    <input
-                                        type="email"
-                                        className="form-input"
-                                        placeholder="name@example.com"
-                                        value={accountEmail}
-                                        onChange={(e) => setAccountEmail(e.target.value)}
-                                        style={{
-                                            width: '100%',
-                                            height: '50px',
-                                            paddingLeft: '2.6rem',
-                                            fontSize: '1rem',
-                                            fontWeight: 600,
-                                            borderRadius: '14px',
-                                            boxSizing: 'border-box'
-                                        }}
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Password */}
-                            <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                                <label className="form-label" style={{ fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-main)', marginBottom: '0.45rem', display: 'block' }}>
-                                    {t('password') || 'Password'} <span style={{ fontWeight: 400, color: 'var(--text-muted)', fontSize: '0.75rem' }}>(Leave blank to keep unchanged)</span>
-                                </label>
-                                <div className="input-group" style={{ position: 'relative' }}>
-                                    <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
-                                        <Lock size={18} />
-                                    </span>
-                                    <input
-                                        type={showPassword ? 'text' : 'password'}
-                                        className="form-input"
-                                        placeholder="Enter new password (min. 6 characters)"
-                                        value={accountPassword}
-                                        onChange={(e) => setAccountPassword(e.target.value)}
-                                        style={{
-                                            width: '100%',
-                                            height: '50px',
-                                            paddingLeft: '2.6rem',
-                                            paddingRight: '2.6rem',
-                                            fontSize: '1rem',
-                                            fontWeight: 600,
-                                            borderRadius: '14px',
-                                            boxSizing: 'border-box'
-                                        }}
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        style={{
-                                            position: 'absolute',
-                                            right: '0.9rem',
-                                            top: '50%',
-                                            transform: 'translateY(-50%)',
-                                            background: 'transparent',
-                                            border: 'none',
-                                            color: 'var(--text-muted)',
-                                            cursor: 'pointer',
-                                            padding: 0
-                                        }}
-                                    >
-                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Confirm Password */}
-                            {accountPassword.length > 0 && (
-                                <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-                                    <label className="form-label" style={{ fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-main)', marginBottom: '0.45rem', display: 'block' }}>
-                                        {t('confirmPassword') || 'Confirm Password'}
+                            <form onSubmit={handleSaveAccountCredentials}>
+                                {/* Full Name */}
+                                <div style={{ marginBottom: '1.25rem' }}>
+                                    <label style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '0.45rem', display: 'block' }}>
+                                        {t('fullName') || 'Full Name'}
                                     </label>
-                                    <div className="input-group" style={{ position: 'relative' }}>
+                                    <div style={{ position: 'relative' }}>
+                                        <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
+                                            <User size={18} />
+                                        </span>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            placeholder="e.g. Abebe Kebede"
+                                            value={accountName}
+                                            onChange={(e) => setAccountName(e.target.value)}
+                                            style={{
+                                                width: '100%',
+                                                height: '50px',
+                                                paddingLeft: '2.6rem',
+                                                fontSize: '0.975rem',
+                                                fontWeight: 600,
+                                                borderRadius: '14px',
+                                                boxSizing: 'border-box'
+                                            }}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Email Address */}
+                                <div style={{ marginBottom: '1.25rem' }}>
+                                    <label style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '0.45rem', display: 'block' }}>
+                                        {t('emailAddress') || 'Email Address'}
+                                    </label>
+                                    <div style={{ position: 'relative' }}>
+                                        <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
+                                            <Mail size={18} />
+                                        </span>
+                                        <input
+                                            type="email"
+                                            className="form-input"
+                                            placeholder="name@example.com"
+                                            value={accountEmail}
+                                            onChange={(e) => setAccountEmail(e.target.value)}
+                                            style={{
+                                                width: '100%',
+                                                height: '50px',
+                                                paddingLeft: '2.6rem',
+                                                fontSize: '0.975rem',
+                                                fontWeight: 600,
+                                                borderRadius: '14px',
+                                                boxSizing: 'border-box'
+                                            }}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Password */}
+                                <div style={{ marginBottom: '1.25rem' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
+                                        <label style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', margin: 0 }}>
+                                            {t('password') || 'Password'}
+                                        </label>
+                                        <span style={{ fontWeight: 500, color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+                                            (Leave blank to keep current)
+                                        </span>
+                                    </div>
+                                    <div style={{ position: 'relative' }}>
                                         <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
                                             <Lock size={18} />
                                         </span>
                                         <input
-                                            type={showConfirmPassword ? 'text' : 'password'}
+                                            type={showPassword ? 'text' : 'password'}
                                             className="form-input"
-                                            placeholder="Re-enter new password"
-                                            value={accountConfirmPassword}
-                                            onChange={(e) => setAccountConfirmPassword(e.target.value)}
+                                            placeholder="Enter new password (min. 6 characters)"
+                                            value={accountPassword}
+                                            onChange={(e) => setAccountPassword(e.target.value)}
                                             style={{
                                                 width: '100%',
                                                 height: '50px',
                                                 paddingLeft: '2.6rem',
                                                 paddingRight: '2.6rem',
-                                                fontSize: '1rem',
+                                                fontSize: '0.975rem',
                                                 fontWeight: 600,
                                                 borderRadius: '14px',
                                                 boxSizing: 'border-box'
                                             }}
-                                            required={accountPassword.length > 0}
                                         />
                                         <button
                                             type="button"
-                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                            onClick={() => setShowPassword(!showPassword)}
                                             style={{
                                                 position: 'absolute',
                                                 right: '0.9rem',
@@ -557,372 +563,460 @@ export default function Onboarding() {
                                                 padding: 0
                                             }}
                                         >
-                                            {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                         </button>
                                     </div>
                                 </div>
-                            )}
 
-                            {/* Save & Continue to Profile Setup */}
-                            <button
-                                type="submit"
-                                disabled={savingAccount}
-                                style={{
-                                    width: '100%',
-                                    height: '52px',
-                                    background: 'var(--primary)',
-                                    color: '#FFFFFF',
-                                    border: 'none',
-                                    borderRadius: '14px',
-                                    fontWeight: 900,
-                                    fontSize: '1.05rem',
-                                    cursor: savingAccount ? 'not-allowed' : 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem',
-                                    boxShadow: '0 4px 14px rgba(5, 150, 105, 0.3)',
-                                    transition: 'all 0.15s ease',
-                                    marginTop: '1rem'
-                                }}
-                            >
-                                {savingAccount ? <span className="spinner"></span> : (
-                                    <>{t('continueToProfile') || 'Continue to Profile Setup'} <ArrowRight size={19} /></>
-                                )}
-                            </button>
-
-                            {/* Direct Skip / Switch Back Link */}
-                            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setError('');
-                                        setSuccessMsg('');
-                                        setStep(2);
-                                    }}
-                                    style={{
-                                        background: 'transparent',
-                                        border: 'none',
-                                        color: 'var(--primary)',
-                                        fontSize: '0.85rem',
-                                        fontWeight: 800,
-                                        cursor: 'pointer',
-                                        textDecoration: 'underline'
-                                    }}
-                                >
-                                    {t('returnToProfile') || 'Return to profile setup'} →
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                )}
-
-                {/* ============================================================== */}
-                {/* STEP 2: CREATOR PROFILE SETUP (USERNAME, TELEBIRR, OTP)       */}
-                {/* ============================================================== */}
-                {step === 2 && (
-                    <div>
-                        {/* Header Titles */}
-                        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-                            <h1 style={{
-                                fontSize: '1.65rem',
-                                fontWeight: 900,
-                                color: 'var(--text-main)',
-                                marginBottom: '0.45rem',
-                                letterSpacing: '-0.3px'
-                            }}>
-                                {t('onboardingTitle') || 'Complete Your Profile'}
-                            </h1>
-                            <p style={{
-                                color: 'var(--text-muted)',
-                                fontSize: '0.875rem',
-                                lineHeight: 1.5,
-                                margin: 0
-                            }}>
-                                {t('onboardingDesc') || 'Set up your creator account to start receiving tips directly to your Telebirr.'}
-                            </p>
-                        </div>
-
-                        <form onSubmit={handleOnboard}>
-                            {/* Choose Username Field */}
-                            <div className="form-group" style={{ marginBottom: '1.35rem' }}>
-                                <label className="form-label" style={{ fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-main)', marginBottom: '0.45rem', display: 'block' }}>
-                                    {t('chooseAUsername') || 'Choose a Username'}
-                                </label>
-                                <div className="input-group" style={{ position: 'relative' }}>
-                                    <span style={{
-                                        position: 'absolute',
-                                        left: '1rem',
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        fontWeight: 900,
-                                        color: 'var(--primary)',
-                                        fontSize: '1.15rem'
-                                    }}>
-                                        @
-                                    </span>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        placeholder="username"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-                                        style={{
-                                            width: '100%',
-                                            height: '50px',
-                                            paddingLeft: '2.5rem',
-                                            fontSize: '1rem',
-                                            fontWeight: 700,
-                                            borderRadius: '14px',
-                                            boxSizing: 'border-box'
-                                        }}
-                                        required
-                                    />
-                                </div>
-                                <p style={{
-                                    fontSize: '0.82rem',
-                                    color: 'var(--primary)',
-                                    marginTop: '0.4rem',
-                                    fontWeight: 700
-                                }}>
-                                    {t('yourTipLink') || 'Your tip link'}: gurshapay.com/@{username || 'yourname'}
-                                </p>
-                            </div>
-
-                            {/* Telebirr Number Field (100% Full Width, ZERO Cropping!) */}
-                            <div className="form-group" style={{ marginBottom: '1.35rem' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
-                                    <label className="form-label" style={{ marginBottom: 0, fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-main)' }}>
-                                        {t('yourTelebirrNumber') || 'Your Telebirr Number'}
-                                    </label>
-                                    {isVerified && (
-                                        <span style={{ fontSize: '0.78rem', color: '#10B981', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                                            <ShieldCheck size={16} /> {t('telebirrVerifiedBadge') || 'Verified'}
-                                        </span>
-                                    )}
-                                </div>
-
-                                {/* Full Width Phone Input Container */}
-                                <div style={{
-                                    position: 'relative',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    width: '100%',
-                                    height: '52px',
-                                    background: 'var(--bg-input, var(--card-bg))',
-                                    border: '1.5px solid var(--border-color)',
-                                    borderRadius: '14px',
-                                    boxSizing: 'border-box',
-                                    overflow: 'hidden',
-                                    transition: 'border-color 0.2s, box-shadow 0.2s'
-                                }}>
-                                    {/* Ethiopian Flag & +251 Country Code */}
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '0.45rem',
-                                        padding: '0 0.85rem',
-                                        height: '100%',
-                                        background: 'var(--card-bg-subtle, rgba(0, 0, 0, 0.03))',
-                                        borderRight: '1px solid var(--border-color)',
-                                        flexShrink: 0,
-                                        userSelect: 'none'
-                                    }}>
-                                        <EthiopianFlag width={22} height={15} />
-                                        <span style={{
-                                            fontWeight: 800,
-                                            fontSize: '0.95rem',
-                                            color: 'var(--text-main)',
-                                            letterSpacing: '0.5px'
-                                        }}>
-                                            +251
-                                        </span>
+                                {/* Confirm Password */}
+                                {accountPassword.length > 0 && (
+                                    <div style={{ marginBottom: '1.5rem' }}>
+                                        <label style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '0.45rem', display: 'block' }}>
+                                            {t('confirmPassword') || 'Confirm Password'}
+                                        </label>
+                                        <div style={{ position: 'relative' }}>
+                                            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
+                                                <Lock size={18} />
+                                            </span>
+                                            <input
+                                                type={showConfirmPassword ? 'text' : 'password'}
+                                                className="form-input"
+                                                placeholder="Re-enter new password"
+                                                value={accountConfirmPassword}
+                                                onChange={(e) => setAccountConfirmPassword(e.target.value)}
+                                                style={{
+                                                    width: '100%',
+                                                    height: '50px',
+                                                    paddingLeft: '2.6rem',
+                                                    paddingRight: '2.6rem',
+                                                    fontSize: '0.975rem',
+                                                    fontWeight: 600,
+                                                    borderRadius: '14px',
+                                                    boxSizing: 'border-box'
+                                                }}
+                                                required={accountPassword.length > 0}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: '0.9rem',
+                                                    top: '50%',
+                                                    transform: 'translateY(-50%)',
+                                                    background: 'transparent',
+                                                    border: 'none',
+                                                    color: 'var(--text-muted)',
+                                                    cursor: 'pointer',
+                                                    padding: 0
+                                                }}
+                                            >
+                                                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                            </button>
+                                        </div>
                                     </div>
+                                )}
 
-                                    {/* 9-digit Phone Input: Never Cropped! */}
-                                    <input
-                                        type="tel"
-                                        inputMode="numeric"
-                                        className="form-input"
-                                        placeholder="911000000"
-                                        value={telebirrInfo}
-                                        onChange={handlePhoneChange}
-                                        maxLength={9}
-                                        disabled={isVerified}
-                                        style={{
-                                            flex: 1,
-                                            width: '100%',
-                                            height: '100%',
-                                            border: 'none',
-                                            outline: 'none',
-                                            background: 'transparent',
-                                            padding: '0 0.85rem',
-                                            fontSize: '1.15rem',
-                                            fontWeight: 800,
-                                            letterSpacing: '2px',
-                                            color: 'var(--text-main)',
-                                            boxSizing: 'border-box'
-                                        }}
-                                    />
-                                </div>
-
-                                {/* Send / Resend OTP Action Button */}
+                                {/* Save & Continue Button */}
                                 <button
-                                    type="button"
-                                    onClick={handleSendOtp}
-                                    disabled={otpSending || resendCooldown > 0 || isVerified || telebirrInfo.length !== 9}
+                                    type="submit"
+                                    disabled={savingAccount}
                                     style={{
                                         width: '100%',
-                                        height: '46px',
-                                        marginTop: '0.65rem',
-                                        background: isVerified
-                                            ? '#10B981'
-                                            : (telebirrInfo.length === 9 && resendCooldown === 0
-                                                ? 'var(--card-bg-subtle, #E2E8F0)'
-                                                : 'var(--card-bg-subtle, #F1F5F9)'),
-                                        color: isVerified ? '#FFFFFF' : 'var(--text-main)',
-                                        border: '1px solid var(--border-color)',
-                                        borderRadius: '12px',
+                                        height: '52px',
+                                        background: 'var(--primary)',
+                                        color: '#FFFFFF',
+                                        border: 'none',
+                                        borderRadius: '14px',
                                         fontWeight: 800,
-                                        fontSize: '0.9rem',
-                                        cursor: (telebirrInfo.length === 9 && resendCooldown === 0 && !otpSending) ? 'pointer' : 'default',
+                                        fontSize: '1rem',
+                                        cursor: savingAccount ? 'not-allowed' : 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         gap: '0.5rem',
-                                        transition: 'all 0.15s ease'
+                                        boxShadow: '0 4px 16px rgba(5, 150, 105, 0.35)',
+                                        transition: 'all 0.15s ease',
+                                        marginTop: '1rem'
                                     }}
                                 >
-                                    {isVerified ? (
-                                        <><Check size={18} /> {t('telebirrVerifiedBadge') || 'Telebirr Verified'}</>
-                                    ) : otpSending ? (
-                                        <span className="spinner"></span>
-                                    ) : resendCooldown > 0 ? (
-                                        <span>{t('resendIn') || 'Resend code in'} {resendCooldown}s</span>
-                                    ) : (
-                                        <>📲 {t('sendOtp') || 'Send OTP'}</>
+                                    {savingAccount ? <span className="spinner"></span> : (
+                                        <>{t('continueToProfile') || 'Continue to Profile Setup'} <ArrowRight size={18} /></>
                                     )}
                                 </button>
+
+                                {/* Skip back to step 2 link */}
+                                <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setError('');
+                                            setSuccessMsg('');
+                                            setStep(2);
+                                        }}
+                                        style={{
+                                            background: 'transparent',
+                                            border: 'none',
+                                            color: 'var(--primary)',
+                                            fontSize: '0.85rem',
+                                            fontWeight: 800,
+                                            cursor: 'pointer',
+                                            textDecoration: 'underline'
+                                        }}
+                                    >
+                                        {t('returnToProfile') || 'Return to profile setup'} →
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    )}
+
+                    {/* ============================================================== */}
+                    {/* STEP 2: CREATOR PROFILE SETUP (USERNAME, TELEBIRR, OTP)       */}
+                    {/* ============================================================== */}
+                    {step === 2 && (
+                        <div>
+                            {/* Header Titles */}
+                            <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+                                <h1 style={{
+                                    fontSize: '1.55rem',
+                                    fontWeight: 900,
+                                    color: 'var(--text-main)',
+                                    marginBottom: '0.4rem',
+                                    letterSpacing: '-0.02em'
+                                }}>
+                                    {t('onboardingTitle') || 'Complete Your Profile'}
+                                </h1>
+                                <p style={{
+                                    color: 'var(--text-muted)',
+                                    fontSize: '0.875rem',
+                                    lineHeight: 1.5,
+                                    margin: 0
+                                }}>
+                                    {t('onboardingDesc') || 'Set up your creator handle and verified Telebirr to receive tips instantly.'}
+                                </p>
                             </div>
 
-                            {/* OTP Input & Verification Section */}
-                            {otpSent && !isVerified && (
-                                <div className="form-group" style={{
-                                    marginBottom: '1.35rem',
-                                    padding: '1rem',
-                                    background: 'var(--card-bg-subtle, rgba(0, 0, 0, 0.02))',
-                                    borderRadius: '16px',
-                                    border: '1px dashed var(--border-color)'
-                                }}>
-                                    <label className="form-label" style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '0.45rem', display: 'block' }}>
-                                        {t('otpCodeLabel') || 'Verification Code (OTP)'}
+                            <form onSubmit={handleOnboard}>
+                                {/* Choose Username Field */}
+                                <div style={{ marginBottom: '1.5rem' }}>
+                                    <label style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '0.45rem', display: 'block' }}>
+                                        {t('chooseAUsername') || 'Choose a Username'}
                                     </label>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                                        <div className="input-group" style={{ position: 'relative' }}>
-                                            <span style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
-                                                <Smartphone size={18} />
-                                            </span>
-                                            <input
-                                                type="text"
-                                                className="form-input"
-                                                placeholder="6-digit code"
-                                                value={otp}
-                                                onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
-                                                maxLength={6}
-                                                style={{
-                                                    width: '100%',
-                                                    height: '50px',
-                                                    paddingLeft: '2.5rem',
-                                                    letterSpacing: otp ? '6px' : 'normal',
-                                                    fontWeight: 800,
-                                                    fontSize: '1.2rem',
-                                                    textAlign: 'center',
-                                                    boxSizing: 'border-box',
-                                                    borderRadius: '12px'
-                                                }}
-                                                autoFocus
-                                            />
+                                    
+                                    <div style={{
+                                        position: 'relative',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        height: '52px',
+                                        background: 'var(--card-bg-subtle, #F8FAFC)',
+                                        border: '1.5px solid var(--border-color)',
+                                        borderRadius: '14px',
+                                        overflow: 'hidden',
+                                        transition: 'border-color 0.2s, box-shadow 0.2s'
+                                    }}>
+                                        {/* Stylized @ badge prefix */}
+                                        <div style={{
+                                            padding: '0 0.9rem',
+                                            height: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            background: 'rgba(5, 150, 105, 0.08)',
+                                            borderRight: '1px solid var(--border-color)',
+                                            color: 'var(--primary)',
+                                            fontWeight: 900,
+                                            fontSize: '1.1rem',
+                                            userSelect: 'none',
+                                            flexShrink: 0
+                                        }}>
+                                            @
                                         </div>
 
-                                        <button
-                                            type="button"
-                                            onClick={handleVerifyOtp}
-                                            disabled={verifying || otp.length !== 6}
+                                        <input
+                                            type="text"
+                                            placeholder="username"
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
                                             style={{
-                                                width: '100%',
-                                                height: '46px',
-                                                background: otp.length === 6 ? '#10B981' : 'var(--border-color)',
-                                                color: otp.length === 6 ? '#FFFFFF' : 'var(--text-muted)',
+                                                flex: 1,
+                                                height: '100%',
                                                 border: 'none',
-                                                borderRadius: '12px',
-                                                fontWeight: 800,
-                                                fontSize: '0.95rem',
-                                                cursor: otp.length === 6 && !verifying ? 'pointer' : 'not-allowed',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: '0.45rem',
-                                                boxShadow: otp.length === 6 ? '0 3px 10px rgba(16, 185, 129, 0.3)' : 'none',
-                                                transition: 'all 0.15s ease'
+                                                outline: 'none',
+                                                background: 'transparent',
+                                                padding: '0 0.85rem',
+                                                fontSize: '1rem',
+                                                fontWeight: 700,
+                                                color: 'var(--text-main)',
+                                                boxSizing: 'border-box'
                                             }}
-                                        >
-                                            {verifying ? <span className="spinner"></span> : <><Check size={18} /> {t('verifyOtp') || 'Verify Code'}</>}
-                                        </button>
+                                            required
+                                        />
+
+                                        {username.length >= 3 && (
+                                            <div style={{ paddingRight: '0.85rem', color: '#10B981', display: 'flex', alignItems: 'center' }}>
+                                                <Check size={18} />
+                                            </div>
+                                        )}
                                     </div>
 
-                                    {devOtp && (
-                                        <div style={{ marginTop: '0.45rem', fontSize: '0.78rem', color: 'var(--primary)', fontWeight: 700 }}>
-                                            ℹ️ Test Verification Code: {devOtp}
-                                        </div>
-                                    )}
+                                    {/* Interactive Live Link Preview Card */}
+                                    <div style={{
+                                        marginTop: '0.5rem',
+                                        padding: '0.55rem 0.85rem',
+                                        background: 'rgba(5, 150, 105, 0.06)',
+                                        border: '1px solid rgba(5, 150, 105, 0.2)',
+                                        borderRadius: '10px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.45rem',
+                                        fontSize: '0.82rem',
+                                        color: 'var(--primary)',
+                                        fontWeight: 700
+                                    }}>
+                                        <Globe size={14} style={{ flexShrink: 0 }} />
+                                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                            gurshapay.com/@{username || 'yourname'}
+                                        </span>
+                                    </div>
                                 </div>
-                            )}
 
-                            {/* Complete Setup Submit Button */}
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                style={{
-                                    width: '100%',
-                                    height: '52px',
-                                    background: 'var(--primary)',
-                                    color: '#FFFFFF',
-                                    border: 'none',
-                                    borderRadius: '14px',
-                                    fontWeight: 900,
-                                    fontSize: '1.05rem',
-                                    cursor: loading ? 'not-allowed' : 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem',
-                                    boxShadow: '0 4px 14px rgba(5, 150, 105, 0.3)',
-                                    transition: 'all 0.15s ease',
-                                    marginTop: '0.75rem'
-                                }}
-                            >
-                                {loading ? <span className="spinner"></span> : (t('completeSetup') || 'Complete Setup')}
-                            </button>
-                        </form>
-                    </div>
-                )}
-            </div>
+                                {/* Telebirr Number Section */}
+                                <div style={{ marginBottom: '1.5rem' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
+                                        <label style={{ margin: 0, fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)' }}>
+                                            {t('yourTelebirrNumber') || 'Your Telebirr Number'}
+                                        </label>
+                                        {isVerified && (
+                                            <span style={{ fontSize: '0.78rem', color: '#10B981', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                                <ShieldCheck size={16} /> {t('telebirrVerifiedBadge') || 'Verified'}
+                                            </span>
+                                        )}
+                                    </div>
 
-            {/* Bottom Financial Compliance Badge */}
-            <div style={{
+                                    {/* Full Width Phone Container */}
+                                    <div style={{
+                                        position: 'relative',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        width: '100%',
+                                        height: '52px',
+                                        background: 'var(--card-bg-subtle, #F8FAFC)',
+                                        border: '1.5px solid var(--border-color)',
+                                        borderRadius: '14px',
+                                        boxSizing: 'border-box',
+                                        overflow: 'hidden',
+                                        transition: 'border-color 0.2s, box-shadow 0.2s'
+                                    }}>
+                                        {/* Ethiopian Flag & +251 Country Code */}
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.45rem',
+                                            padding: '0 0.85rem',
+                                            height: '100%',
+                                            background: 'var(--card-bg-subtle, rgba(0, 0, 0, 0.03))',
+                                            borderRight: '1px solid var(--border-color)',
+                                            flexShrink: 0,
+                                            userSelect: 'none'
+                                        }}>
+                                            <EthiopianFlag width={22} height={15} />
+                                            <span style={{
+                                                fontWeight: 800,
+                                                fontSize: '0.95rem',
+                                                color: 'var(--text-main)',
+                                                letterSpacing: '0.5px'
+                                            }}>
+                                                +251
+                                            </span>
+                                        </div>
+
+                                        {/* 9-digit Phone Input: Never Cropped! */}
+                                        <input
+                                            type="tel"
+                                            inputMode="numeric"
+                                            placeholder="911000000"
+                                            value={telebirrInfo}
+                                            onChange={handlePhoneChange}
+                                            maxLength={9}
+                                            disabled={isVerified}
+                                            style={{
+                                                flex: 1,
+                                                width: '100%',
+                                                height: '100%',
+                                                border: 'none',
+                                                outline: 'none',
+                                                background: 'transparent',
+                                                padding: '0 0.85rem',
+                                                fontSize: '1.15rem',
+                                                fontWeight: 800,
+                                                letterSpacing: '2px',
+                                                color: 'var(--text-main)',
+                                                boxSizing: 'border-box'
+                                            }}
+                                        />
+                                    </div>
+
+                                    {/* Action button: Send OTP */}
+                                    <button
+                                        type="button"
+                                        onClick={handleSendOtp}
+                                        disabled={otpSending || resendCooldown > 0 || isVerified || telebirrInfo.length !== 9}
+                                        style={{
+                                            width: '100%',
+                                            height: '46px',
+                                            marginTop: '0.65rem',
+                                            background: isVerified
+                                                ? '#10B981'
+                                                : (telebirrInfo.length === 9 && resendCooldown === 0
+                                                    ? 'var(--card-bg-subtle, #E2E8F0)'
+                                                    : 'var(--card-bg-subtle, #F1F5F9)'),
+                                            color: isVerified ? '#FFFFFF' : 'var(--text-main)',
+                                            border: '1px solid var(--border-color)',
+                                            borderRadius: '12px',
+                                            fontWeight: 800,
+                                            fontSize: '0.9rem',
+                                            cursor: (telebirrInfo.length === 9 && resendCooldown === 0 && !otpSending) ? 'pointer' : 'default',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '0.5rem',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                    >
+                                        {isVerified ? (
+                                            <><Check size={18} /> {t('telebirrVerifiedBadge') || 'Telebirr Verified'}</>
+                                        ) : otpSending ? (
+                                            <span className="spinner"></span>
+                                        ) : resendCooldown > 0 ? (
+                                            <span>{t('resendIn') || 'Resend code in'} {resendCooldown}s</span>
+                                        ) : (
+                                            <><Send size={16} /> {t('sendOtp') || 'Send Verification Code'}</>
+                                        )}
+                                    </button>
+                                </div>
+
+                                {/* OTP Section when code is sent */}
+                                {otpSent && !isVerified && (
+                                    <div style={{
+                                        marginBottom: '1.5rem',
+                                        padding: '1.1rem',
+                                        background: 'var(--card-bg-subtle, rgba(0, 0, 0, 0.02))',
+                                        borderRadius: '16px',
+                                        border: '1px dashed var(--border-color)'
+                                    }}>
+                                        <label style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '0.45rem', display: 'block' }}>
+                                            {t('otpCodeLabel') || 'Verification Code (OTP)'}
+                                        </label>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                                            <div style={{ position: 'relative' }}>
+                                                <span style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
+                                                    <Smartphone size={18} />
+                                                </span>
+                                                <input
+                                                    type="text"
+                                                    className="form-input"
+                                                    placeholder="6-digit code"
+                                                    value={otp}
+                                                    onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
+                                                    maxLength={6}
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '50px',
+                                                        paddingLeft: '2.5rem',
+                                                        letterSpacing: otp ? '6px' : 'normal',
+                                                        fontWeight: 800,
+                                                        fontSize: '1.2rem',
+                                                        textAlign: 'center',
+                                                        boxSizing: 'border-box',
+                                                        borderRadius: '12px'
+                                                    }}
+                                                    autoFocus
+                                                />
+                                            </div>
+
+                                            <button
+                                                type="button"
+                                                onClick={handleVerifyOtp}
+                                                disabled={verifying || otp.length !== 6}
+                                                style={{
+                                                    width: '100%',
+                                                    height: '46px',
+                                                    background: otp.length === 6 ? '#10B981' : 'var(--border-color)',
+                                                    color: otp.length === 6 ? '#FFFFFF' : 'var(--text-muted)',
+                                                    border: 'none',
+                                                    borderRadius: '12px',
+                                                    fontWeight: 800,
+                                                    fontSize: '0.95rem',
+                                                    cursor: otp.length === 6 && !verifying ? 'pointer' : 'not-allowed',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '0.45rem',
+                                                    boxShadow: otp.length === 6 ? '0 3px 10px rgba(16, 185, 129, 0.3)' : 'none',
+                                                    transition: 'all 0.15s ease'
+                                                }}
+                                            >
+                                                {verifying ? <span className="spinner"></span> : <><Check size={18} /> {t('verifyOtp') || 'Verify Code'}</>}
+                                            </button>
+                                        </div>
+
+                                        {devOtp && (
+                                            <div style={{ marginTop: '0.45rem', fontSize: '0.78rem', color: 'var(--primary)', fontWeight: 700 }}>
+                                                ℹ️ Test Verification Code: {devOtp}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Complete Setup Submit Button */}
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    style={{
+                                        width: '100%',
+                                        height: '52px',
+                                        background: 'var(--primary)',
+                                        color: '#FFFFFF',
+                                        border: 'none',
+                                        borderRadius: '14px',
+                                        fontWeight: 900,
+                                        fontSize: '1.05rem',
+                                        cursor: loading ? 'not-allowed' : 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.5rem',
+                                        boxShadow: '0 4px 18px rgba(5, 150, 105, 0.35)',
+                                        transition: 'all 0.15s ease',
+                                        marginTop: '0.75rem'
+                                    }}
+                                >
+                                    {loading ? <span className="spinner"></span> : (
+                                        <>{t('completeSetup') || 'Complete Setup'} <ArrowRight size={19} /></>
+                                    )}
+                                </button>
+                            </form>
+                        </div>
+                    )}
+                </div>
+            </main>
+
+            {/* 3. PINNED COMPLIANCE FOOTER */}
+            <footer style={{
                 textAlign: 'center',
+                padding: '1rem',
                 fontSize: '0.78rem',
                 color: 'var(--text-muted)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.4rem',
-                marginTop: '1.25rem'
+                gap: '0.4rem'
             }}>
                 <span>🔒 Secured by GurshaPay Financial Compliance •</span>
                 <EthiopianFlag width={18} height={12} />
                 <span>Ethiopia</span>
-            </div>
+            </footer>
         </div>
     );
 }

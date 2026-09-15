@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ShieldCheck, Check, Copy, RefreshCw, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShieldCheck, Check, Copy, RefreshCw, X, QrCode, Smartphone } from 'lucide-react';
 import Button from './ui/Button';
 
 // High-fidelity Official Google Play Store Vector Icon
@@ -15,11 +15,47 @@ export const GooglePlayIcon = ({ size = 20, style = {} }) => (
 export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshStatus }) {
     const [copied, setCopied] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
+    const [showQrOnMobile, setShowQrOnMobile] = useState(false);
+    const [isMobileView, setIsMobileView] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 640);
+
+    // Track window resize for mobile layout
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobileView(window.innerWidth <= 640);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // Intercept phone hardware/browser back button:
+    // Pushes modal state on open, closes modal on popstate so the user stays on dashboard!
+    useEffect(() => {
+        if (isOpen) {
+            window.history.pushState({ modal: 'forced-kyc' }, '');
+
+            const handlePopState = () => {
+                if (onClose) onClose();
+            };
+
+            window.addEventListener('popstate', handlePopState);
+            return () => {
+                window.removeEventListener('popstate', handlePopState);
+            };
+        }
+    }, [isOpen, onClose]);
 
     if (!isOpen) return null;
 
     const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.gursha.pay';
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(playStoreUrl)}`;
+
+    const handleClose = () => {
+        if (window.history.state?.modal === 'forced-kyc') {
+            window.history.back();
+        } else if (onClose) {
+            onClose();
+        }
+    };
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(playStoreUrl);
@@ -36,147 +72,242 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
     };
 
     return (
-        <div style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1.25rem',
-            background: 'rgba(9, 9, 11, 0.75)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            animation: 'fadeIn 0.2s ease-out'
-        }}>
-            <div 
+        <div
+            style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 9999,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0.75rem',
+                background: 'rgba(9, 9, 11, 0.78)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                overflowY: 'auto'
+            }}
+            onClick={handleClose}
+        >
+            <div
                 style={{
                     background: 'var(--card-bg)',
-                    border: '1.5px solid var(--border-color)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '24px',
-                    maxWidth: '560px',
+                    maxWidth: '520px',
                     width: '100%',
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)',
-                    padding: '2rem',
+                    maxHeight: 'min(92dvh, 680px)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08)',
                     position: 'relative',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    margin: 'auto'
                 }}
+                onClick={e => e.stopPropagation()}
             >
-                {/* Close Button */}
-                {onClose && (
+                {/* 1. PINNED HEADER (Never cropped, always visible) */}
+                <div style={{
+                    padding: '1.2rem 1.4rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    borderBottom: '1px solid var(--border-color)',
+                    background: 'var(--card-bg)',
+                    flexShrink: 0
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{
+                            width: '42px',
+                            height: '42px',
+                            borderRadius: '12px',
+                            background: 'rgba(217, 119, 6, 0.12)',
+                            border: '1px solid rgba(217, 119, 6, 0.3)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#D97706',
+                            flexShrink: 0
+                        }}>
+                            <ShieldCheck size={24} />
+                        </div>
+                        <div>
+                            <h2 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
+                                Mobile ID Verification
+                            </h2>
+                            <span style={{ fontSize: '0.75rem', color: '#D97706', fontWeight: 700 }}>
+                                🔒 Fayda Biometric Compliance
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Clean Pinned Close Button */}
                     <button
-                        onClick={onClose}
+                        onClick={handleClose}
+                        aria-label="Close modal"
                         style={{
-                            position: 'absolute',
-                            top: '1.25rem',
-                            right: '1.25rem',
                             background: 'var(--card-bg-subtle)',
                             border: '1px solid var(--border-color)',
                             borderRadius: '50%',
-                            width: '34px',
-                            height: '34px',
+                            width: '36px',
+                            height: '36px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             cursor: 'pointer',
                             color: 'var(--text-muted)',
-                            transition: 'all 0.15s ease'
+                            transition: 'all 0.15s ease',
+                            flexShrink: 0
                         }}
                         onMouseEnter={e => e.currentTarget.style.color = 'var(--text-main)'}
                         onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
                     >
                         <X size={18} />
                     </button>
-                )}
-
-                {/* Header Icon & Tag */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                    <div style={{
-                        width: '46px',
-                        height: '46px',
-                        borderRadius: '14px',
-                        background: 'rgba(217, 119, 6, 0.12)',
-                        border: '1px solid rgba(217, 119, 6, 0.3)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#D97706'
-                    }}>
-                        <ShieldCheck size={26} />
-                    </div>
-                    <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: 0, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
-                                Mobile Verification Required
-                            </h2>
-                        </div>
-                        <span style={{ fontSize: '0.8rem', color: '#D97706', fontWeight: 700 }}>
-                            🔒 National ID & Biometric Security
-                        </span>
-                    </div>
                 </div>
 
-                {/* Explanatory Banner */}
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.55, marginBottom: '1.5rem' }}>
-                    To comply with National Bank regulations and protect creator earnings, <strong>Fayda National ID</strong> and <strong>Facial Liveness</strong> verification must be completed securely through the <strong>GurshaPay Mobile App</strong> using on-device hardware biometrics.
-                </p>
-
-                {/* Interactive QR Code & Download Box */}
+                {/* 2. SCROLLABLE BODY (Fits comfortably on all mobile screens) */}
                 <div style={{
-                    background: 'var(--card-bg-subtle)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '18px',
-                    padding: '1.25rem',
+                    padding: '1.25rem 1.4rem',
+                    overflowY: 'auto',
+                    flex: 1,
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: '1.5rem',
-                    marginBottom: '1.5rem',
-                    flexWrap: 'wrap'
+                    flexDirection: 'column',
+                    gap: '1rem'
                 }}>
-                    {/* Dynamic QR Code */}
-                    <div style={{
-                        background: '#FFFFFF',
-                        padding: '8px',
-                        borderRadius: '14px',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0
-                    }}>
-                        <img 
-                            src={qrCodeUrl} 
-                            alt="Scan to download GurshaPay on Google Play" 
-                            style={{ width: '120px', height: '120px', display: 'block', borderRadius: '8px' }} 
-                        />
-                    </div>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.55, margin: 0 }}>
+                        To comply with National Bank regulations and protect creator earnings, <strong>Fayda National ID</strong> and <strong>Facial Liveness</strong> verification must be completed securely via the <strong>GurshaPay Mobile App</strong> using on-device hardware biometrics.
+                    </p>
 
-                    {/* Step-by-Step Instructions */}
-                    <div style={{ flex: 1, minWidth: '200px' }}>
-                        <div style={{ fontSize: '0.825rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                            Quick 3-Step Verification:
-                        </div>
-                        <ol style={{ margin: 0, paddingLeft: '1.15rem', fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                            <li>Scan QR with your phone or tap <strong>Google Play</strong> below</li>
-                            <li>Sign in & complete the 60-second Fayda scan</li>
-                            <li>Instant approval unlocks all <strong>Telebirr & Bank</strong> payouts</li>
-                        </ol>
+                    {/* Step-by-Step Instructions & App Info */}
+                    <div style={{
+                        background: 'var(--card-bg-subtle)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '16px',
+                        padding: '1rem 1.15rem'
+                    }}>
+                        {/* Desktop View: Side-by-Side QR Code */}
+                        {!isMobileView ? (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                                <div style={{
+                                    background: '#FFFFFF',
+                                    padding: '6px',
+                                    borderRadius: '12px',
+                                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexShrink: 0
+                                }}>
+                                    <img 
+                                        src={qrCodeUrl} 
+                                        alt="Scan to download GurshaPay on Google Play" 
+                                        style={{ width: '108px', height: '108px', display: 'block', borderRadius: '6px' }} 
+                                    />
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.45rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                                        Quick 3-Step Verification:
+                                    </div>
+                                    <ol style={{ margin: 0, paddingLeft: '1.15rem', fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                                        <li>Scan QR with your phone or click below</li>
+                                        <li>Sign in & complete the 60-second Fayda scan</li>
+                                        <li>Instant approval unlocks all <strong>Telebirr & Bank</strong> payouts</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        ) : (
+                            /* Mobile View: Direct In-Device App Instructions (No wasted vertical QR space) */
+                            <div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.75rem' }}>
+                                    <div style={{
+                                        width: '34px',
+                                        height: '34px',
+                                        borderRadius: '10px',
+                                        background: 'var(--primary-light)',
+                                        color: 'var(--primary)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Smartphone size={18} />
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                                            Verify on your Android Phone
+                                        </div>
+                                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                            Hardware camera & biometrics required
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <ol style={{ margin: 0, paddingLeft: '1.15rem', fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+                                    <li>Tap <strong>Get on Google Play</strong> below to open the app</li>
+                                    <li>Log into your account and tap <strong>Verify Identity</strong></li>
+                                    <li>Complete the 60-second Fayda scan and selfie</li>
+                                    <li>Your payouts will immediately unlock! 🎉</li>
+                                </ol>
+
+                                {/* Optional QR Code toggle for mobile */}
+                                <div style={{ marginTop: '0.75rem', paddingTop: '0.65rem', borderTop: '1px dashed var(--border-color)' }}>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowQrOnMobile(!showQrOnMobile)}
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            color: 'var(--primary)',
+                                            fontSize: '0.78rem',
+                                            fontWeight: 700,
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.35rem',
+                                            padding: 0
+                                        }}
+                                    >
+                                        <QrCode size={15} />
+                                        {showQrOnMobile ? 'Hide QR Code' : 'Scan with another phone (Show QR)'}
+                                    </button>
+
+                                    {showQrOnMobile && (
+                                        <div style={{ marginTop: '0.75rem', display: 'flex', justifyContent: 'center' }}>
+                                            <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)' }}>
+                                                <img 
+                                                    src={qrCodeUrl} 
+                                                    alt="Scan to download GurshaPay" 
+                                                    style={{ width: '120px', height: '120px', display: 'block' }} 
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                {/* Primary Action Buttons */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                {/* 3. PINNED FOOTER (Action Buttons always visible at bottom) */}
+                <div style={{
+                    padding: '1rem 1.4rem',
+                    borderTop: '1px solid var(--border-color)',
+                    background: 'var(--card-bg)',
+                    flexShrink: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.75rem'
+                }}>
+                    <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
                         <a 
                             href={playStoreUrl} 
                             target="_blank" 
                             rel="noreferrer" 
-                            style={{ flex: 1, textDecoration: 'none', minWidth: '180px' }}
+                            style={{ flex: 1, textDecoration: 'none', minWidth: '170px' }}
                         >
                             <Button 
                                 variant="primary" 
                                 size="md" 
-                                style={{ width: '100%', justifyContent: 'center', gap: '0.5rem' }}
+                                style={{ width: '100%', justifyContent: 'center', gap: '0.5rem', height: '48px' }}
                             >
                                 <GooglePlayIcon size={18} />
                                 <span>Get on Google Play</span>
@@ -188,14 +319,14 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
                             size="md" 
                             icon={copied ? Check : Copy}
                             onClick={handleCopyLink}
-                            style={{ minWidth: '130px' }}
+                            style={{ minWidth: '120px', height: '48px' }}
                         >
-                            {copied ? 'Link Copied!' : 'Copy Link'}
+                            {copied ? 'Copied!' : 'Copy Link'}
                         </Button>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.5rem' }}>
-                        <span style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.25rem' }}>
+                        <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
                             Status: <strong style={{ color: user?.kycStatus === 'pending' ? 'var(--info)' : '#D97706' }}>
                                 {user?.kycStatus === 'pending' ? 'Verification in Review ⏳' : 'Verification Required 🔒'}
                             </strong>
