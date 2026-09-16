@@ -217,11 +217,12 @@ const ChangeTelebirrModal = ({ show, onClose, user, onSuccess, onReturnToWithdra
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
                     borderRadius: '16px',
-                    maxWidth: '440px',
+                    maxWidth: '480px',
                     width: '100%',
                     padding: '2rem 1.75rem',
                     boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    overflow: 'hidden'
                 }}
                 onClick={e => e.stopPropagation()}
             >
@@ -328,18 +329,34 @@ const ChangeTelebirrModal = ({ show, onClose, user, onSuccess, onReturnToWithdra
                             </span>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '0.75rem' }}>
-                            <Button type="button" variant="secondary" size="md" onClick={onClose}>
-                                {t('cancel') || 'Cancel'}
-                            </Button>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '1.25rem' }}>
                             <Button
                                 type="submit"
                                 variant="primary"
                                 size="md"
                                 loading={loading}
                                 disabled={!newPhone.trim() || loading}
+                                style={{
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    fontWeight: 800,
+                                    whiteSpace: 'normal',
+                                    lineHeight: 1.3,
+                                    padding: '0.75rem 1rem',
+                                    textAlign: 'center',
+                                    boxSizing: 'border-box'
+                                }}
                             >
-                                {t('sendCodeToCurrentPhone') || 'Send Code'}
+                                {t('sendVerificationCode') || t('sendCodeToCurrentPhone') || 'Send Verification Code'}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                size="md"
+                                onClick={onClose}
+                                style={{ width: '100%', justifyContent: 'center' }}
+                            >
+                                {t('cancel') || 'Cancel'}
                             </Button>
                         </div>
                     </form>
@@ -434,18 +451,34 @@ const ChangeTelebirrModal = ({ show, onClose, user, onSuccess, onReturnToWithdra
                             )}
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '0.75rem' }}>
-                            <Button type="button" variant="secondary" size="md" onClick={onClose}>
-                                {t('cancel') || 'Cancel'}
-                            </Button>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '1.25rem' }}>
                             <Button
                                 type="submit"
                                 variant="primary"
                                 size="md"
                                 loading={loading}
                                 disabled={!otp.trim() || loading}
+                                style={{
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    fontWeight: 800,
+                                    whiteSpace: 'normal',
+                                    lineHeight: 1.3,
+                                    padding: '0.75rem 1rem',
+                                    textAlign: 'center',
+                                    boxSizing: 'border-box'
+                                }}
                             >
                                 {t('verifyAndUpdatePhone') || 'Confirm & Update'}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                size="md"
+                                onClick={onClose}
+                                style={{ width: '100%', justifyContent: 'center' }}
+                            >
+                                {t('cancel') || 'Cancel'}
                             </Button>
                         </div>
                     </form>
@@ -556,11 +589,12 @@ const WithdrawModal = ({
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
                     borderRadius: '16px',
-                    maxWidth: '460px',
+                    maxWidth: '480px',
                     width: '100%',
                     padding: '2rem',
                     boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    overflow: 'hidden'
                 }}
                 onClick={e => e.stopPropagation()}
             >
@@ -869,16 +903,22 @@ const WithdrawModal = ({
                             )}
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '0.75rem' }}>
-                            <Button variant="secondary" size="md" onClick={onClose}>
-                                {t('cancel') || 'Cancel'}
-                            </Button>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '1.25rem' }}>
                             <Button
                                 variant="primary"
                                 size="md"
+                                style={{ width: '100%', justifyContent: 'center', fontWeight: 800, whiteSpace: 'normal', padding: '0.75rem 1rem' }}
                                 onClick={handleConfirmClick}
                             >
                                 {t('confirmPayout') || 'Confirm Payout'}
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                size="md"
+                                style={{ width: '100%', justifyContent: 'center' }}
+                                onClick={onClose}
+                            >
+                                {t('cancel') || 'Cancel'}
                             </Button>
                         </div>
                     </div>
@@ -930,11 +970,12 @@ const PasswordModal = ({ show, onClose, onConfirm, loading }) => {
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
                     borderRadius: '16px',
-                    maxWidth: '380px',
+                    maxWidth: '420px',
                     width: '100%',
                     padding: '2rem 1.75rem',
                     boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    overflow: 'hidden'
                 }}
                 onClick={e => e.stopPropagation()}
             >
@@ -984,18 +1025,25 @@ const PasswordModal = ({ show, onClose, onConfirm, loading }) => {
                         </button>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '0.75rem' }}>
-                        <Button type="button" variant="secondary" size="md" onClick={onClose}>
-                            Cancel
-                        </Button>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '1.25rem' }}>
                         <Button
                             type="submit"
                             variant="primary"
                             size="md"
+                            style={{ width: '100%', justifyContent: 'center', fontWeight: 800 }}
                             loading={loading}
                             disabled={!password.trim() || loading}
                         >
                             Confirm
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            size="md"
+                            style={{ width: '100%', justifyContent: 'center' }}
+                            onClick={onClose}
+                        >
+                            Cancel
                         </Button>
                     </div>
                 </form>
@@ -1017,11 +1065,13 @@ const WithdrawSuccessModal = ({ data, onClose, user }) => {
                     background: 'var(--card-bg)',
                     border: '1px solid var(--border-color)',
                     borderRadius: '16px',
-                    maxWidth: '440px',
+                    maxWidth: '460px',
                     width: '100%',
                     padding: '2.25rem 2rem',
                     textAlign: 'center',
-                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)'
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)',
+                    boxSizing: 'border-box',
+                    overflow: 'hidden'
                 }}
                 onClick={e => e.stopPropagation()}
             >
@@ -1856,11 +1906,17 @@ export default function Dashboard() {
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.75rem' }}>
                             {t('tippingLinkDesc')}
                         </p>
-                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', background: 'var(--card-bg-subtle)', padding: '0.35rem 0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                        <div
+                            onClick={copyToClipboard}
+                            style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', background: 'var(--card-bg-subtle)', padding: '0.35rem 0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease' }}
+                            onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
+                            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+                            title="Click to copy link"
+                        >
                             <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', paddingLeft: '0.25rem' }}>
                                 {tipUrl}
                             </span>
-                            <Button variant="primary" size="sm" icon={copied ? CheckCircle : Copy} onClick={copyToClipboard}>
+                            <Button variant="primary" size="sm" icon={copied ? CheckCircle : Copy} onClick={(e) => { e.stopPropagation(); copyToClipboard(); }}>
                                 {copied ? t('copied') : t('copy')}
                             </Button>
                         </div>
@@ -1877,11 +1933,17 @@ export default function Dashboard() {
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.75rem' }}>
                             Browser Source URL for live stream alerts & sound effects.
                         </p>
-                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', background: 'var(--card-bg-subtle)', padding: '0.35rem 0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                        <div
+                            onClick={copyObsUrl}
+                            style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', background: 'var(--card-bg-subtle)', padding: '0.35rem 0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease' }}
+                            onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
+                            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+                            title="Click to copy OBS URL"
+                        >
                             <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.8rem', color: 'var(--text-muted)', paddingLeft: '0.25rem' }}>
                                 {obsUrl}
                             </span>
-                            <Button variant="secondary" size="sm" icon={obsCopied ? CheckCircle : Copy} onClick={copyObsUrl}>
+                            <Button variant="secondary" size="sm" icon={obsCopied ? CheckCircle : Copy} onClick={(e) => { e.stopPropagation(); copyObsUrl(); }}>
                                 {obsCopied ? t('copied') : 'Copy URL'}
                             </Button>
                         </div>
@@ -2243,14 +2305,33 @@ export default function Dashboard() {
                         </div>
 
                         {payoutMethod === 'telebirr' ? (
-                            <div style={{ background: 'var(--card-bg-subtle)', padding: '1.15rem', borderRadius: '10px', border: '1px solid var(--border-color)', marginBottom: '1.25rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
-                                    <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                            <div style={{ background: 'var(--card-bg-subtle)', padding: '1.15rem', borderRadius: '12px', border: '1px solid var(--border-color)', marginBottom: '1.25rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
+                                        <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                    </div>
+                                    <div>
+                                        <p style={{ margin: 0, color: 'var(--text-secondary)' }}>
+                                            {t('telebirrWithdrawNotice')}{' '}
+                                            <strong style={{ color: 'var(--primary)', fontSize: '0.95rem' }}>
+                                                {user?.telebirr_number || user?.telebirrAccount?.phoneNumber || 'Not Configured'}
+                                            </strong>
+                                        </p>
+                                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                            ✓ Verified automatic payout rail
+                                        </span>
+                                    </div>
                                 </div>
-                                <p style={{ margin: 0, color: 'var(--text-secondary)' }}>
-                                    {t('telebirrWithdrawNotice')}{' '}
-                                    <strong style={{ color: 'var(--primary)' }}>{user?.telebirr_number || user?.telebirrAccount?.phoneNumber || 'Not Configured'}</strong>
-                                </p>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    icon={Edit2}
+                                    onClick={() => setShowChangeTelebirrModal(true)}
+                                    style={{ fontWeight: 700, borderColor: 'var(--border-color)' }}
+                                >
+                                    {t('changeTelebirrNumber') || 'Change Number'}
+                                </Button>
                             </div>
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>

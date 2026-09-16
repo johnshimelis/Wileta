@@ -694,7 +694,7 @@ export default function Onboarding() {
                                     lineHeight: 1.5,
                                     margin: 0
                                 }}>
-                                    {t('onboardingDesc') || 'Set up your creator handle and verified Telebirr to receive tips instantly.'}
+                                    {t('onboardingDesc') || 'Set up your creator handle and verified phone number to receive tips instantly.'}
                                 </p>
                             </div>
 
