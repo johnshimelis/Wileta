@@ -229,7 +229,7 @@ export default function Onboarding() {
             const res = await verifyTelebirrOtp(fullNumber, otp);
             if (res.success) {
                 setIsVerified(true);
-                setSuccessMsg(res.message || 'Telebirr number verified successfully! 🎉');
+                setSuccessMsg(res.message || 'Phone number verified successfully! 🎉');
             } else {
                 setError(res.error || 'Invalid verification code. Please check and try again.');
             }
@@ -782,15 +782,15 @@ export default function Onboarding() {
                                     </div>
                                 </div>
 
-                                {/* Telebirr Number Section */}
+                                {/* Phone Number Section */}
                                 <div style={{ marginBottom: '1.5rem' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
                                         <label style={{ margin: 0, fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)' }}>
-                                            {t('yourTelebirrNumber') || 'Your Telebirr Number'}
+                                            {t('yourPhoneNumber') || 'Phone Number'}
                                         </label>
                                         {isVerified && (
                                             <span style={{ fontSize: '0.78rem', color: '#10B981', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                                                <ShieldCheck size={16} /> {t('telebirrVerifiedBadge') || 'Verified'}
+                                                <ShieldCheck size={16} /> {t('phoneVerifiedBadge') || t('verified') || 'Verified'}
                                             </span>
                                         )}
                                     </div>
@@ -886,7 +886,7 @@ export default function Onboarding() {
                                         }}
                                     >
                                         {isVerified ? (
-                                            <><Check size={18} /> {t('telebirrVerifiedBadge') || 'Telebirr Verified'}</>
+                                            <><Check size={18} /> {t('phoneVerifiedBadge') || t('verified') || 'Phone Verified'}</>
                                         ) : otpSending ? (
                                             <span className="spinner"></span>
                                         ) : resendCooldown > 0 ? (

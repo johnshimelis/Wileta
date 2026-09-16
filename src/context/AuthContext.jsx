@@ -158,8 +158,15 @@ export const AuthProvider = ({ children }) => {
 
     const requestTelebirrOtp = async (phone) => {
         try {
-            const res = await api.post('/auth/request-telebirr-otp', { phone });
-            return { success: true, message: res.data?.message, devOtp: res.data?.devOtp };
+            const res = await api.post('/auth/request-telebirr-otp', { phone, newPhone: phone });
+            return {
+                success: true,
+                message: res.data?.message,
+                devOtp: res.data?.devOtp,
+                isPhoneChange: res.data?.isPhoneChange,
+                oldPhoneMasked: res.data?.oldPhoneMasked,
+                newPhone: res.data?.newPhone
+            };
         } catch (error) {
             return { success: false, error: error.response?.data?.error || 'Failed to send verification code' };
         }
@@ -167,22 +174,49 @@ export const AuthProvider = ({ children }) => {
 
     const verifyTelebirrOtp = async (phone, otp) => {
         try {
-            const res = await api.post('/auth/verify-telebirr-otp', { phone, otp });
-            if (res.data?.telebirr_number && user) {
+            const res = await api.post('/auth/verify-telebirr-otp', { phone, newPhone: phone, otp });
+            const finalNum = res.data?.telebirr_number || phone;
+            if (finalNum && user) {
                 const updated = {
                     ...user,
-                    phone: res.data.telebirr_number,
+                    ...(res.data?.user || {}),
+                    phone: finalNum,
                     phoneVerified: true,
-                    telebirr_number: res.data.telebirr_number,
-                    telebirrAccount: { ...(user.telebirrAccount || {}), phoneNumber: res.data.telebirr_number, status: 'VERIFIED' }
+                    telebirr_number: finalNum,
+                    telebirrAccount: { ...(user.telebirrAccount || {}), phoneNumber: finalNum, status: 'VERIFIED' }
                 };
                 setUser(updated);
                 localStorage.setItem('gp_cached_user', JSON.stringify(updated));
             }
-            return { success: true, message: res.data?.message || 'Telebirr verified successfully' };
+            return {
+                success: true,
+                message: res.data?.message || 'Telebirr verified successfully',
+                telebirr_number: finalNum,
+                user: res.data?.user
+            };
         } catch (error) {
             return { success: false, error: error.response?.data?.error || 'Invalid or expired verification code' };
         }
+    };
+
+    const requestChangeTelebirrOtp = async (newPhone) => {
+        try {
+            const res = await api.post('/auth/request-change-telebirr-otp', { newPhone });
+            return {
+                success: true,
+                message: res.data?.message,
+                devOtp: res.data?.devOtp,
+                isPhoneChange: res.data?.isPhoneChange,
+                oldPhoneMasked: res.data?.oldPhoneMasked,
+                newPhone: res.data?.newPhone
+            };
+        } catch (error) {
+            return { success: false, error: error.response?.data?.error || 'Failed to send verification code' };
+        }
+    };
+
+    const verifyChangeTelebirrOtp = async (newPhone, otp) => {
+        return verifyTelebirrOtp(newPhone, otp);
     };
 
     const requestSignupOtp = async (phone) => {
@@ -240,6 +274,8 @@ export const AuthProvider = ({ children }) => {
         requestSignupOtp,
         requestTelebirrOtp,
         verifyTelebirrOtp,
+        requestChangeTelebirrOtp,
+        verifyChangeTelebirrOtp,
         login,
         logout,
         logoutAll,

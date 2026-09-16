@@ -157,8 +157,10 @@ const translations = {
         
         // Onboarding
         onboardingTitle: "Complete Your Profile",
-        onboardingSubtitle: "Set up your creator account to start receiving tips directly to your Telebirr.",
-        onboardingDesc: "Set up your creator account to start receiving tips directly to your Telebirr.",
+        onboardingSubtitle: "Set up your creator handle and verified phone number to start receiving tips.",
+        onboardingDesc: "Set up your creator handle and verified phone number to start receiving tips.",
+        yourPhoneNumber: "Phone Number",
+        phoneVerifiedBadge: "Phone Verified",
         chooseAUsername: "Choose a Username",
         accountCredentialsTitle: "Account Credentials",
         accountCredentialsDesc: "Make any corrections to your name, email, or password before finishing your profile.",
@@ -259,8 +261,8 @@ const translations = {
         emailReports: "Email Reports",
         emailReportsDesc: "Weekly summary of your earnings",
         deleteNotice2: "Once you delete your account, there is no going back. Please be certain.",
-        deactivateAccount: "Deactivate Account"
-    },
+        deactivateAccount: "Deactivate Account",
+
         // Drawer & Sidebar
         supportAndHelp: "Support & Help",
         verifyKyc: "Verify KYC",
@@ -307,6 +309,20 @@ const translations = {
         telebirrWallet: "Telebirr Wallet",
         noTelebirrConfigured: "No Telebirr number configured",
         noBankAccounts: "No bank accounts configured.",
+
+        // Telebirr Withdrawal & Change Phone Flow
+        changeTelebirrNumber: "Change Telebirr Number",
+        confirmWithdrawToPhone: "You want to withdraw to this Telebirr phone number",
+        yesProceed: "Yes, Proceed",
+        newTelebirrPhone: "New Telebirr Phone Number",
+        enterNewPhoneNumber: "Enter your new 9-digit Ethiopian mobile number",
+        sendCodeToCurrentPhone: "Send Verification Code to Current Number",
+        oldPhoneSecurityNotice: "For security, an authorization code will be sent via SMS to your current phone",
+        enterOldPhoneOtp: "Enter the 6-digit code sent to your current phone to approve this change",
+        verifyAndUpdatePhone: "Verify & Update Number",
+        phoneUpdatedSuccess: "Telebirr payout number updated successfully!",
+        invalidPhoneNumber: "Please enter a valid Ethiopian mobile number (09... or 07...)"
+    },
 
     am: {
         appName: "ጉርሻፔይ",
@@ -462,8 +478,10 @@ const translations = {
         
         // Onboarding
         onboardingTitle: "መገለጫዎን ያጠናቅቁ",
-        onboardingSubtitle: "ጉርሻ በቀጥታ በቴሌብርዎ ለመቀበል የፈጣሪ መለያዎን ያዘጋጁ።",
-        onboardingDesc: "ጉርሻ በቀጥታ በቴሌብርዎ ለመቀበል የፈጣሪ መለያዎን ያዘጋጁ።",
+        onboardingSubtitle: "ጉርሻ ለመቀበል የፈጣሪ መለያዎን እና የተረጋገጠ ስልክ ቁጥርዎን ያዘጋጁ።",
+        onboardingDesc: "ጉርሻ ለመቀበል የፈጣሪ መለያዎን እና የተረጋገጠ ስልክ ቁጥርዎን ያዘጋጁ።",
+        yourPhoneNumber: "ስልክ ቁጥር",
+        phoneVerifiedBadge: "ስልክዎ ተረጋግጧል",
         chooseAUsername: "የተጠቃሚ ስም ይምረጡ",
         accountCredentialsTitle: "የአካውንት መረጃ",
         accountCredentialsDesc: "ስምዎን፣ ኢሜይልዎን ወይም የይለፍ ቃልዎን ማስተካከል ከፈለጉ እዚህ ያዘምኑ።",
@@ -610,7 +628,20 @@ const translations = {
         telebirrWallet: "የቴሌብር አካውንት",
         noTelebirrConfigured: "የተገናኘ የቴሌብር ቁጥር የለም",
         noBankAccounts: "የተገናኘ የባንክ አካውንት የለም።",
-        deactivateAccount: "አካውንት ያጥፉ"
+        deactivateAccount: "አካውንት ያጥፉ",
+
+        // Telebirr Withdrawal & Change Phone Flow
+        changeTelebirrNumber: "የቴሌብር ቁጥር ይቀይሩ",
+        confirmWithdrawToPhone: "ወደዚህ የቴሌብር ስልክ ቁጥር ማውጣት ይፈልጋሉ",
+        yesProceed: "አዎ፣ ቀጥል",
+        newTelebirrPhone: "አዲስ የቴሌብር ስልክ ቁጥር",
+        enterNewPhoneNumber: "አዲሱን ባለ 9 አሃዝ ስልክ ቁጥር ያስገቡ",
+        sendCodeToCurrentPhone: "ወደ ነባሩ ስልክ የማረጋገጫ ኮድ ላክ",
+        oldPhoneSecurityNotice: "ለደህንነት ሲባል የማረጋገጫ ኮድ ወደ ነባሩ ስልክዎ በኤስኤምኤስ ይላካል",
+        enterOldPhoneOtp: "ለውጡን ለማጽደቅ ወደ ነባሩ ስልክ የተላከውን ባለ 6 አሃዝ ኮድ ያስገቡ",
+        verifyAndUpdatePhone: "አረጋግጥና ስልክ ቀይር",
+        phoneUpdatedSuccess: "የቴሌብር ቁጥርዎ በተሳካ ሁኔታ ተቀይሯል!",
+        invalidPhoneNumber: "እባክዎ ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ (09... ወይም 07...)"
     }
 };
 
@@ -621,8 +652,8 @@ export const LanguageProvider = ({ children }) => {
         localStorage.setItem('language', language);
     }, [language]);
 
-        const t = (key) => {
-        return translations[language]?.[key] || translations['en']?.[key] || key;
+    const t = (key, fallback) => {
+        return translations[language]?.[key] || translations['en']?.[key] || fallback || key;
     };
 
     return (

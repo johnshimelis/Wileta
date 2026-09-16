@@ -18,6 +18,7 @@ import Logo from '../components/Logo';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import ForcedMobileKYCModal from '../components/ForcedMobileKYCModal';
+import EthiopianFlag from '../components/EthiopianFlag';
 
 // Official Verified Blue Tick SVG Emblem
 const VerifiedBlueTick = ({ size = 24, title = "Verified Creator" }) => (
@@ -80,17 +81,394 @@ const getBankInitials = (name) => {
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 };
 
+const ChangeTelebirrModal = ({ show, onClose, user, onSuccess, onReturnToWithdraw }) => {
+    const { t } = useLanguage();
+    const { requestChangeTelebirrOtp, verifyChangeTelebirrOtp, setUser } = useAuth();
+    const [step, setStep] = useState(1); // 1: Enter new phone, 2: Enter OTP sent to old phone
+    const [newPhone, setNewPhone] = useState('');
+    const [otp, setOtp] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [maskedOldPhone, setMaskedOldPhone] = useState('');
+    const [devOtp, setDevOtp] = useState(null);
+    const [countdown, setCountdown] = useState(0);
+
+    useEffect(() => {
+        if (show) {
+            setStep(1);
+            setNewPhone('');
+            setOtp('');
+            setError('');
+            setDevOtp(null);
+            setCountdown(0);
+        }
+    }, [show]);
+
+    useEffect(() => {
+        let timer;
+        if (countdown > 0) {
+            timer = setInterval(() => setCountdown(c => c - 1), 1000);
+        }
+        return () => clearInterval(timer);
+    }, [countdown]);
+
+    if (!show) return null;
+
+    const currentPhoneRaw = (user?.telebirr_number || user?.phone || user?.telebirrAccount?.phoneNumber || '').toString();
+    const formatPhone = (val) => {
+        if (!val) return '';
+        if (val.startsWith('+251')) return val;
+        if (val.startsWith('0') && val.length === 10) return `+251 ${val.substring(1)}`;
+        if (val.length === 9) return `+251 ${val}`;
+        return val;
+    };
+
+    const handleSendCode = async (e) => {
+        if (e) e.preventDefault();
+        setError('');
+        let clean = newPhone.trim().replace(/[^0-9]/g, '');
+        if (clean.startsWith('251') && clean.length === 12) clean = clean.substring(3);
+        else if (clean.startsWith('0') && clean.length === 10) clean = clean.substring(1);
+
+        if (clean.length !== 9 || (!clean.startsWith('9') && !clean.startsWith('7'))) {
+            setError(t('invalidPhoneNumber') || 'Please enter a valid Ethiopian mobile number (09... or 07...).');
+            return;
+        }
+
+        const currentClean = currentPhoneRaw.replace(/[^0-9]/g, '');
+        if (currentClean.endsWith(clean)) {
+            setError('The new phone number must be different from your current number.');
+            return;
+        }
+
+        const normalizedNew = `0${clean}`;
+        setLoading(true);
+        try {
+            const res = await requestChangeTelebirrOtp(normalizedNew);
+            if (res.success) {
+                setMaskedOldPhone(res.oldPhoneMasked || formatPhone(currentPhoneRaw) || 'your current phone');
+                if (res.devOtp) setDevOtp(res.devOtp);
+                setStep(2);
+                setCountdown(60);
+            } else {
+                setError(res.error || 'Failed to send verification code');
+            }
+        } catch (err) {
+            setError(err.response?.data?.error || err.message || 'Failed to send code');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleVerifyOtp = async (e) => {
+        if (e) e.preventDefault();
+        if (!otp.trim() || otp.trim().length < 4) {
+            setError(t('enterOldPhoneOtp') || 'Please enter the 6-digit verification code sent to your old phone.');
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+        try {
+            let clean = newPhone.trim().replace(/[^0-9]/g, '');
+            if (clean.startsWith('251') && clean.length === 12) clean = clean.substring(3);
+            else if (clean.startsWith('0') && clean.length === 10) clean = clean.substring(1);
+            const normalizedNew = `0${clean}`;
+
+            const res = await verifyChangeTelebirrOtp(normalizedNew, otp.trim());
+            if (res.success) {
+                if (res.user) {
+                    setUser(res.user);
+                    localStorage.setItem('gp_cached_user', JSON.stringify(res.user));
+                }
+                if (onSuccess) onSuccess(res.user || { telebirr_number: normalizedNew, phone: normalizedNew });
+                onClose();
+                if (onReturnToWithdraw) onReturnToWithdraw();
+            } else {
+                setError(res.error || 'Invalid or expired verification code');
+            }
+        } catch (err) {
+            setError(err.response?.data?.error || err.message || 'Verification failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'rgba(9, 9, 11, 0.75)',
+                zIndex: 9500,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backdropFilter: 'blur(6px)',
+                padding: '1rem'
+            }}
+            onClick={onClose}
+        >
+            <div
+                style={{
+                    background: 'var(--card-bg)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '16px',
+                    maxWidth: '440px',
+                    width: '100%',
+                    padding: '2rem 1.75rem',
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
+                    boxSizing: 'border-box'
+                }}
+                onClick={e => e.stopPropagation()}
+            >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Smartphone size={20} />
+                        </div>
+                        <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>
+                            {step === 1 ? (t('changeTelebirrNumber') || 'Change Telebirr Number') : (t('verifyAndUpdatePhone') || 'Security Verification')}
+                        </h3>
+                    </div>
+                    <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}>
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {error && (
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        background: 'var(--danger-light, rgba(239, 68, 68, 0.12))',
+                        border: '1px solid var(--danger, #EF4444)',
+                        color: 'var(--danger, #EF4444)',
+                        borderRadius: '10px',
+                        padding: '0.65rem 0.85rem',
+                        fontSize: '0.825rem',
+                        fontWeight: 700,
+                        marginBottom: '1rem'
+                    }}>
+                        <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                        <span>{error}</span>
+                    </div>
+                )}
+
+                {step === 1 ? (
+                    <form onSubmit={handleSendCode}>
+                        {currentPhoneRaw && (
+                            <div style={{
+                                padding: '0.75rem 1rem',
+                                background: 'var(--card-bg-subtle)',
+                                border: '1px solid var(--border-color)',
+                                borderRadius: '10px',
+                                marginBottom: '1.25rem',
+                                fontSize: '0.825rem'
+                            }}>
+                                <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.75rem', fontWeight: 600 }}>
+                                    Current Linked Number:
+                                </span>
+                                <span style={{ fontWeight: 800, color: 'var(--text-main)' }}>
+                                    {formatPhone(currentPhoneRaw)}
+                                </span>
+                            </div>
+                        )}
+
+                        <div style={{ marginBottom: '1.25rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+                                {t('newTelebirrPhone') || 'New Telebirr Phone Number'}
+                            </label>
+                            <div style={{ position: 'relative' }}>
+                                <span style={{
+                                    position: 'absolute',
+                                    left: '0.85rem',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    fontWeight: 700,
+                                    fontSize: '0.85rem',
+                                    color: 'var(--text-muted)'
+                                }}>
+                                    +251
+                                </span>
+                                <input
+                                    type="tel"
+                                    placeholder="09... or 07..."
+                                    className="form-input"
+                                    value={newPhone}
+                                    onChange={e => {
+                                        setNewPhone(e.target.value);
+                                        if (error) setError('');
+                                    }}
+                                    style={{ paddingLeft: '3.6rem', width: '100%', boxSizing: 'border-box' }}
+                                    autoFocus
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div style={{
+                            display: 'flex',
+                            gap: '0.5rem',
+                            padding: '0.75rem',
+                            background: 'rgba(59, 130, 246, 0.08)',
+                            border: '1px solid rgba(59, 130, 246, 0.25)',
+                            borderRadius: '10px',
+                            marginBottom: '1.5rem',
+                            fontSize: '0.775rem',
+                            color: 'var(--text-muted)',
+                            lineHeight: 1.4
+                        }}>
+                            <ShieldCheck size={16} color="var(--primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                            <span>
+                                {t('oldPhoneSecurityNotice') || 'For security, an authorization code will be sent via SMS to your current phone to approve this change.'}
+                            </span>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '0.75rem' }}>
+                            <Button type="button" variant="secondary" size="md" onClick={onClose}>
+                                {t('cancel') || 'Cancel'}
+                            </Button>
+                            <Button
+                                type="submit"
+                                variant="primary"
+                                size="md"
+                                loading={loading}
+                                disabled={!newPhone.trim() || loading}
+                            >
+                                {t('sendCodeToCurrentPhone') || 'Send Code'}
+                            </Button>
+                        </div>
+                    </form>
+                ) : (
+                    <form onSubmit={handleVerifyOtp}>
+                        <div style={{
+                            padding: '0.85rem 1rem',
+                            background: 'rgba(234, 179, 8, 0.08)',
+                            border: '1px solid rgba(234, 179, 8, 0.3)',
+                            borderRadius: '10px',
+                            marginBottom: '1.25rem',
+                            fontSize: '0.8rem',
+                            color: 'var(--text-main)',
+                            lineHeight: 1.45
+                        }}>
+                            <div style={{ fontWeight: 800, color: 'var(--warning, #D97706)', marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                <ShieldCheck size={15} />
+                                GurshaPay Security Alert
+                            </div>
+                            <div>
+                                Someone is trying to change your withdrawal phone to <strong>{newPhone}</strong>. If this was you, enter the 6-digit verification code sent to <strong>{maskedOldPhone}</strong>.
+                            </div>
+                        </div>
+
+                        {devOtp && (
+                            <div
+                                onClick={() => setOtp(devOtp)}
+                                style={{
+                                    marginBottom: '1rem',
+                                    padding: '0.5rem 0.75rem',
+                                    background: 'var(--primary-light)',
+                                    borderRadius: '8px',
+                                    fontSize: '0.8rem',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    fontWeight: 700,
+                                    color: 'var(--primary)'
+                                }}
+                            >
+                                <span>[Test Mode] Dev OTP: {devOtp}</span>
+                                <span style={{ textDecoration: 'underline', fontSize: '0.75rem' }}>Click to fill</span>
+                            </div>
+                        )}
+
+                        <div style={{ marginBottom: '1.25rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+                                {t('enterOldPhoneOtp') || 'Enter 6-Digit Code'}
+                            </label>
+                            <input
+                                type="text"
+                                maxLength={6}
+                                placeholder="• • • • • •"
+                                className="form-input"
+                                value={otp}
+                                onChange={e => {
+                                    setOtp(e.target.value.replace(/[^0-9]/g, ''));
+                                    if (error) setError('');
+                                }}
+                                style={{
+                                    textAlign: 'center',
+                                    letterSpacing: '0.4em',
+                                    fontSize: '1.2rem',
+                                    fontWeight: 800,
+                                    width: '100%',
+                                    boxSizing: 'border-box'
+                                }}
+                                autoFocus
+                                required
+                            />
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', fontSize: '0.8rem' }}>
+                            <button
+                                type="button"
+                                onClick={() => setStep(1)}
+                                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', textDecoration: 'underline', padding: 0 }}
+                            >
+                                Change number
+                            </button>
+                            {countdown > 0 ? (
+                                <span style={{ color: 'var(--text-muted)' }}>Resend in {countdown}s</span>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={handleSendCode}
+                                    style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontWeight: 700, textDecoration: 'underline', padding: 0 }}
+                                >
+                                    Resend code
+                                </button>
+                            )}
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '0.75rem' }}>
+                            <Button type="button" variant="secondary" size="md" onClick={onClose}>
+                                {t('cancel') || 'Cancel'}
+                            </Button>
+                            <Button
+                                type="submit"
+                                variant="primary"
+                                size="md"
+                                loading={loading}
+                                disabled={!otp.trim() || loading}
+                            >
+                                {t('verifyAndUpdatePhone') || 'Confirm & Update'}
+                            </Button>
+                        </div>
+                    </form>
+                )}
+            </div>
+        </div>
+    );
+};
+
 const WithdrawModal = ({
     show, onClose, withdrawType, setWithdrawType, balance,
-    customAmount, setCustomAmount, onConfirm, user
+    customAmount, setCustomAmount, onConfirm, user,
+    onRequestChangeTelebirr
 }) => {
     const { t } = useLanguage();
     const [selectedBankIndex, setSelectedBankIndex] = useState(0);
     const [modalError, setModalError] = useState('');
+    const [isConfirmingTelebirr, setIsConfirmingTelebirr] = useState(false);
 
     useEffect(() => {
         if (show) {
             setModalError('');
+            setIsConfirmingTelebirr(false);
         }
     }, [show, withdrawType]);
 
@@ -100,6 +478,15 @@ const WithdrawModal = ({
     const isBank = user?.payoutMethod === 'bank';
     const availableBal = Number(balance || 0);
     const amountVal = withdrawType === 'all' ? availableBal : Number(customAmount || 0);
+
+    const formattedTelebirrPhone = (() => {
+        const raw = (user?.telebirr_number || user?.telebirrAccount?.phoneNumber || user?.phone || '').toString();
+        if (!raw) return t('noTelebirrConfigured') || 'No Telebirr number configured';
+        if (raw.startsWith('+251')) return raw;
+        if (raw.startsWith('0') && raw.length === 10) return `+251 ${raw.substring(1)}`;
+        if (raw.length === 9) return `+251 ${raw}`;
+        return raw;
+    })();
 
     const handleConfirmClick = () => {
         if (availableBal <= 0) {
@@ -122,7 +509,14 @@ const WithdrawModal = ({
             return;
         }
         setModalError('');
-        onConfirm(isBank ? banks[selectedBankIndex] : null);
+
+        // If withdrawing to Telebirr, show explicit confirmation prompt first!
+        if (!isBank) {
+            setIsConfirmingTelebirr(true);
+            return;
+        }
+
+        onConfirm(banks[selectedBankIndex]);
     };
 
     const handleCustomAmountChange = (e) => {
@@ -177,7 +571,7 @@ const WithdrawModal = ({
                         </div>
                         <div>
                             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>
-                                {t('withdrawFunds')}
+                                {isConfirmingTelebirr ? (t('confirmPayout') || 'Confirm Payout') : (t('withdrawFunds') || 'Withdraw Funds')}
                             </h3>
                             <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>
                                 {t('available') || 'Available'}: {availableBal.toFixed(2)} ETB
@@ -210,153 +604,285 @@ const WithdrawModal = ({
                     </div>
                 )}
 
-                {/* Destination */}
-                <div style={{ marginBottom: '1.25rem' }}>
-                    <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        {t('payoutDestination') || 'Payout Destination'}
-                    </label>
-                    {isBank ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            {banks.length > 0 ? banks.map((bank, index) => {
-                                const logo = bank.logoUrl || getBankLogo(bank.bankName);
-                                return (
-                                    <div
-                                        key={index}
-                                        onClick={() => setSelectedBankIndex(index)}
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '0.75rem',
-                                            padding: '0.85rem 1rem',
-                                            border: '1.5px solid ' + (selectedBankIndex === index ? 'var(--primary)' : 'var(--border-color)'),
-                                            borderRadius: '10px',
-                                            cursor: 'pointer',
-                                            background: selectedBankIndex === index ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                            transition: 'all 0.15s ease'
-                                        }}
-                                    >
-                                        <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
-                                            {logo ? (
-                                                <img src={logo} alt={bank.bankName} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                                            ) : (
-                                                <div style={{ width: '100%', height: '100%', borderRadius: '6px', background: getBankColor(bank.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.75rem' }}>
-                                                    {getBankInitials(bank.bankName)}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-                                            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{bank.bankName}</div>
-                                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                                {bank.accountNumber} {bank.accountHolderName ? `• ${bank.accountHolderName}` : ''}
-                                            </div>
-                                        </div>
-                                        {selectedBankIndex === index && <CheckCircle size={18} color="var(--primary)" />}
-                                    </div>
-                                );
-                            }) : (
-                                <p style={{ color: 'var(--danger)', fontSize: '0.85rem' }}>{t('noBankAccounts') || 'No bank accounts configured.'}</p>
-                            )}
-                        </div>
-                    ) : (
-                        <div style={{ padding: '0.85rem 1rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                            <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
-                                <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                {isConfirmingTelebirr ? (
+                    <div>
+                        <div style={{ textAlign: 'center', padding: '0.5rem 0 1.25rem' }}>
+                            <div style={{
+                                width: '54px',
+                                height: '54px',
+                                borderRadius: '14px',
+                                background: 'var(--primary-light)',
+                                color: 'var(--primary)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                margin: '0 auto 0.85rem'
+                            }}>
+                                <Smartphone size={26} />
                             </div>
-                            <div>
-                                <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-main)' }}>{t('telebirrWallet') || 'Telebirr Wallet'}</div>
-                                <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
-                                    {(() => {
-                                        const raw = (user?.telebirr_number || user?.telebirrAccount?.phoneNumber || '').toString();
-                                        if (!raw) return t('noTelebirrConfigured') || 'No Telebirr number configured';
-                                        if (raw.startsWith('+251')) return raw;
-                                        if (raw.startsWith('0') && raw.length === 10) return `+251 ${raw.substring(1)}`;
-                                        if (raw.length === 9) return `+251 ${raw}`;
-                                        return raw;
-                                    })()}
+                            <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+                                {t('confirmWithdrawToPhone') || 'You want to withdraw to this Telebirr phone number'}?
+                            </h4>
+                            <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', margin: 0 }}>
+                                {t('telebirrWithdrawNotice') || 'Withdrawals will automatically route to your verified onboarded Telebirr number'}:
+                            </p>
+                        </div>
+
+                        {/* Confirmation Details Card */}
+                        <div style={{
+                            padding: '1rem',
+                            background: 'var(--card-bg-subtle)',
+                            border: '1.5px solid var(--primary)',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            marginBottom: '1.25rem'
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
+                                    <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                </div>
+                                <div>
+                                    <div style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--text-main)' }}>
+                                        {formattedTelebirrPhone}
+                                    </div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 700 }}>
+                                        ✓ {t('telebirrVerifiedBadge') || 'Verified Telebirr'}
+                                    </div>
                                 </div>
                             </div>
+                            <div style={{ textAlign: 'right' }}>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>
+                                    {t('withdrawalAmount') || 'Amount'}
+                                </span>
+                                <span style={{ fontSize: '1rem', fontWeight: 900, color: 'var(--text-main)' }}>
+                                    {amountVal.toFixed(2)} ETB
+                                </span>
+                            </div>
                         </div>
-                    )}
-                </div>
 
-                {/* Amount Option */}
-                <div style={{ marginBottom: '1.5rem' }}>
-                    <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        {t('withdrawalAmount') || 'Withdrawal Amount'}
-                    </label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setWithdrawType('all');
-                                setModalError('');
-                            }}
-                            style={{
-                                padding: '0.75rem',
-                                borderRadius: '8px',
-                                border: '1.5px solid ' + (withdrawType === 'all' ? 'var(--primary)' : 'var(--border-color)'),
-                                background: withdrawType === 'all' ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                color: withdrawType === 'all' ? 'var(--primary)' : 'var(--text-main)',
-                                fontWeight: 700,
-                                fontSize: '0.85rem',
-                                cursor: 'pointer',
-                                transition: 'all 0.15s ease'
-                            }}
-                        >
-                            {t('fullBalance') || 'Full Balance'} ({availableBal.toFixed(2)} ETB)
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setWithdrawType('custom')}
-                            style={{
-                                padding: '0.75rem',
-                                borderRadius: '8px',
-                                border: '1.5px solid ' + (withdrawType === 'custom' ? 'var(--primary)' : 'var(--border-color)'),
-                                background: withdrawType === 'custom' ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
-                                color: withdrawType === 'custom' ? 'var(--primary)' : 'var(--text-main)',
-                                fontWeight: 700,
-                                fontSize: '0.85rem',
-                                cursor: 'pointer',
-                                transition: 'all 0.15s ease'
-                            }}
-                        >
-                            {t('customAmount') || 'Custom Amount'}
-                        </button>
-                    </div>
-
-                    {withdrawType === 'custom' && (
-                        <div className="input-group" style={{ position: 'relative' }}>
-                            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.85rem' }}>ETB</span>
-                            <input
-                                type="number"
-                                min="1"
-                                max={availableBal}
-                                placeholder="0.00"
-                                className="form-input"
-                                value={customAmount}
-                                onChange={handleCustomAmountChange}
-                                style={{
-                                    paddingLeft: '3.5rem',
-                                    border: (Number(customAmount) > availableBal) ? '1.5px solid var(--danger, #EF4444)' : undefined
+                        {/* Confirmation Actions */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                            <Button
+                                variant="primary"
+                                size="md"
+                                style={{ width: '100%', justifyContent: 'center', fontWeight: 800 }}
+                                onClick={() => {
+                                    setIsConfirmingTelebirr(false);
+                                    onConfirm(null);
                                 }}
-                                autoFocus
-                            />
-                        </div>
-                    )}
-                </div>
+                            >
+                                {t('yesProceed') || 'Yes, Proceed'}
+                            </Button>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '0.75rem' }}>
-                    <Button variant="secondary" size="md" onClick={onClose}>
-                        {t('cancel') || 'Cancel'}
-                    </Button>
-                    <Button
-                        variant="primary"
-                        size="md"
-                        onClick={handleConfirmClick}
-                    >
-                        {t('confirmPayout') || 'Confirm Payout'}
-                    </Button>
-                </div>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setIsConfirmingTelebirr(false);
+                                    onClose();
+                                    if (onRequestChangeTelebirr) onRequestChangeTelebirr();
+                                }}
+                                style={{
+                                    background: 'none',
+                                    border: '1px dashed var(--border-color)',
+                                    borderRadius: '10px',
+                                    padding: '0.75rem',
+                                    color: 'var(--text-muted)',
+                                    fontSize: '0.825rem',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    transition: 'all 0.15s ease'
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.borderColor = 'var(--primary)';
+                                    e.currentTarget.style.color = 'var(--primary)';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.borderColor = 'var(--border-color)';
+                                    e.currentTarget.style.color = 'var(--text-muted)';
+                                }}
+                            >
+                                {t('changeTelebirrNumber') || 'Want to change Telebirr phone number?'}
+                            </button>
+
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                style={{ width: '100%', justifyContent: 'center' }}
+                                onClick={() => setIsConfirmingTelebirr(false)}
+                            >
+                                {t('back') || 'Back'}
+                            </Button>
+                        </div>
+                    </div>
+                ) : (
+                    <div>
+                        {/* Destination */}
+                        <div style={{ marginBottom: '1.25rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                {t('payoutDestination') || 'Payout Destination'}
+                            </label>
+                            {isBank ? (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    {banks.length > 0 ? banks.map((bank, index) => {
+                                        const logo = bank.logoUrl || getBankLogo(bank.bankName);
+                                        return (
+                                            <div
+                                                key={index}
+                                                onClick={() => setSelectedBankIndex(index)}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '0.75rem',
+                                                    padding: '0.85rem 1rem',
+                                                    border: '1.5px solid ' + (selectedBankIndex === index ? 'var(--primary)' : 'var(--border-color)'),
+                                                    borderRadius: '10px',
+                                                    cursor: 'pointer',
+                                                    background: selectedBankIndex === index ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                                    transition: 'all 0.15s ease'
+                                                }}
+                                            >
+                                                <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
+                                                    {logo ? (
+                                                        <img src={logo} alt={bank.bankName} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                                    ) : (
+                                                        <div style={{ width: '100%', height: '100%', borderRadius: '6px', background: getBankColor(bank.bankName), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.75rem' }}>
+                                                            {getBankInitials(bank.bankName)}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                                                    <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{bank.bankName}</div>
+                                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                        {bank.accountNumber} {bank.accountHolderName ? `• ${bank.accountHolderName}` : ''}
+                                                    </div>
+                                                </div>
+                                                {selectedBankIndex === index && <CheckCircle size={18} color="var(--primary)" />}
+                                            </div>
+                                        );
+                                    }) : (
+                                        <p style={{ color: 'var(--danger)', fontSize: '0.85rem' }}>{t('noBankAccounts') || 'No bank accounts configured.'}</p>
+                                    )}
+                                </div>
+                            ) : (
+                                <div style={{ padding: '0.85rem 1rem', background: 'var(--card-bg-subtle)', borderRadius: '10px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '2px', flexShrink: 0 }}>
+                                            <img src="/banks/telebirr.jpg" alt="Telebirr" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                        </div>
+                                        <div>
+                                            <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-main)' }}>{t('telebirrWallet') || 'Telebirr Wallet'}</div>
+                                            <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
+                                                {formattedTelebirrPhone}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {onRequestChangeTelebirr && (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                onClose();
+                                                onRequestChangeTelebirr();
+                                            }}
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                color: 'var(--primary)',
+                                                fontSize: '0.775rem',
+                                                fontWeight: 700,
+                                                cursor: 'pointer',
+                                                textDecoration: 'underline',
+                                                padding: '4px 6px'
+                                            }}
+                                        >
+                                            {t('changeTelebirr') || 'Change'}
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Amount Option */}
+                        <div style={{ marginBottom: '1.5rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                {t('withdrawalAmount') || 'Withdrawal Amount'}
+                            </label>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setWithdrawType('all');
+                                        setModalError('');
+                                    }}
+                                    style={{
+                                        padding: '0.75rem',
+                                        borderRadius: '8px',
+                                        border: '1.5px solid ' + (withdrawType === 'all' ? 'var(--primary)' : 'var(--border-color)'),
+                                        background: withdrawType === 'all' ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                        color: withdrawType === 'all' ? 'var(--primary)' : 'var(--text-main)',
+                                        fontWeight: 700,
+                                        fontSize: '0.85rem',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.15s ease'
+                                    }}
+                                >
+                                    {t('fullBalance') || 'Full Balance'} ({availableBal.toFixed(2)} ETB)
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setWithdrawType('custom')}
+                                    style={{
+                                        padding: '0.75rem',
+                                        borderRadius: '8px',
+                                        border: '1.5px solid ' + (withdrawType === 'custom' ? 'var(--primary)' : 'var(--border-color)'),
+                                        background: withdrawType === 'custom' ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
+                                        color: withdrawType === 'custom' ? 'var(--primary)' : 'var(--text-main)',
+                                        fontWeight: 700,
+                                        fontSize: '0.85rem',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.15s ease'
+                                    }}
+                                >
+                                    {t('customAmount') || 'Custom Amount'}
+                                </button>
+                            </div>
+
+                            {withdrawType === 'custom' && (
+                                <div className="input-group" style={{ position: 'relative' }}>
+                                    <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.85rem' }}>ETB</span>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max={availableBal}
+                                        placeholder="0.00"
+                                        className="form-input"
+                                        value={customAmount}
+                                        onChange={handleCustomAmountChange}
+                                        style={{
+                                            paddingLeft: '3.5rem',
+                                            border: (Number(customAmount) > availableBal) ? '1.5px solid var(--danger, #EF4444)' : undefined
+                                        }}
+                                        autoFocus
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '0.75rem' }}>
+                            <Button variant="secondary" size="md" onClick={onClose}>
+                                {t('cancel') || 'Cancel'}
+                            </Button>
+                            <Button
+                                variant="primary"
+                                size="md"
+                                onClick={handleConfirmClick}
+                            >
+                                {t('confirmPayout') || 'Confirm Payout'}
+                            </Button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -563,6 +1089,7 @@ export default function Dashboard() {
     const [isWithdrawing, setIsWithdrawing] = useState(false);
     const [alert, setAlert] = useState(null);
     const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+    const [showChangeTelebirrModal, setShowChangeTelebirrModal] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [showForcedKYCModal, setShowForcedKYCModal] = useState(false);
     const [pendingWithdrawBank, setPendingWithdrawBank] = useState(null);
@@ -867,7 +1394,6 @@ export default function Dashboard() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
                             <h1 style={{ fontSize: 'clamp(1.35rem, 5vw, 1.75rem)', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
                                 <span>{t('welcome')}, {user?.name?.split(' ')[0] || 'Creator'}</span>
-                                <span style={{ fontSize: '1.35rem' }}>👋</span>
                                 {isVerified && <VerifiedBlueTick size={22} title="GurshaPay Verified Creator" />}
                                 {user?.customCommissionRate === 0 && (
                                     <span className="badge badge-vip" title="VIP Genesis Creator (0% Platform Fee)">👑 VIP (0% Fee)</span>
@@ -1886,6 +2412,23 @@ export default function Dashboard() {
                     setCustomAmount={setCustomAmount}
                     onConfirm={handleRequestPassword}
                     user={user}
+                    onRequestChangeTelebirr={() => setShowChangeTelebirrModal(true)}
+                />
+
+                {/* Change Telebirr Number Modal */}
+                <ChangeTelebirrModal
+                    show={showChangeTelebirrModal}
+                    onClose={() => setShowChangeTelebirrModal(false)}
+                    user={user}
+                    onSuccess={(updatedUser) => {
+                        if (updatedUser) setUser(prev => ({ ...prev, ...updatedUser }));
+                        setAlert({
+                            message: t('phoneUpdatedSuccess') || 'Telebirr payout number updated successfully!',
+                            type: 'success'
+                        });
+                        fetchDashboardData(true);
+                    }}
+                    onReturnToWithdraw={() => setShowWithdrawModal(true)}
                 />
 
                 {/* Password Modal Prompt */}
