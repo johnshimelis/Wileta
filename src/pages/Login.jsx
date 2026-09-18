@@ -4,7 +4,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import {
     Mail, Phone, Lock, Eye, EyeOff, AlertCircle,
     ArrowLeft, Send, CheckCircle, ShieldCheck, Zap, Heart,
-    Sparkles, Volume2, Users, TrendingUp, DollarSign
+    Sparkles, Volume2, Users, TrendingUp, DollarSign,
+    Smartphone, KeyRound
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from '../components/LanguageToggle';
@@ -30,9 +31,12 @@ export default function Login() {
 
     // Forgot Password states
     const [showForgotPassword, setShowForgotPassword] = useState(false);
+    const [forgotMethod, setForgotMethod] = useState('phone'); // 'phone' | 'email'
     const [resetEmail, setResetEmail] = useState('');
+    const [resetPhone, setResetPhone] = useState('');
     const [resetSent, setResetSent] = useState(false);
     const [resetLoading, setResetLoading] = useState(false);
+    const [resetDeliveredChannels, setResetDeliveredChannels] = useState([]);
 
     // Interactive Right-side Showcase state
     const demoSupporters = [
@@ -126,16 +130,21 @@ export default function Login() {
     const handleForgotPassword = async (e) => {
         e.preventDefault();
         setError('');
-        if (!resetEmail) {
-            setError('Please enter your email to reset password');
+        const identifier = forgotMethod === 'phone' ? resetPhone : resetEmail;
+        if (!identifier) {
+            setError(forgotMethod === 'phone' ? 'Please enter your phone number' : 'Please enter your email address');
             return;
         }
         setResetLoading(true);
         try {
-            await api.post('/auth/forgot-password', { email: resetEmail });
+            const res = await api.post('/auth/forgot-password', {
+                identifier,
+                channel: forgotMethod === 'phone' ? 'sms' : 'email'
+            });
+            setResetDeliveredChannels(res.data?.deliveredChannels || []);
             setResetSent(true);
         } catch (err) {
-            setError(err.response?.data?.error || 'Failed to send reset link');
+            setError(err.response?.data?.error || 'Failed to send reset code');
         }
         setResetLoading(false);
     };
@@ -251,63 +260,210 @@ export default function Login() {
                         <div>
                             <button
                                 onClick={() => { setShowForgotPassword(false); setError(''); setResetSent(false); }}
-                                style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)', cursor: 'pointer', marginBottom: '1.25rem', fontWeight: 600, fontSize: '0.85rem' }}
+                                style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)', cursor: 'pointer', marginBottom: '1rem', fontWeight: 600, fontSize: '0.85rem' }}
                             >
                                 <ArrowLeft size={16} /> Back to sign in
                             </button>
 
-                            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, textAlign: 'center', marginBottom: '0.35rem' }}>Reset Password</h1>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', textAlign: 'center', marginBottom: '1.5rem' }}>
-                                Enter your registered email and we'll send you a reset link.
+                            <h1 style={{ fontSize: '1.4rem', fontWeight: 800, textAlign: 'center', marginBottom: '0.35rem' }}>Reset Password</h1>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.825rem', textAlign: 'center', marginBottom: '1.25rem' }}>
+                                Choose how you want to receive your password reset verification code:
                             </p>
 
                             {resetSent ? (
-                                <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-                                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-                                        <Mail size={24} />
+                                <div style={{ textAlign: 'center', padding: '0.5rem 0' }}>
+                                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.15)', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+                                        <CheckCircle size={26} />
                                     </div>
-                                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.35rem' }}>Check Your Email</h3>
-                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-                                        We sent a password reset link to <strong>{resetEmail}</strong>.
+                                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.35rem' }}>Reset Code Sent!</h3>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem', lineHeight: 1.45 }}>
+                                        {resetDeliveredChannels.length > 0 ? (
+                                            <>Dispatched to: <strong>{resetDeliveredChannels.join(', ')}</strong></>
+                                        ) : (
+                                            <>Verification code dispatched successfully.</>
+                                        )}
                                     </p>
-                                    <Button variant="primary" size="md" className="btn-full" onClick={() => setShowForgotPassword(false)}>
-                                        Return to Sign In
-                                    </Button>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                                        <Button
+                                            variant="primary"
+                                            size="md"
+                                            className="btn-full"
+                                            onClick={() => navigate('/reset-password')}
+                                            icon={KeyRound}
+                                        >
+                                            Enter Code & Set Password
+                                        </Button>
+                                        <Button
+                                            variant="secondary"
+                                            size="md"
+                                            className="btn-full"
+                                            onClick={() => setShowForgotPassword(false)}
+                                        >
+                                            Return to Sign In
+                                        </Button>
+                                    </div>
                                 </div>
                             ) : (
-                                <form onSubmit={handleForgotPassword}>
+                                <div>
+                                    {/* Method Switcher Tabs */}
+                                    <div style={{
+                                        display: 'grid',
+                                        gridTemplateColumns: '1fr 1fr',
+                                        gap: '0.3rem',
+                                        background: 'var(--card-bg-subtle, rgba(0,0,0,0.04))',
+                                        padding: '0.25rem',
+                                        borderRadius: '8px',
+                                        marginBottom: '1.25rem',
+                                        border: '1px solid var(--border-color)'
+                                    }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => { setForgotMethod('phone'); setError(''); }}
+                                            style={{
+                                                padding: '0.5rem 0',
+                                                borderRadius: '6px',
+                                                border: 'none',
+                                                background: forgotMethod === 'phone' ? 'var(--card-bg)' : 'transparent',
+                                                color: forgotMethod === 'phone' ? 'var(--primary)' : 'var(--text-muted)',
+                                                fontWeight: 700,
+                                                fontSize: '0.8rem',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '0.35rem',
+                                                boxShadow: forgotMethod === 'phone' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                                                transition: 'all 0.15s ease'
+                                            }}
+                                        >
+                                            <Smartphone size={14} /> SMS & Telegram
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => { setForgotMethod('email'); setError(''); }}
+                                            style={{
+                                                padding: '0.5rem 0',
+                                                borderRadius: '6px',
+                                                border: 'none',
+                                                background: forgotMethod === 'email' ? 'var(--card-bg)' : 'transparent',
+                                                color: forgotMethod === 'email' ? 'var(--primary)' : 'var(--text-muted)',
+                                                fontWeight: 700,
+                                                fontSize: '0.8rem',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '0.35rem',
+                                                boxShadow: forgotMethod === 'email' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                                                transition: 'all 0.15s ease'
+                                            }}
+                                        >
+                                            <Mail size={14} /> Email Link
+                                        </button>
+                                    </div>
+
                                     {error && (
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--danger-light)', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: '8px', padding: '0.65rem 0.85rem', fontSize: '0.825rem', fontWeight: 600, marginBottom: '1.25rem' }}>
                                             <AlertCircle size={16} /> {error}
                                         </div>
                                     )}
 
-                                    <div className="form-group">
-                                        <label className="form-label">{t('emailAddress')}</label>
-                                        <div className="input-group">
-                                            <Mail size={18} />
-                                            <input
-                                                type="email"
-                                                className="form-input"
-                                                placeholder="you@example.com"
-                                                value={resetEmail}
-                                                onChange={e => { setResetEmail(e.target.value); setError(''); }}
-                                                required
-                                            />
-                                        </div>
-                                    </div>
+                                    <form onSubmit={handleForgotPassword}>
+                                        {forgotMethod === 'phone' ? (
+                                            <div className="form-group">
+                                                <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                    <span>{t('phoneNumber') || 'Phone Number'}</span>
+                                                    <span style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600 }}>SMS + Telegram</span>
+                                                </label>
+                                                <div style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    height: '44px',
+                                                    background: 'var(--card-bg)',
+                                                    border: '1.5px solid var(--border-color)',
+                                                    borderRadius: '8px',
+                                                    overflow: 'hidden'
+                                                }}>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.4rem',
+                                                        padding: '0 0.75rem',
+                                                        height: '100%',
+                                                        background: 'var(--card-bg-subtle, rgba(0, 0, 0, 0.03))',
+                                                        borderRight: '1px solid var(--border-color)',
+                                                        userSelect: 'none'
+                                                    }}>
+                                                        <EthiopianFlag width={20} height={14} />
+                                                        <span style={{ fontWeight: 800, fontSize: '0.88rem', color: 'var(--text-main)' }}>+251</span>
+                                                    </div>
+                                                    <input
+                                                        type="tel"
+                                                        inputMode="numeric"
+                                                        placeholder="911000000"
+                                                        value={resetPhone}
+                                                        onChange={e => {
+                                                            let val = e.target.value.replace(/[^0-9]/g, '');
+                                                            if (val.startsWith('0')) val = val.substring(1);
+                                                            setResetPhone(val.slice(0, 9));
+                                                            setError('');
+                                                        }}
+                                                        maxLength={9}
+                                                        style={{
+                                                            flex: 1,
+                                                            height: '100%',
+                                                            border: 'none',
+                                                            outline: 'none',
+                                                            background: 'transparent',
+                                                            padding: '0 0.75rem',
+                                                            fontSize: '0.98rem',
+                                                            fontWeight: 700,
+                                                            letterSpacing: '1px',
+                                                            color: 'var(--text-main)'
+                                                        }}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="form-group">
+                                                <label className="form-label">{t('emailAddress') || 'Email Address'}</label>
+                                                <div className="input-group">
+                                                    <Mail size={18} />
+                                                    <input
+                                                        type="email"
+                                                        className="form-input"
+                                                        placeholder="you@example.com"
+                                                        value={resetEmail}
+                                                        onChange={e => { setResetEmail(e.target.value); setError(''); }}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
 
-                                    <Button
-                                        type="submit"
-                                        variant="primary"
-                                        size="md"
-                                        className="btn-full"
-                                        loading={resetLoading}
-                                        icon={Send}
-                                    >
-                                        Send Reset Link
-                                    </Button>
-                                </form>
+                                        <Button
+                                            type="submit"
+                                            variant="primary"
+                                            size="md"
+                                            className="btn-full"
+                                            loading={resetLoading}
+                                            icon={Send}
+                                            style={{ marginTop: '0.5rem' }}
+                                        >
+                                            Send Reset Code
+                                        </Button>
+
+                                        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                                            <Link
+                                                to="/reset-password"
+                                                style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 600, textDecoration: 'underline' }}
+                                            >
+                                                Have a code or link? Open Reset Password page &rarr;
+                                            </Link>
+                                        </div>
+                                    </form>
+                                </div>
                             )}
                         </div>
                     ) : (
