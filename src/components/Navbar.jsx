@@ -42,12 +42,12 @@ export default function Navbar() {
     };
 
     const navLinks = [
-        { label: 'How It Works', href: '#how-it-works' },
-        { label: 'Live Demo', href: '#simulator' },
-        { label: 'Revenue Calculator', href: '#calculator' },
-        { label: 'Bank Rails', href: '#payouts' },
-        { label: 'OBS Alerts', href: '#obs-alerts' },
-        { label: 'FAQ', href: '#faq' }
+        { label: 'How It Works', key: 'howItWorks', href: '#how-it-works' },
+        { label: 'Live Demo', key: 'liveDemo', href: '#simulator' },
+        { label: 'Revenue Calculator', key: 'revenueCalculator', href: '#calculator' },
+        { label: 'Bank Rails', key: 'bankRails', href: '#payouts' },
+        { label: 'OBS Alerts', key: 'obsAlerts', href: '#obs-alerts' },
+        { label: 'FAQ', key: 'faq', href: '#faq' }
     ];
 
     return (
@@ -106,7 +106,7 @@ export default function Navbar() {
                                     e.currentTarget.style.background = 'transparent';
                                 }}
                             >
-                                {link.label}
+                                {t(link.key, link.label)}
                             </a>
                         ))}
                     </nav>
@@ -118,7 +118,7 @@ export default function Navbar() {
                         <button
                             type="button"
                             onClick={handleSoundToggle}
-                            title={soundActive ? "Mute sound" : "Enable sound"}
+                            title={soundActive ? (t('sound') + ": On") : (t('sound') + ": Off")}
                             style={{
                                 background: soundActive ? 'var(--primary-light)' : 'var(--card-bg-subtle)',
                                 border: '1px solid ' + (soundActive ? 'rgba(4, 120, 87, 0.3)' : 'var(--border-color)'),
@@ -150,7 +150,7 @@ export default function Navbar() {
                             }}
                             style={{ whiteSpace: 'nowrap' }}
                         >
-                            Dashboard
+                            {t('dashboard', 'Dashboard')}
                         </Button>
                     ) : (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'nowrap' }}>
@@ -173,7 +173,7 @@ export default function Navbar() {
                                 onMouseEnter={e => e.currentTarget.style.background = 'var(--card-bg-subtle)'}
                                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                             >
-                                Log in
+                                {t('signIn', 'Log in')}
                             </Link>
                             <Button
                                 variant="primary"
@@ -186,7 +186,7 @@ export default function Navbar() {
                                 }}
                                 style={{ whiteSpace: 'nowrap' }}
                             >
-                                Claim Link
+                                {t('getStarted', 'Claim Link')}
                             </Button>
                         </div>
                     )}

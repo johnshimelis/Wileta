@@ -92,15 +92,27 @@ export default function PublicProfile() {
     const [celebrationGift, setCelebrationGift] = useState(null);
     const [comboCount, setComboCount] = useState(1);
 
-    const { t } = useLanguage();
+    const { language, t } = useLanguage();
 
-    const defaultQuickMessages = [
+    const defaultQuickMessagesEn = [
         '☕ Gursha on me! Keep creating!',
         '🌼 Great work! Proud supporter!',
         '🦁 Big respect for your talent!',
         '👑 Keep inspiring Ethiopia!'
     ];
-    const activeQuickMessages = (!isCustom && selectedGift?.quickMessages) ? selectedGift.quickMessages : defaultQuickMessages;
+    const defaultQuickMessagesAm = [
+        '☕ ጉርሻ ከኔ! በርትተህ ቀጥል!',
+        '🌼 ድንቅ ስራ ነው! ኩራት ይሰማኛል!',
+        '🦁 ለተሰጥኦህ ትልቅ አክብሮት አለኝ!',
+        '👑 ሁሌም ሀገርን በስራህ አነቃቃ!'
+    ];
+
+    const activeQuickMessages = (!isCustom && selectedGift?.quickMessages)
+        ? (language === 'am'
+            ? selectedGift.quickMessages.filter(m => /[\u1200-\u137F]/.test(m)).concat(defaultQuickMessagesAm).slice(0, 4)
+            : selectedGift.quickMessages.filter(m => !/[\u1200-\u137F]/.test(m)).concat(defaultQuickMessagesEn).slice(0, 4)
+          )
+        : (language === 'am' ? defaultQuickMessagesAm : defaultQuickMessagesEn);
 
     const showAlert = (message, type = 'success') => {
         setAlert({ message, type });
@@ -309,12 +321,12 @@ export default function PublicProfile() {
                     <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: 'var(--danger-light)', color: 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
                         <AlertCircle size={26} />
                     </div>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 0.5rem' }}>Creator Not Found</h2>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 0.5rem' }}>{t('creatorNotFound')}</h2>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.5, margin: '0 0 1.5rem' }}>
-                        {error || "The handle you entered doesn't exist or is no longer active."}
+                        {error || t('creatorNotFoundDesc')}
                     </p>
                     <Link to="/" style={{ textDecoration: 'none' }}>
-                        <Button variant="primary" style={{ width: '100%' }}>Explore Creators</Button>
+                        <Button variant="primary" style={{ width: '100%' }}>{t('exploreCreators')}</Button>
                     </Link>
                 </div>
             </div>
@@ -338,7 +350,7 @@ export default function PublicProfile() {
                         type="button"
                         onClick={() => setShowQrModal(true)}
                         className="tipping-nav-btn"
-                        title="Show QR Code"
+                        title={language === 'am' ? 'የQR ኮድ አሳይ' : 'Show QR Code'}
                     >
                         <QrCode size={14} />
                         <span>QR</span>
@@ -390,9 +402,9 @@ export default function PublicProfile() {
                             </div>
                         </div>
 
-                        <h2 className="tip-success-title">Tip Sent Successfully!</h2>
+                        <h2 className="tip-success-title">{t('tipSentSuccessfully')}</h2>
                         <p className="tip-success-subtitle">
-                            Thank you for supporting <strong>{creator.name}</strong>
+                            {t('thankYouForSupportingCreator')} <strong>{creator.name}</strong>
                         </p>
 
                         <div className="tip-order-summary-box">
@@ -406,32 +418,32 @@ export default function PublicProfile() {
                                 </div>
                                 <div className="tip-order-gift-details">
                                     <div className="tip-order-gift-name">
-                                        {!isCustom && selectedGift ? `${selectedGift.nameAm} (${selectedGift.nameEn})` : 'Custom Gursha Tip'}
+                                        {!isCustom && selectedGift ? (language === 'am' ? `${selectedGift.nameAm} (${selectedGift.nameEn})` : `${selectedGift.nameEn} (${selectedGift.nameAm})`) : t('customGurshaTip')}
                                     </div>
                                     <div className="tip-order-gift-sub">
-                                        From {isAnonymous ? 'Anonymous Supporter' : (tipperName || 'Supporter')}
+                                        {language === 'am' ? 'ደጋፊ፡ ' : 'From '} {isAnonymous ? t('anonymousSupporter') : (tipperName || t('anonymousFan'))}
                                     </div>
                                 </div>
                             </div>
                             <div className="tip-order-amount-col">
-                                <div className="tip-order-amount-etb">{currentEtb} ETB</div>
-                                <div className="tip-order-coins-sub">🪙 {currentCoins.toLocaleString()} Coins</div>
+                                <div className="tip-order-amount-etb">{currentEtb} {language === 'am' ? 'ብር' : 'ETB'}</div>
+                                <div className="tip-order-coins-sub">🪙 {currentCoins.toLocaleString()} {t('coinsLabel')}</div>
                             </div>
                         </div>
 
                         <div className="compact-receipt-card">
                             <div className="compact-receipt-row">
-                                <span className="receipt-label">Status</span>
+                                <span className="receipt-label">{t('statusHeaderLabel')}</span>
                                 <span className="receipt-status-pill">
-                                    <Check size={11} strokeWidth={3} /> COMPLETED
+                                    <Check size={11} strokeWidth={3} /> {t('completedStatus')}
                                 </span>
                             </div>
                             <div className="compact-receipt-row">
-                                <span className="receipt-label">Reference</span>
+                                <span className="receipt-label">{t('referenceLabel')}</span>
                                 <div 
                                     className="receipt-ref-badge" 
                                     onClick={handleCopyRef} 
-                                    title="Click to copy reference"
+                                    title={t('clickToCopyRef')}
                                     role="button"
                                     tabIndex={0}
                                 >
@@ -440,16 +452,16 @@ export default function PublicProfile() {
                                 </div>
                             </div>
                             <div className="compact-receipt-row">
-                                <span className="receipt-label">Payment Method</span>
+                                <span className="receipt-label">{t('paymentMethod')}</span>
                                 <span className="receipt-method-pill">
                                     <span className={`receipt-method-dot ${paymentMethod === 'telebirr' ? 'telebirr' : 'chapa'}`} />
-                                    {paymentMethod === 'telebirr' ? 'Telebirr USSD' : 'Chapa Gateway'}
+                                    {paymentMethod === 'telebirr' ? `${t('telebirrTitle')} USSD` : 'Chapa Gateway'}
                                 </span>
                             </div>
                             <div className="compact-receipt-row">
-                                <span className="receipt-label">Date</span>
+                                <span className="receipt-label">{t('dateLabel')}</span>
                                 <span className="receipt-date-val">
-                                    {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                    {new Date().toLocaleDateString(language === 'am' ? 'am-ET' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                 </span>
                             </div>
                         </div>
@@ -462,20 +474,20 @@ export default function PublicProfile() {
                                 setShoutOutMessage('');
                             }}
                         >
-                            Send Another Gursha
+                            {t('sendAnotherGursha')}
                         </Button>
 
                         <div className="compact-share-section">
-                            <span className="compact-share-title">Share page</span>
+                            <span className="compact-share-title">{t('sharePageLabel')}</span>
                             <div className="compact-share-row">
                                 <button
                                     type="button"
                                     onClick={handleCopyLink}
                                     className="compact-share-pill"
-                                    title="Copy Link"
+                                    title={t('shareLink')}
                                 >
                                     {copiedShare ? <Check size={13} color="#10B981" /> : <Copy size={13} />}
-                                    <span>{copiedShare ? 'Copied' : 'Copy'}</span>
+                                    <span>{copiedShare ? t('copiedBadge') : t('shareLink')}</span>
                                 </button>
                                 <a
                                     href={`https://t.me/share/url?url=${shareUrl}&text=${shareText}`}
@@ -533,14 +545,14 @@ export default function PublicProfile() {
                                 </div>
                                 <div className="tip-order-gift-details">
                                     <span className="tip-order-gift-name">
-                                        {!isCustom && selectedGift ? `${selectedGift.nameAm} (${selectedGift.nameEn})` : 'Custom Tip'}
+                                        {!isCustom && selectedGift ? (language === 'am' ? `${selectedGift.nameAm} (${selectedGift.nameEn})` : `${selectedGift.nameEn} (${selectedGift.nameAm})`) : t('customTip')}
                                     </span>
-                                    <span className="tip-order-gift-sub">Support to @{creator.username}</span>
+                                    <span className="tip-order-gift-sub">{t('supportTo')} @{creator.username}</span>
                                 </div>
                             </div>
                             <div className="tip-order-amount-col">
-                                <div className="tip-order-amount-etb">{currentEtb} ETB</div>
-                                <div className="tip-order-coins-sub">🪙 {currentCoins.toLocaleString()} Coins</div>
+                                <div className="tip-order-amount-etb">{currentEtb} {language === 'am' ? 'ብር' : 'ETB'}</div>
+                                <div className="tip-order-coins-sub">🪙 {currentCoins.toLocaleString()} {t('coinsLabel')}</div>
                             </div>
                         </div>
 
@@ -548,7 +560,7 @@ export default function PublicProfile() {
                             <div className="telebirr-flow-header">
                                 <div className="telebirr-flow-title">
                                     <span className="telebirr-radar-ring" />
-                                    <span>Telebirr Authorization</span>
+                                    <span>{t('telebirrAuthorization')}</span>
                                 </div>
                                 <div className="telebirr-phone-pill">
                                     +251 {tipperPhone}
@@ -558,20 +570,20 @@ export default function PublicProfile() {
                             <div className="telebirr-step-tracker">
                                 <div className="telebirr-step-item">
                                     <span className="telebirr-step-bullet completed">✓</span>
-                                    <span className="telebirr-step-text">USSD prompt sent to mobile</span>
+                                    <span className="telebirr-step-text">{t('ussdPromptSent')}</span>
                                 </div>
                                 <div className="telebirr-step-item">
                                     <span className="telebirr-step-bullet active">2</span>
-                                    <span className="telebirr-step-text active">Enter your 4-digit Telebirr PIN</span>
+                                    <span className="telebirr-step-text active">{t('enter4DigitPin')}</span>
                                 </div>
                                 <div className="telebirr-step-item">
                                     <span className="telebirr-step-bullet pending">3</span>
-                                    <span className="telebirr-step-text pending">Instant confirmation</span>
+                                    <span className="telebirr-step-text pending">{t('instantConfirmation')}</span>
                                 </div>
                             </div>
 
                             <p className="telebirr-flow-note">
-                                💡 A Telebirr prompt appeared on your phone screen. Please approve the tip of <strong>{currentEtb} ETB</strong>.
+                                💡 {t('telebirrPromptAppeared')} <strong>{currentEtb} {language === 'am' ? 'ብር' : 'ETB'}</strong>.
                             </p>
                         </div>
 
@@ -580,7 +592,7 @@ export default function PublicProfile() {
                             style={{ width: '100%', height: '42px', fontWeight: 600, fontSize: '0.875rem' }}
                             onClick={() => setTippingState('idle')}
                         >
-                            Cancel / Modify Tip
+                            {t('cancelModifyTip')}
                         </Button>
                     </div>
 
@@ -604,16 +616,28 @@ export default function PublicProfile() {
                             </div>
 
                             <div className="creator-info-block">
-                                <h1 className="creator-display-name">
-                                    {creator.name}
-                                    {creator.isVerified && <VerifiedBlueTick size={18} />}
-                                    {creator.customCommissionRate === 0 && (
-                                        <span className="badge badge-vip" style={{ marginLeft: '0.4rem', verticalAlign: 'middle', fontSize: '0.75rem' }} title="VIP Genesis Creator (0% Platform Fee)">👑 VIP Genesis</span>
-                                    )}
-                                    {creator.customCommissionRate === 0.05 && (
-                                        <span className="badge badge-growth" style={{ marginLeft: '0.4rem', verticalAlign: 'middle', fontSize: '0.75rem' }} title="Growth Tier Creator (5% Platform Fee)">⚡ Growth Tier</span>
-                                    )}
-                                </h1>
+                                <div className="creator-name-row">
+                                    <h1 className="creator-display-name">
+                                        <span className="creator-name-text">{creator.name}</span>
+                                        {creator.isVerified && <VerifiedBlueTick size={20} />}
+                                    </h1>
+                                </div>
+
+                                {creator.customCommissionRate === 0 && (
+                                    <div className="creator-tier-wrapper">
+                                        <span className="creator-tier-badge badge-vip" title={t('vipGenesisTitle')}>
+                                            {t('vipGenesisBadge')}
+                                        </span>
+                                    </div>
+                                )}
+                                {creator.customCommissionRate === 0.05 && (
+                                    <div className="creator-tier-wrapper">
+                                        <span className="creator-tier-badge badge-growth" title={t('growthTierTitle')}>
+                                            {t('growthTierBadge')}
+                                        </span>
+                                    </div>
+                                )}
+
                                 <span className="creator-handle-tag">@{creator.username}</span>
                             </div>
 
@@ -657,8 +681,8 @@ export default function PublicProfile() {
                                         />
                                     </div>
                                     <div className="goal-row-bottom">
-                                        <span><strong>{(creator.goal.raisedAmount || 0).toLocaleString()} ETB</strong> raised</span>
-                                        <span>Target: {creator.goal.targetAmount.toLocaleString()} ETB</span>
+                                        <span><strong>{(creator.goal.raisedAmount || 0).toLocaleString()} {language === 'am' ? 'ብር' : 'ETB'}</strong> {t('raised')}</span>
+                                        <span>{t('target')} {creator.goal.targetAmount.toLocaleString()} {language === 'am' ? 'ብር' : 'ETB'}</span>
                                     </div>
                                 </div>
                             )}
@@ -670,7 +694,7 @@ export default function PublicProfile() {
                             {/* Gift Selection Section */}
                             <div className="gift-section-block">
                                 <div className="section-title-row">
-                                    <span className="clean-section-title">Select a gift (ስጦታ ይምረጡ)</span>
+                                    <span className="clean-section-title">{t('selectGift')}</span>
                                 </div>
 
                                 {/* Category Navigation Tabs (Clean Horizontal Tabs) */}
@@ -696,7 +720,7 @@ export default function PublicProfile() {
                                             <span className="cat-tab-icon">
                                                 {tab.key === 'culture' ? <EthiopianFlag width={18} height={12} /> : tab.icon}
                                             </span>
-                                            <span className="cat-tab-label">{tab.labelAm}</span>
+                                            <span className="cat-tab-label">{language === 'am' ? tab.labelAm : tab.labelEn}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -732,10 +756,10 @@ export default function PublicProfile() {
                                                         </div>
 
                                                         <div className="gift-text-wrap">
-                                                            <span className="gift-name-primary">{gift.nameAm}</span>
-                                                            <span className="gift-name-secondary">{gift.nameEn}</span>
+                                                            <span className="gift-name-primary">{language === 'am' ? gift.nameAm : gift.nameEn}</span>
+                                                            <span className="gift-name-secondary">{language === 'am' ? (gift.shortAm || gift.nameEn) : gift.nameAm}</span>
                                                             <div className="gift-price-badge">
-                                                                <span className="price-etb">{gift.etb} ETB</span>
+                                                                <span className="price-etb">{gift.etb} {language === 'am' ? 'ብር' : 'ETB'}</span>
                                                                 <span className="price-coins">🪙 {gift.coins.toLocaleString()}</span>
                                                             </div>
                                                         </div>
@@ -749,16 +773,16 @@ export default function PublicProfile() {
                                 {isCustom && (
                                     <div className="clean-custom-box">
                                         <div className="custom-input-label-row">
-                                            <span>Custom amount (ብጁ መጠን)</span>
-                                            <span className="custom-rate-hint">1 ETB = 10 Coins 🪙</span>
+                                            <span>{t('customAmountLabel')}</span>
+                                            <span className="custom-rate-hint">1 {language === 'am' ? 'ብር' : 'ETB'} = 10 {t('coinsLabel')} 🪙</span>
                                         </div>
                                         <div className="custom-field-container">
-                                            <span className="custom-prefix">ETB</span>
+                                            <span className="custom-prefix">{language === 'am' ? 'ብር' : 'ETB'}</span>
                                             <input
                                                 type="number"
                                                 min="10"
                                                 max="100000"
-                                                placeholder="Enter amount (min 10 ETB)"
+                                                placeholder={t('enterAmountMin')}
                                                 value={customAmount}
                                                 onChange={(e) => setCustomAmount(e.target.value)}
                                                 className="clean-custom-input"
@@ -767,7 +791,7 @@ export default function PublicProfile() {
                                         </div>
                                         {customAmount && Number(customAmount) >= 10 && (
                                             <div className="custom-conversion-text">
-                                                = 🪙 {(Number(customAmount) * 10).toLocaleString()} Gursha Coins
+                                                = 🪙 {(Number(customAmount) * 10).toLocaleString()} {t('gurshaCoins')}
                                             </div>
                                         )}
                                     </div>
@@ -783,16 +807,16 @@ export default function PublicProfile() {
                                                 </div>
                                                 <div className="multiplier-gift-meta">
                                                     <div className="multiplier-title-row">
-                                                        <span className="multiplier-name-am">{selectedGift.nameAm}</span>
-                                                        <span className="multiplier-name-en">({selectedGift.nameEn})</span>
+                                                        <span className="multiplier-name-am">{language === 'am' ? selectedGift.nameAm : selectedGift.nameEn}</span>
+                                                        <span className="multiplier-name-en">({language === 'am' ? selectedGift.nameEn : selectedGift.nameAm})</span>
                                                     </div>
                                                     <div className="multiplier-cost-row">
                                                         <span key={amount} className="cost-etb-val">
-                                                            {(Number(amount || selectedGift.etb)).toLocaleString()} ETB
+                                                            {(Number(amount || selectedGift.etb)).toLocaleString()} {language === 'am' ? 'ብር' : 'ETB'}
                                                         </span>
                                                         <span className="cost-dot">•</span>
                                                         <span key={currentCoins} className="cost-coins-val">
-                                                            🪙 {currentCoins.toLocaleString()} Coins
+                                                            🪙 {currentCoins.toLocaleString()} {t('coinsLabel')}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -801,7 +825,7 @@ export default function PublicProfile() {
                                             <button
                                                 type="button"
                                                 className="clean-preview-btn"
-                                                title="Preview Live Celebration"
+                                                title={t('previewCelebration')}
                                                 onClick={() => {
                                                     setCelebrationGift(selectedGift);
                                                     setComboCount(1);
@@ -813,12 +837,12 @@ export default function PublicProfile() {
                                                 }}
                                             >
                                                 <span>✨</span>
-                                                <span>Preview</span>
+                                                <span>{t('previewCelebration')}</span>
                                             </button>
                                         </div>
 
                                         <div className="multiplier-strip-bottom">
-                                            <span className="multiplier-pills-label">Multiplier:</span>
+                                            <span className="multiplier-pills-label">{t('multiplier')}</span>
                                             <div className="multiplier-pills-group">
                                                 {[1, 2, 5, 10].map(mult => {
                                                     const multAmount = String(Number(selectedGift.etb) * mult);
@@ -843,20 +867,20 @@ export default function PublicProfile() {
                             {/* Supporter Name & Anonymous Checkbox */}
                             <div className="clean-field-group">
                                 <div className="clean-field-header">
-                                    <label className="clean-field-label">Your name (optional)</label>
+                                    <label className="clean-field-label">{t('yourNameOptional')}</label>
                                     <label className="clean-anon-checkbox">
                                         <input
                                             type="checkbox"
                                             checked={isAnonymous}
                                             onChange={(e) => setIsAnonymous(e.target.checked)}
                                         />
-                                        <span>Tip anonymously</span>
+                                        <span>{t('tipAnonymously')}</span>
                                     </label>
                                 </div>
                                 {!isAnonymous && (
                                     <input
                                         type="text"
-                                        placeholder="e.g. Dawit from Addis"
+                                        placeholder={t('namePlaceholder')}
                                         value={tipperName}
                                         onChange={(e) => setTipperName(e.target.value)}
                                         className="clean-text-input"
@@ -867,12 +891,12 @@ export default function PublicProfile() {
                             {/* Shoutout Message */}
                             <div className="clean-field-group">
                                 <div className="clean-field-header">
-                                    <label className="clean-field-label">Say something nice (optional)</label>
+                                    <label className="clean-field-label">{t('saySomethingNice')}</label>
                                     <span className="clean-char-counter">{shoutOutMessage.length}/200</span>
                                 </div>
                                 <textarea
                                     rows={2}
-                                    placeholder="Leave an encouraging message for this creator..."
+                                    placeholder={t('encouragingMsgPlaceholder')}
                                     value={shoutOutMessage}
                                     onChange={(e) => setShoutOutMessage(e.target.value)}
                                     maxLength={200}
@@ -900,7 +924,7 @@ export default function PublicProfile() {
 
                             {/* Payment Method Selector */}
                             <div className="clean-field-group">
-                                <label className="clean-field-label">Payment method</label>
+                                <label className="clean-field-label">{t('paymentMethodLabel')}</label>
                                 <div className="clean-payment-grid">
                                     <button
                                         type="button"
@@ -916,8 +940,8 @@ export default function PublicProfile() {
                                             <Smartphone size={18} />
                                         </div>
                                         <div className="payment-tile-meta">
-                                            <span className="tile-title">Telebirr</span>
-                                            <span className="tile-sub">USSD Push</span>
+                                            <span className="tile-title">{t('telebirrTitle')}</span>
+                                            <span className="tile-sub">{t('telebirrUssdPush')}</span>
                                         </div>
                                         {paymentMethod === 'telebirr' && (
                                             <div className="payment-tile-check">
@@ -940,8 +964,8 @@ export default function PublicProfile() {
                                             <CreditCard size={18} />
                                         </div>
                                         <div className="payment-tile-meta">
-                                            <span className="tile-title">Bank / Cards</span>
-                                            <span className="tile-sub">CBE & Chapa</span>
+                                            <span className="tile-title">{t('bankCardsTitle')}</span>
+                                            <span className="tile-sub">{t('cbeAndChapa')}</span>
                                         </div>
                                         {paymentMethod === 'chapa_checkout' && (
                                             <div className="payment-tile-check">
@@ -955,7 +979,7 @@ export default function PublicProfile() {
                             {/* Telebirr Phone Number Field */}
                             {paymentMethod === 'telebirr' && (
                                 <div className="clean-field-group">
-                                    <label className="clean-field-label">Telebirr mobile number</label>
+                                    <label className="clean-field-label">{t('telebirrMobileNumber')}</label>
                                     <div 
                                         style={{
                                             display: 'flex',
@@ -970,7 +994,7 @@ export default function PublicProfile() {
                                         className="phone-input-field"
                                     >
                                         <div style={{
-                                            display: 'flex',
+                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: '0.4rem',
                                             padding: '0 0.75rem',
@@ -1031,13 +1055,13 @@ export default function PublicProfile() {
                                 {tippingState === 'processing' ? (
                                     <>
                                         <RefreshCw size={18} className="clean-spin" />
-                                        <span>Connecting...</span>
+                                        <span>{t('connecting')}</span>
                                     </>
                                 ) : (
                                     <>
                                         <span className="clean-send-icon">{isCustom ? '🪙' : (selectedGift?.emoji || '☕')}</span>
                                         <span key={`${isCustom ? customAmount : amount}-${selectedGift?.id}`} className="send-btn-amount-pulse">
-                                            Send {isCustom ? `${Number(customAmount || 0).toLocaleString()} ETB` : `${selectedGift?.nameEn || 'Gursha'} (${Number(amount || 0).toLocaleString()} ETB)`}
+                                            {t('sendTipWithAmount')} {isCustom ? `${Number(customAmount || 0).toLocaleString()} ${language === 'am' ? 'ብር' : 'ETB'}` : `${(language === 'am' ? selectedGift?.nameAm : selectedGift?.nameEn) || 'Gursha'} (${Number(amount || 0).toLocaleString()} ${language === 'am' ? 'ብር' : 'ETB'})`}
                                         </span>
                                     </>
                                 )}
@@ -1045,7 +1069,7 @@ export default function PublicProfile() {
 
                             <div className="clean-security-footnote">
                                 <Lock size={12} />
-                                <span>256-bit encrypted checkout &bull; Operated by Birana Labs</span>
+                                <span>{t('encryptedCheckout')}</span>
                             </div>
                         </form>
                     </>
@@ -1055,14 +1079,14 @@ export default function PublicProfile() {
             {/* Share Page Strip (Clean & Compact) */}
             {tippingState === 'idle' && (
                 <div className="clean-share-bar">
-                    <span className="clean-share-label">Share page:</span>
+                    <span className="clean-share-label">{t('sharePageLabel')}</span>
                     <button
                         type="button"
                         onClick={handleCopyLink}
                         className="clean-share-link-btn"
                     >
                         {copiedShare ? <Check size={13} color="#10B981" /> : <Copy size={13} />}
-                        <span>{copiedShare ? 'Copied' : 'Link'}</span>
+                        <span>{copiedShare ? t('copiedBadge') : t('shareLink')}</span>
                     </button>
                     <a
                         href={`https://t.me/share/url?url=${shareUrl}&text=${shareText}`}
@@ -1092,7 +1116,7 @@ export default function PublicProfile() {
                         type="button"
                         onClick={handleNativeShare}
                         className="clean-share-link-btn icon-only"
-                        title="More options"
+                        title={t('moreOptions')}
                     >
                         <Share2 size={13} />
                     </button>
@@ -1110,7 +1134,7 @@ export default function PublicProfile() {
                         onClick={e => e.stopPropagation()}
                     >
                         <div className="clean-modal-header">
-                            <h3 className="clean-modal-title">Creator Tip QR Code</h3>
+                            <h3 className="clean-modal-title">{t('creatorTipQrCode')}</h3>
                             <button
                                 type="button"
                                 onClick={() => setShowQrModal(false)}
@@ -1129,7 +1153,7 @@ export default function PublicProfile() {
                         </div>
 
                         <p className="clean-qr-caption">
-                            Scan with phone or Telebirr to support <strong>@{creator.username}</strong>
+                            {t('scanWithPhoneOrTelebirr')} <strong>@{creator.username}</strong>
                         </p>
 
                         <a
@@ -1140,7 +1164,7 @@ export default function PublicProfile() {
                             style={{ textDecoration: 'none' }}
                         >
                             <Button variant="primary" icon={Download} style={{ width: '100%', height: '42px', fontWeight: 600 }}>
-                                Download High-Res QR
+                                {t('downloadHighResQr')}
                             </Button>
                         </a>
                     </div>

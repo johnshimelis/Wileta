@@ -240,17 +240,17 @@ export default function Home() {
                     <div>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.25rem 0.65rem', borderRadius: '9999px', background: 'var(--primary-light)', color: 'var(--primary)', fontWeight: 700, fontSize: '0.75rem', marginBottom: '1rem', border: '1px solid rgba(4, 120, 87, 0.2)', maxWidth: '100%', boxSizing: 'border-box' }}>
                             <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: 'var(--primary)', display: 'inline-block' }}></span>
-                            <span>Ethiopia's Creator Monetization Infrastructure</span>
+                            <span>{t('heroBadge')}</span>
                             <EthiopianFlag width={18} height={12} />
                         </div>
 
                         <h1 style={{ fontSize: 'clamp(1.75rem, 5.5vw, 3.4rem)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.12, marginBottom: '1.25rem', color: 'var(--text-main)' }}>
-                            The direct monetization rail for <br />
-                            <span style={{ color: 'var(--primary)' }}>Ethiopian creators.</span>
+                            {t('heroTitle1')} <br />
+                            <span style={{ color: 'var(--primary)' }}>{t('heroTitle2')}</span>
                         </h1>
 
                         <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: 1.6, maxWidth: '520px' }}>
-                            Accept instant fan support in ETB directly through Telebirr and local Ethiopian bank accounts. Zero monthly fees, real-time OBS stream overlays, and automated withdrawals.
+                            {t('heroSubtitle')}
                         </p>
 
                         {/* Interactive Handle Claim Bar */}
@@ -261,7 +261,7 @@ export default function Home() {
                                 </span>
                                 <input
                                     type="text"
-                                    placeholder="yourname"
+                                    placeholder={t('claimPlaceholder')}
                                     value={claimUsername}
                                     onChange={(e) => handleCheckUsername(e.target.value)}
                                     style={{
@@ -285,12 +285,12 @@ export default function Home() {
                                 onClick={() => navigate('/signup' + (claimUsername ? '?username=' + claimUsername : ''))}
                                 style={{ whiteSpace: 'nowrap', flexShrink: 0 }}
                             >
-                                Claim Link
+                                {t('claimButton')}
                             </Button>
                         </div>
                         {claimStatus === 'available' ? (
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary)', fontSize: '0.825rem', fontWeight: 700, marginBottom: '1.25rem' }}>
-                                <CheckCircle size={14} /> @{claimUsername} is available! Claim it in 30 seconds.
+                                <CheckCircle size={14} /> @{claimUsername} {t('availableBadge')}
                             </div>
                         ) : (
                             <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>

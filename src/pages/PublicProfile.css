@@ -136,19 +136,84 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    margin-top: 0.15rem;
+    gap: 3px;
 }
 
-.creator-display-name {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--text-main);
-    margin: 0;
+.creator-name-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    width: 100%;
+    text-align: center;
+}
+
+.creator-display-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     letter-spacing: -0.015em;
+    text-align: center;
+    max-width: 100%;
+}
+
+.creator-name-text {
+    display: inline-block;
+    text-align: center;
+}
+
+.creator-tier-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 2px 0 4px;
+}
+
+.creator-tier-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    line-height: 1.2;
+}
+
+.creator-tier-badge.badge-growth {
+    background: rgba(16, 185, 129, 0.12);
+    color: #047857;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+[data-theme='dark'] .creator-tier-badge.badge-growth {
+    background: rgba(16, 185, 129, 0.18);
+    color: #10B981;
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.creator-tier-badge.badge-vip {
+    background: rgba(245, 158, 11, 0.12);
+    color: #B45309;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+[data-theme='dark'] .creator-tier-badge.badge-vip {
+    background: rgba(245, 158, 11, 0.18);
+    color: #FBBF24;
+    border-color: rgba(245, 158, 11, 0.4);
 }
 
 .creator-handle-tag {
@@ -156,9 +221,71 @@
     font-weight: 600;
     color: #047857;
     letter-spacing: -0.01em;
+    text-align: center;
+    display: block;
 }
 
 [data-theme='dark'] .creator-handle-tag {
+    color: #10B981;
+}
+
+/* Status Card Header (PIN Prompt & Success screens) */
+.status-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 1.25rem;
+    gap: 0.5rem;
+}
+
+.status-card-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+}
+
+.status-card-avatar-fallback {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #E6F4EA;
+    color: #047857;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.status-card-creator-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.status-card-creator-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.status-card-creator-handle {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #047857;
+}
+
+[data-theme='dark'] .status-card-creator-handle {
     color: #10B981;
 }
 
