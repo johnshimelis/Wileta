@@ -101,7 +101,7 @@ export default function Login() {
                     setLoading(false);
                 });
         } else if (errParam) {
-            setError(errParam);
+            setError(decodeURIComponent(errParam));
         }
     }, [navigate, api, setUser]);
 
