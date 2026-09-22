@@ -19,6 +19,7 @@ import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import ForcedMobileKYCModal from '../components/ForcedMobileKYCModal';
 import EthiopianFlag from '../components/EthiopianFlag';
+import TelegramConnectBanner from '../components/TelegramConnectBanner';
 
 // Official Verified Blue Tick SVG Emblem
 const VerifiedBlueTick = ({ size = 24, title = "Verified Creator" }) => (
@@ -49,6 +50,13 @@ const VerifiedBlueTick = ({ size = 24, title = "Verified Creator" }) => (
             />
         </svg>
     </span>
+);
+
+// High-fidelity Telegram Icon
+const TelegramIcon = ({ size = 20, color = "currentColor" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.64 8.8C16.49 10.38 15.82 14.34 15.48 16.16C15.34 16.93 15.05 17.19 14.78 17.21C14.18 17.27 13.73 16.82 13.15 16.44C12.24 15.84 11.73 15.47 10.85 14.89C9.83 14.22 10.49 13.85 11.07 13.25C11.22 13.1 13.86 10.7 13.91 10.49C13.92 10.46 13.92 10.37 13.87 10.32C13.81 10.27 13.73 10.29 13.67 10.3C13.58 10.32 12.2 11.23 9.53 13.04C9.14 13.31 8.78 13.44 8.47 13.43C8.12 13.42 7.46 13.23 6.97 13.07C6.37 12.87 5.89 12.77 5.93 12.44C5.95 12.27 6.19 12.1 6.64 11.92C9.42 10.71 11.28 9.91 12.21 9.52C14.85 8.42 15.4 8.23 15.76 8.23C15.84 8.23 16.02 8.25 16.14 8.35C16.24 8.43 16.27 8.55 16.28 8.64C16.28 8.71 16.29 8.87 16.64 8.8Z" fill={color} />
+    </svg>
 );
 
 const getBankLogo = (name) => {
@@ -1137,6 +1145,7 @@ export default function Dashboard() {
     const [copied, setCopied] = useState(false);
     const [obsCopied, setObsCopied] = useState(false);
     const [isWithdrawing, setIsWithdrawing] = useState(false);
+    const [isConnectingTelegram, setIsConnectingTelegram] = useState(false);
     const [alert, setAlert] = useState(null);
     const [showWithdrawModal, setShowWithdrawModal] = useState(false);
     const [showChangeTelebirrModal, setShowChangeTelebirrModal] = useState(false);
@@ -1228,15 +1237,21 @@ export default function Dashboard() {
     useEffect(() => {
         fetchDashboardData(true);
 
-        // Mobile lifecycle: Auto-refresh balance when returning to tab/app without requiring reload
+        // Mobile lifecycle: Auto-refresh balance and user state when returning to tab/app without requiring reload
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'visible') {
                 fetchMetrics();
+                api.get('/auth/me').then(res => {
+                    if (res?.data) setUser(res.data);
+                }).catch(() => {});
             }
         };
 
         const handleFocus = () => {
             fetchMetrics();
+            api.get('/auth/me').then(res => {
+                if (res?.data) setUser(res.data);
+            }).catch(() => {});
         };
 
         document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -1319,6 +1334,47 @@ export default function Dashboard() {
             setAlert({ message: errMsg, type: "error" });
         }
         setIsWithdrawing(false);
+    };
+
+    const handleConnectTelegram = async () => {
+        setIsConnectingTelegram(true);
+        try {
+            const res = await api.get('/user/telegram-link');
+            const deepLink = res.data?.deepLink || res.data?.url;
+            if (deepLink) {
+                const isMobileBrowser = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                if (isMobileBrowser) {
+                    window.location.href = deepLink;
+                } else {
+                    window.open(deepLink, '_blank', 'noopener,noreferrer');
+                }
+
+                // Actively poll /auth/me to detect when creator taps START in Telegram
+                let pollAttempts = 0;
+                const pollInterval = setInterval(async () => {
+                    pollAttempts++;
+                    try {
+                        const meRes = await api.get('/auth/me');
+                        if (meRes?.data?.telegramChatId) {
+                            setUser(meRes.data);
+                            localStorage.setItem('gp_cached_user', JSON.stringify(meRes.data));
+                            clearInterval(pollInterval);
+                        }
+                    } catch (_) {}
+                    if (pollAttempts >= 15) clearInterval(pollInterval);
+                }, 3000);
+            } else {
+                throw new Error('No deep link returned from server');
+            }
+        } catch (err) {
+            console.error('[Dashboard] Telegram link error:', err);
+            setAlert({
+                message: t('telegramLinkError') || 'Failed to generate Telegram connection link. Please try again.',
+                type: 'error'
+            });
+        } finally {
+            setIsConnectingTelegram(false);
+        }
     };
 
     const handleLogoUpload = async (file, accountIndex) => {
@@ -1437,7 +1493,9 @@ export default function Dashboard() {
             <main className="main-content">
                 {alert && <TopAlert message={alert.message} type={alert.type} onClose={() => setAlert(null)} />}
 
-                
+                {/* Telegram 1-Click Deep-Link Connect Banner */}
+                <TelegramConnectBanner />
+
                 {/* Dashboard Executive Header */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem', width: '100%', boxSizing: 'border-box' }}>
                     <div>
@@ -1604,6 +1662,213 @@ export default function Dashboard() {
                                 Verify on Mobile
                             </Button>
                         )}
+                    </div>
+                )}
+
+                {/* Telegram Bot Notification Connector Banner */}
+                {user?.telegramChatId ? (
+                    <div
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(34, 158, 217, 0.08) 0%, rgba(0, 136, 204, 0.12) 100%)',
+                            border: '1px solid rgba(34, 158, 217, 0.35)',
+                            borderRadius: '16px',
+                            padding: '1.15rem 1.35rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '1rem',
+                            marginBottom: '1.75rem',
+                            flexWrap: 'wrap',
+                            position: 'relative'
+                        }}
+                    >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                            <div style={{
+                                width: '44px',
+                                height: '44px',
+                                borderRadius: '12px',
+                                background: 'linear-gradient(135deg, #229ED9 0%, #0088CC 100%)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#FFFFFF',
+                                boxShadow: '0 4px 12px rgba(0, 136, 204, 0.35)',
+                                flexShrink: 0
+                            }}>
+                                <TelegramIcon size={26} color="#FFFFFF" />
+                            </div>
+                            <div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                    <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                                        {t('telegramConnectedTitle') || 'Telegram Alerts Connected'}
+                                    </span>
+                                    <span style={{
+                                        fontSize: '0.72rem',
+                                        fontWeight: 700,
+                                        color: '#10B981',
+                                        background: 'rgba(16, 185, 129, 0.12)',
+                                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                                        borderRadius: '20px',
+                                        padding: '2px 8px',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '4px'
+                                    }}>
+                                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981' }}></span>
+                                        {t('telegramBadgeConnected') || 'Connected'}
+                                    </span>
+                                </div>
+                                <div style={{ fontSize: '0.825rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                    {t('telegramConnectedDesc') || 'You are actively receiving instant tip and payout notifications via @GurshaPayNotificationBot.'}
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                            <a
+                                href="https://t.me/GurshaPayNotificationBot"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    style={{
+                                        borderColor: 'rgba(34, 158, 217, 0.4)',
+                                        color: 'var(--text-main)',
+                                        fontWeight: 700,
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px'
+                                    }}
+                                >
+                                    <TelegramIcon size={16} color="#0088CC" />
+                                    <span>{t('telegramOpenBotBtn') || 'Open Bot'}</span>
+                                    <ExternalLink size={13} />
+                                </Button>
+                            </a>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleConnectTelegram}
+                                loading={isConnectingTelegram}
+                                disabled={isConnectingTelegram}
+                                style={{
+                                    fontSize: '0.8rem',
+                                    color: 'var(--text-muted)',
+                                    padding: '0.4rem 0.65rem'
+                                }}
+                                title="Reconnect or link a new Telegram account"
+                            >
+                                <RefreshCw size={13} style={{ marginRight: '4px' }} />
+                                <span>{t('telegramReconnectBtn') || 'Reconnect'}</span>
+                            </Button>
+                        </div>
+                    </div>
+                ) : (
+                    <div
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(34, 158, 217, 0.12) 0%, rgba(0, 136, 204, 0.18) 100%)',
+                            border: '1.5px solid rgba(0, 136, 204, 0.4)',
+                            borderRadius: '16px',
+                            padding: '1.25rem 1.4rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '1.25rem',
+                            marginBottom: '1.75rem',
+                            flexWrap: 'wrap',
+                            position: 'relative',
+                            boxShadow: '0 4px 20px -2px rgba(0, 136, 204, 0.15)'
+                        }}
+                    >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem', flex: 1, minWidth: '260px' }}>
+                            <div style={{
+                                width: '48px',
+                                height: '48px',
+                                borderRadius: '14px',
+                                background: 'linear-gradient(135deg, #229ED9 0%, #0088CC 100%)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#FFFFFF',
+                                boxShadow: '0 6px 16px rgba(0, 136, 204, 0.4)',
+                                flexShrink: 0
+                            }}>
+                                <TelegramIcon size={28} color="#FFFFFF" />
+                            </div>
+                            <div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flexWrap: 'wrap', marginBottom: '3px' }}>
+                                    <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                                        {t('telegramBannerTitle') || 'Never miss a tip! Connect Telegram to get instant, free alerts.'}
+                                    </span>
+                                    <span style={{
+                                        fontSize: '0.7rem',
+                                        fontWeight: 800,
+                                        color: '#0088CC',
+                                        background: 'rgba(34, 158, 217, 0.15)',
+                                        border: '1px solid rgba(34, 158, 217, 0.35)',
+                                        borderRadius: '20px',
+                                        padding: '2px 8px',
+                                        letterSpacing: '0.02em',
+                                        textTransform: 'uppercase'
+                                    }}>
+                                        ⚡ {t('telegramBadgeInstant') || 'Instant & Free'}
+                                    </span>
+                                </div>
+                                <div style={{ fontSize: '0.825rem', color: 'var(--text-muted)', lineHeight: 1.45 }}>
+                                    {t('telegramBannerDesc') || 'Get free, real-time push alerts on Telegram whenever fans send you tips or withdrawals clear.'}
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{ flexShrink: 0 }}>
+                            <button
+                                type="button"
+                                onClick={handleConnectTelegram}
+                                disabled={isConnectingTelegram}
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.6rem',
+                                    background: 'linear-gradient(135deg, #229ED9 0%, #0088CC 100%)',
+                                    color: '#FFFFFF',
+                                    border: 'none',
+                                    borderRadius: '12px',
+                                    padding: '0.7rem 1.35rem',
+                                    fontSize: '0.925rem',
+                                    fontWeight: 800,
+                                    cursor: isConnectingTelegram ? 'not-allowed' : 'pointer',
+                                    boxShadow: '0 4px 14px rgba(0, 136, 204, 0.35)',
+                                    transition: 'all 0.15s ease',
+                                    opacity: isConnectingTelegram ? 0.75 : 1
+                                }}
+                                onMouseEnter={e => {
+                                    if (!isConnectingTelegram) {
+                                        e.currentTarget.style.transform = 'translateY(-2px)';
+                                        e.currentTarget.style.boxShadow = '0 6px 18px rgba(0, 136, 204, 0.45)';
+                                    }
+                                }}
+                                onMouseLeave={e => {
+                                    if (!isConnectingTelegram) {
+                                        e.currentTarget.style.transform = 'translateY(0)';
+                                        e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 136, 204, 0.35)';
+                                    }
+                                }}
+                            >
+                                {isConnectingTelegram ? (
+                                    <>
+                                        <RefreshCw size={17} style={{ animation: 'spin 1s linear infinite' }} />
+                                        <span>{t('telegramConnecting') || 'Connecting...'}</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <TelegramIcon size={19} color="#FFFFFF" />
+                                        <span>{t('telegramConnectBtn') || 'Connect Telegram'}</span>
+                                        <ArrowRight size={16} />
+                                    </>
+                                )}
+                            </button>
+                        </div>
                     </div>
                 )}
 

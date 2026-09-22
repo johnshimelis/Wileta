@@ -89,6 +89,20 @@ const translations = {
         kycPendingStatus: "KYC Pending",
         kycUnverifiedStatus: "KYC Unverified",
         
+        // Telegram Bot Integration
+        telegramBannerTitle: "Never miss a tip! Connect Telegram to get instant, free alerts.",
+        telegramBannerDesc: "Get free, real-time push alerts on Telegram whenever fans send you tips or withdrawals clear.",
+        telegramConnectBtn: "Connect Telegram",
+        telegramConnecting: "Connecting...",
+        telegramConnectedTitle: "Telegram Alerts Connected",
+        telegramConnectedDesc: "You are actively receiving instant tip and payout notifications via @GurshaPayNotificationBot.",
+        telegramReconnectBtn: "Reconnect",
+        telegramOpenBotBtn: "Open Bot",
+        telegramBadgeConnected: "Connected",
+        telegramBadgeInstant: "Instant & Free",
+        telegramLinkError: "Failed to generate Telegram connection link. Please try again.",
+        telegramTestAlertSuccess: "Test alert dispatched! Check your Telegram app.",
+        
         // Public Tipping Profile
         supportCreator: "Support this creator",
         amountLabel: "Select Tip Amount",
@@ -512,6 +526,20 @@ const translations = {
         activeStatus: "ገባሪ",
         kycPendingStatus: "በግምገማ ላይ",
         kycUnverifiedStatus: "ያልተረጋገጠ",
+        
+        // Telegram Bot Integration
+        telegramBannerTitle: "ጉርሻ እንዳያመልጥዎ! ፈጣን ማሳወቂያ በቴሌግራም ያግኙ",
+        telegramBannerDesc: "አድናቂዎችዎ ጉርሻ ሲልኩልዎ ወይም ክፍያ ሲደርስዎ በቴሌግራም ነፃ እና ፈጣን ማሳወቂያ ያግኙ።",
+        telegramConnectBtn: "ቴሌግራምን አገናኝ",
+        telegramConnecting: "በማገናኘት ላይ...",
+        telegramConnectedTitle: "የቴሌግራም ማሳወቂያ ተገናኝቷል",
+        telegramConnectedDesc: "በ @GurshaPayNotificationBot በኩል ፈጣን የጉርሻ እና የገንዘብ ማውጣት ማሳወቂያዎችን እያገኙ ነው።",
+        telegramReconnectBtn: "እንደገና አገናኝ",
+        telegramOpenBotBtn: "ቦቱን ክፈት",
+        telegramBadgeConnected: "የነቃ ማሳወቂያ",
+        telegramBadgeInstant: "ነፃ እና ፈጣን",
+        telegramLinkError: "የቴሌግራም መገናኛ ሊንክ ማመንጨት አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
+        telegramTestAlertSuccess: "የሙከራ ማሳወቂያ ተልኳል! ቴሌግራምዎን ይመልከቱ።",
         
         // Public Tipping Profile
         supportCreator: "ለፈጣሪው ጉርሻ ይስጡ",
