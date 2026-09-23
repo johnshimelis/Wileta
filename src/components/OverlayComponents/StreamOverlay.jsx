@@ -3,32 +3,39 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { AnimatePresence } from 'framer-motion';
 
-import LowTierAlert from './LowTierAlert';
-import MidTierAlert from './MidTierAlert';
-import HighTierAlert from './HighTierAlert';
+import Tier1Alert from './Tier1Alert';
+import Tier2Alert from './Tier2Alert';
+import Tier3Alert from './Tier3Alert';
+// Retain backward compatibility aliases
+import LowTierAlert from './Tier1Alert';
+import MidTierAlert from './Tier2Alert';
+import HighTierAlert from './Tier3Alert';
 
 // Object Map routing incoming socket data to specific tier component
 const TIER_COMPONENTS = {
-    tier_low: LowTierAlert,
-    tier_mid: MidTierAlert,
-    tier_high: HighTierAlert,
-    // Aliases
-    tier1_sparkle: LowTierAlert,
-    tier2_obelisk: MidTierAlert,
-    tier3_lion: HighTierAlert
+    tier1_sparkle: Tier1Alert,
+    tier2_obelisk: Tier2Alert,
+    tier3_lion: Tier3Alert,
+    // Aliases & legacy mappings
+    tier_low: Tier1Alert,
+    tier_mid: Tier2Alert,
+    tier_high: Tier3Alert
 };
 
 /**
- * Determine alert tier from tip amount
+ * Determine alert tier from tip amount:
+ * - < 50 ETB: tier1_sparkle
+ * - 50 - 199 ETB: tier2_obelisk
+ * - >= 200 ETB: tier3_lion
  */
 export function getTipTier(amount, explicitTier) {
     if (explicitTier && TIER_COMPONENTS[explicitTier]) {
         return explicitTier;
     }
     const val = Number(amount) || 0;
-    if (val >= 201) return 'tier_high';
-    if (val >= 51) return 'tier_mid';
-    return 'tier_low';
+    if (val >= 200) return 'tier3_lion';
+    if (val >= 50) return 'tier2_obelisk';
+    return 'tier1_sparkle';
 }
 
 /**
@@ -94,10 +101,10 @@ export default function StreamOverlay() {
         setIsExiting(false);
 
         // Tier-specific timing
-        // Low: 7.5s (fade at 6.8s) | Mid: 9.5s (fade at 8.7s) | High: 12.0s (fade at 11.0s)
-        const duration = nextAlert.tier === 'tier_high' 
-            ? 12000 
-            : (nextAlert.tier === 'tier_mid' ? 9500 : 7500);
+        // Tier 1 (Sparkle): 5.5s (fade at 4.7s) | Tier 2 (Obelisk): 8.5s (fade at 7.7s) | Tier 3 (Hero Lion): 12.0s (fade at 11.2s)
+        const isTier3 = nextAlert.tier === 'tier3_lion' || nextAlert.tier === 'tier_high';
+        const isTier2 = nextAlert.tier === 'tier2_obelisk' || nextAlert.tier === 'tier_mid';
+        const duration = isTier3 ? 12000 : (isTier2 ? 8500 : 5500);
         const fadeDelay = duration - 800;
 
         if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
@@ -122,8 +129,8 @@ export default function StreamOverlay() {
         document.body.style.margin = '0';
         document.body.style.padding = '0';
         document.body.style.overflow = 'hidden';
-        document.body.style.width = '1920px';
-        document.body.style.height = '1080px';
+        document.body.style.width = '100vw';
+        document.body.style.height = '100vh';
 
         const socketBaseUrl = import.meta.env.VITE_API_URL 
             ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') 
@@ -161,21 +168,21 @@ export default function StreamOverlay() {
         });
 
         // URL Query Param Test Preview:
-        // /overlay/:username?test=low | mid | high | queue
+        // /overlay/:username?test=tier1_sparkle | tier2_obelisk | tier3_lion | queue
         const testParam = searchParams.get('test') || searchParams.get('preview') || searchParams.get('tier');
         if (testParam) {
             setTimeout(() => {
-                if (testParam === 'low' || testParam === 'true' || testParam === 'tier1_sparkle') {
-                    enqueueAlert({ tier: 'tier_low', senderName: 'Selamawit T.', amount: 45, message: 'Love the stream! ☕️🇪🇹' });
-                } else if (testParam === 'mid' || testParam === 'tier2_obelisk') {
-                    enqueueAlert({ tier: 'tier_mid', senderName: 'Dawit Bekele', amount: 150, message: 'Aksum Stele power boost! 🏛️✨' });
-                } else if (testParam === 'high' || testParam === 'tier3_lion') {
-                    enqueueAlert({ tier: 'tier_high', senderName: 'Kassahun M.', amount: 500, message: 'Imperial Gonder castle celebration! 👑🏰' });
+                if (testParam === 'tier1_sparkle' || testParam === 'low' || testParam === 'true') {
+                    enqueueAlert({ animationId: 'tier1_sparkle', tier: 'tier1_sparkle', senderName: 'Selamawit T.', amount: 45, message: 'Love the stream! ☕️🇪🇹' });
+                } else if (testParam === 'tier2_obelisk' || testParam === 'mid') {
+                    enqueueAlert({ animationId: 'tier2_obelisk', tier: 'tier2_obelisk', senderName: 'Dawit Bekele', amount: 150, message: 'Aksum Obelisk energy boost! 🏛️✨' });
+                } else if (testParam === 'tier3_lion' || testParam === 'high') {
+                    enqueueAlert({ animationId: 'tier3_lion', tier: 'tier3_lion', senderName: 'Kassahun M.', amount: 500, message: 'Royal Lion of Judah celebration! 🦁👑' });
                 } else if (testParam === 'queue') {
                     // Test all 3 sequentially
-                    enqueueAlert({ tier: 'tier_low', senderName: 'Selamawit T.', amount: 25, message: 'First tip! ☕️' });
-                    enqueueAlert({ tier: 'tier_mid', senderName: 'Dawit Bekele', amount: 120, message: 'Second tip in queue! 🏛️' });
-                    enqueueAlert({ tier: 'tier_high', senderName: 'Kassahun M.', amount: 750, message: 'Grand finale royal tip! 👑' });
+                    enqueueAlert({ animationId: 'tier1_sparkle', tier: 'tier1_sparkle', senderName: 'Selamawit T.', amount: 25, message: 'Sparkle tip! ✨' });
+                    enqueueAlert({ animationId: 'tier2_obelisk', tier: 'tier2_obelisk', senderName: 'Dawit Bekele', amount: 120, message: 'Obelisk tip in queue! 🏛️' });
+                    enqueueAlert({ animationId: 'tier3_lion', tier: 'tier3_lion', senderName: 'Kassahun M.', amount: 750, message: 'Grand finale royal tip! 🦁' });
                 }
             }, 600);
         }
@@ -188,7 +195,7 @@ export default function StreamOverlay() {
     }, [targetUsername, searchParams, enqueueAlert]);
 
     // Active Tier Component lookup
-    const ActiveTierComponent = currentAlert ? (TIER_COMPONENTS[currentAlert.tier] || LowTierAlert) : null;
+    const ActiveTierComponent = currentAlert ? (TIER_COMPONENTS[currentAlert.tier] || Tier1Alert) : null;
 
     return (
         <div 
@@ -196,8 +203,8 @@ export default function StreamOverlay() {
             style={{
                 position: 'fixed',
                 inset: 0,
-                width: '1920px',
-                height: '1080px',
+                width: '100vw',
+                height: '100vh',
                 maxWidth: '100vw',
                 maxHeight: '100vh',
                 background: 'transparent',
@@ -226,8 +233,8 @@ export default function StreamOverlay() {
                     margin: 0 !important;
                     padding: 0 !important;
                     overflow: hidden !important;
-                    width: 1920px !important;
-                    height: 1080px !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
                 }
             `}} />
         </div>

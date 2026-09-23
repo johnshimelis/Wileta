@@ -1962,19 +1962,19 @@ export default function Dashboard() {
                             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '0.2rem' }}>
                                 Test Alert:
                             </span>
-                            <a href={`${obsUrl}?test=low`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                            <a href={`${obsUrl}?test=tier1_sparkle`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                                 <Button variant="secondary" size="sm" style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem' }}>
-                                    ✨ 1-50 ETB (Meskel)
+                                    ✨ &lt;50 ETB (Sparkle)
                                 </Button>
                             </a>
-                            <a href={`${obsUrl}?test=mid`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                            <a href={`${obsUrl}?test=tier2_obelisk`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                                 <Button variant="secondary" size="sm" style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem' }}>
-                                    🏛️ 51-200 ETB (Axum)
+                                    🏛️ 50-199 ETB (Obelisk)
                                 </Button>
                             </a>
-                            <a href={`${obsUrl}?test=high`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                            <a href={`${obsUrl}?test=tier3_lion`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                                 <Button variant="secondary" size="sm" style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem' }}>
-                                    👑 201+ ETB (Gonder)
+                                    🦁 200+ ETB (Hero Lion)
                                 </Button>
                             </a>
                             <a href={`${obsUrl}?test=queue`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
