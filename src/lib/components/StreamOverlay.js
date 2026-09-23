@@ -1,4 +1,4 @@
-import StreamOverlay, { getAnimationId } from '../../components/OverlayComponents/StreamOverlay';
+import StreamOverlay, { getAnimationId, VIDEO_CONFIG_MAP } from '../../components/OverlayComponents/StreamOverlay';
 
-export { getAnimationId };
+export { getAnimationId, VIDEO_CONFIG_MAP };
 export default StreamOverlay;

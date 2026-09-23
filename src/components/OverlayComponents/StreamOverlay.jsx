@@ -3,26 +3,57 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { AnimatePresence } from 'framer-motion';
 
-import Tier1Alert from './Tier1Alert';
-import Tier2Alert from './Tier2Alert';
-import Tier3Alert from './Tier3Alert';
+import CinematicAlert from './CinematicAlert';
 
-// Component Mapping reading animationId
-const ANIMATION_COMPONENTS = {
-    tier1_sparkle: Tier1Alert,
-    tier2_obelisk: Tier2Alert,
-    tier3_lion: Tier3Alert,
-    // Backward compatibility aliases
-    tier_low: Tier1Alert,
-    tier_mid: Tier2Alert,
-    tier_high: Tier3Alert
+// Dynamic WebM Video Asset & Timing Mapping
+export const VIDEO_CONFIG_MAP = {
+    tier1_sparkle: {
+        videoSrc: '/assets/alerts/sparkle_burst.webm',
+        objectFit: 'contain',
+        placement: 'lower_third',
+        climaxDelay: 400,
+        fallbackDuration: 5500,
+        audioTier: 'low',
+        badgeText: 'GURSHA SPARKLE',
+        badgeIcon: '✨',
+        titleSize: '3.1rem',
+        messageSize: '1.45rem',
+        videoFilter: 'drop-shadow(0 0 35px rgba(245, 158, 11, 0.75))'
+    },
+    tier2_obelisk: {
+        videoSrc: '/assets/alerts/3d_axum_obelisk.webm',
+        objectFit: 'contain',
+        placement: 'center',
+        climaxDelay: 750,
+        fallbackDuration: 8000,
+        audioTier: 'mid',
+        badgeText: 'AXUM CELESTIAL BEACON',
+        badgeIcon: '🏛️',
+        titleSize: '3.6rem',
+        messageSize: '1.65rem',
+        videoFilter: 'drop-shadow(0 0 45px rgba(56, 189, 248, 0.85)) drop-shadow(0 0 25px rgba(245, 158, 11, 0.6))'
+    },
+    tier3_lion: {
+        videoSrc: '/assets/alerts/3d_royal_lion.webm',
+        objectFit: 'cover',
+        placement: 'center',
+        climaxDelay: 1100,
+        fallbackDuration: 11500,
+        audioTier: 'high',
+        enableStageDimming: true,
+        badgeText: 'ROYAL LION HERO GURSHA',
+        badgeIcon: '👑',
+        titleSize: '4.4rem',
+        messageSize: '1.9rem',
+        videoFilter: 'drop-shadow(0 0 65px rgba(245, 158, 11, 0.95)) drop-shadow(0 0 35px rgba(16, 185, 129, 0.7))'
+    }
 };
 
 /**
- * Resolve animationId from amount or explicit payload
+ * Determine animationId from amount or explicit payload
  */
 export function getAnimationId(amount, explicitId) {
-    if (explicitId && ANIMATION_COMPONENTS[explicitId]) {
+    if (explicitId && VIDEO_CONFIG_MAP[explicitId]) {
         return explicitId;
     }
     const val = Number(amount) || 0;
@@ -34,8 +65,9 @@ export function getAnimationId(amount, explicitId) {
 /**
  * StreamOverlay Main Orchestrator
  * - 100% Frameless Architecture (No boxes, no cards, no borders)
- * - Robust Sequential Queue: Guarantees active animation finishes before next triggers
- * - Multi-tier cinematic Lottie & Particle renderers
+ * - Cinematic WebM Video Engine with native alpha transparency
+ * - Synchronized 3D Framer-Motion Typography
+ * - Queue System triggered by video onEnded
  */
 export default function StreamOverlay() {
     const { username, creatorId } = useParams();
@@ -46,15 +78,14 @@ export default function StreamOverlay() {
     const [alertQueue, setAlertQueue] = useState([]);
     const [currentAlert, setCurrentAlert] = useState(null);
 
-    // Deduping reference to avoid double-processing
+    // Deduping reference to prevent double processing
     const processedTxRefs = useRef(new Set());
-    const timerRef = useRef(null);
 
     // Enqueue incoming tips
     const enqueueAlert = useCallback((rawPayload) => {
         if (!rawPayload) return;
 
-        // Dedup by tx_ref if available
+        // Dedup by tx_ref if present
         if (rawPayload.tx_ref) {
             if (processedTxRefs.current.has(rawPayload.tx_ref)) {
                 return;
@@ -79,7 +110,7 @@ export default function StreamOverlay() {
         setAlertQueue(prev => [...prev, standardized]);
     }, []);
 
-    // Sequential Queue Consumer: Strictly waits until active animation unmounts
+    // Queue Consumer Loop: Picks next alert when current is unmounted
     useEffect(() => {
         if (currentAlert || alertQueue.length === 0) {
             return;
@@ -89,27 +120,17 @@ export default function StreamOverlay() {
         const nextAlert = alertQueue[0];
         setAlertQueue(prev => prev.slice(1));
         setCurrentAlert(nextAlert);
-
-        // Strict timeout per tier:
-        // Tier 3 Hero (Lion/Castle): 12,000ms
-        // Tier 2 Mid (Obelisk): 8,500ms
-        // Tier 1 Low (Sparkle): 5,500ms
-        const duration = nextAlert.animationId === 'tier3_lion'
-            ? 12000
-            : (nextAlert.animationId === 'tier2_obelisk' ? 8500 : 5500);
-
-        if (timerRef.current) clearTimeout(timerRef.current);
-
-        timerRef.current = setTimeout(() => {
-            // Unmount current animation completely, freeing the stage for the next alert in queue
-            setCurrentAlert(null);
-        }, duration);
-
     }, [currentAlert, alertQueue]);
 
-    // Socket.IO Subscription & OBS Transparent Styling
+    // Callback when current video finishes playing (onEnded)
+    const handleAlertComplete = useCallback(() => {
+        console.log('[StreamOverlay] Current alert finished. Clearing screen & advancing queue.');
+        setCurrentAlert(null);
+    }, []);
+
+    // Socket.IO Subscription & OBS Transparent Viewport
     useEffect(() => {
-        // Enforce completely frameless 100vw x 100vh transparent body
+        // Enforce 100% frameless transparency
         document.documentElement.style.background = 'transparent';
         document.documentElement.style.backgroundColor = 'transparent';
         document.body.style.background = 'transparent';
@@ -141,7 +162,7 @@ export default function StreamOverlay() {
             }
         });
 
-        // Listen for standardized cinematic tip events
+        // Listen for standardized cinematic tip alerts
         socket.on('gursha_tip', (data) => {
             enqueueAlert(data);
         });
@@ -176,12 +197,13 @@ export default function StreamOverlay() {
 
         return () => {
             socket.disconnect();
-            if (timerRef.current) clearTimeout(timerRef.current);
         };
     }, [targetUsername, searchParams, enqueueAlert]);
 
-    // Active Animation Component
-    const ActiveComponent = currentAlert ? (ANIMATION_COMPONENTS[currentAlert.animationId] || Tier1Alert) : null;
+    // Active configuration for current alert
+    const activeConfig = currentAlert 
+        ? (VIDEO_CONFIG_MAP[currentAlert.animationId] || VIDEO_CONFIG_MAP.tier1_sparkle) 
+        : null;
 
     return (
         <div 
@@ -200,10 +222,12 @@ export default function StreamOverlay() {
             }}
         >
             <AnimatePresence mode="wait">
-                {currentAlert && ActiveComponent && (
-                    <ActiveComponent 
+                {currentAlert && activeConfig && (
+                    <CinematicAlert
                         key={currentAlert.id}
                         alert={currentAlert}
+                        config={activeConfig}
+                        onComplete={handleAlertComplete}
                     />
                 )}
             </AnimatePresence>
