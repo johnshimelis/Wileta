@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import Sidebar from '../components/Sidebar';
 import NotificationDrawer from '../components/NotificationDrawer';
 import DirectChatDrawer from '../components/DirectChatDrawer';
@@ -156,6 +157,7 @@ const CATEGORY_CATALOG = [
 export default function Support() {
     const { user, api } = useAuth();
     const { triggerNotification } = useNotification();
+    const { t } = useLanguage();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Form state
@@ -584,11 +586,11 @@ export default function Support() {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>
                         <h1 style={{ fontSize: 'clamp(1.4rem, 5vw, 1.85rem)', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <span>Support & Case Center</span>
+                            <span>{t('supportTitle', 'Support & Case Center')}</span>
                             <LifeBuoy size={26} color="var(--primary)" />
                         </h1>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.25rem', marginBottom: 0 }}>
-                            Real-time two-way support case messaging, tracking, and dispute management.
+                            {t('supportSubtitle', 'Real-time two-way support case messaging, tracking, and dispute management.')}
                         </p>
                     </div>
 
@@ -621,8 +623,8 @@ export default function Support() {
                                 <Mail size={20} />
                             </div>
                             <div>
-                                <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)' }}>Email Operations</div>
-                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Average reply within 2 hours</div>
+                                <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)' }}>{t('emailOperations', 'Email Operations')}</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{t('emailReplyTime', 'Average reply within 2 hours')}</div>
                             </div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--card-bg-subtle)', padding: '0.5rem 0.75rem', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
@@ -632,7 +634,7 @@ export default function Support() {
                                 style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 700 }}
                             >
                                 {copiedEmail ? <Check size={14} /> : <Copy size={14} />}
-                                {copiedEmail ? 'Copied' : 'Copy'}
+                                {copiedEmail ? t('copied', 'Copied') : t('copy', 'Copy')}
                             </button>
                         </div>
                     </div>
@@ -653,8 +655,8 @@ export default function Support() {
                                 <MessageSquare size={20} />
                             </div>
                             <div>
-                                <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)' }}>Telegram Creator Desk</div>
-                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Direct 24/7 creator community</div>
+                                <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)' }}>{t('telegramDesk', 'Telegram Creator Desk')}</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{t('telegramDeskDesc', 'Direct 24/7 creator community')}</div>
                             </div>
                         </div>
                         <a 
@@ -664,7 +666,7 @@ export default function Support() {
                             style={{ textDecoration: 'none' }}
                         >
                             <Button variant="outline" size="sm" style={{ width: '100%', justifyContent: 'center', gap: '4px' }}>
-                                <span>Open @GurshaPaySupport</span>
+                                <span>{t('openTelegramSupport', 'Open @GurshaPaySupport')}</span>
                                 <ExternalLink size={13} />
                             </Button>
                         </a>
@@ -684,7 +686,7 @@ export default function Support() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
                             <Send size={18} color="var(--primary)" />
                             <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
-                                Open a Support Case
+                                {t('openTicketTab', 'Open a Support Case')}
                             </h2>
                         </div>
 
@@ -711,7 +713,7 @@ export default function Support() {
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                                 <div>
                                     <label style={{ display: 'block', fontSize: '0.775rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
-                                        Your Name
+                                        {t('fullName', 'Your Name')}
                                     </label>
                                     <input 
                                         type="text" 
@@ -724,7 +726,7 @@ export default function Support() {
                                 </div>
                                 <div>
                                     <label style={{ display: 'block', fontSize: '0.775rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
-                                        Email Address
+                                        {t('emailAddress', 'Email Address')}
                                     </label>
                                     <input 
                                         type="email" 
@@ -741,7 +743,7 @@ export default function Support() {
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                                 <div>
                                     <label style={{ display: 'block', fontSize: '0.775rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
-                                        Category
+                                        {t('categoryLabel', 'Category')}
                                     </label>
                                     <select 
                                         value={category} 
@@ -758,7 +760,7 @@ export default function Support() {
 
                                 <div>
                                     <label style={{ display: 'block', fontSize: '0.775rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
-                                        Issue Subcategory
+                                        {t('subcategoryLabel', 'Issue Subcategory')}
                                     </label>
                                     <select 
                                         value={subcategory} 
@@ -778,7 +780,7 @@ export default function Support() {
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                                 <div>
                                     <label style={{ display: 'block', fontSize: '0.775rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
-                                        Priority
+                                        {t('priorityLabel', 'Priority')}
                                     </label>
                                     <select 
                                         value={priority} 
@@ -794,7 +796,7 @@ export default function Support() {
 
                                 <div>
                                     <label style={{ display: 'block', fontSize: '0.775rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
-                                        Phone Number (Optional)
+                                        {t('phoneNumber', 'Phone Number (Optional)')}
                                     </label>
                                     <input 
                                         type="tel" 
@@ -810,7 +812,7 @@ export default function Support() {
                             {category === 'WITHDRAWAL' && recentWithdrawals.length > 0 && (
                                 <div>
                                     <label style={{ display: 'block', fontSize: '0.775rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.35rem' }}>
-                                        Link Recent Withdrawal (Optional)
+                                        {t('relatedWithdrawalLabel', 'Link Recent Withdrawal (Optional)')}
                                     </label>
                                     <select
                                         value={relatedWithdrawalId}
@@ -830,7 +832,7 @@ export default function Support() {
                             {(category === 'PAYMENT' || category === 'TIPPING') && recentTips.length > 0 && (
                                 <div>
                                     <label style={{ display: 'block', fontSize: '0.775rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.35rem' }}>
-                                        Link Recent Tip Transaction (Optional)
+                                        {t('relatedTipLabel', 'Link Recent Tip Transaction (Optional)')}
                                     </label>
                                     <select
                                         value={relatedTransactionId}
@@ -850,7 +852,7 @@ export default function Support() {
                             {/* Subject */}
                             <div>
                                 <label style={{ display: 'block', fontSize: '0.775rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
-                                    Subject
+                                    {t('subjectLabel', 'Subject')}
                                 </label>
                                 <input 
                                     type="text" 
@@ -865,7 +867,7 @@ export default function Support() {
                             {/* Detailed Description */}
                             <div>
                                 <label style={{ display: 'block', fontSize: '0.775rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
-                                    Detailed Description
+                                    {t('caseMessageLabel', 'Detailed Description')}
                                 </label>
                                 <textarea 
                                     rows={4}
@@ -885,7 +887,7 @@ export default function Support() {
                                 icon={Send}
                                 style={{ width: '100%', justifyContent: 'center' }}
                             >
-                                Submit Support Case
+                                {submitting ? t('submittingCaseBtn', 'Submitting Case...') : t('submitCaseBtn', 'Submit Support Case')}
                             </Button>
                         </form>
                     </div>
@@ -902,7 +904,7 @@ export default function Support() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
                                 <HelpCircle size={18} color="var(--primary)" />
                                 <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
-                                    Frequently Asked Questions
+                                    {t('faqSectionTitle', 'Frequently Asked Questions')}
                                 </h2>
                             </div>
 
@@ -964,7 +966,7 @@ export default function Support() {
                         }}>
                             <ShieldCheck size={20} color="var(--primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
                             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                                <strong style={{ color: 'var(--text-main)' }}>Bank-Grade Protection:</strong> Real-time two-way messaging is encrypted and audited with end-to-end delivery tracking.
+                                {t('bankGradeProtection', 'Bank-Grade Protection: Real-time two-way messaging is encrypted and audited with end-to-end delivery tracking.')}
                             </div>
                         </div>
                     </div>
@@ -983,7 +985,7 @@ export default function Support() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                             <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                 <Clock size={18} color="var(--primary)" />
-                                <span>My Support Cases ({myCases.length})</span>
+                                <span>{t('myTicketsTab', 'My Support Cases')} ({myCases.length})</span>
                             </h2>
 
                             {/* Search and Category Filter */}
@@ -992,7 +994,7 @@ export default function Support() {
                                     <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                                     <input
                                         type="text"
-                                        placeholder="Search cases..."
+                                        placeholder={t('searchCasesPlaceholder', 'Search cases...')}
                                         value={searchQuery}
                                         onChange={e => setSearchQuery(e.target.value)}
                                         style={{ padding: '0.45rem 0.65rem 0.45rem 1.85rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--card-bg-subtle)', color: 'var(--text-main)', fontSize: '0.8rem', outline: 'none', width: '160px' }}
@@ -1003,19 +1005,19 @@ export default function Support() {
                                     onChange={e => setStatusFilter(e.target.value)}
                                     style={{ padding: '0.45rem 0.65rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--card-bg-subtle)', color: 'var(--text-main)', fontSize: '0.8rem', outline: 'none' }}
                                 >
-                                    <option value="ALL">All Statuses</option>
-                                    <option value="OPEN">Open / In Progress</option>
+                                    <option value="ALL">{t('allStatusFilter', 'All Statuses')}</option>
+                                    <option value="OPEN">{t('openStatusFilter', 'Open / In Progress')}</option>
                                     <option value="WAITING_FOR_USER">Waiting User</option>
                                     <option value="WAITING_FOR_INTERNAL_REVIEW">Needs Review</option>
-                                    <option value="RESOLVED">Resolved</option>
-                                    <option value="CLOSED">Closed</option>
+                                    <option value="RESOLVED">{t('caseStatusResolved', 'Resolved')}</option>
+                                    <option value="CLOSED">{t('caseStatusClosed', 'Closed')}</option>
                                 </select>
                             </div>
                         </div>
 
                         {filteredCases.length === 0 ? (
                             <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                                No support cases match your filter criteria.
+                                {t('noCasesDesc', 'No support cases match your filter criteria.')}
                             </div>
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -1198,7 +1200,7 @@ export default function Support() {
 
                                                         {isTypingAgent && (
                                                             <div style={{ alignSelf: 'flex-start', fontSize: '0.75rem', color: 'var(--primary)', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                                <span className="dot-flashing"></span> Support officer is typing...
+                                                                <span className="dot-flashing"></span> {t('caseSupportOfficerTyping', 'Support officer is typing...')}
                                                             </div>
                                                         )}
                                                     </div>
@@ -1216,7 +1218,7 @@ export default function Support() {
                                                                             socketRef.current.emit('case_typing', { caseId, senderName: user?.name || 'Customer', isTyping: e.target.value.length > 0 });
                                                                         }
                                                                     }}
-                                                                    placeholder="Type your message to support..."
+                                                                    placeholder={t('typeMessagePlaceholder', 'Type your message to support...')}
                                                                     onKeyDown={(e) => { if (e.key === 'Enter') handleSendUserReply(caseId); }}
                                                                     style={{
                                                                         flex: 1,
@@ -1236,7 +1238,7 @@ export default function Support() {
                                                                     disabled={!(userReplyMap[caseId] || '').trim()}
                                                                     onClick={() => handleSendUserReply(caseId)}
                                                                 >
-                                                                    <Send size={14} /> Send
+                                                                    <Send size={14} /> {t('sendReplyBtn', 'Send')}
                                                                 </Button>
                                                             </div>
 
@@ -1246,7 +1248,7 @@ export default function Support() {
                                                                     disabled={closingMap[caseId]}
                                                                     style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.75rem', cursor: 'pointer', textDecoration: 'underline' }}
                                                                 >
-                                                                    {closingMap[caseId] ? 'Closing case...' : 'Mark case as resolved & close'}
+                                                                    {closingMap[caseId] ? t('closingCase', 'Closing case...') : t('markCaseResolved', 'Mark case as resolved & close')}
                                                                 </button>
                                                             </div>
                                                         </div>

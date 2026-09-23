@@ -46,7 +46,14 @@ export default function Login() {
     ];
     const [activeDemoIdx, setActiveDemoIdx] = useState(0);
     const activeDemo = demoSupporters[activeDemoIdx];
-    const [simulatedAlert, setSimulatedAlert] = useState(false);
+
+    // Smooth auto-rotation for live supporter showcase
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setActiveDemoIdx(prev => (prev + 1) % demoSupporters.length);
+        }, 4500);
+        return () => clearInterval(timer);
+    }, [demoSupporters.length]);
 
     const { login, api, setUser } = useAuth();
     const { t } = useLanguage();
@@ -104,11 +111,6 @@ export default function Login() {
             setError(decodeURIComponent(errParam));
         }
     }, [navigate, api, setUser]);
-
-    const triggerTestAlert = () => {
-        setSimulatedAlert(true);
-        setTimeout(() => setSimulatedAlert(false), 3500);
-    };
 
     const handleSendOtp = async () => {
         if (!phone) {
@@ -276,19 +278,50 @@ export default function Login() {
                                         <CheckCircle size={26} />
                                     </div>
                                     <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.35rem' }}>Reset Code Sent!</h3>
-                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem', lineHeight: 1.45 }}>
-                                        {resetDeliveredChannels.length > 0 ? (
-                                            <>Dispatched to: <strong>{resetDeliveredChannels.join(', ')}</strong></>
-                                        ) : (
-                                            <>Verification code dispatched successfully.</>
-                                        )}
-                                    </p>
+                                    {resetDeliveredChannels.length > 0 ? (
+                                        <div style={{
+                                            margin: '0.75rem 0 1.25rem',
+                                            padding: '0.65rem 0.85rem',
+                                            borderRadius: '8px',
+                                            background: 'var(--card-bg-subtle, rgba(0,0,0,0.03))',
+                                            border: '1px solid var(--border-color)',
+                                            fontSize: '0.825rem',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '0.4rem'
+                                        }}>
+                                            <span style={{ fontWeight: 600, color: 'var(--text-muted)' }}>Sent to your verified channels:</span>
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', justifyContent: 'center' }}>
+                                                {resetDeliveredChannels.map((ch, idx) => (
+                                                    <span key={idx} style={{
+                                                        padding: '0.2rem 0.6rem',
+                                                        borderRadius: '12px',
+                                                        background: 'rgba(16, 185, 129, 0.1)',
+                                                        color: '#059669',
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 700
+                                                    }}>
+                                                        {ch}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.25rem', lineHeight: 1.45 }}>
+                                            Verification code dispatched successfully.
+                                        </p>
+                                    )}
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
                                         <Button
                                             variant="primary"
                                             size="md"
                                             className="btn-full"
-                                            onClick={() => navigate('/reset-password')}
+                                            onClick={() => navigate('/reset-password', {
+                                                state: {
+                                                    identifier: forgotMethod === 'phone' ? (resetPhone ? `0${resetPhone}` : '') : resetEmail,
+                                                    method: forgotMethod
+                                                }
+                                            })}
                                             icon={KeyRound}
                                         >
                                             Enter Code & Set Password
@@ -455,12 +488,18 @@ export default function Login() {
                                         </Button>
 
                                         <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-                                            <Link
-                                                to="/reset-password"
-                                                style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 600, textDecoration: 'underline' }}
+                                            <button
+                                                type="button"
+                                                onClick={() => navigate('/reset-password', {
+                                                    state: {
+                                                        identifier: forgotMethod === 'phone' ? (resetPhone ? `0${resetPhone}` : '') : resetEmail,
+                                                        method: forgotMethod
+                                                    }
+                                                })}
+                                                style={{ background: 'none', border: 'none', fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}
                                             >
                                                 Have a code or link? Open Reset Password page &rarr;
-                                            </Link>
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
@@ -821,11 +860,21 @@ export default function Login() {
                         <span style={{ background: 'rgba(255,255,255,0.18)', color: '#FFFFFF', padding: '0.3rem 0.75rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 700, border: '1px solid rgba(255,255,255,0.3)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
                             <Sparkles size={14} color="#FBBF24" /> Ethiopian Creator Economy <EthiopianFlag width={18} height={12} style={{ marginLeft: '4px' }} />
                         </span>
-                        {simulatedAlert && (
-                            <span style={{ background: '#10B981', color: 'white', padding: '0.25rem 0.65rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800, animation: 'pulse 1s infinite' }}>
-                                🔔 Stream Alert LIVE
-                            </span>
-                        )}
+                        <span style={{
+                            background: 'rgba(16, 185, 129, 0.25)',
+                            border: '1px solid rgba(52, 211, 153, 0.4)',
+                            color: '#A7F3D0',
+                            padding: '0.25rem 0.75rem',
+                            borderRadius: '9999px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.45rem'
+                        }}>
+                            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#34D399', boxShadow: '0 0 8px #34D399' }} />
+                            Live Feed
+                        </span>
                     </div>
 
                     <h2 style={{ fontSize: '2.15rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.2, marginBottom: '0.85rem', letterSpacing: '-0.025em' }}>
@@ -893,24 +942,11 @@ export default function Login() {
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: '#A7F3D0' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                                 <CheckCircle size={14} color="#34D399" />
-                                <span>Verified Telebirr PIN Push Settlement</span>
+                                <span>Verified Telebirr Instant Settlement</span>
                             </div>
-                            <button
-                                type="button"
-                                onClick={triggerTestAlert}
-                                style={{
-                                    background: 'rgba(255,255,255,0.2)',
-                                    border: '1px solid rgba(255,255,255,0.4)',
-                                    color: '#FFFFFF',
-                                    padding: '0.2rem 0.5rem',
-                                    borderRadius: '4px',
-                                    fontSize: '0.7rem',
-                                    fontWeight: 700,
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                Test Alert 🔔
-                            </button>
+                            <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.72rem', fontWeight: 600 }}>
+                                0% Platform Fee
+                            </span>
                         </div>
                     </div>
 

@@ -98,7 +98,17 @@ const AnimatedRoutes = () => {
               <PageTransition><Signup /></PageTransition>
             </PublicRoute>
           } />
+          <Route path="/reset-password" element={
+            <PublicRoute>
+              <PageTransition><ResetPassword /></PageTransition>
+            </PublicRoute>
+          } />
           <Route path="/reset-password/:token" element={
+            <PublicRoute>
+              <PageTransition><ResetPassword /></PageTransition>
+            </PublicRoute>
+          } />
+          <Route path="/forgot-password" element={
             <PublicRoute>
               <PageTransition><ResetPassword /></PageTransition>
             </PublicRoute>
@@ -128,16 +138,11 @@ const AnimatedRoutes = () => {
               <PageTransition><Settings /></PageTransition>
             </ProtectedRoute>
           } />
-          {/* Public Creator & Tipping Pages */}
-          <Route path="/creator/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
-          <Route path="/c/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
-          <Route path="/tip/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
-          <Route path="/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
-          <Route path="/@:username" element={<PageTransition><PublicProfile /></PageTransition>} />
-          
-          {/* OBS Stream Overlay */}
-          <Route path="/overlay/:creatorId" element={<PageTransition><Overlay /></PageTransition>} />
-          
+
+          {/* Support & Contact Pages */}
+          <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
+          <Route path="/contact" element={<PageTransition><Support /></PageTransition>} />
+
           {/* Direct In-App Chat / Conversation */}
           <Route path="/chat" element={
             <ProtectedRoute>
@@ -155,17 +160,24 @@ const AnimatedRoutes = () => {
             </ProtectedRoute>
           } />
 
-          {/* Support & Contact Pages */}
-          <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
-          <Route path="/contact" element={<PageTransition><Support /></PageTransition>} />
+          {/* Public Legal / Compliance Pages */}
+          <Route path="/privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+          <Route path="/privacy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+          <Route path="/data-deletion" element={<PageTransition><DataDeletion /></PageTransition>} />
 
           {/* Maintenance Direct Routes & Aliases */}
           <Route path="/maintenance" element={<MaintenanceRouteWrapper />} />
           <Route path="/maintance" element={<MaintenanceRouteWrapper />} />
 
-          {/* Public Legal / Compliance Pages */}
-          <Route path="/privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
-          <Route path="/data-deletion" element={<PageTransition><DataDeletion /></PageTransition>} />
+          {/* OBS Stream Overlay */}
+          <Route path="/overlay/:creatorId" element={<PageTransition><Overlay /></PageTransition>} />
+
+          {/* Public Creator & Tipping Pages */}
+          <Route path="/creator/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+          <Route path="/c/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+          <Route path="/tip/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+          <Route path="/@:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+          <Route path="/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
           
           {/* Homepage */}
           <Route path="/" element={<PageTransition><Home /></PageTransition>} />

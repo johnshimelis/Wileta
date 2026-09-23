@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Check, Copy, RefreshCw, X, QrCode, Smartphone } from 'lucide-react';
 import Button from './ui/Button';
+import { useLanguage } from '../context/LanguageContext';
 
 // High-fidelity Official Google Play Store Vector Icon
 export const GooglePlayIcon = ({ size = 20, style = {} }) => (
@@ -13,6 +14,7 @@ export const GooglePlayIcon = ({ size = 20, style = {} }) => (
 );
 
 export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshStatus }) {
+    const { t } = useLanguage();
     const [copied, setCopied] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [showQrOnMobile, setShowQrOnMobile] = useState(false);
@@ -132,10 +134,10 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
                         </div>
                         <div>
                             <h2 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
-                                Mobile ID Verification
+                                {t('mobileKycTitle', 'Mobile ID Verification')}
                             </h2>
                             <span style={{ fontSize: '0.75rem', color: '#D97706', fontWeight: 700 }}>
-                                🔒 Fayda Biometric Compliance
+                                🔒 {t('faydaComplianceBadge', 'Fayda Biometric Compliance')}
                             </span>
                         </div>
                     </div>
@@ -175,7 +177,7 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
                     gap: '1rem'
                 }}>
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.55, margin: 0 }}>
-                        To comply with National Bank regulations and protect creator earnings, <strong>Fayda National ID</strong> and <strong>Facial Liveness</strong> verification must be completed securely via the <strong>GurshaPay Mobile App</strong> using on-device hardware biometrics.
+                        {t('biometricNotice', 'To comply with National Bank regulations and protect creator earnings, Fayda National ID and Facial Liveness verification must be completed securely via the GurshaPay Mobile App using on-device hardware biometrics.')}
                     </p>
 
                     {/* Step-by-Step Instructions & App Info */}
@@ -206,12 +208,12 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.45rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                                        Quick 3-Step Verification:
+                                        {t('step1GetApp', 'Quick 3-Step Verification:')}
                                     </div>
                                     <ol style={{ margin: 0, paddingLeft: '1.15rem', fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                                        <li>Scan QR with your phone or click below</li>
-                                        <li>Sign in & complete the 60-second Fayda scan</li>
-                                        <li>Instant approval unlocks all <strong>Telebirr & Bank</strong> payouts</li>
+                                        <li>{t('step1GetAppDesc', 'Scan QR with your phone or click below')}</li>
+                                        <li>{t('step2ScanOrOpenDesc', 'Sign in & complete the 60-second Fayda scan')}</li>
+                                        <li>{t('instantPayoutsUnlocked', 'Instant approval unlocks all Telebirr & Bank payouts')}</li>
                                     </ol>
                                 </div>
                             </div>
@@ -233,19 +235,18 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
                                     </div>
                                     <div>
                                         <div style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-main)' }}>
-                                            Verify on your Android Phone
+                                            {t('verifyOnAndroidPhone', 'Verify on your Android Phone')}
                                         </div>
                                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                            Hardware camera & biometrics required
+                                            {t('cameraBioRequired', 'Hardware camera & biometrics required')}
                                         </div>
                                     </div>
                                 </div>
 
                                 <ol style={{ margin: 0, paddingLeft: '1.15rem', fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                                    <li>Tap <strong>Get on Google Play</strong> below to open the app</li>
-                                    <li>Log into your account and tap <strong>Verify Identity</strong></li>
-                                    <li>Complete the 60-second Fayda scan and selfie</li>
-                                    <li>Your payouts will immediately unlock! 🎉</li>
+                                    <li>{t('step1GetAppDesc', 'Install the official GurshaPay app directly from Google Play or download the verified APK.')}</li>
+                                    <li>{t('step2ScanOrOpenDesc', 'Log into your account and complete verification')}</li>
+                                    <li>{t('instantPayoutsUnlocked', 'Instant approval unlocks all Telebirr & Bank payouts')}</li>
                                 </ol>
 
                                 {/* Optional QR Code toggle for mobile */}
@@ -267,7 +268,7 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
                                         }}
                                     >
                                         <QrCode size={15} />
-                                        {showQrOnMobile ? 'Hide QR Code' : 'Scan with another phone (Show QR)'}
+                                        {showQrOnMobile ? t('hideQrCode', 'Hide QR Code') : t('scanAnotherPhone', 'Scan with another phone (Show QR)')}
                                     </button>
 
                                     {showQrOnMobile && (
@@ -310,7 +311,7 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
                                 style={{ width: '100%', justifyContent: 'center', gap: '0.5rem', height: '48px' }}
                             >
                                 <GooglePlayIcon size={18} />
-                                <span>Get on Google Play</span>
+                                <span>{t('openInGooglePlay', 'Open Google Play Store')}</span>
                             </Button>
                         </a>
 
@@ -321,14 +322,14 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
                             onClick={handleCopyLink}
                             style={{ minWidth: '120px', height: '48px' }}
                         >
-                            {copied ? 'Copied!' : 'Copy Link'}
+                            {copied ? t('copiedDownloadLink', 'Copied!') : t('copyDownloadLink', 'Copy Link')}
                         </Button>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.25rem' }}>
                         <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                            Status: <strong style={{ color: user?.kycStatus === 'pending' ? 'var(--info)' : '#D97706' }}>
-                                {user?.kycStatus === 'pending' ? 'Verification in Review ⏳' : 'Verification Required 🔒'}
+                            {t('statusLabel', 'Status:')} <strong style={{ color: user?.kycStatus === 'pending' ? 'var(--info)' : '#D97706' }}>
+                                {user?.kycStatus === 'pending' ? t('verificationInReview', 'Verification in Review ⏳') : t('verificationRequired', 'Verification Required 🔒')}
                             </strong>
                         </span>
                         <Button 
@@ -338,7 +339,7 @@ export default function ForcedMobileKYCModal({ isOpen, onClose, user, onRefreshS
                             onClick={handleRefresh}
                             disabled={refreshing}
                         >
-                            {refreshing ? 'Checking...' : 'Check Status'}
+                            {refreshing ? t('checkingStatus', 'Checking...') : t('checkStatusBtn', 'Check Status')}
                         </Button>
                     </div>
                 </div>

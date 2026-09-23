@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import {
     Lock, Eye, EyeOff, CheckCircle, AlertCircle,
     ArrowLeft, Send, Phone, Mail, Smartphone, KeyRound,
@@ -19,16 +19,22 @@ export default function ResetPassword() {
     const { api } = useAuth();
     const { t } = useLanguage();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const locationIdentifier = location.state?.identifier || '';
+    const locationMethod = location.state?.method || (locationIdentifier.includes('@') ? 'email' : 'phone');
+    const cleanPhone = locationMethod === 'phone' ? locationIdentifier.replace(/^(\+251|251|0)/, '') : '';
+    const cleanEmail = locationMethod === 'email' ? locationIdentifier : '';
 
     // Reset channel selection: 'phone' (SMS + Telegram) vs 'email'
-    const [resetMethod, setResetMethod] = useState('phone'); // 'phone' | 'email'
+    const [resetMethod, setResetMethod] = useState(locationMethod);
     
     // Step state: 1 = Request Code, 2 = Enter Code & New Password, 3 = Success
-    const [step, setStep] = useState(urlToken ? 2 : 1);
+    const [step, setStep] = useState((urlToken || locationIdentifier) ? 2 : 1);
 
     // Form inputs
-    const [phone, setPhone] = useState('');
-    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState(cleanPhone);
+    const [email, setEmail] = useState(cleanEmail);
     const [otpCode, setOtpCode] = useState(urlToken || '');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -37,17 +43,30 @@ export default function ResetPassword() {
     // Status states
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState(locationIdentifier ? 'Verification code sent to your linked channels.' : '');
     const [deliveredInfo, setDeliveredInfo] = useState(null);
-    const [resendCountdown, setResendCountdown] = useState(0);
+    const [resendCountdown, setResendCountdown] = useState(locationIdentifier ? 60 : 0);
 
-    // Synchronize urlToken if present
+    // Synchronize urlToken or location state if present
     useEffect(() => {
         if (urlToken) {
             setOtpCode(urlToken);
             setStep(2);
+        } else if (location.state?.identifier) {
+            const id = location.state.identifier;
+            const m = location.state.method || (id.includes('@') ? 'email' : 'phone');
+            setResetMethod(m);
+            if (m === 'phone') {
+                setPhone(id.replace(/^(\+251|251|0)/, ''));
+            } else {
+                setEmail(id);
+            }
+            setStep(2);
+            if (!successMessage) {
+                setSuccessMessage('Verification code sent to your linked channels.');
+            }
         }
-    }, [urlToken]);
+    }, [urlToken, location.state]);
 
     // Resend countdown timer
     useEffect(() => {

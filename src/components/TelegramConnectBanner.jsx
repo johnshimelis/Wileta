@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { ExternalLink, RefreshCw, ArrowRight } from 'lucide-react';
+import { ExternalLink, RefreshCw, ArrowRight, X } from 'lucide-react';
 
 // Crisp Telegram Paper Airplane Icon
 const TelegramIcon = ({ size = 16, color = "#FFFFFF" }) => (
@@ -20,7 +20,29 @@ export default function TelegramConnectBanner({ onConnected }) {
     const [waitingForHandshake, setWaitingForHandshake] = useState(false);
     const [error, setError] = useState(null);
 
+    const storageKey = `gursha_telegram_banner_dismissed_${user?._id || 'creator'}`;
+    const [dismissed, setDismissed] = useState(() => {
+        try {
+            return localStorage.getItem(storageKey) === 'true';
+        } catch (e) {
+            return false;
+        }
+    });
+
     const isConnected = !!(user?.telegramChatId);
+
+    const handleDismiss = (e) => {
+        e?.stopPropagation();
+        setDismissed(true);
+        try {
+            localStorage.setItem(storageKey, 'true');
+        } catch (e) {}
+    };
+
+    // If already connected or dismissed by the creator, remove permanently
+    if (isConnected || dismissed) {
+        return null;
+    }
 
     // Handle 1-Click Telegram Deep Link Connection
     const handleConnectTelegram = async () => {
@@ -51,6 +73,9 @@ export default function TelegramConnectBanner({ onConnected }) {
                             setUser(prev => ({ ...prev, ...updatedUser }));
                             setWaitingForHandshake(false);
                             clearInterval(interval);
+                            try {
+                                localStorage.setItem(storageKey, 'true');
+                            } catch (e) {}
                             if (onConnected) onConnected();
                         }
                     } catch (_) {}
@@ -285,6 +310,29 @@ export default function TelegramConnectBanner({ onConnected }) {
                         )}
                     </button>
                 )}
+
+                <button
+                    type="button"
+                    onClick={handleDismiss}
+                    aria-label="Dismiss Telegram banner"
+                    title={t('amharic') === 'English' ? 'ዝጋ' : 'Dismiss'}
+                    style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--text-muted)',
+                        cursor: 'pointer',
+                        padding: '0.3rem',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.15s ease'
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-main)'; e.currentTarget.style.background = 'rgba(0,0,0,0.06)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'transparent'; }}
+                >
+                    <X size={15} />
+                </button>
             </div>
         </div>
     );

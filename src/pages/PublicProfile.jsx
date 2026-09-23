@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
     Smartphone, CheckCircle, AlertCircle, MessageSquare, ShieldCheck,
     Heart, Sparkles, Share2, Copy, Send, Coffee, Award, ExternalLink,
@@ -23,6 +23,13 @@ import {
 } from '../components/Ethiopian3DGifts';
 import EthiopianFlag from '../components/EthiopianFlag';
 import './PublicProfile.css';
+
+const RESERVED_ROUTES = [
+    'reset-password', 'forgot-password', 'login', 'signup', 'register',
+    'dashboard', 'settings', 'profile', 'kyc', 'support', 'privacy',
+    'privacy-policy', 'data-deletion', 'terms', 'terms-of-service',
+    'admin', 'api', 'verify', 'auth', 'onboarding'
+];
 
 // Verified Blue Tick SVG Emblem
 const VerifiedBlueTick = ({ size = 18, title = "Verified Creator" }) => (
@@ -56,6 +63,7 @@ const VerifiedBlueTick = ({ size = 18, title = "Verified Creator" }) => (
 export default function PublicProfile() {
     const { api } = useAuth();
     const { username } = useParams();
+    const navigate = useNavigate();
     const [creator, setCreator] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -155,6 +163,13 @@ export default function PublicProfile() {
         const fetchProfile = async () => {
             try {
                 const cleanUsername = username?.startsWith('@') ? username.slice(1) : username;
+                if (!cleanUsername) return;
+                
+                if (RESERVED_ROUTES.includes(cleanUsername.toLowerCase())) {
+                    navigate(`/${cleanUsername.toLowerCase()}`, { replace: true });
+                    return;
+                }
+
                 const res = await api.get('/public/' + cleanUsername);
                 setCreator(res.data);
 
