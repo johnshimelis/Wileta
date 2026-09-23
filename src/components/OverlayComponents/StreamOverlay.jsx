@@ -3,35 +3,39 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { AnimatePresence } from 'framer-motion';
 
-import LowTierAlert from './LowTierAlert';
-import MidTierAlert from './MidTierAlert';
-import HighTierAlert from './HighTierAlert';
+import Tier1Alert from './Tier1Alert';
+import Tier2Alert from './Tier2Alert';
+import Tier3Alert from './Tier3Alert';
 
-// Object Map routing incoming socket data to specific tier component
-const TIER_COMPONENTS = {
-    tier_low: LowTierAlert,
-    tier_mid: MidTierAlert,
-    tier_high: HighTierAlert
+// Component Mapping reading animationId
+const ANIMATION_COMPONENTS = {
+    tier1_sparkle: Tier1Alert,
+    tier2_obelisk: Tier2Alert,
+    tier3_lion: Tier3Alert,
+    // Backward compatibility aliases
+    tier_low: Tier1Alert,
+    tier_mid: Tier2Alert,
+    tier_high: Tier3Alert
 };
 
 /**
- * Determine alert tier from tip amount
+ * Resolve animationId from amount or explicit payload
  */
-export function getTipTier(amount, explicitTier) {
-    if (explicitTier && TIER_COMPONENTS[explicitTier]) {
-        return explicitTier;
+export function getAnimationId(amount, explicitId) {
+    if (explicitId && ANIMATION_COMPONENTS[explicitId]) {
+        return explicitId;
     }
     const val = Number(amount) || 0;
-    if (val >= 201) return 'tier_high';
-    if (val >= 51) return 'tier_mid';
-    return 'tier_low';
+    if (val >= 200) return 'tier3_lion';
+    if (val >= 50) return 'tier2_obelisk';
+    return 'tier1_sparkle';
 }
 
 /**
  * StreamOverlay Main Orchestrator
- * - Manages an Alert Queue for sequential playback without overlapping
- * - Subscribes to Socket.IO 'gursha_tip' and 'new_tip' events
- * - Enforces transparent 1920x1080 canvas for OBS & TikTok LIVE Studio
+ * - 100% Frameless Architecture (No boxes, no cards, no borders)
+ * - Robust Sequential Queue: Guarantees active animation finishes before next triggers
+ * - Multi-tier cinematic Lottie & Particle renderers
  */
 export default function StreamOverlay() {
     const { username, creatorId } = useParams();
@@ -41,86 +45,80 @@ export default function StreamOverlay() {
     // Alert Queue Management
     const [alertQueue, setAlertQueue] = useState([]);
     const [currentAlert, setCurrentAlert] = useState(null);
-    const [isExiting, setIsExiting] = useState(false);
 
-    // Deduping reference to prevent duplicate triggers from simultaneous events
+    // Deduping reference to avoid double-processing
     const processedTxRefs = useRef(new Set());
-    const exitTimerRef = useRef(null);
-    const dismissTimerRef = useRef(null);
+    const timerRef = useRef(null);
 
-    // Enqueue an incoming alert
+    // Enqueue incoming tips
     const enqueueAlert = useCallback((rawPayload) => {
         if (!rawPayload) return;
 
-        // Dedup by tx_ref if present
+        // Dedup by tx_ref if available
         if (rawPayload.tx_ref) {
             if (processedTxRefs.current.has(rawPayload.tx_ref)) {
                 return;
             }
             processedTxRefs.current.add(rawPayload.tx_ref);
-            // Cap memory size
             if (processedTxRefs.current.size > 200) {
                 processedTxRefs.current.clear();
             }
         }
 
-        const tier = getTipTier(rawPayload.amount, rawPayload.tier);
+        const animationId = getAnimationId(rawPayload.amount, rawPayload.animationId || rawPayload.tier);
         const standardized = {
-            id: rawPayload.tx_ref || `alert_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
-            tier,
+            id: rawPayload.tx_ref || `alert_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+            animationId,
             senderName: rawPayload.senderName || rawPayload.supporterName || rawPayload.tipperPhone || 'A Supporter',
             amount: Number(rawPayload.amount || 0),
             message: rawPayload.message || '',
             gift: rawPayload.gift || ''
         };
 
-        console.log(`[StreamOverlay] Enqueueing [${tier}] alert:`, standardized);
+        console.log(`[StreamOverlay] Enqueued [${animationId}]:`, standardized);
         setAlertQueue(prev => [...prev, standardized]);
     }, []);
 
-    // Queue Consumer Loop: play alerts sequentially
+    // Sequential Queue Consumer: Strictly waits until active animation unmounts
     useEffect(() => {
         if (currentAlert || alertQueue.length === 0) {
             return;
         }
 
-        // Pop next alert from queue
+        // Dequeue next alert
         const nextAlert = alertQueue[0];
         setAlertQueue(prev => prev.slice(1));
         setCurrentAlert(nextAlert);
-        setIsExiting(false);
 
-        // Tier-specific timing
-        // Low: 7.5s (fade at 6.8s) | Mid: 9.5s (fade at 8.7s) | High: 12.0s (fade at 11.0s)
-        const duration = nextAlert.tier === 'tier_high' 
-            ? 12000 
-            : (nextAlert.tier === 'tier_mid' ? 9500 : 7500);
-        const fadeDelay = duration - 800;
+        // Strict timeout per tier:
+        // Tier 3 Hero (Lion/Castle): 12,000ms
+        // Tier 2 Mid (Obelisk): 8,500ms
+        // Tier 1 Low (Sparkle): 5,500ms
+        const duration = nextAlert.animationId === 'tier3_lion'
+            ? 12000
+            : (nextAlert.animationId === 'tier2_obelisk' ? 8500 : 5500);
 
-        if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-        if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+        if (timerRef.current) clearTimeout(timerRef.current);
 
-        exitTimerRef.current = setTimeout(() => {
-            setIsExiting(true);
-        }, fadeDelay);
-
-        dismissTimerRef.current = setTimeout(() => {
+        timerRef.current = setTimeout(() => {
+            // Unmount current animation completely, freeing the stage for the next alert in queue
             setCurrentAlert(null);
-            setIsExiting(false);
         }, duration);
 
     }, [currentAlert, alertQueue]);
 
     // Socket.IO Subscription & OBS Transparent Styling
     useEffect(() => {
-        // Enforce 100% transparent background and zero scrollbars
+        // Enforce completely frameless 100vw x 100vh transparent body
+        document.documentElement.style.background = 'transparent';
         document.documentElement.style.backgroundColor = 'transparent';
+        document.body.style.background = 'transparent';
         document.body.style.backgroundColor = 'transparent';
         document.body.style.margin = '0';
         document.body.style.padding = '0';
         document.body.style.overflow = 'hidden';
-        document.body.style.width = '1920px';
-        document.body.style.height = '1080px';
+        document.body.style.width = '100vw';
+        document.body.style.height = '100vh';
 
         const socketBaseUrl = import.meta.env.VITE_API_URL 
             ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') 
@@ -136,19 +134,18 @@ export default function StreamOverlay() {
         });
 
         socket.on('connect', () => {
-            console.log(`[StreamOverlay] Socket connected. Joining creator room: ${targetUsername}`);
+            console.log(`[StreamOverlay] Socket connected. Joining room: ${targetUsername}`);
             if (targetUsername) {
                 socket.emit('join_overlay', targetUsername);
                 socket.emit('join', targetUsername);
             }
         });
 
-        // Listen for standardized multi-tiered tip alerts
+        // Listen for standardized cinematic tip events
         socket.on('gursha_tip', (data) => {
             enqueueAlert(data);
         });
 
-        // Backward compatibility for existing tip alerts
         socket.on('new_tip', (data) => {
             enqueueAlert(data);
         });
@@ -157,52 +154,34 @@ export default function StreamOverlay() {
             enqueueAlert(data);
         });
 
-        // Listen for postMessage triggers from dashboard preview
-        const handleWindowMessage = (e) => {
-            if (e.data === 'test_low' || e.data?.type === 'test_low') {
-                enqueueAlert({ tier: 'tier_low', senderName: 'Almaz K.', amount: 50, message: 'Keep shining! ☕️🇪🇹' });
-            } else if (e.data === 'test_mid' || e.data?.type === 'test_mid') {
-                enqueueAlert({ tier: 'tier_mid', senderName: 'Yonas T.', amount: 150, message: 'Axum Stele support for our creator! 🏛️✨' });
-            } else if (e.data === 'test_high' || e.data?.type === 'test_high') {
-                enqueueAlert({ tier: 'tier_high', senderName: 'Binyam G.', amount: 500, message: 'Royal Gursha for Addis Ababa stream! 👑🏰' });
-            } else if (e.data === 'test_queue' || e.data?.type === 'test_queue') {
-                enqueueAlert({ tier: 'tier_low', senderName: 'Almaz K.', amount: 30, message: 'Great stream! ☕️' });
-                enqueueAlert({ tier: 'tier_mid', senderName: 'Yonas T.', amount: 100, message: 'Keep up the energy! 🏛️' });
-                enqueueAlert({ tier: 'tier_high', senderName: 'Binyam G.', amount: 1000, message: 'Hero of the community! 👑' });
-            }
-        };
-        window.addEventListener('message', handleWindowMessage);
-
-        // URL Query Param Test Preview:
-        // /overlay/:username?test=low | mid | high | queue
-        const testParam = searchParams.get('test') || searchParams.get('preview') || searchParams.get('tier');
+        // URL Query Param Testing:
+        // /overlay/:username?test=tier1_sparkle | tier2_obelisk | tier3_lion | queue
+        const testParam = searchParams.get('test') || searchParams.get('preview') || searchParams.get('animation');
         if (testParam) {
             setTimeout(() => {
-                if (testParam === 'low' || testParam === 'true') {
-                    enqueueAlert({ tier: 'tier_low', senderName: 'Selamawit T.', amount: 45, message: 'Love the stream! ☕️🇪🇹' });
-                } else if (testParam === 'mid') {
-                    enqueueAlert({ tier: 'tier_mid', senderName: 'Dawit Bekele', amount: 150, message: 'Aksum Stele power boost! 🏛️✨' });
-                } else if (testParam === 'high') {
-                    enqueueAlert({ tier: 'tier_high', senderName: 'Kassahun M.', amount: 500, message: 'Imperial Gonder castle celebration! 👑🏰' });
+                if (testParam === 'tier1_sparkle' || testParam === 'sparkle' || testParam === 'low' || testParam === 'true') {
+                    enqueueAlert({ animationId: 'tier1_sparkle', senderName: 'Selamawit T.', amount: 45, message: 'Keep shining on live! ☕️✨' });
+                } else if (testParam === 'tier2_obelisk' || testParam === 'obelisk' || testParam === 'mid') {
+                    enqueueAlert({ animationId: 'tier2_obelisk', senderName: 'Dawit Bekele', amount: 150, message: 'Axum Celestial Beacon for the stream! 🏛️⚡️' });
+                } else if (testParam === 'tier3_lion' || testParam === 'lion' || testParam === 'high') {
+                    enqueueAlert({ animationId: 'tier3_lion', senderName: 'Kassahun M.', amount: 500, message: 'Royal Lion of Judah imperial salute! 👑🦁' });
                 } else if (testParam === 'queue') {
-                    // Test all 3 sequentially
-                    enqueueAlert({ tier: 'tier_low', senderName: 'Selamawit T.', amount: 25, message: 'First tip! ☕️' });
-                    enqueueAlert({ tier: 'tier_mid', senderName: 'Dawit Bekele', amount: 120, message: 'Second tip in queue! 🏛️' });
-                    enqueueAlert({ tier: 'tier_high', senderName: 'Kassahun M.', amount: 750, message: 'Grand finale royal tip! 👑' });
+                    // Queue all 3 sequentially to demonstrate collision-free playback
+                    enqueueAlert({ animationId: 'tier1_sparkle', senderName: 'Selamawit T.', amount: 25, message: 'First gift in queue! ✨' });
+                    enqueueAlert({ animationId: 'tier2_obelisk', senderName: 'Dawit Bekele', amount: 100, message: 'Second gift waiting its turn! 🏛️' });
+                    enqueueAlert({ animationId: 'tier3_lion', senderName: 'Kassahun M.', amount: 1000, message: 'Grand finale royal hero gift! 👑🦁' });
                 }
-            }, 600);
+            }, 500);
         }
 
         return () => {
-            window.removeEventListener('message', handleWindowMessage);
             socket.disconnect();
-            if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-            if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+            if (timerRef.current) clearTimeout(timerRef.current);
         };
     }, [targetUsername, searchParams, enqueueAlert]);
 
-    // Active Tier Component lookup
-    const ActiveTierComponent = currentAlert ? (TIER_COMPONENTS[currentAlert.tier] || LowTierAlert) : null;
+    // Active Animation Component
+    const ActiveComponent = currentAlert ? (ANIMATION_COMPONENTS[currentAlert.animationId] || Tier1Alert) : null;
 
     return (
         <div 
@@ -210,38 +189,37 @@ export default function StreamOverlay() {
             style={{
                 position: 'fixed',
                 inset: 0,
-                width: '1920px',
-                height: '1080px',
-                maxWidth: '100vw',
-                maxHeight: '100vh',
+                width: '100vw',
+                height: '100vh',
                 background: 'transparent',
                 backgroundColor: 'transparent',
                 overflow: 'hidden',
                 pointerEvents: 'none',
                 userSelect: 'none',
-                fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+                zIndex: 9999
             }}
         >
             <AnimatePresence mode="wait">
-                {currentAlert && ActiveTierComponent && (
-                    <ActiveTierComponent 
+                {currentAlert && ActiveComponent && (
+                    <ActiveComponent 
                         key={currentAlert.id}
-                        alert={currentAlert} 
-                        isExiting={isExiting} 
+                        alert={currentAlert}
                     />
                 )}
             </AnimatePresence>
 
-            {/* Global Transparent Overrides for OBS / TikTok LIVE Studio */}
+            {/* Strict Frameless Transparency Overrides (Zero boxes) */}
             <style dangerouslySetInnerHTML={{__html: `
-                html, body, #root {
+                html, body, #root, #stream-overlay-root {
                     background: transparent !important;
                     background-color: transparent !important;
                     margin: 0 !important;
                     padding: 0 !important;
                     overflow: hidden !important;
-                    width: 1920px !important;
-                    height: 1080px !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
+                    border: none !important;
+                    box-shadow: none !important;
                 }
             `}} />
         </div>
