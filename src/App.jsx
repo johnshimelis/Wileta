@@ -169,8 +169,9 @@ const AnimatedRoutes = () => {
           <Route path="/maintenance" element={<MaintenanceRouteWrapper />} />
           <Route path="/maintance" element={<MaintenanceRouteWrapper />} />
 
-          {/* OBS Stream Overlay */}
-          <Route path="/overlay/:creatorId" element={<PageTransition><Overlay /></PageTransition>} />
+          {/* Real-time OBS & TikTok LIVE Studio Stream Overlay */}
+          <Route path="/overlay/:username" element={<Overlay />} />
+          <Route path="/overlay/:creatorId" element={<Overlay />} />
 
           {/* Public Creator & Tipping Pages */}
           <Route path="/creator/:username" element={<PageTransition><PublicProfile /></PageTransition>} />

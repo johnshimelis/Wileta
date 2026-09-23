@@ -3,22 +3,25 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 
 export default function Overlay() {
-    const { creatorId } = useParams();
+    const { username, creatorId } = useParams();
+    const targetIdentifier = username || creatorId;
     const [searchParams] = useSearchParams();
     const [alert, setAlert] = useState(null);
     const [isExiting, setIsExiting] = useState(false);
     const [confetti, setConfetti] = useState([]);
+    
+    const audioRef = useRef(null);
     const alertTimeoutRef = useRef(null);
     const exitTimeoutRef = useRef(null);
 
-    // Audio chime synthesis via Web Audio API (OBS browser compatible)
-    const playAlertSound = () => {
+    // Audio chime synthesis fallback via Web Audio API (OBS / TikTok LIVE Studio browser compatible)
+    const playSynthChime = () => {
         try {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             if (!AudioContext) return;
             const ctx = new AudioContext();
 
-            const playTone = (freq, start, duration, gainVal = 0.25) => {
+            const playTone = (freq, start, duration, gainVal = 0.3) => {
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = 'triangle';
@@ -32,21 +35,37 @@ export default function Overlay() {
             };
 
             const t = ctx.currentTime;
-            // Upbeat celebratory fintech fanfare
+            // Celebratory high-resonance cash register / fintech chime chord
             playTone(523.25, t, 0.35);        // C5
-            playTone(659.25, t + 0.12, 0.35); // E5
-            playTone(783.99, t + 0.24, 0.35); // G5
-            playTone(1046.50, t + 0.36, 0.6); // C6
-            playTone(1318.51, t + 0.48, 0.8); // E6
+            playTone(659.25, t + 0.10, 0.35); // E5
+            playTone(783.99, t + 0.20, 0.35); // G5
+            playTone(1046.50, t + 0.30, 0.55); // C6
+            playTone(1318.51, t + 0.40, 0.75); // E6
         } catch (err) {
-            console.error('[Overlay Audio] Synthesis failed:', err);
+            console.warn('[Overlay Audio] Synthesis failed:', err);
+        }
+    };
+
+    // Trigger audio alert with HTML5 Audio element + Web Audio fallback
+    const playAlertSound = () => {
+        if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            const playPromise = audioRef.current.play();
+            if (playPromise !== undefined) {
+                playPromise.catch((e) => {
+                    console.log('[Overlay Audio] HTML5 audio error/autoplay restricted, playing Web Audio synthesis:', e?.message);
+                    playSynthChime();
+                });
+            }
+        } else {
+            playSynthChime();
         }
     };
 
     // Confetti particles generator
     const triggerConfetti = () => {
         const particles = [];
-        const colors = ['#10B981', '#059669', '#34D399', '#F59E0B', '#3B82F6', '#EC4899', '#8B5CF6'];
+        const colors = ['#10B981', '#059669', '#34D399', '#F59E0B', '#FBBF24', '#3B82F6', '#EC4899'];
         for (let i = 0; i < 90; i++) {
             particles.push({
                 id: i,
@@ -72,21 +91,21 @@ export default function Overlay() {
         playAlertSound();
         triggerConfetti();
 
-        // Start smooth exit transition at 9.2 seconds
+        // Start smooth exit fade at 7.2 seconds
         exitTimeoutRef.current = setTimeout(() => {
             setIsExiting(true);
-        }, 9200);
+        }, 7200);
 
-        // Completely unmount/reset after exactly 10.0 seconds
+        // Completely unmount/remove alert from DOM after exactly 8.0 seconds
         alertTimeoutRef.current = setTimeout(() => {
             setAlert(null);
             setIsExiting(false);
             setConfetti([]);
-        }, 10000);
+        }, 8000);
     };
 
     useEffect(() => {
-        // Force transparent background for OBS Studio Browser Source
+        // Enforce 100% transparent background and zero scrollbars for OBS & TikTok LIVE Studio
         document.documentElement.style.backgroundColor = 'transparent';
         document.body.style.backgroundColor = 'transparent';
         document.body.style.margin = '0';
@@ -107,20 +126,21 @@ export default function Overlay() {
         });
 
         socket.on('connect', () => {
-            console.log(`[Overlay] Connected! Joining creator room: ${creatorId}`);
-            if (creatorId) {
-                socket.emit('join', creatorId);
+            console.log(`[Overlay] Socket connected (${socket.id}). Joining room: ${targetIdentifier}`);
+            if (targetIdentifier) {
+                socket.emit('join_overlay', targetIdentifier);
+                socket.emit('join', targetIdentifier);
             }
         });
 
-        // Listen to all possible tip notification events
-        socket.on('tip_alert', (data) => {
-            console.log('[Overlay] Received tip_alert:', data);
+        // Listen for new tip events
+        socket.on('new_tip', (data) => {
+            console.log('[Overlay] Received new_tip alert:', data);
             triggerTipAlert(data);
         });
 
-        socket.on('new_tip', (data) => {
-            console.log('[Overlay] Received new_tip:', data);
+        socket.on('tip_alert', (data) => {
+            console.log('[Overlay] Received tip_alert:', data);
             triggerTipAlert(data);
         });
 
@@ -128,24 +148,41 @@ export default function Overlay() {
             console.log('[Overlay] Disconnected from socket server.');
         });
 
-        // Test preview trigger via URL query param: /overlay/:id?preview=true
+        // Listen for local test events triggered by Dashboard
+        const handleWindowMessage = (e) => {
+            if (e.data === 'test_overlay' || e.data?.type === 'test_overlay') {
+                triggerTipAlert({
+                    senderName: 'Selamawit T.',
+                    amount: 250,
+                    message: 'Gobez nesh! Keep inspiring us on live! ☕️🚀🇪🇹',
+                    tx_ref: 'GP-TEST-' + Date.now()
+                });
+            }
+        };
+        window.addEventListener('message', handleWindowMessage);
+
+        // Test preview trigger via URL query param: /overlay/:username?preview=true or ?test=true
         if (searchParams.get('preview') === 'true' || searchParams.get('test') === 'true') {
             setTimeout(() => {
                 triggerTipAlert({
-                    amount: 50,
-                    tipperPhone: '0912****78',
-                    message: 'Keep making great content! Gursha from Addis Ababa ☕️🚀',
+                    senderName: 'Dawit Bekele',
+                    amount: 150,
+                    message: 'Great livestream! Keep making awesome content ☕️🇪🇹',
                     tx_ref: 'GP-SAMPLE-PREVIEW'
                 });
-            }, 1000);
+            }, 800);
         }
 
         return () => {
+            window.removeEventListener('message', handleWindowMessage);
             socket.disconnect();
             if (alertTimeoutRef.current) clearTimeout(alertTimeoutRef.current);
             if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current);
         };
-    }, [creatorId, searchParams]);
+    }, [targetIdentifier, searchParams]);
+
+    const senderDisplay = alert?.senderName || alert?.supporterName || alert?.tipperPhone || 'A Supporter';
+    const amountDisplay = Number(alert?.amount || 0).toLocaleString();
 
     return (
         <div 
@@ -166,6 +203,13 @@ export default function Overlay() {
                 userSelect: 'none'
             }}
         >
+            {/* HTML5 Audio element for crisp cash chime */}
+            <audio 
+                ref={audioRef} 
+                src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3" 
+                preload="auto" 
+            />
+
             {/* Confetti Particle Layer */}
             {confetti.map((p) => (
                 <div
@@ -180,76 +224,76 @@ export default function Overlay() {
                         borderRadius: p.shape === 'circle' ? '50%' : '2px',
                         transform: `rotate(${p.rotation}deg)`,
                         animation: `obsFall ${p.duration}s linear ${p.delay}s forwards`,
-                        opacity: 0.85,
+                        opacity: 0.9,
                         zIndex: 9998
                     }}
                 />
             ))}
 
-            {/* Radiant Alert Card */}
+            {/* Radiant Glassmorphism / Neon Ethiopian Aesthetic Alert Box */}
             {alert && (
                 <div 
                     className={`obs-alert-card ${isExiting ? 'obs-exiting' : 'obs-entering'}`}
                     style={{
-                        background: 'linear-gradient(145deg, rgba(15, 23, 42, 0.96) 0%, rgba(6, 78, 59, 0.94) 100%)',
-                        backdropFilter: 'blur(24px)',
-                        WebkitBackdropFilter: 'blur(24px)',
+                        background: 'linear-gradient(140deg, rgba(6, 78, 59, 0.96) 0%, rgba(15, 23, 42, 0.97) 55%, rgba(20, 83, 45, 0.94) 100%)',
+                        backdropFilter: 'blur(28px)',
+                        WebkitBackdropFilter: 'blur(28px)',
                         border: '2.5px solid #10B981',
-                        boxShadow: '0 0 50px rgba(16, 185, 129, 0.55), 0 20px 40px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.25)',
-                        borderRadius: '28px',
-                        padding: '2.25rem 3.5rem',
+                        boxShadow: '0 0 55px rgba(16, 185, 129, 0.65), 0 0 25px rgba(245, 158, 11, 0.4), 0 25px 60px rgba(0, 0, 0, 0.85), inset 0 1px 2px rgba(255, 255, 255, 0.3)',
+                        borderRadius: '26px',
+                        padding: '2.2rem 3.2rem',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'center',
                         textAlign: 'center',
                         color: '#FFFFFF',
-                        maxWidth: '560px',
-                        width: '90%',
+                        maxWidth: '620px',
+                        width: '92%',
                         zIndex: 9999,
                         position: 'relative'
                     }}
                 >
-                    {/* Top Shimmer Badge */}
+                    {/* Ethiopian Flag / Gursha Glowing Badge */}
                     <div style={{
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '0.45rem',
-                        background: 'rgba(16, 185, 129, 0.2)',
-                        border: '1px solid rgba(16, 185, 129, 0.45)',
-                        padding: '0.35rem 0.9rem',
+                        gap: '0.5rem',
+                        background: 'rgba(16, 185, 129, 0.22)',
+                        border: '1px solid rgba(16, 185, 129, 0.55)',
+                        padding: '0.35rem 1rem',
                         borderRadius: '9999px',
-                        fontSize: '0.825rem',
+                        fontSize: '0.85rem',
                         fontWeight: 800,
                         letterSpacing: '0.08em',
                         color: '#34D399',
                         textTransform: 'uppercase',
                         marginBottom: '1rem',
-                        boxShadow: '0 0 15px rgba(16, 185, 129, 0.3)'
+                        boxShadow: '0 0 20px rgba(16, 185, 129, 0.35)'
                     }}>
-                        <span style={{ fontSize: '0.95rem' }}>✨</span>
-                        NEW GURSHA TIP RECEIVED!
+                        <span style={{ fontSize: '1rem' }}>🇪🇹</span>
+                        <span>LIVE GURSHA ALERT</span>
                     </div>
 
-                    {/* Glowing Logo / Gift Graphic */}
+                    {/* Glowing Logo Icon */}
                     <div style={{
-                        width: '74px',
-                        height: '74px',
+                        width: '72px',
+                        height: '72px',
                         borderRadius: '50%',
-                        background: 'radial-gradient(circle, rgba(16, 185, 129, 0.35) 0%, rgba(15, 23, 42, 0.8) 70%)',
+                        background: 'radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, rgba(15, 23, 42, 0.85) 75%)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        marginBottom: '0.75rem',
+                        marginBottom: '1rem',
                         border: '2px solid #10B981',
-                        boxShadow: '0 0 25px rgba(16, 185, 129, 0.6)',
+                        boxShadow: '0 0 30px rgba(16, 185, 129, 0.65)',
                         animation: 'obsPulse 1.8s ease-in-out infinite'
                     }}>
                         <img 
                             src="/gp-official-logo.png" 
                             alt="Gursha Logo" 
                             style={{ 
-                                width: '46px', 
+                                width: '44px', 
                                 height: 'auto',
                                 objectFit: 'contain'
                             }} 
@@ -259,64 +303,54 @@ export default function Overlay() {
                         />
                     </div>
 
-                    {/* Huge Prominent Tip Amount */}
+                    {/* Exciting Large Typography Headline: "🎉 [SenderName] tipped [Amount] ETB!" */}
                     <div style={{
-                        display: 'flex',
-                        alignItems: 'baseline',
-                        justifyContent: 'center',
-                        gap: '0.45rem',
-                        margin: '0.25rem 0 0.5rem'
+                        fontSize: '2.1rem',
+                        fontWeight: 900,
+                        lineHeight: 1.25,
+                        letterSpacing: '-0.02em',
+                        color: '#FFFFFF',
+                        textShadow: '0 2px 14px rgba(0, 0, 0, 0.8)',
+                        marginBottom: alert.message ? '0.85rem' : '0.25rem',
+                        textAlign: 'center'
                     }}>
+                        <span style={{ marginRight: '0.35rem' }}>🎉</span>
                         <span style={{
-                            fontSize: '4.25rem',
-                            fontWeight: 900,
-                            lineHeight: 1,
-                            letterSpacing: '-0.04em',
+                            color: '#FFFFFF',
+                            textShadow: '0 0 20px rgba(255, 255, 255, 0.4)'
+                        }}>
+                            {senderDisplay}
+                        </span>
+                        {' '}
+                        <span style={{ color: '#E2E8F0', fontWeight: 700 }}>tipped</span>
+                        {' '}
+                        <span style={{
                             color: '#10B981',
-                            textShadow: '0 0 25px rgba(16, 185, 129, 0.75), 0 4px 12px rgba(0, 0, 0, 0.8)',
-                            fontFamily: "'Plus Jakarta Sans', sans-serif"
-                        }}>
-                            {Number(alert.amount || 0).toFixed(0)}
-                        </span>
-                        <span style={{
-                            fontSize: '1.75rem',
                             fontWeight: 900,
-                            color: '#F59E0B',
-                            textShadow: '0 0 15px rgba(245, 158, 11, 0.6)'
+                            textShadow: '0 0 28px rgba(16, 185, 129, 0.85), 0 2px 8px rgba(0, 0, 0, 0.9)'
                         }}>
-                            ETB
+                            {amountDisplay} ETB!
                         </span>
                     </div>
 
-                    {/* Sender Identification */}
-                    <div style={{
-                        fontSize: '1.2rem',
-                        fontWeight: 600,
-                        color: '#CBD5E1',
-                        marginBottom: alert.message ? '1rem' : '0.5rem'
-                    }}>
-                        from <span style={{ color: '#F8FAFC', fontWeight: 800, textDecoration: 'underline', textDecorationColor: '#10B981' }}>
-                            {alert.tipperPhone || alert.senderName || 'Anonymous Supporter'}
-                        </span>
-                    </div>
-
-                    {/* Supporter's Message Bubble */}
+                    {/* Supporter's Custom Message */}
                     {alert.message && (
                         <div style={{
+                            marginTop: '0.4rem',
                             padding: '0.85rem 1.4rem',
-                            background: 'rgba(0, 0, 0, 0.4)',
+                            background: 'rgba(0, 0, 0, 0.5)',
                             borderLeft: '4px solid #10B981',
                             borderRight: '1px solid rgba(255, 255, 255, 0.08)',
                             borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                             borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                             borderRadius: '0 14px 14px 0',
-                            maxWidth: '440px',
+                            maxWidth: '480px',
                             wordWrap: 'break-word',
                             color: '#F1F5F9',
-                            fontSize: '1.05rem',
+                            fontSize: '1.1rem',
                             lineHeight: 1.45,
                             fontStyle: 'italic',
-                            boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.3)'
+                            boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.35)'
                         }}>
                             "{alert.message}"
                         </div>
@@ -324,7 +358,7 @@ export default function Overlay() {
                 </div>
             )}
 
-            {/* Embedded CSS Animations */}
+            {/* Embedded CSS Animations & Transparent Overrides */}
             <style dangerouslySetInnerHTML={{__html: `
                 html, body, #root {
                     background: transparent !important;
@@ -346,11 +380,11 @@ export default function Overlay() {
                 }
 
                 .obs-entering {
-                    animation: obsPopIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                    animation: obsPopIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
                 }
 
                 .obs-exiting {
-                    animation: obsFadeOut 0.8s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+                    animation: obsFadeOut 0.75s cubic-bezier(0.7, 0, 0.84, 0) forwards;
                 }
 
                 @keyframes obsPopIn {
@@ -382,11 +416,11 @@ export default function Overlay() {
                 @keyframes obsPulse {
                     0%, 100% {
                         transform: scale(1);
-                        box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+                        box-shadow: 0 0 22px rgba(16, 185, 129, 0.45);
                     }
                     50% {
                         transform: scale(1.08);
-                        box-shadow: 0 0 35px rgba(16, 185, 129, 0.85);
+                        box-shadow: 0 0 38px rgba(16, 185, 129, 0.9);
                     }
                 }
             `}} />

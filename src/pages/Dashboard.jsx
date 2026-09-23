@@ -1373,7 +1373,7 @@ export default function Dashboard() {
     };
 
     const tipUrl = window.location.origin + '/' + (user?.username || '');
-    const obsUrl = window.location.origin + '/overlay/' + (user?._id || '');
+    const obsUrl = window.location.origin + '/overlay/' + (user?.username || user?._id || '');
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(tipUrl);
@@ -1931,30 +1931,42 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    {/* OBS Livestream Overlay */}
+                    {/* Stream Overlay (OBS & TikTok LIVE Studio) */}
                     <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.25rem', boxShadow: 'var(--shadow-xs)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
                             <span style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                                <Sparkles size={16} color="#D97706" /> {t('obsOverlayTitle')}
+                                <Sparkles size={16} color="#10B981" /> Stream Overlay
                             </span>
-                            <Badge variant="warning" size="sm">OBS 1080p</Badge>
+                            <Badge variant="success" size="sm">OBS & TikTok LIVE</Badge>
                         </div>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.75rem' }}>
-                            Browser Source URL for live stream alerts & sound effects.
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.45, marginBottom: '0.75rem' }}>
+                            Paste this URL into TikTok LIVE Studio or OBS as a 'Webpage' or 'Browser Source' to see live tip alerts on your stream.
                         </p>
                         <div
                             onClick={copyObsUrl}
                             style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', background: 'var(--card-bg-subtle)', padding: '0.35rem 0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease' }}
                             onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
                             onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
-                            title="Click to copy OBS URL"
+                            title="Click to copy Stream Overlay URL"
                         >
                             <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.8rem', color: 'var(--text-muted)', paddingLeft: '0.25rem' }}>
                                 {obsUrl}
                             </span>
-                            <Button variant="secondary" size="sm" icon={obsCopied ? CheckCircle : Copy} onClick={(e) => { e.stopPropagation(); copyObsUrl(); }}>
-                                {obsCopied ? t('copied') : 'Copy URL'}
+                            <Button variant="primary" size="sm" icon={obsCopied ? CheckCircle : Copy} onClick={(e) => { e.stopPropagation(); copyObsUrl(); }}>
+                                {obsCopied ? t('copied') : 'Copy Link'}
                             </Button>
+                            <a
+                                href={`${obsUrl}?preview=true`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                style={{ textDecoration: 'none' }}
+                                title="Test live stream overlay"
+                            >
+                                <Button variant="secondary" size="sm" icon={ExternalLink}>
+                                    Test
+                                </Button>
+                            </a>
                         </div>
                     </div>
                 </div>
