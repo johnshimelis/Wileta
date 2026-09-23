@@ -1944,7 +1944,7 @@ export default function Dashboard() {
                         </p>
                         <div
                             onClick={copyObsUrl}
-                            style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', background: 'var(--card-bg-subtle)', padding: '0.35rem 0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease' }}
+                            style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', background: 'var(--card-bg-subtle)', padding: '0.35rem 0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease', marginBottom: '0.75rem' }}
                             onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
                             onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
                             title="Click to copy Stream Overlay URL"
@@ -1955,16 +1955,31 @@ export default function Dashboard() {
                             <Button variant="primary" size="sm" icon={obsCopied ? CheckCircle : Copy} onClick={(e) => { e.stopPropagation(); copyObsUrl(); }}>
                                 {obsCopied ? t('copied') : 'Copy Link'}
                             </Button>
-                            <a
-                                href={`${obsUrl}?preview=true`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                                style={{ textDecoration: 'none' }}
-                                title="Test live stream overlay"
-                            >
-                                <Button variant="secondary" size="sm" icon={ExternalLink}>
-                                    Test
+                        </div>
+
+                        {/* Interactive Multi-Tier Test Preview Controls */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '0.2rem' }}>
+                                Test Alert:
+                            </span>
+                            <a href={`${obsUrl}?test=low`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                                <Button variant="secondary" size="sm" style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem' }}>
+                                    ✨ 1-50 ETB (Meskel)
+                                </Button>
+                            </a>
+                            <a href={`${obsUrl}?test=mid`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                                <Button variant="secondary" size="sm" style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem' }}>
+                                    🏛️ 51-200 ETB (Axum)
+                                </Button>
+                            </a>
+                            <a href={`${obsUrl}?test=high`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                                <Button variant="secondary" size="sm" style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem' }}>
+                                    👑 201+ ETB (Gonder)
+                                </Button>
+                            </a>
+                            <a href={`${obsUrl}?test=queue`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                                <Button variant="secondary" size="sm" style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem' }}>
+                                    ⚡ Test Queue
                                 </Button>
                             </a>
                         </div>
