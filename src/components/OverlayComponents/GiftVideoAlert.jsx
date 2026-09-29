@@ -57,9 +57,9 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.catch((err) => {
-                    console.warn('[GiftVideoAlert] Autoplay warning (OBS/Browser policy):', err?.message || err);
-                    // If blocked by browser autoplay policy, retry unmuted or proceed
-                    video.play().catch(() => {});
+                    console.warn('[GiftVideoAlert] Autoplay policy prevented unmuted video playback, retrying muted:', err?.message || err);
+                    video.muted = true;
+                    video.play().catch((e) => console.error('[GiftVideoAlert] Muted autoplay retry failed:', e));
                 });
             }
         }

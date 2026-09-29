@@ -172,38 +172,50 @@ export default function StreamOverlay() {
         document.body.style.width = '100vw';
         document.body.style.height = '100vh';
 
-        const socketBaseUrl = import.meta.env.VITE_API_URL 
-            ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') 
-            : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                ? 'http://localhost:5000'
-                : 'https://wileta-backend.onrender.com');
+        const queryBackend = searchParams.get('backend') || searchParams.get('server');
+        const envSocketUrl = import.meta.env.VITE_SOCKET_URL || (import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') : null);
+        // Robust Socket host: query param > env > production backend
+        const socketBaseUrl = queryBackend || envSocketUrl || 'https://wileta-backend.onrender.com';
 
-        console.log(`[StreamOverlay] Connecting to Socket: ${socketBaseUrl}`);
+        console.log(`[StreamOverlay] Connecting to Socket: ${socketBaseUrl} for target: ${targetUsername}`);
         const socket = io(socketBaseUrl, {
             transports: ['websocket', 'polling'],
-            reconnectionAttempts: 10,
+            reconnectionAttempts: Infinity,
+            reconnectionDelay: 1500,
             timeout: 10000
         });
 
-        socket.on('connect', () => {
-            console.log(`[StreamOverlay] Socket connected. Joining creator room: ${targetUsername}`);
+        const joinRooms = () => {
             if (targetUsername) {
-                socket.emit('join_overlay', targetUsername);
-                socket.emit('join', targetUsername);
+                const raw = String(targetUsername).trim();
+                const clean = raw.toLowerCase().replace(/^@/, '');
+                console.log(`[StreamOverlay] Socket connected (${socket.id}). Joining creator rooms: [${clean}, ${raw}]`);
+                socket.emit('join_overlay', clean);
+                socket.emit('join', clean);
+                if (clean !== raw) {
+                    socket.emit('join_overlay', raw);
+                    socket.emit('join', raw);
+                }
             }
-        });
+        };
+
+        socket.on('connect', joinRooms);
+        socket.io.on('reconnect', joinRooms);
 
         // Listen for standardized multi-tiered tip alerts
         socket.on('gursha_tip', (data) => {
+            console.log('[StreamOverlay] Received gursha_tip event:', data);
             enqueueAlert(data);
         });
 
         // Backward compatibility for existing tip alerts
         socket.on('new_tip', (data) => {
+            console.log('[StreamOverlay] Received new_tip event:', data);
             enqueueAlert(data);
         });
 
         socket.on('tip_alert', (data) => {
+            console.log('[StreamOverlay] Received tip_alert event:', data);
             enqueueAlert(data);
         });
 
