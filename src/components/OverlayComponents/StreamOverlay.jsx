@@ -6,17 +6,14 @@ import { AnimatePresence } from 'framer-motion';
 import Tier1Alert from './Tier1Alert';
 import Tier2Alert from './Tier2Alert';
 import Tier3Alert from './Tier3Alert';
-// Retain backward compatibility aliases
-import LowTierAlert from './Tier1Alert';
-import MidTierAlert from './Tier2Alert';
-import HighTierAlert from './Tier3Alert';
+import GiftVideoAlert from './GiftVideoAlert';
+import { getGiftVideo } from './giftVideoMapping';
 
-// Object Map routing incoming socket data to specific tier component
+// Procedural fallback map for tips without assigned video assets
 const TIER_COMPONENTS = {
     tier1_sparkle: Tier1Alert,
     tier2_obelisk: Tier2Alert,
     tier3_lion: Tier3Alert,
-    // Aliases & legacy mappings
     tier_low: Tier1Alert,
     tier_mid: Tier2Alert,
     tier_high: Tier3Alert
@@ -39,10 +36,12 @@ export function getTipTier(amount, explicitTier) {
 }
 
 /**
- * StreamOverlay Main Orchestrator (Multi-Tiered Ethiopian Cultural System)
- * - Manages an Alert Queue for sequential playback without overlapping
+ * StreamOverlay Main Orchestrator (GurshaPay Live Gift Overlay)
+ * - Plays the exact assigned video for each authentic Ethiopian gift (Jebena, Lion, Kebero, Masinqo, etc.)
+ * - Manages an Alert Queue for sequential video playback without overlapping
  * - Subscribes to Socket.IO 'gursha_tip', 'new_tip', and 'tip_alert' events
- * - Enforces transparent 1920x1080 canvas for OBS Studio & TikTok LIVE Studio
+ * - Enforces transparent frameless canvas for OBS Studio & TikTok LIVE Studio
+ * - Preserves ?preview=true & ?test=<giftId> test functionality
  */
 export default function StreamOverlay() {
     const { username, creatorId } = useParams();
@@ -58,6 +57,7 @@ export default function StreamOverlay() {
     const processedTxRefs = useRef(new Set());
     const exitTimerRef = useRef(null);
     const dismissTimerRef = useRef(null);
+    const safetyTimerRef = useRef(null);
 
     // Enqueue an incoming alert
     const enqueueAlert = useCallback((rawPayload) => {
@@ -74,18 +74,48 @@ export default function StreamOverlay() {
             }
         }
 
-        const tier = getTipTier(rawPayload.amount, rawPayload.tier || rawPayload.animationId);
+        // Resolve assigned gift video
+        const giftInfo = getGiftVideo(rawPayload);
+        const tier = getTipTier(rawPayload.amount, rawPayload.tier || rawPayload.animationId || giftInfo?.tier);
+
         const standardized = {
             id: rawPayload.tx_ref || `alert_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+            giftId: rawPayload.giftId,
+            gift: rawPayload.gift,
+            giftName: rawPayload.giftName || rawPayload.gift || giftInfo?.name || '',
+            animationId: rawPayload.animationId,
             tier,
+            giftInfo,
             senderName: rawPayload.senderName || rawPayload.supporterName || rawPayload.tipperPhone || 'A Supporter',
             amount: Number(rawPayload.amount || 0),
             message: rawPayload.message || '',
-            gift: rawPayload.gift || ''
+            durationMs: rawPayload.durationMs
         };
 
-        console.log(`[StreamOverlay] Enqueueing [${tier}] alert:`, standardized);
+        // Preload video asset if available
+        if (giftInfo && giftInfo.videoSrc) {
+            try {
+                const preloader = document.createElement('video');
+                preloader.preload = 'auto';
+                preloader.src = giftInfo.videoSrc;
+            } catch (_) {}
+        }
+
+        console.log(`[StreamOverlay] Enqueueing alert for gift: "${giftInfo ? giftInfo.name : 'Fallback'}" (video: ${giftInfo?.videoSrc || 'none'})`, standardized);
         setAlertQueue(prev => [...prev, standardized]);
+    }, []);
+
+    // Complete current alert and smoothly advance queue
+    const handleAlertComplete = useCallback(() => {
+        setIsExiting(true);
+        if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+        if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+        if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+
+        setTimeout(() => {
+            setCurrentAlert(null);
+            setIsExiting(false);
+        }, 350);
     }, []);
 
     // Queue Consumer Loop: play alerts sequentially
@@ -100,8 +130,19 @@ export default function StreamOverlay() {
         setCurrentAlert(nextAlert);
         setIsExiting(false);
 
-        // Tier-specific timing
-        // Tier 1 (Sparkle): 5.5s (fade at 4.7s) | Tier 2 (Obelisk): 8.5s (fade at 7.7s) | Tier 3 (Hero Lion): 12.0s (fade at 11.2s)
+        // If alert has assigned video, GiftVideoAlert handles its own playback and completion
+        if (nextAlert.giftInfo && nextAlert.giftInfo.videoSrc) {
+            // Safety fallback timer so queue is never permanently blocked (15s max)
+            if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+            safetyTimerRef.current = setTimeout(() => {
+                console.log('[StreamOverlay] Safety timeout triggered for video alert, advancing queue.');
+                handleAlertComplete();
+            }, 15000);
+            return;
+        }
+
+        // Fallback for alerts without assigned video
+        console.warn(`[StreamOverlay] No video assigned for gift: "${nextAlert.giftId || nextAlert.gift || nextAlert.giftName}", using procedural fallback animation.`);
         const isTier3 = nextAlert.tier === 'tier3_lion' || nextAlert.tier === 'tier_high';
         const isTier2 = nextAlert.tier === 'tier2_obelisk' || nextAlert.tier === 'tier_mid';
         const duration = isTier3 ? 12000 : (isTier2 ? 8500 : 5500);
@@ -115,15 +156,14 @@ export default function StreamOverlay() {
         }, fadeDelay);
 
         dismissTimerRef.current = setTimeout(() => {
-            setCurrentAlert(null);
-            setIsExiting(false);
+            handleAlertComplete();
         }, duration);
 
-    }, [currentAlert, alertQueue]);
+    }, [currentAlert, alertQueue, handleAlertComplete]);
 
     // Socket.IO Subscription & OBS Transparent Styling
     useEffect(() => {
-        // Enforce 100% transparent background and zero scrollbars
+        // Enforce 100% transparent background and zero scrollbars for OBS & TikTok LIVE Studio
         document.documentElement.style.backgroundColor = 'transparent';
         document.body.style.backgroundColor = 'transparent';
         document.body.style.margin = '0';
@@ -167,35 +207,65 @@ export default function StreamOverlay() {
             enqueueAlert(data);
         });
 
-        // URL Query Param Test Preview:
-        // /overlay/:username?test=tier1_sparkle | tier2_obelisk | tier3_lion | queue
-        const testParam = searchParams.get('test') || searchParams.get('preview') || searchParams.get('tier');
+        // URL Query Param Test & Preview Support
+        // Supports: ?preview=true, ?test=<giftId>, ?test=queue
+        const testParam = (searchParams.get('test') || searchParams.get('preview') || searchParams.get('tier') || '').toLowerCase();
         if (testParam) {
             setTimeout(() => {
-                if (testParam === 'tier1_sparkle' || testParam === 'low' || testParam === 'true') {
-                    enqueueAlert({ animationId: 'tier1_sparkle', tier: 'tier1_sparkle', senderName: 'Selamawit T.', amount: 45, message: 'Love the stream! ☕️🇪🇹' });
-                } else if (testParam === 'tier2_obelisk' || testParam === 'mid') {
-                    enqueueAlert({ animationId: 'tier2_obelisk', tier: 'tier2_obelisk', senderName: 'Dawit Bekele', amount: 150, message: 'Aksum Obelisk energy boost! 🏛️✨' });
-                } else if (testParam === 'tier3_lion' || testParam === 'high') {
-                    enqueueAlert({ animationId: 'tier3_lion', tier: 'tier3_lion', senderName: 'Kassahun M.', amount: 500, message: 'Royal Lion of Judah celebration! 🦁👑' });
+                if (testParam === 'jebena') {
+                    enqueueAlert({ giftId: 'jebena', giftName: 'Clay Jebena', senderName: 'Dawit Bekele', amount: 100, message: 'Traditional Jebena coffee on me! 🫖☕️' });
+                } else if (testParam === 'lion') {
+                    enqueueAlert({ giftId: 'lion', giftName: 'Lion of Judah', senderName: 'Kassahun M.', amount: 5000, message: 'Royal Lion of Judah celebration! 🦁👑' });
+                } else if (testParam === 'kebero') {
+                    enqueueAlert({ giftId: 'kebero', giftName: 'Kebero Drum', senderName: 'Almaz Tadesse', amount: 300, message: 'Joyful Kebero rhythm! 🪘✨' });
+                } else if (testParam === 'masinqo' || testParam === 'masenqo') {
+                    enqueueAlert({ giftId: 'masinqo', giftName: 'Masenqo Lute', senderName: 'Yared Getachew', amount: 500, message: 'Soulful Masenqo strings! 🎻🇪🇹' });
+                } else if (testParam === 'walia' || testParam === 'walia_ibex') {
+                    enqueueAlert({ giftId: 'walia_ibex', giftName: 'Walia Ibex', senderName: 'Blen Semere', amount: 2500, message: 'Highland Walia spirit! 🐐⛰️' });
+                } else if (testParam === 'axum' || testParam === 'axum_obelisk') {
+                    enqueueAlert({ giftId: 'axum_obelisk', giftName: 'Axum Obelisk', senderName: 'Haile Menelik', amount: 3000, message: 'Monumental Axum Obelisk! 🏛️' });
+                } else if (testParam === 'lalibela') {
+                    enqueueAlert({ giftId: 'lalibela', giftName: 'Lalibela Church', senderName: 'Marta Kebede', amount: 4000, message: 'Holy Lalibela blessing! ⛪' });
+                } else if (testParam === 'jet' || testParam === 'ethiopian_jet') {
+                    enqueueAlert({ giftId: 'ethiopian_jet', giftName: 'Ethiopian Jet', senderName: 'Abel Nega', amount: 25000, message: 'Soaring with Ethiopian Airlines! ✈️' });
+                } else if (testParam === 'supercar' || testParam === 'car') {
+                    enqueueAlert({ giftId: 'supercar', giftName: 'Addis Supercar', senderName: 'Yonatan Birhanu', amount: 15000, message: 'Addis Supercar horsepower! 🏎️💨' });
                 } else if (testParam === 'queue') {
-                    // Test all 3 sequentially
-                    enqueueAlert({ animationId: 'tier1_sparkle', tier: 'tier1_sparkle', senderName: 'Selamawit T.', amount: 25, message: 'Sparkle tip! ✨' });
-                    enqueueAlert({ animationId: 'tier2_obelisk', tier: 'tier2_obelisk', senderName: 'Dawit Bekele', amount: 120, message: 'Obelisk tip in queue! 🏛️' });
-                    enqueueAlert({ animationId: 'tier3_lion', tier: 'tier3_lion', senderName: 'Kassahun M.', amount: 750, message: 'Grand finale royal tip! 🦁' });
+                    // Test consecutive gifts in queue
+                    enqueueAlert({ giftId: 'jebena', giftName: 'Clay Jebena', senderName: 'Dawit Bekele', amount: 100, message: 'First gift: Jebena! 🫖' });
+                    enqueueAlert({ giftId: 'lion', giftName: 'Lion of Judah', senderName: 'Kassahun M.', amount: 5000, message: 'Second gift: Lion! 🦁' });
+                    enqueueAlert({ giftId: 'axum_obelisk', giftName: 'Axum Obelisk', senderName: 'Haile M.', amount: 3000, message: 'Third gift: Axum! 🏛️' });
+                    enqueueAlert({ giftId: 'supercar', giftName: 'Addis Supercar', senderName: 'Yonatan B.', amount: 15000, message: 'Fourth gift: Supercar! 🏎️' });
+                } else if (testParam === 'true' || testParam === 'preview') {
+                    // Default preview demonstration (Clay Jebena)
+                    enqueueAlert({ giftId: 'jebena', giftName: 'Clay Jebena', senderName: 'Selamawit T.', amount: 100, message: 'Previewing GurshaPay Live Gift Overlay! 🫖✨' });
+                } else {
+                    // Check if testParam directly matches any gift in mapping
+                    const directGift = getGiftVideo(testParam);
+                    if (directGift) {
+                        enqueueAlert({ giftId: testParam, giftName: directGift.name, senderName: 'Preview Supporter', amount: 250, message: `Testing ${directGift.name} video! ✨` });
+                    } else if (testParam === 'tier1_sparkle' || testParam === 'low') {
+                        enqueueAlert({ animationId: 'tier1_sparkle', tier: 'tier1_sparkle', senderName: 'Selamawit T.', amount: 45, message: 'Love the stream! ☕️🇪🇹' });
+                    } else if (testParam === 'tier2_obelisk' || testParam === 'mid') {
+                        enqueueAlert({ animationId: 'tier2_obelisk', tier: 'tier2_obelisk', senderName: 'Dawit Bekele', amount: 150, message: 'Aksum Obelisk energy boost! 🏛️✨' });
+                    } else if (testParam === 'tier3_lion' || testParam === 'high') {
+                        enqueueAlert({ animationId: 'tier3_lion', tier: 'tier3_lion', senderName: 'Kassahun M.', amount: 500, message: 'Royal Lion of Judah celebration! 🦁👑' });
+                    }
                 }
-            }, 600);
+            }, 500);
         }
 
         return () => {
             socket.disconnect();
             if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
             if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+            if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
         };
-    }, [targetUsername, searchParams, enqueueAlert]);
+    }, [targetUsername, searchParams, enqueueAlert, handleAlertComplete]);
 
-    // Active Tier Component lookup
-    const ActiveTierComponent = currentAlert ? (TIER_COMPONENTS[currentAlert.tier] || Tier1Alert) : null;
+    // Determine component to render
+    const hasAssignedVideo = Boolean(currentAlert?.giftInfo?.videoSrc);
+    const FallbackTierComponent = currentAlert ? (TIER_COMPONENTS[currentAlert.tier] || Tier1Alert) : null;
 
     return (
         <div 
@@ -216,12 +286,22 @@ export default function StreamOverlay() {
             }}
         >
             <AnimatePresence mode="wait">
-                {currentAlert && ActiveTierComponent && (
-                    <ActiveTierComponent 
+                {currentAlert && hasAssignedVideo ? (
+                    <GiftVideoAlert
                         key={currentAlert.id}
-                        alert={currentAlert} 
-                        isExiting={isExiting} 
+                        alert={currentAlert}
+                        giftInfo={currentAlert.giftInfo}
+                        isExiting={isExiting}
+                        onComplete={handleAlertComplete}
                     />
+                ) : (
+                    currentAlert && FallbackTierComponent && (
+                        <FallbackTierComponent 
+                            key={currentAlert.id}
+                            alert={currentAlert} 
+                            isExiting={isExiting} 
+                        />
+                    )
                 )}
             </AnimatePresence>
 
