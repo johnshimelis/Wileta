@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import {
     Smartphone, CheckCircle, AlertCircle, MessageSquare, ShieldCheck,
     Heart, Sparkles, Share2, Copy, Send, Coffee, Award, ExternalLink,
@@ -63,6 +63,7 @@ const VerifiedBlueTick = ({ size = 18, title = "Verified Creator" }) => (
 export default function PublicProfile() {
     const { api } = useAuth();
     const { username } = useParams();
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [creator, setCreator] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -287,6 +288,29 @@ export default function PublicProfile() {
         } catch (err) {
             setTippingState('error');
             showAlert(err.response?.data?.error || "Error connecting to payment provider.", "error");
+        }
+    };
+
+    const handleSendTestTip = async () => {
+        if (!creator) return;
+        try {
+            showAlert("Dispatching test gift animation to overlays...", "info");
+            const finalAmt = isCustom ? Number(customAmount || 10) : Number(amount || 10);
+            const giftLabel = selectedGift ? (language === 'am' ? selectedGift.nameAm : selectedGift.nameEn) : 'Clay Jebena';
+            const res = await api.post('/payments/simulate-tip', {
+                creatorUsername: creator.username,
+                creatorId: creator.id || creator._id,
+                amount: finalAmt,
+                gift: selectedGift?.nameEn || giftLabel,
+                giftName: giftLabel,
+                senderName: tipperName || (isAnonymous ? 'Anonymous' : 'Test Supporter'),
+                message: shoutOutMessage || 'Live gift animation test! 🎉'
+            });
+            if (res.data?.success) {
+                showAlert("🎉 Live gift animation triggered on Mobile & Stream Overlay!", "success");
+            }
+        } catch (simErr) {
+            showAlert("Failed to dispatch test animation: " + (simErr.response?.data?.error || simErr.message), "error");
         }
     };
 
@@ -1086,6 +1110,44 @@ export default function PublicProfile() {
                                 <Lock size={12} />
                                 <span>{t('encryptedCheckout')}</span>
                             </div>
+
+                            {/* Live Overlay Test Animation Trigger */}
+                            {(searchParams.get('test') === 'true' || searchParams.get('preview') === 'true' || tippingState === 'error') && (
+                                <div style={{
+                                    marginTop: '14px',
+                                    padding: '12px',
+                                    borderRadius: '12px',
+                                    background: 'rgba(245, 158, 11, 0.08)',
+                                    border: '1px dashed rgba(245, 158, 11, 0.45)',
+                                    textAlign: 'center'
+                                }}>
+                                    <div style={{ fontSize: '12px', color: '#F59E0B', marginBottom: '8px', fontWeight: 600 }}>
+                                        ⚡ Test Mode: Preview Stream & Mobile Overlay Animation
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={handleSendTestTip}
+                                        style={{
+                                            width: '100%',
+                                            padding: '8px 14px',
+                                            borderRadius: '8px',
+                                            background: '#F59E0B',
+                                            color: '#000',
+                                            fontWeight: 700,
+                                            fontSize: '13px',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '6px'
+                                        }}
+                                    >
+                                        <Sparkles size={15} />
+                                        <span>Trigger Test Gift Video ({selectedGift ? (language === 'am' ? selectedGift.nameAm : selectedGift.nameEn) : 'Clay Jebena'})</span>
+                                    </button>
+                                </div>
+                            )}
                         </form>
                     </>
                 )}
