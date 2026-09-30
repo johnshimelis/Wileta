@@ -7,7 +7,8 @@ export const useAuth = () => useContext(AuthContext);
 
 const getApiBaseUrl = () => {
     if (import.meta.env.VITE_API_URL) {
-        return import.meta.env.VITE_API_URL.replace(/\/$/, '') + '/api';
+        const url = import.meta.env.VITE_API_URL.replace(/\/$/, '');
+        return url.endsWith('/api') ? url : `${url}/api`;
     }
     return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:5000/api'

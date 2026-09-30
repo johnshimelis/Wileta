@@ -114,7 +114,8 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
+                justifyContent: 'flex-end',
+                paddingBottom: '24px',
                 pointerEvents: 'none',
                 userSelect: 'none',
                 zIndex: 9999,
@@ -131,25 +132,26 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 transition={{ duration: 6, ease: 'easeInOut' }}
                 style={{
                     position: 'absolute',
-                    width: '650px',
-                    height: '650px',
+                    bottom: 0,
+                    width: '750px',
+                    height: '500px',
                     borderRadius: '50%',
-                    background: 'radial-gradient(circle, rgba(245, 158, 11, 0.22) 0%, rgba(16, 185, 129, 0.12) 40%, transparent 70%)',
-                    filter: 'blur(60px)',
+                    background: 'radial-gradient(ellipse at bottom, rgba(245, 158, 11, 0.26) 0%, rgba(16, 185, 129, 0.14) 40%, transparent 75%)',
+                    filter: 'blur(50px)',
                     zIndex: 1,
                     pointerEvents: 'none'
                 }}
             />
 
-            {/* Video Container (Preserves Aspect Ratio above creator camera) */}
+            {/* Frameless Transparent Video Container Anchored to Bottom */}
             <motion.div
-                initial={{ scale: 0.65, opacity: 0, y: 30 }}
+                initial={{ scale: 0.75, opacity: 0, y: 50 }}
                 animate={{ 
-                    scale: isExiting ? 0.9 : 1, 
+                    scale: isExiting ? 0.92 : 1, 
                     opacity: isExiting ? 0 : 1, 
-                    y: isExiting ? -20 : 0 
+                    y: isExiting ? 20 : 0 
                 }}
-                exit={{ scale: 0.8, opacity: 0, y: -30 }}
+                exit={{ scale: 0.85, opacity: 0, y: 50 }}
                 transition={{ 
                     type: 'spring', 
                     damping: 24, 
@@ -159,12 +161,12 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 style={{
                     position: 'relative',
                     width: '100%',
-                    maxWidth: '680px',
-                    maxHeight: '52vh',
+                    maxWidth: '850px',
+                    maxHeight: '75vh',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    justifyContent: 'center',
+                    justifyContent: 'flex-end',
                     zIndex: 2,
                     background: 'transparent',
                     backgroundColor: 'transparent'
@@ -181,111 +183,26 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                         onError={handleVideoError}
                         style={{
                             maxWidth: '100%',
-                            maxHeight: '48vh',
+                            maxHeight: '72vh',
                             width: 'auto',
                             height: 'auto',
                             objectFit: 'contain',
                             pointerEvents: 'none',
                             background: 'transparent',
                             backgroundColor: 'transparent',
-                            filter: 'drop-shadow(0 12px 36px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 28px rgba(245, 158, 11, 0.45))'
+                            filter: 'drop-shadow(0 16px 40px rgba(0, 0, 0, 0.60)) drop-shadow(0 0 32px rgba(245, 158, 11, 0.40))'
                         }}
                     />
                 ) : (
                     /* Fallback Icon Glow if video fails */
                     <div style={{
-                        fontSize: '110px',
-                        filter: 'drop-shadow(0 0 30px rgba(245, 158, 11, 0.7))',
-                        margin: '20px 0'
+                        fontSize: '140px',
+                        filter: 'drop-shadow(0 0 35px rgba(245, 158, 11, 0.75))',
+                        marginBottom: '30px'
                     }}>
                         {giftEmoji}
                     </div>
                 )}
-
-                {/* Floating Gift Info Banner (Donor, Gift Name & Amount) */}
-                <AnimatePresence>
-                    {showText && !isExiting && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 25, scale: 0.9 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                            transition={{ type: 'spring', damping: 20, stiffness: 320 }}
-                            style={{
-                                marginTop: '12px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                gap: '6px',
-                                textAlign: 'center',
-                                padding: '12px 28px',
-                                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.88) 100%)',
-                                backdropFilter: 'blur(16px)',
-                                WebkitBackdropFilter: 'blur(16px)',
-                                borderRadius: '24px',
-                                border: '1.5px solid rgba(245, 158, 11, 0.55)',
-                                boxShadow: '0 16px 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(245, 158, 11, 0.28)',
-                                maxWidth: '90vw'
-                            }}
-                        >
-                            {/* Supporter Name */}
-                            <div style={{
-                                fontSize: '24px',
-                                fontWeight: 900,
-                                color: '#FFFFFF',
-                                letterSpacing: '-0.3px',
-                                textShadow: '0 2px 8px rgba(0,0,0,0.8), 0 0 20px rgba(253, 224, 71, 0.4)'
-                            }}>
-                                {senderName}
-                            </div>
-
-                            {/* Gift Badge & Amount */}
-                            <div style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                padding: '4px 14px',
-                                background: 'linear-gradient(90deg, rgba(245, 158, 11, 0.22) 0%, rgba(16, 185, 129, 0.22) 100%)',
-                                borderRadius: '12px',
-                                border: '1px solid rgba(245, 158, 11, 0.45)'
-                            }}>
-                                <span style={{ fontSize: '18px' }}>{giftEmoji}</span>
-                                <span style={{
-                                    fontSize: '16px',
-                                    fontWeight: 800,
-                                    color: '#FDE047',
-                                    letterSpacing: '0.2px'
-                                }}>
-                                    sent {giftName}
-                                </span>
-                                <span style={{
-                                    fontSize: '15px',
-                                    fontWeight: 900,
-                                    color: '#10B981',
-                                    marginLeft: '4px'
-                                }}>
-                                    • {amount} ETB
-                                </span>
-                            </div>
-
-                            {/* Supporter Message (if present) */}
-                            {message && message.trim() && (
-                                <div style={{
-                                    marginTop: '4px',
-                                    fontSize: '14px',
-                                    fontWeight: 600,
-                                    color: '#E2E8F0',
-                                    fontStyle: 'italic',
-                                    maxWidth: '460px',
-                                    wordBreak: 'break-word',
-                                    lineHeight: 1.35,
-                                    textShadow: '0 1px 4px rgba(0,0,0,0.8)'
-                                }}>
-                                    "{message}"
-                                </div>
-                            )}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
             </motion.div>
         </div>
     );

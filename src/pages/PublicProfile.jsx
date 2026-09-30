@@ -161,6 +161,7 @@ export default function PublicProfile() {
     };
 
     useEffect(() => {
+        let isMounted = true;
         const fetchProfile = async () => {
             try {
                 const cleanUsername = username?.startsWith('@') ? username.slice(1) : username;
@@ -171,39 +172,75 @@ export default function PublicProfile() {
                     return;
                 }
 
-                const res = await api.get('/public/' + cleanUsername);
-                setCreator(res.data);
+                let data = null;
+                try {
+                    const res = await api.get('/public/' + cleanUsername);
+                    data = res.data;
+                } catch (firstErr) {
+                    try {
+                        const fallbackRes = await api.get('/public/creator/' + cleanUsername);
+                        data = fallbackRes.data;
+                    } catch (_) {}
+                }
 
-                // Set SEO Open Graph Metadata
-                const creatorName = res.data.name || cleanUsername;
-                document.title = `${creatorName} — Support on GurshaPay`;
+                if (!isMounted) return;
 
-                const updateMeta = (name, content) => {
-                    let element = document.querySelector(`meta[property="${name}"]`) || document.querySelector(`meta[name="${name}"]`);
-                    if (!element) {
-                        element = document.createElement('meta');
-                        if (name.startsWith('og:')) {
-                            element.setAttribute('property', name);
-                        } else {
-                            element.setAttribute('name', name);
+                if (data) {
+                    setCreator(data);
+                    setError('');
+
+                    // Set SEO Open Graph Metadata
+                    const creatorName = data.name || cleanUsername;
+                    document.title = `${creatorName} — Support on GurshaPay`;
+
+                    const updateMeta = (name, content) => {
+                        let element = document.querySelector(`meta[property="${name}"]`) || document.querySelector(`meta[name="${name}"]`);
+                        if (!element) {
+                            element = document.createElement('meta');
+                            if (name.startsWith('og:')) {
+                                element.setAttribute('property', name);
+                            } else {
+                                element.setAttribute('name', name);
+                            }
+                            document.head.appendChild(element);
                         }
-                        document.head.appendChild(element);
-                    }
-                    element.setAttribute('content', content);
-                };
+                        element.setAttribute('content', content);
+                    };
 
-                updateMeta('og:title', `${creatorName} — Support on GurshaPay`);
-                updateMeta('og:description', `Support ${creatorName} directly through GurshaPay.`);
-                updateMeta('og:url', `https://gurshapay.com/@${cleanUsername}`);
-                updateMeta('description', `Support ${creatorName} directly through GurshaPay.`);
+                    updateMeta('og:title', `${creatorName} — Support on GurshaPay`);
+                    updateMeta('og:description', `Support ${creatorName} directly through GurshaPay.`);
+                    updateMeta('og:url', `https://gurshapay.com/@${cleanUsername}`);
+                    updateMeta('description', `Support ${creatorName} directly through GurshaPay.`);
+                } else {
+                    throw new Error('Creator not found');
+                }
 
             } catch (err) {
-                setError("We couldn't find this creator profile. Please check the handle and try again.");
+                if (!isMounted) return;
+                const cleanUsername = username?.startsWith('@') ? username.slice(1) : username;
+                if (user && user.username && user.username.toLowerCase() === cleanUsername?.toLowerCase()) {
+                    setCreator({
+                        id: user._id || user.id,
+                        name: user.name,
+                        username: user.username,
+                        bio: user.bio || '',
+                        profilePicUrl: user.profilePicUrl || '',
+                        isVerified: user.kycStatus === 'approved' || user.isVerified === true,
+                        customCommissionRate: user.customCommissionRate ?? 0.05,
+                        payoutMethod: user.payoutMethod || 'telebirr',
+                        goal: null
+                    });
+                    setError('');
+                } else {
+                    setError("We couldn't find this creator profile. Please check the handle and try again.");
+                }
+            } finally {
+                if (isMounted) setLoading(false);
             }
-            setLoading(false);
         };
         fetchProfile();
-    }, [username, api]);
+        return () => { isMounted = false; };
+    }, [username, api, user]);
 
     // Polling for Telebirr PIN completion
     useEffect(() => {
@@ -364,9 +401,18 @@ export default function PublicProfile() {
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.5, margin: '0 0 1.5rem' }}>
                         {error || t('creatorNotFoundDesc')}
                     </p>
-                    <Link to="/" style={{ textDecoration: 'none' }}>
-                        <Button variant="primary" style={{ width: '100%' }}>{t('exploreCreators')}</Button>
-                    </Link>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <Button 
+                            variant="secondary" 
+                            style={{ width: '100%', justifyContent: 'center' }}
+                            onClick={() => window.location.reload()}
+                        >
+                            Try Again 🔄
+                        </Button>
+                        <Link to="/" style={{ textDecoration: 'none' }}>
+                            <Button variant="ghost" style={{ width: '100%', justifyContent: 'center' }}>{t('exploreCreators')}</Button>
+                        </Link>
+                    </div>
                 </div>
             </div>
         );
