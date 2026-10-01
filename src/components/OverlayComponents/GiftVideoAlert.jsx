@@ -1,26 +1,60 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { playLowTierAudio, playMidTierAudio, playHighTierAudio } from '../../assets/AlertAssets/alertAudio';
+
+const AMHARIC_GIFT_NAMES = {
+    'sini buna cup': 'Sini Buna Cup (ሲኒ ቡና)',
+    'buna': 'Sini Buna Cup (ሲኒ ቡና)',
+    'coffee': 'Sini Buna Cup (ሲኒ ቡና)',
+    'adey flower': 'Adey Flower (አደይ አበባ)',
+    'adey abeba': 'Adey Flower (አደይ አበባ)',
+    'highland rose': 'Highland Rose (ጽጌረዳ)',
+    'clay jebena': 'Clay Jebena (ሸክላ ጀበና)',
+    'jebena': 'Clay Jebena (ሸክላ ጀበና)',
+    'mesob basket': 'Mesob Basket (መሶብ)',
+    'mesob': 'Mesob Basket (መሶብ)',
+    'gursha feast': 'Gursha Feast (የበየነት ጉርሻ)',
+    'holy bible': 'Holy Bible (መጽሐፍ ቅዱስ)',
+    'holy quran': 'Holy Quran (ቁርኣን)',
+    'kebero drum': 'Kebero Drum (ከበሮ)',
+    'kebero': 'Kebero Drum (ከበሮ)',
+    'masenqo lute': 'Masenqo Lute (ማሲንቆ)',
+    'masinqo': 'Masenqo Lute (ማሲንቆ)',
+    'acoustic krar': 'Acoustic Krar (ክራር)',
+    'kirar': 'Acoustic Krar (ክራር)',
+    'habesha kemis': 'Habesha Kemis (ሐበሻ ቀሚስ)',
+    'warrior shield': 'Warrior Shield (የጦር ጋሻ)',
+    'walia ibex': 'Walia Ibex (ዋሊያ)',
+    'gadaa horse': 'Gadaa Horse (የገዳ ፈረስ)',
+    'lion of judah': 'Lion of Judah (የይሁዳ አንበሳ)',
+    'negus crown': 'Negus Crown (የንጉሥ ዘውድ)',
+    'telebirr gem': 'Telebirr Gem (ቴሌብር አልማዝ)',
+    'addis supercar': 'Addis Supercar (አዲስ ሱፐርካር)',
+    'axum obelisk': 'Axum Obelisk (የአክሱም ሐውልት)',
+    'lalibela church': 'Lalibela Church (የላሊበላ ቤተክርስቲያን)',
+    'ethiopian jet': 'Ethiopian Jet (የኢትዮጵያ ጄት)'
+};
 
 /**
  * GiftVideoAlert Component (GurshaPay Live Gift Overlay)
- * Plays the exact video assigned to the given gift for OBS Studio and TikTok LIVE Studio.
- * Matches TikTok live gift animation aesthetic:
- * - Huge 3D animation anchored strictly at the bottom (covering lower ~65-75% of stream canvas)
- * - 100% transparent background (zero cards, zero donor badges, zero ambient glow or border boxes)
- * - Streamer camera remains 100% visible in the upper half
- * - Auto-plays once, never loops, disappears completely on finish with no black frame
- * - Supports screen blending so black background MP4s become 100% transparent over the camera
- * - Preserves OBS audio capture with celebratory chime
+ * Matches screenshot media_1790888306403.png:
+ * - Floating golden-bordered dark translucent capsule pill with [🎁] Donor ★, sent [Emoji] [Gift], [+Amount ETB]
+ * - Bottom-anchored frameless transparent gift video animation
+ * - 100% transparent canvas for OBS Studio and TikTok LIVE Studio
  */
 export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting }) {
     const videoRef = useRef(null);
     const [videoFailed, setVideoFailed] = useState(false);
     const hasCompletedRef = useRef(false);
 
-    const giftName = giftInfo?.name || alert?.giftName || alert?.gift || 'Gursha Gift';
+    const rawGiftName = (giftInfo?.name || alert?.giftName || alert?.gift || 'Adey Flower').trim();
+    const giftKey = rawGiftName.toLowerCase().replace(/[^\w\s]/g, '').trim();
+    const formattedGiftName = AMHARIC_GIFT_NAMES[giftKey] || rawGiftName;
     const giftEmoji = giftInfo?.emoji || '🎁';
     const videoSrc = giftInfo?.videoSrc || '/animations/adey_flower.mp4';
+    const donorName = alert?.senderName || alert?.supporterName || alert?.sender || alert?.name || 'A Supporter';
+    const amount = alert?.amount || '1';
+    const currency = alert?.currency || 'ETB';
 
     const safeComplete = () => {
         if (!hasCompletedRef.current) {
@@ -50,7 +84,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.catch((err) => {
-                    console.warn('[GiftVideoAlert] Autoplay policy prevented unmuted video playback, retrying muted:', err?.message || err);
+                    console.warn('[GiftVideoAlert] Autoplay prevented, retrying muted:', err?.message || err);
                     video.muted = true;
                     video.play().catch((e) => console.error('[GiftVideoAlert] Muted autoplay retry failed:', e));
                 });
@@ -60,13 +94,13 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
 
     // Handle normal video completion
     const handleVideoEnded = () => {
-        console.log(`[GiftVideoAlert] Video ended for gift: ${giftName} (${alert?.id})`);
+        console.log(`[GiftVideoAlert] Video ended for gift: ${formattedGiftName} (${alert?.id})`);
         setTimeout(() => {
             safeComplete();
         }, 200);
     };
 
-    // Fallback if video file fails to load or is missing in environment
+    // Fallback if video file fails to load or is missing
     const handleVideoError = (e) => {
         console.warn(`[GiftVideoAlert] Video source (${videoSrc}) error:`, e?.target?.error);
         setVideoFailed(true);
@@ -75,7 +109,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
         }, 3500);
     };
 
-    // Safety timeout in case video stalls or fails to fire onEnded (12s max)
+    // Safety timeout in case video stalls (12s max)
     useEffect(() => {
         const safetyTimer = setTimeout(() => {
             console.log('[GiftVideoAlert] Max safety duration reached, advancing queue.');
@@ -107,15 +141,106 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 backgroundColor: 'transparent'
             }}
         >
+            {/* Broadcast Pill Capsule (Matching media_1790888306403.png) */}
+            <motion.div
+                initial={{ opacity: 0, y: -25, scale: 0.92 }}
+                animate={{ 
+                    opacity: isExiting ? 0 : 1, 
+                    y: isExiting ? -15 : 0, 
+                    scale: isExiting ? 0.92 : 1 
+                }}
+                exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                transition={{ type: 'spring', damping: 22, stiffness: 300, duration: 0.4 }}
+                style={{
+                    position: 'absolute',
+                    top: '32vh',
+                    zIndex: 10,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '8px 18px',
+                    background: 'rgba(15, 23, 42, 0.85)',
+                    backdropFilter: 'blur(16px)',
+                    WebkitBackdropFilter: 'blur(16px)',
+                    borderRadius: '9999px',
+                    border: '1.5px solid #F59E0B',
+                    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.35)',
+                    maxWidth: '92vw'
+                }}
+            >
+                {/* Left: Golden Circular Gift Icon */}
+                <div style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #F59E0B, #D97706)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '20px',
+                    flexShrink: 0,
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                }}>
+                    🎁
+                </div>
+
+                {/* Middle: Donor & Gift Sent Description */}
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'center',
+                    lineHeight: 1.25,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        color: '#FFFFFF',
+                        fontWeight: 800,
+                        fontSize: '16px',
+                        letterSpacing: '-0.2px'
+                    }}>
+                        <span>{donorName}</span>
+                        <span style={{ color: '#F59E0B', fontSize: '13px' }}>★</span>
+                    </div>
+                    <div style={{
+                        color: '#FDE047',
+                        fontWeight: 600,
+                        fontSize: '13px'
+                    }}>
+                        sent {giftEmoji} {formattedGiftName}
+                    </div>
+                </div>
+
+                {/* Right: Emerald Green Amount Pill */}
+                <div style={{
+                    background: '#10B981',
+                    borderRadius: '9999px',
+                    padding: '5px 14px',
+                    color: '#FFFFFF',
+                    fontWeight: 900,
+                    fontSize: '13px',
+                    letterSpacing: '0.3px',
+                    flexShrink: 0,
+                    boxShadow: '0 2px 10px rgba(16, 185, 129, 0.4)'
+                }}>
+                    +{amount} {currency}
+                </div>
+            </motion.div>
+
             {/* Frameless Transparent Video Container Anchored strictly to the Bottom */}
             <motion.div
-                initial={{ scale: 0.85, opacity: 0, y: 40 }}
+                initial={{ scale: 0.88, opacity: 0, y: 30 }}
                 animate={{ 
                     scale: isExiting ? 0.95 : 1, 
                     opacity: isExiting ? 0 : 1, 
                     y: isExiting ? 20 : 0 
                 }}
-                exit={{ scale: 0.9, opacity: 0, y: 30 }}
+                exit={{ scale: 0.9, opacity: 0, y: 20 }}
                 transition={{ 
                     type: 'spring', 
                     damping: 24, 
