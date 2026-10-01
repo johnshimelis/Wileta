@@ -7,7 +7,7 @@ import Tier1Alert from './Tier1Alert';
 import Tier2Alert from './Tier2Alert';
 import Tier3Alert from './Tier3Alert';
 import GiftVideoAlert from './GiftVideoAlert';
-import { getGiftVideo } from './giftVideoMapping';
+import { getGiftVideo, GIFT_VIDEOS } from './giftVideoMapping';
 
 // Procedural fallback map for tips without assigned video assets
 const TIER_COMPONENTS = {
@@ -298,22 +298,14 @@ export default function StreamOverlay() {
             }}
         >
             <AnimatePresence mode="wait">
-                {currentAlert && hasAssignedVideo ? (
+                {currentAlert && (
                     <GiftVideoAlert
                         key={currentAlert.id}
                         alert={currentAlert}
-                        giftInfo={currentAlert.giftInfo}
+                        giftInfo={currentAlert.giftInfo || GIFT_VIDEOS.adey_flower}
                         isExiting={isExiting}
                         onComplete={handleAlertComplete}
                     />
-                ) : (
-                    currentAlert && FallbackTierComponent && (
-                        <FallbackTierComponent 
-                            key={currentAlert.id}
-                            alert={currentAlert} 
-                            isExiting={isExiting} 
-                        />
-                    )
                 )}
             </AnimatePresence>
 

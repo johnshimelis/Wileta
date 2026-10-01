@@ -429,5 +429,6 @@ export function getGiftVideo(input, amountFallback) {
         return GIFT_VIDEOS.adey_flower;
     }
 
-    return null;
+    // Guaranteed fallback: ALWAYS return a valid video so overlay ONLY plays the gift video animation
+    return GIFT_VIDEOS.adey_flower;
 }
