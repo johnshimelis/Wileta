@@ -234,8 +234,12 @@ export default function StreamOverlay() {
                     enqueueAlert({ giftId: 'lion', giftName: 'Lion of Judah', senderName: 'Kassahun M.', amount: 5000, message: 'Royal Lion of Judah celebration! 🦁👑' });
                 } else if (testParam === 'kebero') {
                     enqueueAlert({ giftId: 'kebero', giftName: 'Kebero Drum', senderName: 'Almaz Tadesse', amount: 300, message: 'Joyful Kebero rhythm! 🪘✨' });
-                } else if (testParam === 'masinqo' || testParam === 'masenqo') {
-                    enqueueAlert({ giftId: 'masinqo', giftName: 'Masenqo Lute', senderName: 'Yared Getachew', amount: 500, message: 'Soulful Masenqo strings! 🎻🇪🇹' });
+                } else if (testParam === 'masinqo' || testParam === 'masenqo' || testParam === '10') {
+                    enqueueAlert({ giftId: 'masinqo', giftName: 'Masenqo Lute (ማሲንቆ)', senderName: 'John', amount: 10, currency: 'ETB', message: 'Authentic Masenqo rhythm! 🎻✨' });
+                } else if (testParam === 'bible' || testParam === '7') {
+                    enqueueAlert({ giftId: 'bible', giftName: 'Holy Bible (መጽሐፍ ቅዱስ)', senderName: 'John', amount: 7, currency: 'ETB', message: 'Blessed Holy Bible! 📖✝️' });
+                } else if (testParam === 'quran' || testParam === '8') {
+                    enqueueAlert({ giftId: 'quran', giftName: 'Holy Quran (ቁርኣን)', senderName: 'Ahmed', amount: 8, currency: 'ETB', message: 'Holy Quran blessing! 📗✨' });
                 } else if (testParam === 'walia' || testParam === 'walia_ibex') {
                     enqueueAlert({ giftId: 'walia_ibex', giftName: 'Walia Ibex', senderName: 'Blen Semere', amount: 2500, message: 'Highland Walia spirit! 🐐⛰️' });
                 } else if (testParam === 'axum' || testParam === 'axum_obelisk') {

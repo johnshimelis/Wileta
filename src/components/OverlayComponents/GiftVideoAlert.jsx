@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { playLowTierAudio, playMidTierAudio, playHighTierAudio } from '../../assets/AlertAssets/alertAudio';
 
 const AMHARIC_GIFT_NAMES = {
@@ -15,13 +15,17 @@ const AMHARIC_GIFT_NAMES = {
     'mesob': 'Mesob Basket (መሶብ)',
     'gursha feast': 'Gursha Feast (የበየነት ጉርሻ)',
     'holy bible': 'Holy Bible (መጽሐፍ ቅዱስ)',
+    'bible': 'Holy Bible (መጽሐፍ ቅዱስ)',
     'holy quran': 'Holy Quran (ቁርኣን)',
+    'quran': 'Holy Quran (ቁርኣን)',
     'kebero drum': 'Kebero Drum (ከበሮ)',
     'kebero': 'Kebero Drum (ከበሮ)',
     'masenqo lute': 'Masenqo Lute (ማሲንቆ)',
+    'masenqo': 'Masenqo Lute (ማሲንቆ)',
     'masinqo': 'Masenqo Lute (ማሲንቆ)',
     'acoustic krar': 'Acoustic Krar (ክራር)',
     'kirar': 'Acoustic Krar (ክራር)',
+    'krar': 'Acoustic Krar (ክራር)',
     'habesha kemis': 'Habesha Kemis (ሐበሻ ቀሚስ)',
     'warrior shield': 'Warrior Shield (የጦር ጋሻ)',
     'walia ibex': 'Walia Ibex (ዋሊያ)',
@@ -35,38 +39,98 @@ const AMHARIC_GIFT_NAMES = {
     'ethiopian jet': 'Ethiopian Jet (የኢትዮጵያ ጄት)'
 };
 
+const GIFT_EMOJIS = {
+    'holy bible': '📖',
+    'bible': '📖',
+    'holy quran': '📗',
+    'quran': '📗',
+    'masenqo lute': '🎻',
+    'masenqo': '🎻',
+    'masinqo': '🎻',
+    'acoustic krar': '🪕',
+    'kirar': '🪕',
+    'krar': '🪕',
+    'clay jebena': '🫖',
+    'jebena': '🫖',
+    'sini buna cup': '☕',
+    'coffee': '☕',
+    'buna': '☕',
+    'adey flower': '🌼',
+    'adey': '🌼',
+    'highland rose': '🌹',
+    'rose': '🌹',
+    'mesob basket': '🧺',
+    'mesob': '🧺',
+    'gursha feast': '🍲',
+    'gursha': '🍲',
+    'kebero drum': '🪘',
+    'kebero': '🪘',
+    'habesha kemis': '👗',
+    'kemis': '👗',
+    'warrior shield': '🛡️',
+    'shield': '🛡️',
+    'walia ibex': '🐐',
+    'walia': '🐐',
+    'gadaa horse': '🐎',
+    'horse': '🐎',
+    'lion of judah': '🦁',
+    'lion': '🦁',
+    'negus crown': '👑',
+    'crown': '👑',
+    'telebirr gem': '💎',
+    'gem': '💎',
+    'addis supercar': '🏎️',
+    'supercar': '🏎️',
+    'axum obelisk': '🏛️',
+    'obelisk': '🏛️',
+    'lalibela church': '⛪',
+    'lalibela': '⛪',
+    'ethiopian jet': '✈️',
+    'jet': '✈️'
+};
+
+function getGiftEmoji(name, fallbackEmoji) {
+    if (!name) return fallbackEmoji || '🎁';
+    const key = name.toLowerCase().replace(/[^\w\s]/g, '').trim();
+    return GIFT_EMOJIS[key] || fallbackEmoji || '🎁';
+}
+
 /**
- * GiftVideoAlert Component (GurshaPay Live Gift Overlay)
- * Matches screenshot media_1790888306403.png:
- * - Floating golden-bordered dark translucent capsule pill with [🎁] Donor ★, sent [Emoji] [Gift], [+Amount ETB]
- * - Bottom-anchored frameless transparent gift video animation
- * - 100% CEF / OBS / TikTok LIVE Studio compatible:
- *   1. Guaranteed muted HTML5 video autoplay (CEF blocks unmuted autoplay without user gesture)
- *   2. Standard alpha compositing without mixBlendMode (avoids 0-alpha invisibility in CEF OSR)
- *   3. Absolute canonical CDN URLs with multi-tier fallback (bypasses 301 redirects)
+ * GiftVideoAlert Component (GurshaPay Live Gift Overlay for TikTok LIVE Studio & OBS)
+ * 
+ * Perfect alignment with native mobile overlay (Image 2) and TikTok Live standard (Image 3):
+ * 1. Alert Pill anchored at 28% from the top (leaving room title and battle scores clear).
+ * 2. Majestic Animation Video starting directly below the pill and extending downwards with full vertical scale (72vh).
+ * 3. 100% Synchronized Playback: Alert pill, video playback, and fanfare audio fire simultaneously.
+ * 4. Transparent Screen Blending (mix-blend-mode: screen) so the black video background is invisible without obscuring the streamer.
+ * 5. Dynamic golden sparkle cascade and expanding energy shockwave.
  */
 export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting }) {
     const videoRef = useRef(null);
     const [videoFailed, setVideoFailed] = useState(false);
     const [retryIndex, setRetryIndex] = useState(0);
+    const [isVideoReady, setIsVideoReady] = useState(false);
     const hasCompletedRef = useRef(false);
+    const hasStartedPlaybackRef = useRef(false);
 
     const rawGiftName = (giftInfo?.name || alert?.giftName || alert?.gift || 'Adey Flower').trim();
     const giftKey = rawGiftName.toLowerCase().replace(/[^\w\s]/g, '').trim();
     const formattedGiftName = AMHARIC_GIFT_NAMES[giftKey] || rawGiftName;
-    const giftEmoji = giftInfo?.emoji || '🎁';
+    const giftEmoji = getGiftEmoji(giftKey, giftInfo?.emoji);
     const rawVideoSrc = giftInfo?.videoSrc || '/animations/adey_flower.mp4';
     const donorName = alert?.senderName || alert?.supporterName || alert?.sender || alert?.name || 'A Supporter';
     const amount = alert?.amount || '1';
     const currency = alert?.currency || 'ETB';
 
-    // Build resilient list of fallback URLs
+    // Prioritize relative path for instant local caching, then canonical fallbacks
     const cleanPath = rawVideoSrc.startsWith('/') ? rawVideoSrc : `/${rawVideoSrc}`;
-    const sourceCandidates = [
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const sourceCandidates = useMemo(() => [
+        cleanPath,
+        `${origin}${cleanPath}`,
         `https://www.gurshapay.com${cleanPath}`,
-        `https://wileta-backend.onrender.com${cleanPath}`,
-        cleanPath
-    ];
+        `https://wileta-backend.onrender.com${cleanPath}`
+    ], [cleanPath, origin]);
 
     const [currentSrc, setCurrentSrc] = useState(sourceCandidates[0]);
 
@@ -77,8 +141,8 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
         }
     };
 
-    // Play appropriate celebratory audio chime for OBS on mount
-    useEffect(() => {
+    // Play appropriate celebratory audio chime synchronized with video start
+    const triggerAudio = () => {
         const tier = alert?.tier || giftInfo?.tier || 'tier1_sparkle';
         if (tier === 'tier3_lion' || tier === 'tier_high') {
             playHighTierAudio();
@@ -87,16 +151,20 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
         } else {
             playLowTierAudio();
         }
-    }, [alert?.tier, giftInfo?.tier]);
+    };
 
-    // Fast-start video playback with guaranteed muted autoplay in CEF / TikTok LIVE Studio
-    useEffect(() => {
+    // Fast-start synchronized playback
+    const startSynchronizedShow = () => {
+        if (hasStartedPlaybackRef.current) return;
+        hasStartedPlaybackRef.current = true;
+        setIsVideoReady(true);
+        triggerAudio();
+
         const video = videoRef.current;
         if (video) {
             video.defaultMuted = true;
             video.muted = true;
             video.currentTime = 0;
-            video.playbackRate = 1.0;
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.catch((err) => {
@@ -107,14 +175,31 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 });
             }
         }
+    };
+
+    // Attempt video playback once loaded or via timeout fallback
+    useEffect(() => {
+        hasStartedPlaybackRef.current = false;
+        setIsVideoReady(false);
+
+        // Immediate readiness timeout guard: start at latest 300ms so alert is never stalled
+        const fallbackTimer = setTimeout(() => {
+            startSynchronizedShow();
+        }, 300);
+
+        return () => clearTimeout(fallbackTimer);
     }, [currentSrc]);
+
+    const handleCanPlay = () => {
+        startSynchronizedShow();
+    };
 
     // Handle normal video completion
     const handleVideoEnded = () => {
-        console.log(`[GiftVideoAlert] Video ended for gift: ${formattedGiftName} (${alert?.id})`);
+        console.log(`[GiftVideoAlert] Video completed for gift: ${formattedGiftName} (${alert?.id})`);
         setTimeout(() => {
             safeComplete();
-        }, 200);
+        }, 250);
     };
 
     // Resilient fallback if initial source fails
@@ -127,13 +212,14 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
         } else {
             console.error(`[GiftVideoAlert] All video sources exhausted for ${rawVideoSrc}`);
             setVideoFailed(true);
+            setIsVideoReady(true);
             setTimeout(() => {
                 safeComplete();
             }, 3500);
         }
     };
 
-    // Safety timeout in case video stalls (12s max)
+    // Safety duration timeout (12s max)
     useEffect(() => {
         const safetyTimer = setTimeout(() => {
             console.log('[GiftVideoAlert] Max safety duration reached, advancing queue.');
@@ -143,6 +229,22 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
         return () => clearTimeout(safetyTimer);
     }, []);
 
+    // 12 Sparkle particles matching Image 2
+    const sparkles = useMemo(() => [
+        { id: 1, left: '35%', top: '15px', delay: 0, size: 16 },
+        { id: 2, left: '60%', top: '25px', delay: 0.2, size: 20 },
+        { id: 3, left: '42%', top: '50px', delay: 0.1, size: 24 },
+        { id: 4, left: '55%', top: '75px', delay: 0.35, size: 18 },
+        { id: 5, left: '30%', top: '90px', delay: 0.15, size: 22 },
+        { id: 6, left: '68%', top: '110px', delay: 0.4, size: 16 },
+        { id: 7, left: '48%', top: '135px', delay: 0.25, size: 26 },
+        { id: 8, left: '38%', top: '160px', delay: 0.05, size: 18 },
+        { id: 9, left: '58%', top: '180px', delay: 0.3, size: 22 },
+        { id: 10, left: '45%', top: '210px', delay: 0.45, size: 20 },
+        { id: 11, left: '32%', top: '235px', delay: 0.2, size: 14 },
+        { id: 12, left: '64%', top: '250px', delay: 0.5, size: 18 }
+    ], []);
+
     return (
         <div
             className="gift-video-alert-wrapper"
@@ -151,12 +253,6 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 inset: 0,
                 width: '100vw',
                 height: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                padding: 0,
-                margin: 0,
                 pointerEvents: 'none',
                 userSelect: 'none',
                 zIndex: 9999,
@@ -165,47 +261,73 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 backgroundColor: 'transparent'
             }}
         >
-            {/* Broadcast Pill Capsule (Matching media_1790888306403.png) */}
+            {/* Layer 1: Expanding Luminous Shockwave Ring behind Pill */}
             <motion.div
-                initial={{ opacity: 0, y: -25, scale: 0.92 }}
-                animate={{ 
-                    opacity: isExiting ? 0 : 1, 
-                    y: isExiting ? -15 : 0, 
-                    scale: isExiting ? 0.92 : 1 
+                initial={{ scale: 0.4, opacity: 0 }}
+                animate={{
+                    scale: isVideoReady && !isExiting ? [0.6, 1.8] : 0.4,
+                    opacity: isVideoReady && !isExiting ? [0.8, 0] : 0
                 }}
-                exit={{ opacity: 0, y: -20, scale: 0.9 }}
-                transition={{ type: 'spring', damping: 22, stiffness: 300, duration: 0.4 }}
+                transition={{ duration: 1.2, ease: 'easeOut', repeat: Infinity, repeatDelay: 1.8 }}
                 style={{
                     position: 'absolute',
-                    top: '38vh',
-                    zIndex: 10,
+                    top: 'calc(28vh - 10px)',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '320px',
+                    height: '70px',
+                    borderRadius: '9999px',
+                    border: '2px solid rgba(245, 158, 11, 0.7)',
+                    boxShadow: '0 0 30px rgba(245, 158, 11, 0.5)',
+                    pointerEvents: 'none',
+                    zIndex: 25
+                }}
+            />
+
+            {/* Layer 2: Broadcast Pill Capsule (Anchored at 28vh matching Image 2) */}
+            <motion.div
+                initial={{ opacity: 0, y: -25, scale: 0.90 }}
+                animate={{ 
+                    opacity: (isVideoReady && !isExiting) ? 1 : 0, 
+                    y: (isVideoReady && !isExiting) ? 0 : -20, 
+                    scale: (isVideoReady && !isExiting) ? 1 : 0.90 
+                }}
+                exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                transition={{ type: 'spring', damping: 22, stiffness: 320, duration: 0.4 }}
+                style={{
+                    position: 'absolute',
+                    top: '28vh',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 50,
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
                     padding: '8px 18px',
-                    background: 'rgba(15, 23, 42, 0.85)',
+                    background: 'rgba(15, 23, 42, 0.90)',
                     backdropFilter: 'blur(16px)',
                     WebkitBackdropFilter: 'blur(16px)',
                     borderRadius: '9999px',
-                    border: '1.5px solid #F59E0B',
-                    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.35)',
-                    maxWidth: '92vw'
+                    border: '1.8px solid #F59E0B',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.65), 0 0 24px rgba(245, 158, 11, 0.45)',
+                    maxWidth: '92vw',
+                    whiteSpace: 'nowrap'
                 }}
             >
-                {/* Left: Golden Circular Gift Icon */}
+                {/* Left: Golden Circular Gift Medallion */}
                 <div style={{
-                    width: '38px',
-                    height: '38px',
+                    width: '40px',
+                    height: '40px',
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #F59E0B, #D97706)',
+                    background: 'linear-gradient(135deg, #FBBF24, #D97706)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '20px',
+                    fontSize: '22px',
                     flexShrink: 0,
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                    boxShadow: '0 2px 10px rgba(245, 158, 11, 0.4)'
                 }}>
-                    🎁
+                    {giftEmoji}
                 </div>
 
                 {/* Middle: Donor & Gift Sent Description */}
@@ -244,27 +366,71 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 <div style={{
                     background: '#10B981',
                     borderRadius: '9999px',
-                    padding: '5px 14px',
+                    padding: '6px 14px',
                     color: '#FFFFFF',
                     fontWeight: 900,
                     fontSize: '13px',
                     letterSpacing: '0.3px',
                     flexShrink: 0,
-                    boxShadow: '0 2px 10px rgba(16, 185, 129, 0.4)'
+                    boxShadow: '0 2px 12px rgba(16, 185, 129, 0.5)'
                 }}>
                     +{amount} {currency}
                 </div>
             </motion.div>
 
-            {/* Frameless Transparent Video Container with 36px Top Radius and Higher Height reaching Middle of Device */}
+            {/* Layer 3: Creative Golden Sparkle Particles cascading downward (Image 2 style) */}
+            {isVideoReady && !isExiting && (
+                <div style={{
+                    position: 'absolute',
+                    top: 'calc(28vh + 30px)',
+                    left: 0,
+                    right: 0,
+                    height: '280px',
+                    pointerEvents: 'none',
+                    zIndex: 25,
+                    overflow: 'hidden'
+                }}>
+                    {sparkles.map((sp) => (
+                        <motion.div
+                            key={sp.id}
+                            initial={{ opacity: 0, scale: 0.5, y: -10 }}
+                            animate={{
+                                opacity: [0, 0.9, 0],
+                                scale: [0.6, 1.2, 0.8],
+                                y: [0, 220],
+                                rotate: [0, 180]
+                            }}
+                            transition={{
+                                duration: 2.2,
+                                delay: sp.delay,
+                                repeat: Infinity,
+                                ease: 'easeOut'
+                            }}
+                            style={{
+                                position: 'absolute',
+                                left: sp.left,
+                                top: sp.top,
+                                color: '#FDE047',
+                                fontSize: `${sp.size}px`,
+                                textShadow: '0 0 10px rgba(253, 224, 71, 0.8)',
+                                pointerEvents: 'none'
+                            }}
+                        >
+                            ✦
+                        </motion.div>
+                    ))}
+                </div>
+            )}
+
+            {/* Layer 4: Majestic Higher-Height Video Container starting directly below alert pill */}
             <motion.div
-                initial={{ scale: 0.88, opacity: 0, y: 30 }}
+                initial={{ opacity: 0, scale: 0.92, y: 25 }}
                 animate={{ 
-                    scale: isExiting ? 0.95 : 1, 
-                    opacity: isExiting ? 0 : 1, 
-                    y: isExiting ? 20 : 0 
+                    opacity: (isVideoReady && !isExiting) ? 1 : 0, 
+                    scale: (isVideoReady && !isExiting) ? 1 : 0.95, 
+                    y: (isVideoReady && !isExiting) ? 0 : 20 
                 }}
-                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
                 transition={{ 
                     type: 'spring', 
                     damping: 24, 
@@ -272,27 +438,43 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                     duration: 0.45 
                 }}
                 style={{
-                    position: 'relative',
+                    position: 'absolute',
+                    top: 'calc(28vh + 42px)',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
                     width: '100vw',
-                    maxWidth: '100vw',
-                    height: '80vh',
-                    maxHeight: '80vh',
+                    height: 'calc(72vh - 42px)',
+                    maxHeight: 'calc(72vh - 42px)',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    zIndex: 2,
+                    justifyContent: 'flex-start',
+                    zIndex: 20,
                     background: 'transparent',
                     backgroundColor: 'transparent',
                     border: 'none',
                     outline: 'none',
                     padding: 0,
                     margin: 0,
-                    borderTopLeftRadius: '36px',
-                    borderTopRightRadius: '36px',
                     overflow: 'hidden'
                 }}
             >
+                {/* Soft Ambient Contrast Backing to make subjects pop over bright streams */}
+                <div style={{
+                    position: 'absolute',
+                    top: '10%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '90vw',
+                    maxWidth: '600px',
+                    height: '70%',
+                    background: 'radial-gradient(circle at 50% 35%, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.12) 55%, transparent 75%)',
+                    borderRadius: '50%',
+                    pointerEvents: 'none',
+                    zIndex: 1
+                }} />
+
                 {!videoFailed ? (
                     <video
                         ref={videoRef}
@@ -302,30 +484,34 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                         muted
                         playsInline
                         preload="auto"
+                        onCanPlay={handleCanPlay}
+                        onLoadedData={handleCanPlay}
                         onEnded={handleVideoEnded}
                         onError={handleVideoError}
                         style={{
                             width: '100%',
                             height: '100%',
                             maxWidth: '100vw',
-                            maxHeight: '80vh',
+                            maxHeight: '100%',
                             objectFit: 'contain',
-                            objectPosition: 'bottom center',
+                            objectPosition: 'top center',
                             pointerEvents: 'none',
                             background: 'transparent',
                             backgroundColor: 'transparent',
                             border: 'none',
                             outline: 'none',
-                            borderTopLeftRadius: '36px',
-                            borderTopRightRadius: '36px'
+                            mixBlendMode: 'screen',
+                            filter: 'contrast(1.12) brightness(1.06)',
+                            zIndex: 2
                         }}
                     />
                 ) : (
-                    /* Fallback Icon Glow if all video sources fail */
+                    /* Fallback Icon Glow if video cannot load */
                     <div style={{
                         fontSize: '140px',
                         filter: 'drop-shadow(0 0 35px rgba(245, 158, 11, 0.75))',
-                        marginBottom: '30px'
+                        marginTop: '40px',
+                        zIndex: 2
                     }}>
                         {giftEmoji}
                     </div>

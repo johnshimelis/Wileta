@@ -551,8 +551,8 @@ export default function Support() {
             a: 'National ID verification and facial liveness must be completed using the GurshaPay Mobile App on Android for biometric security and compliance.'
         },
         {
-            q: 'How do I configure my OBS Live Stream Overlay?',
-            a: 'Copy your unique OBS Stream Overlay URL from your creator dashboard and add it as a Browser Source (width 1920, height 1080) in OBS Studio. It includes real-time fanfare alerts.'
+            q: 'How do I configure my OBS & TikTok LIVE Studio Stream Overlay?',
+            a: 'Copy your unique Stream Overlay URL from your creator dashboard and add it as a Browser Source or Webpage. For TikTok LIVE Studio (Portrait 9:16), set resolution to Width: 1080, Height: 1920. For OBS Studio (Landscape 16:9), set resolution to Width: 1920, Height: 1080. It delivers real-time synchronized gift animations and fanfare alerts directly over your stream.'
         },
         {
             q: 'What should I do if a fan tip did not arrive?',

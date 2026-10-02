@@ -1942,9 +1942,13 @@ export default function Dashboard() {
                             </span>
                             <Badge variant="success" size="sm">OBS & TikTok LIVE</Badge>
                         </div>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.45, marginBottom: '0.75rem' }}>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: 1.45, marginBottom: '0.5rem' }}>
                             Paste this URL into TikTok LIVE Studio or OBS as a 'Webpage' or 'Browser Source' to see live tip alerts on your stream.
                         </p>
+                        <div style={{ fontSize: '0.73rem', color: '#10B981', fontWeight: 600, background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.25)', borderRadius: '6px', padding: '0.35rem 0.6rem', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                            <span>💡 Recommended Size:</span>
+                            <span style={{ color: 'var(--text-main)' }}><strong>TikTok LIVE Studio:</strong> 1080 × 1920 (Portrait) • <strong>OBS:</strong> 1920 × 1080</span>
+                        </div>
                         <div
                             onClick={copyObsUrl}
                             style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', background: 'var(--card-bg-subtle)', padding: '0.35rem 0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.15s ease', marginBottom: '0.75rem' }}
@@ -1965,19 +1969,19 @@ export default function Dashboard() {
                             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '0.2rem' }}>
                                 Test Alert:
                             </span>
-                            <a href={`${obsUrl}?test=tier1_sparkle`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                            <a href={`${obsUrl}?test=masinqo`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                                 <Button variant="secondary" size="sm" style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem' }}>
-                                    ✨ &lt;50 ETB (Sparkle)
+                                    🎻 10 ETB (Masenqo)
                                 </Button>
                             </a>
-                            <a href={`${obsUrl}?test=tier2_obelisk`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                            <a href={`${obsUrl}?test=bible`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                                 <Button variant="secondary" size="sm" style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem' }}>
-                                    🏛️ 50-199 ETB (Obelisk)
+                                    📖 7 ETB (Bible)
                                 </Button>
                             </a>
-                            <a href={`${obsUrl}?test=tier3_lion`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                            <a href={`${obsUrl}?test=lion`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                                 <Button variant="secondary" size="sm" style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem' }}>
-                                    🦁 200+ ETB (Hero Lion)
+                                    🦁 5000 ETB (Lion)
                                 </Button>
                             </a>
                             <a href={`${obsUrl}?test=queue`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
