@@ -1372,8 +1372,11 @@ export default function Dashboard() {
         setSavingPayout(false);
     };
 
+    const canonicalOrigin = (typeof window !== 'undefined' && window.location.hostname.includes('gurshapay.com'))
+        ? 'https://www.gurshapay.com'
+        : window.location.origin;
     const tipUrl = window.location.origin + '/' + (user?.username || '');
-    const obsUrl = window.location.origin + '/overlay/' + (user?.username || user?._id || '');
+    const obsUrl = canonicalOrigin + '/overlay/' + (user?.username || user?._id || '');
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(tipUrl);

@@ -40,21 +40,35 @@ const AMHARIC_GIFT_NAMES = {
  * Matches screenshot media_1790888306403.png:
  * - Floating golden-bordered dark translucent capsule pill with [🎁] Donor ★, sent [Emoji] [Gift], [+Amount ETB]
  * - Bottom-anchored frameless transparent gift video animation
- * - 100% transparent canvas for OBS Studio and TikTok LIVE Studio
+ * - 100% CEF / OBS / TikTok LIVE Studio compatible:
+ *   1. Guaranteed muted HTML5 video autoplay (CEF blocks unmuted autoplay without user gesture)
+ *   2. Standard alpha compositing without mixBlendMode (avoids 0-alpha invisibility in CEF OSR)
+ *   3. Absolute canonical CDN URLs with multi-tier fallback (bypasses 301 redirects)
  */
 export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting }) {
     const videoRef = useRef(null);
     const [videoFailed, setVideoFailed] = useState(false);
+    const [retryIndex, setRetryIndex] = useState(0);
     const hasCompletedRef = useRef(false);
 
     const rawGiftName = (giftInfo?.name || alert?.giftName || alert?.gift || 'Adey Flower').trim();
     const giftKey = rawGiftName.toLowerCase().replace(/[^\w\s]/g, '').trim();
     const formattedGiftName = AMHARIC_GIFT_NAMES[giftKey] || rawGiftName;
     const giftEmoji = giftInfo?.emoji || '🎁';
-    const videoSrc = giftInfo?.videoSrc || '/animations/adey_flower.mp4';
+    const rawVideoSrc = giftInfo?.videoSrc || '/animations/adey_flower.mp4';
     const donorName = alert?.senderName || alert?.supporterName || alert?.sender || alert?.name || 'A Supporter';
     const amount = alert?.amount || '1';
     const currency = alert?.currency || 'ETB';
+
+    // Build resilient list of fallback URLs
+    const cleanPath = rawVideoSrc.startsWith('/') ? rawVideoSrc : `/${rawVideoSrc}`;
+    const sourceCandidates = [
+        `https://www.gurshapay.com${cleanPath}`,
+        `https://wileta-backend.onrender.com${cleanPath}`,
+        cleanPath
+    ];
+
+    const [currentSrc, setCurrentSrc] = useState(sourceCandidates[0]);
 
     const safeComplete = () => {
         if (!hasCompletedRef.current) {
@@ -75,22 +89,25 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
         }
     }, [alert?.tier, giftInfo?.tier]);
 
-    // Fast-start video playback from frame 0
+    // Fast-start video playback with guaranteed muted autoplay in CEF / TikTok LIVE Studio
     useEffect(() => {
         const video = videoRef.current;
         if (video) {
+            video.defaultMuted = true;
+            video.muted = true;
             video.currentTime = 0;
             video.playbackRate = 1.0;
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.catch((err) => {
-                    console.warn('[GiftVideoAlert] Autoplay prevented, retrying muted:', err?.message || err);
+                    console.warn('[GiftVideoAlert] Autoplay retry with explicit muted:', err?.message || err);
+                    video.defaultMuted = true;
                     video.muted = true;
                     video.play().catch((e) => console.error('[GiftVideoAlert] Muted autoplay retry failed:', e));
                 });
             }
         }
-    }, [videoSrc]);
+    }, [currentSrc]);
 
     // Handle normal video completion
     const handleVideoEnded = () => {
@@ -100,13 +117,20 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
         }, 200);
     };
 
-    // Fallback if video file fails to load or is missing
+    // Resilient fallback if initial source fails
     const handleVideoError = (e) => {
-        console.warn(`[GiftVideoAlert] Video source (${videoSrc}) error:`, e?.target?.error);
-        setVideoFailed(true);
-        setTimeout(() => {
-            safeComplete();
-        }, 3500);
+        console.warn(`[GiftVideoAlert] Video source error for (${currentSrc}), attempt ${retryIndex}:`, e?.target?.error);
+        if (retryIndex < sourceCandidates.length - 1) {
+            const nextIdx = retryIndex + 1;
+            setRetryIndex(nextIdx);
+            setCurrentSrc(sourceCandidates[nextIdx]);
+        } else {
+            console.error(`[GiftVideoAlert] All video sources exhausted for ${rawVideoSrc}`);
+            setVideoFailed(true);
+            setTimeout(() => {
+                safeComplete();
+            }, 3500);
+        }
     };
 
     // Safety timeout in case video stalls (12s max)
@@ -269,8 +293,10 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 {!videoFailed ? (
                     <video
                         ref={videoRef}
-                        src={videoSrc}
+                        key={currentSrc}
+                        src={currentSrc}
                         autoPlay
+                        muted
                         playsInline
                         preload="auto"
                         onEnded={handleVideoEnded}
@@ -286,12 +312,11 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                             background: 'transparent',
                             backgroundColor: 'transparent',
                             border: 'none',
-                            outline: 'none',
-                            mixBlendMode: 'screen'
+                            outline: 'none'
                         }}
                     />
                 ) : (
-                    /* Fallback Icon Glow if video fails */
+                    /* Fallback Icon Glow if all video sources fail */
                     <div style={{
                         fontSize: '140px',
                         filter: 'drop-shadow(0 0 35px rgba(245, 158, 11, 0.75))',

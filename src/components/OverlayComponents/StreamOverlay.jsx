@@ -224,8 +224,12 @@ export default function StreamOverlay() {
         const testParam = (searchParams.get('test') || searchParams.get('preview') || searchParams.get('tier') || '').toLowerCase();
         if (testParam) {
             setTimeout(() => {
-                if (testParam === 'jebena') {
-                    enqueueAlert({ giftId: 'jebena', giftName: 'Clay Jebena', senderName: 'Dawit Bekele', amount: 100, message: 'Traditional Jebena coffee on me! 🫖☕️' });
+                if (testParam === 'buna' || testParam === 'coffee' || testParam === '3') {
+                    enqueueAlert({ giftId: 'coffee', giftName: '☕ Sini Buna Cup (ሲኒ ቡና)', senderName: 'John', amount: 3, currency: 'ETB', message: 'Enjoy the fresh Buna! ☕✨' });
+                } else if (testParam === 'adey' || testParam === '1') {
+                    enqueueAlert({ giftId: 'adey_flower', giftName: 'Adey Flower (አደይ አበባ)', senderName: 'John', amount: 1, currency: 'ETB', message: 'Blooming Adey Flower! 🌼' });
+                } else if (testParam === 'jebena' || testParam === '4') {
+                    enqueueAlert({ giftId: 'jebena', giftName: 'Clay Jebena (ሸክላ ጀበና)', senderName: 'Dawit Bekele', amount: 4, message: 'Traditional Jebena coffee on me! 🫖☕️' });
                 } else if (testParam === 'lion') {
                     enqueueAlert({ giftId: 'lion', giftName: 'Lion of Judah', senderName: 'Kassahun M.', amount: 5000, message: 'Royal Lion of Judah celebration! 🦁👑' });
                 } else if (testParam === 'kebero') {
