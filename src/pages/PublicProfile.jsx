@@ -61,7 +61,7 @@ const VerifiedBlueTick = ({ size = 18, title = "Verified Creator" }) => (
 );
 
 export default function PublicProfile() {
-    const { api } = useAuth();
+    const { api, user } = useAuth();
     const { username } = useParams();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
