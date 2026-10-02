@@ -177,7 +177,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 transition={{ type: 'spring', damping: 22, stiffness: 300, duration: 0.4 }}
                 style={{
                     position: 'absolute',
-                    top: '32vh',
+                    top: '38vh',
                     zIndex: 10,
                     display: 'flex',
                     alignItems: 'center',
@@ -256,7 +256,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 </div>
             </motion.div>
 
-            {/* Frameless Transparent Video Container Anchored strictly to the Bottom */}
+            {/* Frameless Transparent Video Container with 36px Top Radius and Higher Height reaching Middle of Device */}
             <motion.div
                 initial={{ scale: 0.88, opacity: 0, y: 30 }}
                 animate={{ 
@@ -275,8 +275,8 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                     position: 'relative',
                     width: '100vw',
                     maxWidth: '100vw',
-                    height: '72vh',
-                    maxHeight: '72vh',
+                    height: '80vh',
+                    maxHeight: '80vh',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -287,7 +287,10 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                     border: 'none',
                     outline: 'none',
                     padding: 0,
-                    margin: 0
+                    margin: 0,
+                    borderTopLeftRadius: '36px',
+                    borderTopRightRadius: '36px',
+                    overflow: 'hidden'
                 }}
             >
                 {!videoFailed ? (
@@ -305,14 +308,16 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                             width: '100%',
                             height: '100%',
                             maxWidth: '100vw',
-                            maxHeight: '72vh',
+                            maxHeight: '80vh',
                             objectFit: 'contain',
                             objectPosition: 'bottom center',
                             pointerEvents: 'none',
                             background: 'transparent',
                             backgroundColor: 'transparent',
                             border: 'none',
-                            outline: 'none'
+                            outline: 'none',
+                            borderTopLeftRadius: '36px',
+                            borderTopRightRadius: '36px'
                         }}
                     />
                 ) : (
