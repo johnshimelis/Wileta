@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Lottie } from 'lottie-react';
+import TransparentVideoCanvas from './TransparentVideoCanvas';
 import { playLowTierAudio, playMidTierAudio, playHighTierAudio } from '../../assets/AlertAssets/alertAudio';
+import adeyFlowerJson from '../../assets/animations/adey_flower.json';
+import highlandRoseJson from '../../assets/animations/highland_rose.json';
 
 const AMHARIC_GIFT_NAMES = {
     'sini buna cup': 'Sini Buna Cup (ሲኒ ቡና)',
@@ -99,14 +103,15 @@ function getGiftEmoji(name, fallbackEmoji) {
  * GiftVideoAlert Component (GurshaPay Live Gift Overlay for TikTok LIVE Studio & OBS)
  * 
  * Perfect alignment with native mobile overlay (Image 2) and TikTok Live standard (Image 3):
- * 1. Alert Pill anchored at 28% from the top (leaving room title and battle scores clear).
- * 2. Majestic Animation Video starting directly below the pill and extending downwards with full vertical scale (72vh).
- * 3. 100% Synchronized Playback: Alert pill, video playback, and fanfare audio fire simultaneously.
- * 4. Transparent Screen Blending (mix-blend-mode: screen) so the black video background is invisible without obscuring the streamer.
- * 5. Dynamic golden sparkle cascade and expanding energy shockwave.
+ * 1. Bottom Anchoring: Gift animation rests at the very bottom of the broadcast (bottom: 0, height: 65vh).
+ * 2. Alert Pill: Anchored directly above the bottom animation (bottom: calc(65vh - 20px)), leaving streamer header clear.
+ * 3. 100% Genuine Transparency:
+ *    - For Lottie gifts (Adey Flower, Highland Rose): Crisp, transparent vector bloom with glowing particles.
+ *    - For 3D Video gifts (Holy Bible, Lion, Supercar, Masinqo, Jebena, etc.): Hardware-accelerated WebGL Luma-Key canvas
+ *      converts black background to 0-alpha pixels, outputting genuine transparent frames to OBS Studio & TikTok LIVE Studio.
+ * 4. 100% Synchronized Playback: Alert pill, animation, and celebratory audio fanfare fire simultaneously.
  */
 export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting }) {
-    const videoRef = useRef(null);
     const [videoFailed, setVideoFailed] = useState(false);
     const [retryIndex, setRetryIndex] = useState(0);
     const [isVideoReady, setIsVideoReady] = useState(false);
@@ -121,6 +126,12 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
     const donorName = alert?.senderName || alert?.supporterName || alert?.sender || alert?.name || 'A Supporter';
     const amount = alert?.amount || '1';
     const currency = alert?.currency || 'ETB';
+
+    // Check if this gift has a dedicated transparent Lottie vector animation
+    const isAdey = giftKey.includes('adey') || giftKey.includes('flower') || giftKey.includes('አደይ');
+    const isRose = giftKey.includes('rose') || giftKey.includes('ጽጌረዳ');
+    const isLottieGift = isAdey || isRose;
+    const lottieData = isRose ? highlandRoseJson : adeyFlowerJson;
 
     // Prioritize relative path for instant local caching, then canonical fallbacks
     const cleanPath = rawVideoSrc.startsWith('/') ? rawVideoSrc : `/${rawVideoSrc}`;
@@ -159,22 +170,6 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
         hasStartedPlaybackRef.current = true;
         setIsVideoReady(true);
         triggerAudio();
-
-        const video = videoRef.current;
-        if (video) {
-            video.defaultMuted = true;
-            video.muted = true;
-            video.currentTime = 0;
-            const playPromise = video.play();
-            if (playPromise !== undefined) {
-                playPromise.catch((err) => {
-                    console.warn('[GiftVideoAlert] Autoplay retry with explicit muted:', err?.message || err);
-                    video.defaultMuted = true;
-                    video.muted = true;
-                    video.play().catch((e) => console.error('[GiftVideoAlert] Muted autoplay retry failed:', e));
-                });
-            }
-        }
     };
 
     // Attempt video playback once loaded or via timeout fallback
@@ -271,7 +266,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 transition={{ duration: 1.2, ease: 'easeOut', repeat: Infinity, repeatDelay: 1.8 }}
                 style={{
                     position: 'absolute',
-                    top: 'calc(28vh - 10px)',
+                    bottom: 'calc(65vh - 35px)',
                     left: '50%',
                     transform: 'translateX(-50%)',
                     width: '320px',
@@ -284,7 +279,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 }}
             />
 
-            {/* Layer 2: Broadcast Pill Capsule (Anchored at 28vh matching Image 2) */}
+            {/* Layer 2: Broadcast Pill Capsule (Anchored directly above the bottom video) */}
             <motion.div
                 initial={{ opacity: 0, y: -25, scale: 0.90 }}
                 animate={{ 
@@ -296,7 +291,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 transition={{ type: 'spring', damping: 22, stiffness: 320, duration: 0.4 }}
                 style={{
                     position: 'absolute',
-                    top: '28vh',
+                    bottom: 'calc(65vh - 20px)',
                     left: '50%',
                     transform: 'translateX(-50%)',
                     zIndex: 50,
@@ -378,14 +373,14 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 </div>
             </motion.div>
 
-            {/* Layer 3: Creative Golden Sparkle Particles cascading downward (Image 2 style) */}
+            {/* Layer 3: Creative Golden Sparkle Particles cascading around bottom video */}
             {isVideoReady && !isExiting && (
                 <div style={{
                     position: 'absolute',
-                    top: 'calc(28vh + 30px)',
+                    bottom: 0,
                     left: 0,
                     right: 0,
-                    height: '280px',
+                    height: '65vh',
                     pointerEvents: 'none',
                     zIndex: 25,
                     overflow: 'hidden'
@@ -422,7 +417,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 </div>
             )}
 
-            {/* Layer 4: Majestic Higher-Height Video Container starting directly below alert pill */}
+            {/* Layer 4: Transparent Bottom-Anchored Animation Container matching Image 2 & 3 */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.92, y: 25 }}
                 animate={{ 
@@ -439,17 +434,16 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 }}
                 style={{
                     position: 'absolute',
-                    top: 'calc(28vh + 42px)',
                     bottom: 0,
                     left: 0,
                     right: 0,
                     width: '100vw',
-                    height: 'calc(72vh - 42px)',
-                    maxHeight: 'calc(72vh - 42px)',
+                    height: '65vh',
+                    maxHeight: '65vh',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    justifyContent: 'flex-start',
+                    justifyContent: 'flex-end',
                     zIndex: 20,
                     background: 'transparent',
                     backgroundColor: 'transparent',
@@ -460,49 +454,39 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                     overflow: 'hidden'
                 }}
             >
-                {/* Soft Ambient Contrast Backing to make subjects pop over bright streams */}
-                <div style={{
-                    position: 'absolute',
-                    top: '10%',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '90vw',
-                    maxWidth: '600px',
-                    height: '70%',
-                    background: 'radial-gradient(circle at 50% 35%, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.12) 55%, transparent 75%)',
-                    borderRadius: '50%',
-                    pointerEvents: 'none',
-                    zIndex: 1
-                }} />
-
-                {!videoFailed ? (
-                    <video
-                        ref={videoRef}
-                        key={currentSrc}
+                {isLottieGift ? (
+                    /* 100% Transparent Vector Lottie Animation for Flowers */
+                    <div style={{
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        justifyContent: 'center',
+                        pointerEvents: 'none'
+                    }}>
+                        <Lottie
+                            animationData={lottieData}
+                            loop={false}
+                            autoplay={true}
+                            onComplete={handleVideoEnded}
+                            style={{
+                                width: '100%',
+                                maxHeight: '100%',
+                                objectFit: 'contain'
+                            }}
+                        />
+                    </div>
+                ) : !videoFailed ? (
+                    /* Hardware-Accelerated WebGL Luma-Key Transparent Video for 3D Gifts */
+                    <TransparentVideoCanvas
                         src={currentSrc}
-                        autoPlay
-                        muted
-                        playsInline
-                        preload="auto"
                         onCanPlay={handleCanPlay}
-                        onLoadedData={handleCanPlay}
                         onEnded={handleVideoEnded}
                         onError={handleVideoError}
                         style={{
                             width: '100%',
                             height: '100%',
-                            maxWidth: '100vw',
-                            maxHeight: '100%',
-                            objectFit: 'contain',
-                            objectPosition: 'top center',
-                            pointerEvents: 'none',
-                            background: 'transparent',
-                            backgroundColor: 'transparent',
-                            border: 'none',
-                            outline: 'none',
-                            mixBlendMode: 'screen',
-                            filter: 'contrast(1.12) brightness(1.06)',
-                            zIndex: 2
+                            maxHeight: '100%'
                         }}
                     />
                 ) : (
@@ -510,7 +494,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                     <div style={{
                         fontSize: '140px',
                         filter: 'drop-shadow(0 0 35px rgba(245, 158, 11, 0.75))',
-                        marginTop: '40px',
+                        marginBottom: '40px',
                         zIndex: 2
                     }}>
                         {giftEmoji}
