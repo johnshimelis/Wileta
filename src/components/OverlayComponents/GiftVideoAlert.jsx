@@ -127,12 +127,6 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
     const amount = alert?.amount || '1';
     const currency = alert?.currency || 'ETB';
 
-    // Check if this gift has a dedicated transparent Lottie vector animation
-    const isAdey = giftKey.includes('adey') || giftKey.includes('flower') || giftKey.includes('አደይ');
-    const isRose = giftKey.includes('rose') || giftKey.includes('ጽጌረዳ');
-    const isLottieGift = isAdey || isRose;
-    const lottieData = isRose ? highlandRoseJson : adeyFlowerJson;
-
     // Prioritize relative path for instant local caching, then canonical fallbacks
     const cleanPath = rawVideoSrc.startsWith('/') ? rawVideoSrc : `/${rawVideoSrc}`;
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
@@ -479,36 +473,14 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                     overflow: 'hidden'
                 }}
             >
-                {isLottieGift ? (
-                    /* 100% Transparent Vector Lottie Animation for Flowers */
-                    <div style={{
-                        width: '100%',
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'flex-end',
-                        justifyContent: 'center',
-                        pointerEvents: 'none'
-                    }}>
-                        <Lottie
-                            animationData={lottieData}
-                            loop={false}
-                            autoplay={true}
-                            onComplete={handleVideoEnded}
-                            style={{
-                                width: '100%',
-                                maxHeight: '100%',
-                                objectFit: 'contain'
-                            }}
-                        />
-                    </div>
-                ) : !videoFailed ? (
-                    /* Hardware-Accelerated WebGL Luma-Key Transparent Video for 3D Gifts */
+                {!videoFailed ? (
+                    /* Hardware-Accelerated Transparent Video from Assets */
                     <TransparentVideoCanvas
                         src={currentSrc}
                         onCanPlay={handleCanPlay}
                         onEnded={handleVideoEnded}
                         onError={handleVideoError}
-                        objectFit="cover"
+                        objectFit="contain"
                         style={{
                             width: '100%',
                             height: '100%',
