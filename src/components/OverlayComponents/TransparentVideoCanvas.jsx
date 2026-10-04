@@ -19,7 +19,8 @@ export default function TransparentVideoCanvas({
     onEnded,
     onError,
     style = {},
-    className = ''
+    className = '',
+    objectFit = 'cover'
 }) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
@@ -250,7 +251,7 @@ export default function TransparentVideoCanvas({
                     height: '100%',
                     maxWidth: '100vw',
                     maxHeight: '100%',
-                    objectFit: 'contain',
+                    objectFit,
                     objectPosition: 'bottom center',
                     pointerEvents: 'none',
                     background: 'transparent',

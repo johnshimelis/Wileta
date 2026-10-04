@@ -266,7 +266,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 transition={{ duration: 1.2, ease: 'easeOut', repeat: Infinity, repeatDelay: 1.8 }}
                 style={{
                     position: 'absolute',
-                    bottom: 'calc(65vh - 35px)',
+                    bottom: 'calc(72vh - 35px)',
                     left: '50%',
                     transform: 'translateX(-50%)',
                     width: '320px',
@@ -279,7 +279,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 }}
             />
 
-            {/* Layer 2: Broadcast Pill Capsule (Anchored directly above the bottom video) */}
+            {/* Layer 2: Broadcast Pill Capsule (Anchored directly above the bottom animation) */}
             <motion.div
                 initial={{ opacity: 0, y: -25, scale: 0.90 }}
                 animate={{ 
@@ -291,7 +291,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 transition={{ type: 'spring', damping: 22, stiffness: 320, duration: 0.4 }}
                 style={{
                     position: 'absolute',
-                    bottom: 'calc(65vh - 20px)',
+                    bottom: 'calc(72vh - 20px)',
                     left: '50%',
                     transform: 'translateX(-50%)',
                     zIndex: 50,
@@ -373,14 +373,40 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 </div>
             </motion.div>
 
-            {/* Layer 3: Creative Golden Sparkle Particles cascading around bottom video */}
+            {/* Layer 2.5: Volumetric Radiant Golden Light Pillar (Matching Image 3) */}
+            <motion.div
+                initial={{ opacity: 0, scaleY: 0 }}
+                animate={{
+                    opacity: (isVideoReady && !isExiting) ? [0.40, 0.70, 0.40] : 0,
+                    scaleY: (isVideoReady && !isExiting) ? 1 : 0
+                }}
+                transition={{
+                    opacity: { duration: 2.4, repeat: Infinity, ease: 'easeInOut' },
+                    scaleY: { duration: 0.5, ease: 'easeOut' }
+                }}
+                style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    transformOrigin: 'bottom center',
+                    width: '340px',
+                    height: '72vh',
+                    background: 'linear-gradient(to top, rgba(245, 158, 11, 0.40) 0%, rgba(251, 191, 36, 0.22) 50%, rgba(245, 158, 11, 0.0) 100%)',
+                    filter: 'blur(22px)',
+                    pointerEvents: 'none',
+                    zIndex: 18
+                }}
+            />
+
+            {/* Layer 3: Creative Golden Sparkle Particles cascading upward toward alert pill */}
             {isVideoReady && !isExiting && (
                 <div style={{
                     position: 'absolute',
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    height: '65vh',
+                    height: '72vh',
                     pointerEvents: 'none',
                     zIndex: 25,
                     overflow: 'hidden'
@@ -388,15 +414,15 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                     {sparkles.map((sp) => (
                         <motion.div
                             key={sp.id}
-                            initial={{ opacity: 0, scale: 0.5, y: -10 }}
+                            initial={{ opacity: 0, scale: 0.5, y: 150 }}
                             animate={{
-                                opacity: [0, 0.9, 0],
-                                scale: [0.6, 1.2, 0.8],
-                                y: [0, 220],
-                                rotate: [0, 180]
+                                opacity: [0, 0.95, 0],
+                                scale: [0.6, 1.3, 0.8],
+                                y: [150, -280],
+                                rotate: [0, 240]
                             }}
                             transition={{
-                                duration: 2.2,
+                                duration: 2.5,
                                 delay: sp.delay,
                                 repeat: Infinity,
                                 ease: 'easeOut'
@@ -404,10 +430,10 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                             style={{
                                 position: 'absolute',
                                 left: sp.left,
-                                top: sp.top,
+                                bottom: sp.top,
                                 color: '#FDE047',
                                 fontSize: `${sp.size}px`,
-                                textShadow: '0 0 10px rgba(253, 224, 71, 0.8)',
+                                textShadow: '0 0 12px rgba(253, 224, 71, 0.9)',
                                 pointerEvents: 'none'
                             }}
                         >
@@ -417,7 +443,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 </div>
             )}
 
-            {/* Layer 4: Transparent Bottom-Anchored Animation Container matching Image 2 & 3 */}
+            {/* Layer 4: Transparent Bottom-Anchored Animation Container matching Image 2, 3 & 4 */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.92, y: 25 }}
                 animate={{ 
@@ -438,8 +464,8 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                     left: 0,
                     right: 0,
                     width: '100vw',
-                    height: '65vh',
-                    maxHeight: '65vh',
+                    height: '72vh',
+                    maxHeight: '72vh',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -483,6 +509,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                         onCanPlay={handleCanPlay}
                         onEnded={handleVideoEnded}
                         onError={handleVideoError}
+                        objectFit="cover"
                         style={{
                             width: '100%',
                             height: '100%',
