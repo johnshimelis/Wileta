@@ -266,20 +266,20 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 transition={{ duration: 1.2, ease: 'easeOut', repeat: Infinity, repeatDelay: 1.8 }}
                 style={{
                     position: 'absolute',
-                    bottom: 'calc(72vh - 35px)',
+                    top: '12vh',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    width: '320px',
-                    height: '70px',
+                    width: '340px',
+                    height: '76px',
                     borderRadius: '9999px',
                     border: '2px solid rgba(245, 158, 11, 0.7)',
                     boxShadow: '0 0 30px rgba(245, 158, 11, 0.5)',
                     pointerEvents: 'none',
-                    zIndex: 25
+                    zIndex: 90
                 }}
             />
 
-            {/* Layer 2: Broadcast Pill Capsule (Anchored directly above the bottom animation) */}
+            {/* Layer 2: Broadcast Pill Capsule (Strictly ON TOP, above the video) */}
             <motion.div
                 initial={{ opacity: 0, y: -25, scale: 0.90 }}
                 animate={{ 
@@ -291,15 +291,15 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 transition={{ type: 'spring', damping: 22, stiffness: 320, duration: 0.4 }}
                 style={{
                     position: 'absolute',
-                    bottom: 'calc(72vh - 20px)',
+                    top: '14vh',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    zIndex: 50,
+                    zIndex: 100, // Guaranteed on top of video animation
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
                     padding: '8px 18px',
-                    background: 'rgba(15, 23, 42, 0.90)',
+                    background: 'rgba(15, 23, 42, 0.92)',
                     backdropFilter: 'blur(16px)',
                     WebkitBackdropFilter: 'blur(16px)',
                     borderRadius: '9999px',
@@ -373,7 +373,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 </div>
             </motion.div>
 
-            {/* Layer 2.5: Volumetric Radiant Golden Light Pillar (Matching Image 3) */}
+            {/* Layer 2.5: Volumetric Radiant Golden Light Pillar */}
             <motion.div
                 initial={{ opacity: 0, scaleY: 0 }}
                 animate={{
@@ -386,16 +386,16 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 }}
                 style={{
                     position: 'absolute',
+                    top: '20vh',
                     bottom: 0,
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    transformOrigin: 'bottom center',
+                    transformOrigin: 'top center',
                     width: '340px',
-                    height: '72vh',
-                    background: 'linear-gradient(to top, rgba(245, 158, 11, 0.40) 0%, rgba(251, 191, 36, 0.22) 50%, rgba(245, 158, 11, 0.0) 100%)',
+                    background: 'linear-gradient(to bottom, rgba(245, 158, 11, 0.45) 0%, rgba(251, 191, 36, 0.22) 45%, rgba(245, 158, 11, 0.0) 100%)',
                     filter: 'blur(22px)',
                     pointerEvents: 'none',
-                    zIndex: 18
+                    zIndex: 20
                 }}
             />
 
@@ -403,12 +403,12 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
             {isVideoReady && !isExiting && (
                 <div style={{
                     position: 'absolute',
+                    top: '20vh',
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    height: '72vh',
                     pointerEvents: 'none',
-                    zIndex: 25,
+                    zIndex: 30,
                     overflow: 'hidden'
                 }}>
                     {sparkles.map((sp) => (
@@ -443,7 +443,7 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 </div>
             )}
 
-            {/* Layer 4: Transparent Bottom-Anchored Animation Container matching Image 2, 3 & 4 */}
+            {/* Layer 4: Transparent Animation Container (Positioned UNDER Alert Pill down to bottom) */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.92, y: 25 }}
                 animate={{ 
@@ -455,22 +455,21 @@ export default function GiftVideoAlert({ alert, giftInfo, onComplete, isExiting 
                 transition={{ 
                     type: 'spring', 
                     damping: 24, 
-                    stiffness: 280,
+                    stiffness: 280, 
                     duration: 0.45 
                 }}
                 style={{
                     position: 'absolute',
+                    top: '22vh',
                     bottom: 0,
                     left: 0,
                     right: 0,
                     width: '100vw',
-                    height: '72vh',
-                    maxHeight: '72vh',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'flex-end',
-                    zIndex: 20,
+                    zIndex: 40, // Under the alert pill (which is zIndex: 100)
                     background: 'transparent',
                     backgroundColor: 'transparent',
                     border: 'none',

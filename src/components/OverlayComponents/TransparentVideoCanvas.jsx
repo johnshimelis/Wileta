@@ -2,16 +2,12 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 /**
  * TransparentVideoCanvas
- * High-performance WebGL-based hardware-accelerated Luma-Key video renderer for OBS Studio & TikTok LIVE Studio.
+ * High-performance WebGL & SVG-filter hardware-accelerated Luma-Key video renderer for OBS Studio & TikTok LIVE Studio.
  * 
- * Why this is needed:
- * Standard MP4 video has no alpha channel. In OBS Studio and TikTok LIVE Studio browser sources,
- * the page backdrop is transparent. CSS mix-blend-mode: screen fails to create true alpha against a transparent backdrop,
- * causing dark MP4 pixels to stay opaque black and hide the streamer.
- * 
- * This component runs a WebGL fragment shader on each frame that converts dark pixels (Y <= 24)
- * to 100% transparent alpha (A = 0.0) while preserving bright, vivid gift visuals (A = 1.0).
- * OBS Studio & TikTok LIVE Studio receive genuine transparent alpha frames!
+ * Guarantees 100% transparent video playback in all environments:
+ * 1. Hardware WebGL fragment shader: Smooth luma-keying with bold color boost (alpha = 1.0 for subject, 0.0 for black bg).
+ * 2. GPU SVG feColorMatrix fallback: Directly applied to HTML5 video element if CEF/TikTok LIVE Studio disables WebGL.
+ * 3. Cross-origin anonymous & programmatic .play() calls: Prevents CEF autoplay blocking and tainted canvas security errors.
  */
 export default function TransparentVideoCanvas({
     src,
@@ -20,11 +16,12 @@ export default function TransparentVideoCanvas({
     onError,
     style = {},
     className = '',
-    objectFit = 'cover'
+    objectFit = 'contain'
 }) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const animFrameRef = useRef(null);
+    const [isCanvasActive, setIsCanvasActive] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
     // Initialize WebGL context and shaders
@@ -33,20 +30,19 @@ export default function TransparentVideoCanvas({
         const canvas = canvasRef.current;
         if (!video || !canvas) return;
 
-        let gl = canvas.getContext('webgl', {
-            alpha: true,
-            premultipliedAlpha: false,
-            preserveDrawingBuffer: false,
-            antialias: true
-        });
-
-        let use2dFallback = false;
-        let ctx2d = null;
-
-        if (!gl) {
-            console.warn('[TransparentVideoCanvas] WebGL not supported, falling back to 2D Canvas context');
-            use2dFallback = true;
-            ctx2d = canvas.getContext('2d', { willReadFrequently: true });
+        let gl = null;
+        try {
+            gl = canvas.getContext('webgl', {
+                alpha: true,
+                premultipliedAlpha: false,
+                preserveDrawingBuffer: false,
+                antialias: true
+            }) || canvas.getContext('experimental-webgl', {
+                alpha: true,
+                premultipliedAlpha: false
+            });
+        } catch (e) {
+            console.warn('[TransparentVideoCanvas] WebGL context creation failed, using SVG filter video fallback:', e);
         }
 
         let program = null;
@@ -72,13 +68,13 @@ export default function TransparentVideoCanvas({
                     // Standard Rec. 601 Luminance
                     float luma = dot(color.rgb, vec3(0.299, 0.587, 0.114));
                     
-                    // High-gain luma keying matching Flutter color filter:
-                    // Pure black compression noise (luma < 0.09) is completely transparent (alpha = 0.0)
-                    // Subject / colorful details (luma > 0.20) are fully solid & vivid (alpha = 1.0)
-                    float alpha = smoothstep(0.09, 0.22, luma);
+                    // High-gain luma keying:
+                    // Dark background (luma < 0.05) is completely transparent (alpha = 0.0)
+                    // Gift subject (luma >= 0.12) is 100% solid & bold (alpha = 1.0)
+                    float alpha = smoothstep(0.05, 0.12, luma);
                     
-                    // Slight vibrancy boost so gift pops majestically over live stream
-                    vec3 rgb = color.rgb * 1.10;
+                    // Vibrancy and boldness boost: colors pop majestically over live stream
+                    vec3 rgb = color.rgb * 1.22;
                     gl_FragColor = vec4(rgb, alpha);
                 }
             `;
@@ -88,7 +84,7 @@ export default function TransparentVideoCanvas({
                 gl.shaderSource(shader, source);
                 gl.compileShader(shader);
                 if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                    console.error('[TransparentVideoCanvas] Shader error:', gl.getShaderInfoLog(shader));
+                    console.error('[TransparentVideoCanvas] Shader compile error:', gl.getShaderInfoLog(shader));
                     gl.deleteShader(shader);
                     return null;
                 }
@@ -107,8 +103,6 @@ export default function TransparentVideoCanvas({
                 if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
                     console.error('[TransparentVideoCanvas] Program link error:', gl.getProgramInfoLog(program));
                     gl = null;
-                    use2dFallback = true;
-                    ctx2d = canvas.getContext('2d', { willReadFrequently: true });
                 } else {
                     gl.useProgram(program);
 
@@ -163,6 +157,8 @@ export default function TransparentVideoCanvas({
             }
         }
 
+        let firstFrameDrawn = false;
+
         // Render Loop
         const renderFrame = () => {
             if (video && !video.paused && !video.ended && video.readyState >= 2) {
@@ -176,27 +172,22 @@ export default function TransparentVideoCanvas({
                 }
 
                 if (gl && program && texture) {
-                    gl.activeTexture(gl.TEXTURE0);
-                    gl.bindTexture(gl.TEXTURE_2D, texture);
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
-                    gl.clearColor(0.0, 0.0, 0.0, 0.0);
-                    gl.clear(gl.COLOR_BUFFER_BIT);
-                    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-                } else if (use2dFallback && ctx2d) {
-                    ctx2d.clearRect(0, 0, vw, vh);
-                    ctx2d.drawImage(video, 0, 0, vw, vh);
-                    const imgData = ctx2d.getImageData(0, 0, vw, vh);
-                    const data = imgData.data;
-                    const len = data.length;
-                    for (let i = 0; i < len; i += 4) {
-                        const luma = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-                        if (luma < 24) {
-                            data[i + 3] = 0;
-                        } else if (luma < 50) {
-                            data[i + 3] = Math.round(((luma - 24) / 26) * 255);
+                    try {
+                        gl.activeTexture(gl.TEXTURE0);
+                        gl.bindTexture(gl.TEXTURE_2D, texture);
+                        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+                        gl.clearColor(0.0, 0.0, 0.0, 0.0);
+                        gl.clear(gl.COLOR_BUFFER_BIT);
+                        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+                        if (!firstFrameDrawn) {
+                            firstFrameDrawn = true;
+                            setIsCanvasActive(true);
                         }
+                    } catch (texErr) {
+                        console.warn('[TransparentVideoCanvas] texImage2D error, falling back to SVG filtered video:', texErr);
+                        setIsCanvasActive(false);
                     }
-                    ctx2d.putImageData(imgData, 0, 0);
                 }
             }
             animFrameRef.current = requestAnimationFrame(renderFrame);
@@ -212,19 +203,90 @@ export default function TransparentVideoCanvas({
                 gl.deleteTexture(texture);
             }
         };
-    }, []);
+    }, [src]);
+
+    // Force reliable programmatic playback on mount or source change
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        video.crossOrigin = 'anonymous';
+        video.muted = true;
+
+        const attemptPlay = async () => {
+            try {
+                video.currentTime = 0;
+                await video.play();
+                console.log('[TransparentVideoCanvas] Video playback started successfully.');
+            } catch (err) {
+                console.warn('[TransparentVideoCanvas] Programmatic video.play() error (retrying on ready):', err);
+                const onReady = async () => {
+                    try {
+                        await video.play();
+                    } catch (_) {}
+                    video.removeEventListener('canplay', onReady);
+                };
+                video.addEventListener('canplay', onReady);
+            }
+        };
+
+        attemptPlay();
+    }, [src]);
 
     const handleCanPlay = useCallback((e) => {
         setIsLoaded(true);
+        const video = videoRef.current;
+        if (video && video.paused) {
+            video.play().catch(() => {});
+        }
         if (onCanPlay) onCanPlay(e);
     }, [onCanPlay]);
 
     return (
-        <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', ...style }} className={className}>
-            {/* Hidden source video element */}
+        <div 
+            style={{ 
+                position: 'relative', 
+                width: '100%', 
+                height: '100%', 
+                display: 'flex', 
+                alignItems: 'flex-end', 
+                justifyContent: 'center', 
+                ...style 
+            }} 
+            className={className}
+        >
+            {/* Inline SVG Luma-Key Filter for direct hardware GPU composite */}
+            <svg 
+                width="0" 
+                height="0" 
+                style={{ 
+                    position: 'absolute', 
+                    pointerEvents: 'none', 
+                    width: 0, 
+                    height: 0, 
+                    overflow: 'hidden' 
+                }}
+            >
+                <defs>
+                    <filter id="gursha-luma-key" colorInterpolationFilters="sRGB">
+                        <feColorMatrix
+                            type="matrix"
+                            values="
+                                1.22 0    0    0 0
+                                0    1.22 0    0 0
+                                0    0    1.22 0 0
+                                3.88 7.63 1.48 0 -65
+                            "
+                        />
+                    </filter>
+                </defs>
+            </svg>
+
+            {/* Video element: plays directly with SVG filter if WebGL is disabled in CEF */}
             <video
                 ref={videoRef}
                 src={src}
+                crossOrigin="anonymous"
                 autoPlay
                 muted
                 playsInline
@@ -235,18 +297,9 @@ export default function TransparentVideoCanvas({
                 onError={onError}
                 style={{
                     position: 'absolute',
-                    width: '1px',
-                    height: '1px',
-                    opacity: 0,
-                    pointerEvents: 'none',
-                    zIndex: -1
-                }}
-            />
-
-            {/* Hardware-accelerated transparent canvas */}
-            <canvas
-                ref={canvasRef}
-                style={{
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
                     width: '100%',
                     height: '100%',
                     maxWidth: '100vw',
@@ -256,7 +309,31 @@ export default function TransparentVideoCanvas({
                     pointerEvents: 'none',
                     background: 'transparent',
                     backgroundColor: 'transparent',
-                    display: 'block'
+                    filter: 'url(#gursha-luma-key)',
+                    display: isCanvasActive ? 'none' : 'block',
+                    zIndex: 1
+                }}
+            />
+
+            {/* Hardware-accelerated transparent WebGL canvas */}
+            <canvas
+                ref={canvasRef}
+                style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    width: '100%',
+                    height: '100%',
+                    maxWidth: '100vw',
+                    maxHeight: '100%',
+                    objectFit,
+                    objectPosition: 'bottom center',
+                    pointerEvents: 'none',
+                    background: 'transparent',
+                    backgroundColor: 'transparent',
+                    display: isCanvasActive ? 'block' : 'none',
+                    zIndex: 2
                 }}
             />
         </div>
