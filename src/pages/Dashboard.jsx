@@ -911,7 +911,7 @@ const WithdrawModal = ({
                                 style={{ width: '100%', justifyContent: 'center', fontWeight: 800, whiteSpace: 'normal', padding: '0.75rem 1rem' }}
                                 onClick={handleConfirmClick}
                             >
-                                {t('confirmPayout') || 'Confirm Payout'}
+                                {t('confirmWithdrawal') || 'Confirm Withdrawal'}
                             </Button>
                             <Button
                                 variant="secondary"

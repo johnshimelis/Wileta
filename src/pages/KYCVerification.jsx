@@ -148,25 +148,13 @@ export default function KYCVerification() {
                             position: 'relative',
                             overflow: 'hidden'
                         }}>
-                            {/* Decorative ambient corner glow */}
-                            <div style={{
-                                position: 'absolute',
-                                top: '-60px',
-                                right: '-60px',
-                                width: '200px',
-                                height: '200px',
-                                borderRadius: '50%',
-                                background: 'radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%)',
-                                pointerEvents: 'none'
-                            }} />
-
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.85rem' }}>
                                 <Badge variant="warning" size="md">
                                     <Lock size={12} style={{ marginRight: '4px' }} />
                                     Mobile App Required
                                 </Badge>
                                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                                    Compliance Directive No. GP-2026/NBE
+                                    National Bank of Ethiopia FinTech Standard
                                 </span>
                             </div>
 
@@ -175,7 +163,7 @@ export default function KYCVerification() {
                             </h2>
 
                             <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', lineHeight: 1.6, marginBottom: '2rem' }}>
-                                Under National Bank of Ethiopia fintech compliance requirements, biometric face match and Fayda ID verification must be captured live using the on-device biometric security scanner in the <strong>GurshaPay Mobile App</strong>.
+                                To comply with national identity verification requirements, biometric verification and Fayda ID verification must be performed live through the camera in the <strong>GurshaPay Mobile App</strong>.
                             </p>
 
                             {/* Two Column Interactive Center: QR Code + Steps */}
@@ -231,7 +219,7 @@ export default function KYCVerification() {
                                         </div>
                                         <div>
                                             <div style={{ fontSize: '0.875rem', fontWeight: 800, color: 'var(--text-main)' }}>Scan Fayda ID & Live Selfie</div>
-                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Takes less than 60 seconds with on-device AI liveness.</div>
+                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Quick and secure camera verification in under 60 seconds.</div>
                                         </div>
                                     </div>
 
@@ -303,7 +291,7 @@ export default function KYCVerification() {
                                         Current Verification Status:
                                     </span>
                                     <span style={{ marginLeft: '0.5rem', fontSize: '0.85rem', fontWeight: 800, color: user?.kycStatus === 'pending' ? 'var(--info)' : '#D97706' }}>
-                                        {user?.kycStatus === 'pending' ? 'Verification In Review ⏳' : 'Not Verified (Action Required) 🔒'}
+                                        {user?.kycStatus === 'pending' ? 'Verification In Review' : 'Action Required (Unverified)'}
                                     </span>
                                 </div>
                             </div>

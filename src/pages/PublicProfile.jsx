@@ -1146,7 +1146,7 @@ export default function PublicProfile() {
                                     <>
                                         <span className="clean-send-icon">{isCustom ? '🪙' : (selectedGift?.emoji || '☕')}</span>
                                         <span key={`${isCustom ? customAmount : amount}-${selectedGift?.id}`} className="send-btn-amount-pulse">
-                                            {t('sendTipWithAmount')} {isCustom ? `${Number(customAmount || 0).toLocaleString()} ${language === 'am' ? 'ብር' : 'ETB'}` : `${(language === 'am' ? selectedGift?.nameAm : selectedGift?.nameEn) || 'Gursha'} (${Number(amount || 0).toLocaleString()} ${language === 'am' ? 'ብር' : 'ETB'})`}
+                                            {t('sendTip')} • {!isCustom && selectedGift ? `${language === 'am' ? selectedGift.nameAm : selectedGift.nameEn} (` : ''}{Number(currentEtb || 0).toLocaleString()} {language === 'am' ? 'ብር' : 'ETB'}{!isCustom && selectedGift ? ')' : ''}
                                         </span>
                                     </>
                                 )}

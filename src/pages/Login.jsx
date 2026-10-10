@@ -38,23 +38,6 @@ export default function Login() {
     const [resetLoading, setResetLoading] = useState(false);
     const [resetDeliveredChannels, setResetDeliveredChannels] = useState([]);
 
-    // Interactive Right-side Showcase state
-    const demoSupporters = [
-        { name: 'Natnael Tadesse', role: 'Tech YouTuber Supporter', amount: '250', time: '10s ago', note: 'Loved your latest video! Gursha on me ☕' },
-        { name: 'Bethlehem Assefa', role: 'Live Podcast Listener', amount: '500', time: '1m ago', note: 'Keep inspiring our community with great stories ❤️' },
-        { name: 'Dawit Getachew', role: 'Gaming Stream Fan', amount: '100', time: '3m ago', note: 'Insane clutch in the tournament bro! 🚀' }
-    ];
-    const [activeDemoIdx, setActiveDemoIdx] = useState(0);
-    const activeDemo = demoSupporters[activeDemoIdx];
-
-    // Smooth auto-rotation for live supporter showcase
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setActiveDemoIdx(prev => (prev + 1) % demoSupporters.length);
-        }, 4500);
-        return () => clearInterval(timer);
-    }, [demoSupporters.length]);
-
     const { login, api, setUser } = useAuth();
     const { t } = useLanguage();
     const navigate = useNavigate();
@@ -831,158 +814,129 @@ export default function Login() {
                 <ComplianceBadge />
             </div>
 
-            {/* Right Column: Centered Rich Interactive Showcase (Desktop Only) */}
+            {/* Right Column: Clean Institutional Ethiopian Fintech Showcase (Desktop Only) */}
             <div className="desktop-only" style={{
                 flex: 1.15,
-                background: 'linear-gradient(145deg, #064E3B 0%, #047857 50%, #059669 100%)',
+                background: '#064E3B',
                 color: '#FFFFFF',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                padding: '3rem 2.5rem',
-                position: 'relative',
-                overflow: 'hidden'
+                padding: '3rem 2.75rem',
+                position: 'relative'
             }}>
-                <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundImage: 'radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)',
-                    backgroundSize: '24px 24px',
-                    pointerEvents: 'none'
-                }}></div>
-
-                <div style={{ maxWidth: '460px', width: '100%', position: 'relative', zIndex: 2 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-                        <span style={{ background: 'rgba(255,255,255,0.18)', color: '#FFFFFF', padding: '0.3rem 0.75rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 700, border: '1px solid rgba(255,255,255,0.3)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-                            <Sparkles size={14} color="#FBBF24" /> Ethiopian Creator Economy <EthiopianFlag width={18} height={12} style={{ marginLeft: '4px' }} />
-                        </span>
+                <div style={{ maxWidth: '460px', width: '100%', display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+                    {/* Ethiopian Creator Badge */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <span style={{
-                            background: 'rgba(16, 185, 129, 0.25)',
-                            border: '1px solid rgba(52, 211, 153, 0.4)',
-                            color: '#A7F3D0',
-                            padding: '0.25rem 0.75rem',
+                            background: 'rgba(255, 255, 255, 0.12)',
+                            color: '#FFFFFF',
+                            padding: '0.35rem 0.85rem',
                             borderRadius: '9999px',
-                            fontSize: '0.75rem',
+                            fontSize: '0.8rem',
                             fontWeight: 700,
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '0.45rem'
+                            gap: '0.5rem'
                         }}>
-                            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#34D399', boxShadow: '0 0 8px #34D399' }} />
-                            Live Feed
+                            <EthiopianFlag width={18} height={12} />
+                            <span>Ethiopian Creator Platform</span>
                         </span>
                     </div>
 
-                    <h2 style={{ fontSize: '2.15rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.2, marginBottom: '0.85rem', letterSpacing: '-0.025em' }}>
-                        Receive Direct Support. Grow Your Passion.
-                    </h2>
-                    
-                    <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.88)', lineHeight: 1.55, marginBottom: '1.5rem' }}>
-                        Empowering 5,000+ Ethiopian YouTubers, Streamers, and Podcasters with instant Telebirr & Multi-Bank direct payouts.
-                    </p>
-
-                    {/* Interactive Creator Switcher Tabs */}
-                    <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '1rem' }}>
-                        {demoSupporters.map((d, i) => (
-                            <button
-                                key={d.name}
-                                type="button"
-                                onClick={() => setActiveDemoIdx(i)}
-                                style={{
-                                    flex: 1,
-                                    padding: '0.45rem 0.5rem',
-                                    borderRadius: '6px',
-                                    border: activeDemoIdx === i ? '2px solid #FFFFFF' : '1px solid rgba(255,255,255,0.2)',
-                                    background: activeDemoIdx === i ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.15)',
-                                    color: '#FFFFFF',
-                                    fontSize: '0.75rem',
-                                    fontWeight: activeDemoIdx === i ? 800 : 600,
-                                    cursor: 'pointer',
-                                    transition: 'all 0.15s ease'
-                                }}
-                            >
-                                {d.name.split(' ')[0]}
-                            </button>
-                        ))}
+                    {/* Headline & Mission */}
+                    <div>
+                        <h2 style={{ fontSize: '2.1rem', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.25, letterSpacing: '-0.025em', marginBottom: '0.75rem' }}>
+                            Direct tips and instant payouts for Ethiopian creators.
+                        </h2>
+                        <p style={{ fontSize: '0.95rem', color: 'rgba(255, 255, 255, 0.82)', lineHeight: 1.55 }}>
+                            Receive tips directly from supporters via Telebirr and local Ethiopian banks. Transparent, reliable, and built specifically for your creative journey.
+                        </p>
                     </div>
 
-                    {/* Interactive Live Tipping Receipt Card */}
+                    {/* 3 Core Value Points */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '0.85rem',
+                            padding: '0.9rem 1rem',
+                            background: 'rgba(255, 255, 255, 0.06)',
+                            borderRadius: '10px',
+                            border: '1px solid rgba(255, 255, 255, 0.1)'
+                        }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.2)', color: '#34D399', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                                <Zap size={18} />
+                            </div>
+                            <div>
+                                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '0.2rem' }}>Instant Telebirr Settlements</div>
+                                <div style={{ fontSize: '0.825rem', color: 'rgba(255, 255, 255, 0.72)', lineHeight: 1.45 }}>Fans tip seamlessly via USSD PIN push. Withdraw directly into your mobile wallet in seconds.</div>
+                            </div>
+                        </div>
+
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '0.85rem',
+                            padding: '0.9rem 1rem',
+                            background: 'rgba(255, 255, 255, 0.06)',
+                            borderRadius: '10px',
+                            border: '1px solid rgba(255, 255, 255, 0.1)'
+                        }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.2)', color: '#60A5FA', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                                <ShieldCheck size={18} />
+                            </div>
+                            <div>
+                                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '0.2rem' }}>Commercial Bank Transfers</div>
+                                <div style={{ fontSize: '0.825rem', color: 'rgba(255, 255, 255, 0.72)', lineHeight: 1.45 }}>Support for CBE, Awash, Dashen, and Bank of Abyssinia with automated reconciliation.</div>
+                            </div>
+                        </div>
+
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '0.85rem',
+                            padding: '0.9rem 1rem',
+                            background: 'rgba(255, 255, 255, 0.06)',
+                            borderRadius: '10px',
+                            border: '1px solid rgba(255, 255, 255, 0.1)'
+                        }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(245, 158, 11, 0.2)', color: '#FBBF24', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                                <KeyRound size={18} />
+                            </div>
+                            <div>
+                                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '0.2rem' }}>Verified Creator Identity</div>
+                                <div style={{ fontSize: '0.825rem', color: 'rgba(255, 255, 255, 0.72)', lineHeight: 1.45 }}>Fayda National ID verification ensuring compliance and protecting your earnings.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Supported Ethiopian Payment Networks */}
                     <div style={{
-                        background: 'rgba(255, 255, 255, 0.12)',
-                        backdropFilter: 'blur(16px)',
-                        border: '1px solid rgba(255, 255, 255, 0.25)',
-                        borderRadius: '12px',
-                        padding: '1.25rem',
-                        marginBottom: '1.5rem',
-                        boxShadow: '0 12px 30px rgba(0,0,0,0.2)'
+                        paddingTop: '1rem',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.12)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem'
                     }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                                <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#FFFFFF', color: '#064E3B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '0.95rem', boxShadow: '0 2px 6px rgba(0,0,0,0.15)' }}>
-                                    {activeDemo.name.charAt(0)}
-                                </div>
-                                <div>
-                                    <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>{activeDemo.name}</div>
-                                    <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.8)' }}>{activeDemo.role} • {activeDemo.time}</div>
-                                </div>
-                            </div>
-                            <span style={{ background: '#10B981', color: '#FFFFFF', fontWeight: 900, fontSize: '0.9rem', padding: '0.3rem 0.75rem', borderRadius: '6px', boxShadow: '0 2px 6px rgba(0,0,0,0.15)' }}>
-                                + {activeDemo.amount} ETB ☕
-                            </span>
+                        <div style={{ fontSize: '0.725rem', fontWeight: 700, color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                            Supported Payment Networks
                         </div>
-
-                        <div style={{ background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem 0.85rem', borderRadius: '8px', fontSize: '0.85rem', color: '#FFFFFF', fontStyle: 'italic', marginBottom: '0.85rem', borderLeft: '3px solid #34D399' }}>
-                            "{activeDemo.note}"
-                        </div>
-
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: '#A7F3D0' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                                <CheckCircle size={14} color="#34D399" />
-                                <span>Verified Telebirr Instant Settlement</span>
-                            </div>
-                            <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.72rem', fontWeight: 600 }}>
-                                0% Platform Fee
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Live Stats Row */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginBottom: '1.25rem' }}>
-                        <div style={{ background: 'rgba(255,255,255,0.08)', padding: '0.65rem 0.5rem', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.15)' }}>
-                            <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#FFFFFF' }}>5,000+</div>
-                            <div style={{ fontSize: '0.675rem', color: 'rgba(255,255,255,0.8)' }}>Active Creators</div>
-                        </div>
-                        <div style={{ background: 'rgba(255,255,255,0.08)', padding: '0.65rem 0.5rem', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.15)' }}>
-                            <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#34D399' }}>99.9%</div>
-                            <div style={{ fontSize: '0.675rem', color: 'rgba(255,255,255,0.8)' }}>Telebirr Uptime</div>
-                        </div>
-                        <div style={{ background: 'rgba(255,255,255,0.08)', padding: '0.65rem 0.5rem', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.15)' }}>
-                            <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#FBBF24' }}>&lt; 10s</div>
-                            <div style={{ fontSize: '0.675rem', color: 'rgba(255,255,255,0.8)' }}>Instant Payouts</div>
-                        </div>
-                    </div>
-
-                    {/* Trust Rails */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', paddingTop: '0.85rem', borderTop: '1px solid rgba(255,255,255,0.18)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={14} color="#34D399" />
-                            <span>Instant Telebirr Payouts</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={14} color="#34D399" />
-                            <span>CBE, Abyssinia & Awash</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={14} color="#34D399" />
-                            <span>1080p OBS Alert Overlays</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#FFFFFF' }}>
-                            <CheckCircle size={14} color="#34D399" />
-                            <span>Zero Monthly Fee</span>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                            {['Telebirr', 'CBE Birr', 'Awash Bank', 'Bank of Abyssinia', 'Dashen Bank', 'Visa & Mastercard'].map((network, idx) => (
+                                <span key={idx} style={{
+                                    fontSize: '0.75rem',
+                                    fontWeight: 600,
+                                    color: 'rgba(255, 255, 255, 0.85)',
+                                    background: 'rgba(255, 255, 255, 0.08)',
+                                    padding: '0.25rem 0.6rem',
+                                    borderRadius: '6px'
+                                }}>
+                                    {network}
+                                </span>
+                            ))}
                         </div>
                     </div>
                 </div>
